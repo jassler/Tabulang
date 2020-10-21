@@ -31,7 +31,7 @@ public class ParameterizedString implements Cloneable {
      * I.e. the keys are the text positions pointing to first char in new lines
      * and the values are line numbers.
      */
-    private NavigableMap<Integer, Integer> lineBreaks = new TreeMap<Integer, Integer>();
+    private NavigableMap<Integer, Integer> lineBreaks = new TreeMap<>();
 
     private int minLineNr;
 
@@ -93,7 +93,7 @@ public class ParameterizedString implements Cloneable {
         } else {
             lineBreaks.put(textLength + 1, count);
         }
-        lineStarts = new Vector<Integer>(lineBreaks.size() + 1);
+        lineStarts = new Vector<>(lineBreaks.size() + 1);
         lineStarts.addAll(lineBreaks.keySet());
         minLineNr = 1;
     }
@@ -115,7 +115,7 @@ public class ParameterizedString implements Cloneable {
         newLineBreaks.put(0, lineBreaks.get(smallest) - 1);
         lineBreaks = newLineBreaks;
         text = line + text;
-        lineStarts = new Vector<Integer>(lineBreaks.size() + 1);
+        lineStarts = new Vector<>(lineBreaks.size() + 1);
         lineStarts.addAll(lineBreaks.keySet());
         minLineNr--;
     }
