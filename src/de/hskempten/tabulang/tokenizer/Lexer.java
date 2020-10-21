@@ -225,7 +225,7 @@ public class Lexer implements Cloneable {
      * Retrieve token from the list, build token list if necessary.
      *
      * @param index Position of the token in the list.
-     * @return The token at the position specified.
+     * @return The token at the position specified. EOFToken if index out of bounds.
      * @throws ParseTimeException On invalid input texts.
      */
     private Token getTokenAt(int index) throws ParseTimeException {

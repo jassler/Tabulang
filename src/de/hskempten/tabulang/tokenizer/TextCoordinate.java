@@ -10,9 +10,9 @@ public class TextCoordinate extends Pair<Integer, Integer> {
     public TextCoordinate(Integer line, Integer col) {
         super(line, col);
         if (line == null)
-            throw new IllegalArgumentException("Line may not be null. ");
+            throw new IllegalArgumentException("Line may not be null.");
         if (col == null)
-            throw new IllegalArgumentException("Column may not be null. ");
+            throw new IllegalArgumentException("Column may not be null.");
     }
 
     public int getLine() {

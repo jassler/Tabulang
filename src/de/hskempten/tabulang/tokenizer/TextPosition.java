@@ -159,19 +159,19 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
      * @return All of the text of the given line, that belongs to this  TextPosition, without leading or trailing white space.
      */
     public String get(int line) {
-        if ((line >= startCoords.getLine()) && (line <= endCoords.getLine())) {
+        if ((line >= startCoords.line) && (line <= endCoords.line)) {
             String fullLine = string.getLine(line);
-            if (line == startCoords.getLine()) {
+            if (line == startCoords.line) {
                 int end = fullLine.length();
-                if (endCoords.getLine() == line) end = endCoords.getCol();
+                if (endCoords.line == line) end = endCoords.col;
                 try {
-                    return fullLine.substring(startCoords.getCol(), end).trim();
+                    return fullLine.substring(startCoords.col, end).trim();
                 } catch (StringIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
             }
-            if (line == endCoords.getLine()) {
-                return fullLine.substring(0, endCoords.getCol()).trim();
+            if (line == endCoords.line) {
+                return fullLine.substring(0, endCoords.col).trim();
             }
             return fullLine.trim();
         }
@@ -179,9 +179,9 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
     }
 
     public int getIndent(int line) {
-        if ((line >= startCoords.getLine()) && (line <= endCoords.getLine())) {
+        if ((line >= startCoords.line) && (line <= endCoords.line)) {
             String fullLine = string.getLine(line);
-            if (line == startCoords.getLine()) return startCoords.getCol();
+            if (line == startCoords.line) return startCoords.col;
             int count = 0;
             while (count < fullLine.length() && fullLine.charAt(count) == ' ') count++;
             return count;

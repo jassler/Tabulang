@@ -86,7 +86,7 @@ public class Token {
         return position;
     }
 
-    public Lexer getScanner() {
+    public Lexer getLexer() {
         return myLexer;
     }
 
