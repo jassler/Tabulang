@@ -172,7 +172,7 @@ public class Lexer implements Cloneable {
         Token t = getNextToken();
         if (t.getType().equals(type)) {
             return t;
-        } else expectedException(expected);
+        } else expectedException(expected, t);
         // line is never reached:
         assert false;
         return null;
@@ -200,9 +200,15 @@ public class Lexer implements Cloneable {
         return currentToken.getPosition().getStartPosition();
     }
 
+    public Token getNextTokenAndExpect(String type) throws ParseTimeException {
+        Token t = this.getNextToken();
+        if(!t.getType().equals(type))
+            expectedException("Expected " + type, t);
+        return t;
+    }
 
-    public void expectedException(String expected) throws ParseTimeException {
-        throw new ParseTimeException(getPosition(), "Expected " + expected + ".");
+    public void expectedException(String expected, Token actual) throws ParseTimeException {
+        throw new ParseTimeException(getPosition(), "Expected " + expected + ", got " + actual.getType());
     }
 
 
