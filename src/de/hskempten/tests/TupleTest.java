@@ -76,4 +76,19 @@ class TupleTest {
                 Arrays.asList("1", "3", "0", "2", "0")
         ), t.projection(1, 3, 0, 2, 0));
     }
+
+    @Test
+    public void testTupleNewNames() {
+        Tuple t = new Tuple(Arrays.asList(12, 13, "1", "2"), Arrays.asList("a", "b", "c", "d"));
+        Tuple t2 = t.newTupleWithNames(Arrays.asList("do", "re", "mi", "fa"));
+
+        // make sure it deep-copies
+        t.set("a", null);
+
+        assertEquals(new Tuple(
+                Arrays.asList(12, 13, "1", "2"),
+                Arrays.asList("do", "re", "mi", "fa"),
+                true
+        ), t2);
+    }
 }

@@ -73,6 +73,35 @@ public class Tuple {
     }
 
     /**
+     * Set tuple element with name or index to value.
+     * Note that if names are also indexes, the named index will be prioritized over the number index.
+     *
+     * @param name Name or index number of element
+     * @throws NumberFormatException          if name not present and not convertible into a number
+     * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
+     */
+    public void set(String name, Object value) {
+        int index = names.indexOf(name);
+        if (index >= 0) {
+            objects.set(index, value);
+            return;
+        }
+
+        try {
+            index = Integer.parseInt(name);
+            objects.set(index, value);
+        } catch (NumberFormatException e) {
+            // TODO should those exceptions be handled differently?
+            throw e;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    /**
      * Concatenate elements of two tuples and return new generated tuple.
      *
      * @param t Tuple with object elements and names to append
@@ -121,6 +150,22 @@ public class Tuple {
         }
 
         return new Tuple(newObjects, newNames, isHorizontal);
+    }
+
+    /**
+     * Create tuple with new names. Copies objects of current tuple to the other tuple over.
+     *
+     * @param newNames New names list, must be same size as this tuple size
+     * @return New tuple with copied object list and new names
+     */
+    public Tuple newTupleWithNames(List<String> newNames) {
+        if (newNames.size() != objects.size()) {
+            throw new RuntimeException("Size of newNames list passed does not equal tuple size: expected "
+                    + objects.size() + ", got " + newNames.size());
+        }
+        List<Object> copy = new ArrayList<>(objects.size());
+        copy.addAll(objects);
+        return new Tuple(copy, newNames, isHorizontal);
     }
 
     @Override
