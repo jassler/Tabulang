@@ -6,29 +6,29 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple {
+public class Tuple<E> {
 
-    private final List<Object> objects;
+    private final List<E> objects;
     private final List<String> names;
     private boolean isHorizontal = true;
 
-    public Tuple(List<Object> objects) {
+    public Tuple(List<E> objects) {
         this.objects = objects;
         this.names = IntStream.range(0, objects.size()).boxed().map(String::valueOf).collect(Collectors.toList());
     }
 
-    public Tuple(List<Object> objects, List<String> names) {
+    public Tuple(List<E> objects, List<String> names) {
         this.objects = objects;
         this.names = names;
     }
 
-    public Tuple(List<Object> objects, List<String> names, boolean isHorizontal) {
+    public Tuple(List<E> objects, List<String> names, boolean isHorizontal) {
         this.objects = objects;
         this.names = names;
         this.isHorizontal = isHorizontal;
     }
 
-    public List<Object> getObjects() {
+    public List<E> getObjects() {
         return objects;
     }
 
@@ -80,7 +80,7 @@ public class Tuple {
      * @throws NumberFormatException          if name not present and not convertible into a number
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public void set(String name, Object value) {
+    public void set(String name, E value) {
         int index = names.indexOf(name);
         if (index >= 0) {
             objects.set(index, value);
@@ -107,14 +107,14 @@ public class Tuple {
      * @param t Tuple with object elements and names to append
      * @return new concatenated tuple
      */
-    public Tuple concatenate(Tuple t) {
-        List<Object> newObjects = new ArrayList<>(objects);
+    public Tuple<E> concatenate(Tuple<E> t) {
+        List<E> newObjects = new ArrayList<>(objects);
         newObjects.addAll(t.getObjects());
 
         List<String> newNames = new ArrayList<>(names);
         newNames.addAll(t.getNames());
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -125,8 +125,8 @@ public class Tuple {
      * @param elements Element indexes
      * @return Tuple with selected indexes
      */
-    public Tuple projection(int... elements) {
-        List<Object> newObjects = new ArrayList<>(elements.length);
+    public Tuple<E> projection(int... elements) {
+        List<E> newObjects = new ArrayList<>(elements.length);
         List<String> newNames = new ArrayList<>(elements.length);
 
         for (int el : elements) {
@@ -134,14 +134,14 @@ public class Tuple {
             newNames.add(names.get(el));
         }
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     /**
      * @see Tuple#projection(int...)
      */
-    public Tuple projection(List<Integer> elements) {
-        List<Object> newObjects = new ArrayList<>(elements.size());
+    public Tuple<E> projection(List<Integer> elements) {
+        List<E> newObjects = new ArrayList<>(elements.size());
         List<String> newNames = new ArrayList<>(elements.size());
 
         for (int i = 0; i < elements.size(); i++) {
@@ -149,7 +149,7 @@ public class Tuple {
             newNames.set(i, names.get(elements.get(i)));
         }
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -158,21 +158,21 @@ public class Tuple {
      * @param newNames New names list, must be same size as this tuple size
      * @return New tuple with copied object list and new names
      */
-    public Tuple newTupleWithNames(List<String> newNames) {
+    public Tuple<E> newTupleWithNames(List<String> newNames) {
         if (newNames.size() != objects.size()) {
             throw new RuntimeException("Size of newNames list passed does not equal tuple size: expected "
                     + objects.size() + ", got " + newNames.size());
         }
-        List<Object> copy = new ArrayList<>(objects.size());
+        List<E> copy = new ArrayList<>(objects.size());
         copy.addAll(objects);
-        return new Tuple(copy, newNames, isHorizontal);
+        return new Tuple<>(copy, newNames, isHorizontal);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple tuple = (Tuple) o;
+        Tuple<?> tuple = (Tuple<?>) o;
         return isHorizontal == tuple.isHorizontal &&
                 objects.equals(tuple.objects) &&
                 names.equals(tuple.names);
