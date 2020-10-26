@@ -4,6 +4,7 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,4 +47,33 @@ class TupleTest {
         assertEquals(2, u.get("2"));
     }
 
+    @Test
+    public void testTupleAppend() {
+        Tuple t = new Tuple(Arrays.asList(12, 13));
+        t.setHorizontal(false);
+
+        t = t.concatenate(new Tuple(Arrays.asList("a", "b"), Arrays.asList("c", "d")));
+        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getObjects());
+        assertEquals(Arrays.asList("0", "1", "c", "d"), t.getNames());
+        assertFalse(t.isHorizontal());
+    }
+
+    @Test
+    public void testTupleProjection() {
+        Tuple t = new Tuple(Arrays.asList(12, 13, "1", "2"));
+
+        assertEquals(new Tuple(
+                Collections.emptyList()
+        ), t.projection());
+
+        assertEquals(new Tuple(
+                Collections.singletonList("1"),
+                Collections.singletonList("2")
+        ), t.projection(2));
+
+        assertEquals(new Tuple(
+                Arrays.asList(13, "2", 12, "1", 12),
+                Arrays.asList("1", "3", "0", "2", "0")
+        ), t.projection(1, 3, 0, 2, 0));
+    }
 }
