@@ -1,38 +1,63 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E> {
+public class Tuple {
 
-    private final List<E> objects;
-    private final List<String> names;
-    private boolean isHorizontal = true;
+    private final Object[] objects;
 
-    public Tuple(List<E> objects) {
-        this.objects = objects;
-        this.names = IntStream.range(0, objects.size()).boxed().map(String::valueOf).collect(Collectors.toList());
+    // names is sorted for binary search, hence we need to keep track on
+    // what index a name is actually pointing to
+    private final String[] names;
+    private final int[] nameIndex;
+    private boolean isHorizontal;
+
+    public Tuple(Object[] objects) {
+        this(
+                objects,
+                IntStream.range(0, objects.length).boxed().map(String::valueOf).toArray(String[]::new)
+        );
     }
 
-    public Tuple(List<E> objects, List<String> names) {
-        this.objects = objects;
-        this.names = names;
+    public Tuple(Object[] objects, String[] names) {
+        this(objects, names, true);
     }
 
-    public Tuple(List<E> objects, List<String> names, boolean isHorizontal) {
-        this.objects = objects;
-        this.names = names;
+    public Tuple(Object[] objects, String[] names, boolean isHorizontal) {
+        this.objects = Arrays.copyOf(objects, objects.length);
+        this.names = Arrays.copyOf(names, names.length);
+        this.nameIndex = IntStream.range(0, names.length)
+                .boxed().sorted(Comparator.comparing(i -> names[i]))
+                .mapToInt(ele -> ele).toArray();
         this.isHorizontal = isHorizontal;
+
+        Arrays.sort(this.names);
+
+        if (this.objects.length != this.names.length)
+            throw new ArrayLengthMismatchException(this.objects.length, this.names.length);
     }
 
-    public List<E> getObjects() {
+    public Tuple(List<Object> objects) {
+        this(objects.toArray(new Object[0]));
+    }
+
+    public Tuple(List<Object> objects, List<String> names) {
+        this(objects.toArray(new Object[0]), names.toArray(new String[0]));
+    }
+
+    public Tuple(List<Object> objects, List<String> names, boolean isHorizontal) {
+        this(objects.toArray(new Object[0]), names.toArray(new String[0]), isHorizontal);
+    }
+
+    public Object[] getObjects() {
         return objects;
     }
 
-    public List<String> getNames() {
+    public String[] getNames() {
         return names;
     }
 
@@ -54,13 +79,13 @@ public class Tuple<E> {
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
     public Object get(String name) {
-        int index = names.indexOf(name);
+        int index = Arrays.binarySearch(names, name);
         if (index >= 0)
-            return objects.get(index);
+            return objects[nameIndex[index]];
 
         try {
             index = Integer.parseInt(name);
-            return objects.get(index);
+            return objects[index];
         } catch (NumberFormatException e) {
             // TODO should those exceptions be handled differently?
             throw e;
@@ -80,16 +105,16 @@ public class Tuple<E> {
      * @throws NumberFormatException          if name not present and not convertible into a number
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public void set(String name, E value) {
-        int index = names.indexOf(name);
+    public void set(String name, Object value) {
+        int index = Arrays.binarySearch(names, name);
         if (index >= 0) {
-            objects.set(index, value);
+            objects[nameIndex[index]] = value;
             return;
         }
 
         try {
             index = Integer.parseInt(name);
-            objects.set(index, value);
+            objects[index] = value;
         } catch (NumberFormatException e) {
             // TODO should those exceptions be handled differently?
             throw e;
@@ -107,14 +132,16 @@ public class Tuple<E> {
      * @param t Tuple with object elements and names to append
      * @return new concatenated tuple
      */
-    public Tuple<E> concatenate(Tuple<E> t) {
-        List<E> newObjects = new ArrayList<>(objects);
-        newObjects.addAll(t.getObjects());
+    public Tuple concatenate(Tuple t) {
+        Object[] newObjects = new Object[objects.length + t.getObjects().length];
+        System.arraycopy(objects, 0, newObjects, 0, objects.length);
+        System.arraycopy(t.getObjects(), 0, newObjects, objects.length, t.getObjects().length);
 
-        List<String> newNames = new ArrayList<>(names);
-        newNames.addAll(t.getNames());
+        String[] newNames = new String[names.length + t.getNames().length];
+        System.arraycopy(names, 0, newNames, 0, names.length);
+        System.arraycopy(t.getNames(), 0, newNames, names.length, t.getNames().length);
 
-        return new Tuple<>(newObjects, newNames, isHorizontal);
+        return new Tuple(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -125,31 +152,16 @@ public class Tuple<E> {
      * @param elements Element indexes
      * @return Tuple with selected indexes
      */
-    public Tuple<E> projection(int... elements) {
-        List<E> newObjects = new ArrayList<>(elements.length);
-        List<String> newNames = new ArrayList<>(elements.length);
+    public Tuple projection(int... elements) {
+        Object[] newObjects = new Object[elements.length];
+        String[] newNames = new String[elements.length];
 
-        for (int el : elements) {
-            newObjects.add(objects.get(el));
-            newNames.add(names.get(el));
+        for (int i = 0; i < elements.length; i++) {
+            newObjects[i] = objects[elements[i]];
+            newNames[i] = names[elements[i]];
         }
 
-        return new Tuple<>(newObjects, newNames, isHorizontal);
-    }
-
-    /**
-     * @see Tuple#projection(int...)
-     */
-    public Tuple<E> projection(List<Integer> elements) {
-        List<E> newObjects = new ArrayList<>(elements.size());
-        List<String> newNames = new ArrayList<>(elements.size());
-
-        for (int i = 0; i < elements.size(); i++) {
-            newObjects.set(i, objects.get(elements.get(i)));
-            newNames.set(i, names.get(elements.get(i)));
-        }
-
-        return new Tuple<>(newObjects, newNames, isHorizontal);
+        return new Tuple(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -158,36 +170,40 @@ public class Tuple<E> {
      * @param newNames New names list, must be same size as this tuple size
      * @return New tuple with copied object list and new names
      */
-    public Tuple<E> newTupleWithNames(List<String> newNames) {
-        if (newNames.size() != objects.size()) {
-            throw new RuntimeException("Size of newNames list passed does not equal tuple size: expected "
-                    + objects.size() + ", got " + newNames.size());
+    public Tuple newTupleWithNames(String[] newNames) {
+        if (newNames.length != objects.length) {
+            throw new ArrayLengthMismatchException(objects.length, newNames.length);
         }
-        List<E> copy = new ArrayList<>(objects.size());
-        copy.addAll(objects);
-        return new Tuple<>(copy, newNames, isHorizontal);
+
+        return new Tuple(objects, newNames, isHorizontal);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple<?> tuple = (Tuple<?>) o;
+        Tuple tuple = (Tuple) o;
         return isHorizontal == tuple.isHorizontal &&
-                objects.equals(tuple.objects) &&
-                names.equals(tuple.names);
+                Arrays.equals(objects, tuple.objects) &&
+                Arrays.equals(names, tuple.names) &&
+                Arrays.equals(nameIndex, tuple.nameIndex);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(objects, names, isHorizontal);
+        int result = Objects.hash(isHorizontal);
+        result = 31 * result + Arrays.hashCode(objects);
+        result = 31 * result + Arrays.hashCode(names);
+        result = 31 * result + Arrays.hashCode(nameIndex);
+        return result;
     }
 
     @Override
     public String toString() {
         return "Tuple{" +
-                "objects=" + objects +
-                ", names=" + names +
+                "objects=" + Arrays.toString(objects) +
+                ", names=" + Arrays.toString(names) +
+                ", nameIndex=" + Arrays.toString(nameIndex) +
                 ", isHorizontal=" + isHorizontal +
                 '}';
     }
