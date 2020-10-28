@@ -6,8 +6,6 @@ package de.hskempten.tabulang.tokenizer;
  */
 public abstract class PositionedException extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
     private TextPosition position = null;
 
     public PositionedException() {

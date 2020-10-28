@@ -3,7 +3,7 @@ package de.hskempten.tabulang.utils;
 
 /**
  * Use this class to concatenate two Objects.
- * A concated Object can be used to construct more
+ * A concatenated Object can be used to construct more
  * complex data types such as lists and trees.
  * This class contains some convenience methods
  * for standard implementations of such data types.
@@ -80,13 +80,11 @@ public class Pair<F, L> {
     public Object getListElementNr(int nr)
             throws Exception {
         if (nr == 0) return first;
-        else {
-            if (last instanceof Pair) {
-                if (last != null) {
-                    return ((Pair) last).getListElementNr(nr - 1);
-                } else throw new Exception("List too short for index.");
-            } else throw new Exception("Last element is not of class Pair.");
-        }
+        if(last == null) throw new Exception("List too short for index.");
+
+        if (last instanceof Pair) {
+            return ((Pair<?,?>) last).getListElementNr(nr - 1);
+        } else throw new Exception("Last element is not of class Pair.");
     }
 
     /**
@@ -113,13 +111,11 @@ public class Pair<F, L> {
             throws Exception {
         String turn = StringUtils.getNextField(path, "/");
         if (turn.equals("")) return first;
-        else {
-            if (last instanceof Pair) {
-                if (last != null) {
-                    return ((Pair) last).getTreeElement(StringUtils.eatNextField(path, "/"));
-                } else throw new Exception("Tree depth is to small for given path");
-            } else throw new Exception("Wrong class in last component.");
-        }
+        if (last == null) throw new Exception("Tree depth is to small for given path");
+
+        if (last instanceof Pair) {
+            return ((Pair<?,?>) last).getTreeElement(StringUtils.eatNextField(path, "/"));
+        } else throw new Exception("Wrong class in last component.");
     }
 
     @Override
@@ -140,7 +136,7 @@ public class Pair<F, L> {
     public boolean equals(Object other) {
         if (other == null) return false;
         if (other instanceof Pair) {
-            Pair op = (Pair) other;
+            Pair<?,?> op = (Pair<?,?>) other;
             return ((op.first.equals(first)) && (op.last.equals(last)));
         } else return false;
     }

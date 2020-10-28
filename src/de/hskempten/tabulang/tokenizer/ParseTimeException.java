@@ -3,8 +3,6 @@ package de.hskempten.tabulang.tokenizer;
 
 public class ParseTimeException extends PositionedException {
 
-    private static final long serialVersionUID = 1L;
-
     public ParseTimeException() {
         super();
     }
