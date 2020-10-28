@@ -196,7 +196,7 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
         if (getSourceName() != null) sb.append(getSourceName()).append(", ");
         sb.append("Line ")
                 .append(getFromLine())
-                .append(", Column")
+                .append(", Column ")
                 .append(getFromCol())
                 .append(":\n");
 

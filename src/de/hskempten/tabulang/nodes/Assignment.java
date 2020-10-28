@@ -18,6 +18,8 @@ public class Assignment extends Node {
 
         this.identifier = idToken.getContent();
         this.value = value;
+
+        lexer.getNextTokenAndExpect(";");
     }
 
     public String getIdentifier() {

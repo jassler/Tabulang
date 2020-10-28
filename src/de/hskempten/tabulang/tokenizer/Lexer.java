@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * A scanner based on regular expressions.
+ * @author boehler
  */
 public class Lexer implements Cloneable {
 
@@ -200,15 +201,19 @@ public class Lexer implements Cloneable {
         return currentToken.getPosition().getStartPosition();
     }
 
+    /**
+     * @author jassler
+     */
     public Token getNextTokenAndExpect(String type) throws ParseTimeException {
-        Token t = this.getNextToken();
+        Token t = this.lookahead();
         if(!t.getType().equals(type))
-            expectedException("Expected " + type, t);
+            expectedException(type, t);
+        this.getNextToken();
         return t;
     }
 
     public void expectedException(String expected, Token actual) throws ParseTimeException {
-        throw new ParseTimeException(getPosition(), "Expected " + expected + ", got " + actual.getType());
+        throw new ParseTimeException(getPosition(), "Expected \"" + expected + "\", got " + actual.getType());
     }
 
 
