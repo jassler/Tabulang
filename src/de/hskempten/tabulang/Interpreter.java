@@ -2,6 +2,9 @@ package de.hskempten.tabulang;
 
 import de.hskempten.tabulang.nodes.Number;
 import de.hskempten.tabulang.nodes.Node;
+import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.PositionedException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.HashMap;
 
@@ -13,8 +16,14 @@ public class Interpreter {
         this.environment = new HashMap<>();
     }
 
-    public void evaluate(Node n) {
-        n.evaluate(this);
+    public void evaluate(Node n) throws ParseTimeException {
+        try {
+            n.evaluate(this);
+        } catch(Exception e) {
+            // TODO Error Position currently set to first position of node, not the Node that actually generated the error
+            // eg. if text is "a := 3 / 0;", it will point to the a, not the 0
+            throw new ParseTimeException(n.getToken().getPosition(), "Error while evaluating node: " + e.getLocalizedMessage());
+        }
     }
 
     public void setValue(String s, Number o) {
