@@ -71,9 +71,9 @@ class TupleTest {
         ), t.projection(2));
 
         assertEquals(new Tuple(
-                new Object[]{13, "2", 12, "1", 12},
-                new String[]{"1", "3", "0", "2", "0"}
-        ), t.projection(1, 3, 0, 2, 0));
+                new Object[]{13, "2", 12, "1"},
+                new String[]{"1", "3", "0", "2"}
+        ), t.projection(1, 3, 0, 2));
     }
 
     @Test
