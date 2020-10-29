@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.nodes;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
@@ -12,7 +13,7 @@ public class Variable extends Node {
     public Variable(Lexer l) throws ParseTimeException {
         super(l.lookahead());
 
-        Token t = l.getNextTokenAndExpect("variable");
+        Token t = l.getNextTokenAndExpect(TokenType.VARIABLE);
         this.literal = t.getContent();
     }
 

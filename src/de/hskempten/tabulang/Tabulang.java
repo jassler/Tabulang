@@ -10,14 +10,9 @@ public class Tabulang {
     public static void main(String[] args) throws ParseTimeException {
         Lexer l = new Lexer();
 
-        l.addExpression(new TokenExpression("variable", "[a-zA-Z]\\w*"));
-        l.addExpression(new TokenExpression("number", "0|[1-9][0-9]*"));
-        // l.addExpression(new TokenExpression("binNumber", "0b[0-9]+"));
-        // 0b14
-        l.addExpression(new TokenExpression(";", ";"));
-        l.addExpression(new TokenExpression(":=", ":="));
-        l.addExpression(new TokenExpression("binaryOperator", "\\+|-|\\*|/"));
-
+        for(var t : TokenType.TOKEN_EXPRESSIONS) {
+            l.addExpression(t);
+        }
 
         l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
         Interpreter i = new Interpreter();

@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.nodes;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
@@ -14,7 +15,7 @@ public class Number extends Node {
     public Number(Lexer lexer) throws ParseTimeException {
         super(lexer.lookahead());
 
-        Token t = lexer.getNextTokenAndExpect("number");
+        Token t = lexer.getNextTokenAndExpect(TokenType.NUMBER);
         value = new BigInteger(t.getContent());
     }
 
