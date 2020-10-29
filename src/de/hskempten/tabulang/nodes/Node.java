@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.nodes;
 
+import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
@@ -15,4 +16,6 @@ public abstract class Node {
     public Token getToken() {
         return token;
     }
+
+    public abstract Number evaluate(Interpreter i);
 }

@@ -39,7 +39,7 @@ public class Lexer implements Cloneable {
     private String parenthesedCommentEnd;
     private List<Token> tokens;
 
-    {
+    static {
         EOFTOKEN_TOKEN_EXPRESSION.setNumber(-1);
     }
 
@@ -48,10 +48,10 @@ public class Lexer implements Cloneable {
         this.text = null;
         tokenPointer = 0;
         lastPointer = 0;
-        expressions = new LinkedList<TokenExpression>();
-        expressionPatterns = new ArrayList<Pattern>();
+        expressions = new LinkedList<>();
+        expressionPatterns = new ArrayList<>();
         terminalCounter = 0;
-        terminalNumbers = new Hashtable<String, Integer>();
+        terminalNumbers = new Hashtable<>();
         oneLineCommentMarkers = new LinkedList<>();
         parenthesedCommentStart = null;
         parenthesedCommentEnd = null;
@@ -181,7 +181,7 @@ public class Lexer implements Cloneable {
 
     public void reverseTokenOrder() throws ParseTimeException {
         makeTokenList();
-        ArrayList<Token> newList = new ArrayList<Token>();
+        ArrayList<Token> newList = new ArrayList<>();
         for (int i = tokens.size() - 1; i >= 0; i--) {
             newList.add(tokens.get(i));
         }
@@ -210,6 +210,19 @@ public class Lexer implements Cloneable {
             expectedException(type, t);
         this.getNextToken();
         return t;
+    }
+
+    /**
+     * Check if we've reached the end of the source code.
+     *
+     * @return true, if lookahead is eof token
+     */
+    public boolean isDone() {
+        try {
+            return lookahead().getType().equals(EOFTokenType);
+        } catch (ParseTimeException e) {
+            return true;
+        }
     }
 
     public void expectedException(String expected, Token actual) throws ParseTimeException {
@@ -249,7 +262,7 @@ public class Lexer implements Cloneable {
 
     private void makeTokenList() throws ParseTimeException {
         if (tokens != null || text == null) return;
-        tokens = new ArrayList<Token>();
+        tokens = new ArrayList<>();
         int textPointer = 0;
 
         scanning:
@@ -310,7 +323,7 @@ public class Lexer implements Cloneable {
      * @throws ParseTimeException
      */
     private int moveOverComment(int textPointer) throws ParseTimeException {
-        int start = textPointer;
+        int start;
         do {
             start = textPointer;
             for (String marker : oneLineCommentMarkers) {

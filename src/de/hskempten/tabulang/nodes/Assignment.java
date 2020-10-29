@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.nodes;
 
+import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
@@ -28,6 +29,12 @@ public class Assignment extends Node {
 
     public Expression getValue() {
         return value;
+    }
+
+    public Number evaluate(Interpreter i) {
+        Number n = value.evaluate(i);
+        i.setValue(identifier, value.evaluate(i));
+        return n;
     }
 
     @Override
