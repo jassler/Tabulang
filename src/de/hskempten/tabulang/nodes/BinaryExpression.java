@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.nodes;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
@@ -17,7 +18,7 @@ public class BinaryExpression extends Node {
 
         this.left = left;
 
-        Token t = l.getNextTokenAndExpect("binaryOperator");
+        Token t = l.getNextTokenAndExpect(TokenType.BINARY_OPERATOR);
         this.operator = t.getContent();
 
         right = new Expression(l, getPrecedence(this.operator));

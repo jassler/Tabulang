@@ -31,7 +31,6 @@ public class Lexer implements Cloneable {
     private ParameterizedString text;
     private int tokenPointer;
     private int lastPointer;
-    private int terminalCounter;
     private Hashtable<String, Integer> terminalNumbers;
     // Everything in a line starting with the given marker is ignored
     private LinkedList<String> oneLineCommentMarkers;
@@ -50,7 +49,6 @@ public class Lexer implements Cloneable {
         lastPointer = 0;
         expressions = new LinkedList<>();
         expressionPatterns = new ArrayList<>();
-        terminalCounter = 0;
         terminalNumbers = new Hashtable<>();
         oneLineCommentMarkers = new LinkedList<>();
         parenthesedCommentStart = null;
@@ -67,7 +65,6 @@ public class Lexer implements Cloneable {
         newOne.lastPointer = lastPointer;
         newOne.expressions = (LinkedList<TokenExpression>) expressions.clone();
         newOne.expressionPatterns = (ArrayList<Pattern>) expressionPatterns.clone();
-        newOne.terminalCounter = terminalCounter;
         newOne.terminalNumbers = terminalNumbers;
         newOne.oneLineCommentMarkers = new LinkedList<>();
         for (String s : oneLineCommentMarkers) newOne.oneLineCommentMarkers.add(s);
@@ -125,11 +122,9 @@ public class Lexer implements Cloneable {
 
 
     public void addExpression(TokenExpression e) {
-        e.setNumber(terminalCounter);
         expressions.add(e);
         expressionPatterns.add(Pattern.compile(e.getExpression()));
-        terminalNumbers.put(e.getType(), terminalCounter);
-        terminalCounter++;
+        terminalNumbers.put(e.getType(), e.getNumber());
     }
 
     public int getNumberOfTerminal(String type) {
@@ -137,7 +132,7 @@ public class Lexer implements Cloneable {
     }
 
     public int getNumberOfTerminals() {
-        return terminalCounter;
+        return terminalNumbers.size();
     }
 
     public Token lookahead() throws ParseTimeException {
@@ -204,10 +199,10 @@ public class Lexer implements Cloneable {
     /**
      * @author jassler
      */
-    public Token getNextTokenAndExpect(String type) throws ParseTimeException {
+    public Token getNextTokenAndExpect(TokenExpression type) throws ParseTimeException {
         Token t = this.lookahead();
-        if(!t.getType().equals(type))
-            expectedException(type, t);
+        if(t.getTypeNumber() != type.getNumber())
+            expectedException(type.getType(), t);
         this.getNextToken();
         return t;
     }

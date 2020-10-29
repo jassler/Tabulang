@@ -10,9 +10,10 @@ public class Tuple {
 
     private final Object[] objects;
 
-    // names is sorted for binary search, hence we need to keep track on
+    // namesSorted is sorted for binary search, hence we need to keep track on
     // what index a name is actually pointing to
     private final String[] names;
+    private final String[] namesSorted;
     private final int[] nameIndex;
     private boolean isHorizontal;
 
@@ -30,15 +31,20 @@ public class Tuple {
     public Tuple(Object[] objects, String[] names, boolean isHorizontal) {
         this.objects = Arrays.copyOf(objects, objects.length);
         this.names = Arrays.copyOf(names, names.length);
+        this.namesSorted = Arrays.copyOf(names, names.length);
         this.nameIndex = IntStream.range(0, names.length)
                 .boxed().sorted(Comparator.comparing(i -> names[i]))
                 .mapToInt(ele -> ele).toArray();
         this.isHorizontal = isHorizontal;
 
-        Arrays.sort(this.names);
+        Arrays.sort(this.namesSorted);
 
-        if (this.objects.length != this.names.length)
-            throw new ArrayLengthMismatchException(this.objects.length, this.names.length);
+        if (this.objects.length != this.namesSorted.length)
+            throw new ArrayLengthMismatchException(this.objects.length, this.namesSorted.length);
+
+        String duplicate = findDuplicate(this.namesSorted);
+        if(duplicate != null)
+            throw new DuplicateNamesException(duplicate);
     }
 
     public Tuple(List<Object> objects) {
@@ -79,7 +85,7 @@ public class Tuple {
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
     public Object get(String name) {
-        int index = Arrays.binarySearch(names, name);
+        int index = Arrays.binarySearch(namesSorted, name);
         if (index >= 0)
             return objects[nameIndex[index]];
 
@@ -106,7 +112,7 @@ public class Tuple {
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
     public void set(String name, Object value) {
-        int index = Arrays.binarySearch(names, name);
+        int index = Arrays.binarySearch(namesSorted, name);
         if (index >= 0) {
             objects[nameIndex[index]] = value;
             return;
@@ -176,6 +182,20 @@ public class Tuple {
         }
 
         return new Tuple(objects, newNames, isHorizontal);
+    }
+
+    /**
+     * Check if <b>sorted</b> array has duplicate elements, returns first element string it finds.
+     *
+     * @param arr Sorted String array with variable names
+     * @return null, if no same string appears next to each other
+     */
+    private static String findDuplicate(String[] arr) {
+        for(int i = 1; i < arr.length; i++) {
+            if(arr[i].equals(arr[i-1]))
+                return arr[i];
+        }
+        return null;
     }
 
     @Override
