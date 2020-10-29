@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 public class Number extends Node {
 
-    private final int STD_NUM_DECIMALS = 5;
+    private final int STD_NUM_DECIMALS = 25;
     private BigInteger numerator;
     private BigInteger denominator;
 
@@ -27,7 +27,13 @@ public class Number extends Node {
         setValueFromString(value);
     }
 
-    private boolean  setValueFromString(String v){
+    private Number(BigInteger _numerator, BigInteger _denominator, Token t) {
+        super(t);
+        numerator = _numerator;
+        denominator = _denominator;
+    }
+
+    private boolean setValueFromString(String v) {
 
         if (v.contains(".")) {
             String[] parts = v.split("\\.");
@@ -51,6 +57,12 @@ public class Number extends Node {
     }
 
 
+    private BigInteger kgv(BigInteger a, BigInteger b) {
+        if (a.equals(BigInteger.ZERO) || b.equals(BigInteger.ZERO)) return BigInteger.ONE;
+        return a.multiply(b).divide(euclid(a, b));
+    }
+
+
     public String getValueString() {
         return getValueString(STD_NUM_DECIMALS);
     }
@@ -61,9 +73,9 @@ public class Number extends Node {
         if (k < 1) {
             return whole;
         }
-        String rest = String.valueOf(divAndRemainder[1].doubleValue() * (Math.pow(10, k) / denominator.doubleValue()));
+        String rest = String.valueOf(divAndRemainder[1].multiply(BigInteger.TEN.pow(k)).divide(denominator));
         String rrr = rest.substring(0, Math.min(rest.length(), k));
-        if (rrr.equals("0.0")){
+        if (rrr.equals("0.0") || rrr.equals("0")) {
             return whole + ".0";
         }
         int z = rrr.length() - 1;
@@ -75,24 +87,46 @@ public class Number extends Node {
 
 
     public float getValue() {
-        System.out.println(getValueString());
         return Float.parseFloat(getValueString());
     }
 
     public Number add(Number other) {
-        return new Number(String.valueOf(getValue() + other.getValue()), getToken());
+        BigInteger kgv = kgv(denominator, other.denominator);
+        BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).add(other.numerator.multiply((kgv.divide(other.denominator))));
+        BigInteger newDenominator = kgv;
+
+        BigInteger divider = euclid(newNumerator, newDenominator);
+        newNumerator = newNumerator.divide(divider);
+        newDenominator = newDenominator.divide(divider);
+
+        return new Number(newNumerator, newDenominator, getToken());
     }
 
     public Number subtract(Number other) {
-        return new Number(String.valueOf(getValue() - other.getValue()), getToken());
+        BigInteger kgv = kgv(denominator, other.denominator);
+        BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).subtract(other.numerator.multiply((kgv.divide(other.denominator))));
+        BigInteger newDenominator = kgv;
+
+        BigInteger divider = euclid(newNumerator, newDenominator);
+        newNumerator = newNumerator.divide(divider);
+        newDenominator = newDenominator.divide(divider);
+
+        return new Number(newNumerator, newDenominator, getToken());
     }
 
     public Number multiply(Number other) {
-        return new Number(String.valueOf(getValue() * other.getValue()), getToken());
+        BigInteger newNumerator = numerator.multiply(other.numerator);
+        BigInteger newDenominator = denominator.multiply(other.denominator);
+
+        BigInteger divider = euclid(newNumerator, newDenominator);
+        newNumerator = newNumerator.divide(divider);
+        newDenominator = newDenominator.divide(divider);
+
+        return new Number(newNumerator, newDenominator, getToken());
     }
 
     public Number divide(Number other) {
-        return new Number(String.valueOf(getValue() / other.getValue()), getToken());
+        return multiply(new Number(other.denominator, other.numerator, other.getToken()));
     }
 
     public Number evaluate(Interpreter i) {
@@ -102,7 +136,7 @@ public class Number extends Node {
     @Override
     public String toString() {
         return "Number{" +
-                "value=" + getValueString() +
+                "value=" + getValueString(5) +
                 '}';
     }
 }
