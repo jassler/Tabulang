@@ -9,7 +9,7 @@ public class Tabulang {
 
     public static void main(String[] args) throws ParseTimeException {
         Lexer l = new Lexer();
-        l.setText("start 123 end ()//");
+        l.setText("start 123 end");
 
         l.addExpression(new TokenExpression("StartType", "start"));
         l.addExpression(new TokenExpression("NumberType", "[0-9]+"));
