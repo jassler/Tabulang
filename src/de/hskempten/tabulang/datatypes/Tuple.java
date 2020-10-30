@@ -1,21 +1,17 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.IntStream;
 
-public class Tuple {
+public class Tuple implements Cloneable {
 
     private final Object[] objects;
-
-    // namesSorted is sorted for binary search, hence we need to keep track on
-    // what index a name is actually pointing to
     private final String[] names;
-    private final String[] namesSorted;
-    private final int[] nameIndex;
     private boolean isHorizontal;
+
+    // name - index lookup table
+    // best case, HashMap finds the index of a given name in O(1) complexity, worst O(n)
+    private final HashMap<String, Integer> nameLookup;
 
     public Tuple(Object[] objects) {
         this(
@@ -31,20 +27,24 @@ public class Tuple {
     public Tuple(Object[] objects, String[] names, boolean isHorizontal) {
         this.objects = Arrays.copyOf(objects, objects.length);
         this.names = Arrays.copyOf(names, names.length);
-        this.namesSorted = Arrays.copyOf(names, names.length);
-        this.nameIndex = IntStream.range(0, names.length)
-                .boxed().sorted(Comparator.comparing(i -> names[i]))
-                .mapToInt(ele -> ele).toArray();
+
+        this.nameLookup = new HashMap<>(this.names.length);
+        for(int i = 0; i < this.names.length; i++)
+            this.nameLookup.put(this.names[i], i);
+
         this.isHorizontal = isHorizontal;
 
-        Arrays.sort(this.namesSorted);
+        if (this.objects.length != this.names.length)
+            throw new ArrayLengthMismatchException(this.objects.length, this.names.length);
 
-        if (this.objects.length != this.namesSorted.length)
-            throw new ArrayLengthMismatchException(this.objects.length, this.namesSorted.length);
+        // keys in map must not appear twice
+        // thus if map-keys-size is not the same as array size, there must be a duplicate value
+        if(this.nameLookup.keySet().size() != this.names.length) {
+            Arrays.sort(this.names);
+            String duplicate = findDuplicate(this.names);
 
-        String duplicate = findDuplicate(this.namesSorted);
-        if(duplicate != null)
             throw new DuplicateNamesException(duplicate);
+        }
     }
 
     public Tuple(List<Object> objects) {
@@ -85,9 +85,9 @@ public class Tuple {
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
     public Object get(String name) {
-        int index = Arrays.binarySearch(namesSorted, name);
+        int index = nameLookup.getOrDefault(name, -1);
         if (index >= 0)
-            return objects[nameIndex[index]];
+            return objects[index];
 
         try {
             index = Integer.parseInt(name);
@@ -112,9 +112,9 @@ public class Tuple {
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
     public void set(String name, Object value) {
-        int index = Arrays.binarySearch(namesSorted, name);
+        int index = nameLookup.getOrDefault(name, -1);
         if (index >= 0) {
-            objects[nameIndex[index]] = value;
+            objects[index] = value;
             return;
         }
 
@@ -198,6 +198,12 @@ public class Tuple {
         return null;
     }
 
+    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
+    @Override
+    protected Tuple clone() {
+        return new Tuple(objects, names, isHorizontal);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -205,8 +211,7 @@ public class Tuple {
         Tuple tuple = (Tuple) o;
         return isHorizontal == tuple.isHorizontal &&
                 Arrays.equals(objects, tuple.objects) &&
-                Arrays.equals(names, tuple.names) &&
-                Arrays.equals(nameIndex, tuple.nameIndex);
+                Arrays.equals(names, tuple.names);
     }
 
     @Override
@@ -214,7 +219,6 @@ public class Tuple {
         int result = Objects.hash(isHorizontal);
         result = 31 * result + Arrays.hashCode(objects);
         result = 31 * result + Arrays.hashCode(names);
-        result = 31 * result + Arrays.hashCode(nameIndex);
         return result;
     }
 
@@ -223,7 +227,6 @@ public class Tuple {
         return "Tuple{" +
                 "objects=" + Arrays.toString(objects) +
                 ", names=" + Arrays.toString(names) +
-                ", nameIndex=" + Arrays.toString(nameIndex) +
                 ", isHorizontal=" + isHorizontal +
                 '}';
     }
