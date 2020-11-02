@@ -1,32 +1,32 @@
-package de.hskempten.tabulang.importFromSql;
+package de.hskempten.tabulang.mySql;
+import de.hskempten.tabulang.libreOffice.CalcConnection;
+import de.hskempten.tabulang.mySql.Models.DbConnectionParameters;
+import de.hskempten.tabulang.mySql.Models.SqlExportWrapper;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 
-@SuppressWarnings("InstantiationOfUtilityClass")
 public class DatabaseConnection {
     private static DatabaseConnection instance;
     private static Connection connection;
     private static Statement statement;
 
-    private DatabaseConnection() {
+    private DatabaseConnection(DbConnectionParameters parameters) {
         try {
-            connection = DriverManager.getConnection(StaticResources.connectionString);
+            connection = DriverManager.getConnection(CreateConnectionString(parameters));
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void OpenConnection() throws SQLException {
+    public static void OpenConnection(DbConnectionParameters parameters) throws SQLException {
         if (instance == null) {
-            instance = new DatabaseConnection();
+            instance = new DatabaseConnection(parameters);
         }
         else if (connection.isClosed()) {
-            instance = new DatabaseConnection();
+            instance = new DatabaseConnection(parameters);
         }
     }
 
@@ -35,13 +35,76 @@ public class DatabaseConnection {
         connection.close();
     }
 
-    public static <T> ArrayList<T> SelectStatement(String query, Class<T> obj){
+    public static void Export(String query, CalcConnection calcConnection, boolean asFile){
         try {
             statement = connection.createStatement();
             var resultSet = statement.executeQuery(query);
-            var returnList = Parse(resultSet, obj);
+            var metaData = resultSet.getMetaData();
+            var headlines = GetHeadlines(metaData);
+            var values = GetColumnValues(headlines, resultSet);
+            var sqlExportWrapper = new SqlExportWrapper(GetTableName(query), headlines, values);
             statement.close();
+
+            if(asFile){
+                calcConnection.CreateCalcFile(sqlExportWrapper);
+            }
+            else {
+                CreateTableHeader(sqlExportWrapper);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String GetTableName(String query) {
+        var charArray = query.substring(query.indexOf("FROM") + 5).toCharArray();
+        StringBuilder tableName = new StringBuilder();
+
+        for (char c : charArray) {
+            if (c == ' ') {
+                break;
+            }
+            tableName.append(c);
+        }
+        return tableName.toString();
+    }
+
+    public static void Import(){
+
+    }
+
+    public static void CreateTableHeader(SqlExportWrapper sqlExportWrapper){
+        // var tableHeadline = String.format("Datenbankeinträge der Tabelle %s", exportWrapper.getTitle());
+        //onTop(tableHeadline, aside(' ', headlines), aside(' ', , ''));
+    }
+
+    private static ArrayList<ArrayList<String>> GetColumnValues(ArrayList<String> names, ResultSet resultSet) {
+        try {
+            var returnList = new ArrayList<ArrayList<String>>();
+            while (resultSet.next())
+            {
+                var tempList = new ArrayList<String>();
+                for(var key : names){
+                    tempList.add(resultSet.getString(key));
+                }
+                returnList.add(tempList);
+            }
             return returnList;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static ArrayList<String> GetHeadlines(ResultSetMetaData metaData) {
+        try {
+            var columnNameList = new ArrayList<String>();
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                columnNameList.add(metaData.getColumnName(i));
+            }
+            return columnNameList;
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -49,6 +112,18 @@ public class DatabaseConnection {
         }
     }
 
+    private String CreateConnectionString(DbConnectionParameters parameters){
+        return String.format("jdbc:mysql://%s:%s/%s?" +
+                "user=%s&" +
+                "password=%s&" +
+                "useUnicode=true&" +
+                "useJDBCCompliantTimezoneShift=true&" +
+                "useLegacyDatetimeCode=false&" +
+                "serverTimezone=UTC", parameters.Ip, parameters.Port, parameters.DbName, parameters.Username, parameters.Password);
+    }
+
+    // PARSE FUNCTION - NOT NECESSARY (02.11.2020)
+    /*
     private static <T> ArrayList<T> Parse(ResultSet rs, Class<T> obj) {
         try {
             var arrayList = new ArrayList<T>();
@@ -58,7 +133,7 @@ public class DatabaseConnection {
                 T newInstance = obj.getDeclaredConstructor().newInstance();
                 for (int i = 1; i <= count; i++) {
                     var originalName = metaData.getColumnName(i).toLowerCase();
-                    var name = toJavaField(originalName);
+                    var name = ToJavaField(originalName);
                     var substring = name.substring(0, 1);
                     var replace = name.replaceFirst(substring, substring.toUpperCase());
                     Class<?> type;
@@ -102,7 +177,7 @@ public class DatabaseConnection {
         return null;
     }
 
-    private static String toJavaField(String str) {
+    private static String ToJavaField(String str) {
         var split = str.split("_");
         var builder = new StringBuilder();
         builder.append(split[0]);// Concatenate first character
@@ -117,4 +192,5 @@ public class DatabaseConnection {
         }
         return builder.toString();
     }
+    */
 }
