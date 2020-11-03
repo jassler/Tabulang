@@ -7,4 +7,8 @@ public class ArrayLengthMismatchException extends RuntimeException {
                 + " and another of length " + l2 + ". They should be the same.");
     }
 
+    public ArrayLengthMismatchException(String message) {
+        super(message);
+    }
+
 }

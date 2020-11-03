@@ -170,6 +170,8 @@ public class Tuple implements Cloneable {
         return new Tuple(newObjects, newNames, isHorizontal);
     }
 
+    // TODO projectgion with names
+
     /**
      * Create tuple with new names. Copies objects of current tuple to the other tuple over.
      *
