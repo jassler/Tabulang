@@ -1,6 +1,9 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class Tuple implements Cloneable {
@@ -92,10 +95,8 @@ public class Tuple implements Cloneable {
         try {
             index = Integer.parseInt(name);
             return objects[index];
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (ArrayIndexOutOfBoundsException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,10 +122,8 @@ public class Tuple implements Cloneable {
         try {
             index = Integer.parseInt(name);
             objects[index] = value;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (ArrayIndexOutOfBoundsException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
