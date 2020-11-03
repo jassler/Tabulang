@@ -36,13 +36,17 @@ public class Number extends Node {
     private boolean setValueFromString(String v) {
 
         if (v.contains(".")) {
+            Boolean isNegative = v.charAt(0) == '-';
             String[] parts = v.split("\\.");
             BigInteger whole = new BigInteger(parts[0]);
             BigInteger decimals = new BigInteger(parts[1]);
             BigInteger numberOfDecimals = BigInteger.valueOf((long) Math.pow(10, parts[1].length()));
             BigInteger divider = euclid(decimals, numberOfDecimals);
             denominator = numberOfDecimals.divide(divider);
-            numerator = decimals.divide(divider).add(whole.multiply(denominator));
+            numerator = decimals.divide(divider).add(whole.abs().multiply(denominator));
+            if (isNegative) {
+                numerator = numerator.negate();
+            }
         } else {
             numerator = new BigInteger(v);
             denominator = BigInteger.valueOf(1);
@@ -52,7 +56,7 @@ public class Number extends Node {
     }
 
     private BigInteger euclid(BigInteger a, BigInteger b) {
-        if (b.equals(BigInteger.ZERO)) return a;
+        if (b.equals(BigInteger.ZERO)) return a.abs();
         else return euclid(b, a.divideAndRemainder(b)[1]);
     }
 
@@ -73,16 +77,28 @@ public class Number extends Node {
         if (k < 1) {
             return whole;
         }
-        String rest = String.valueOf(divAndRemainder[1].multiply(BigInteger.TEN.pow(k)).divide(denominator));
+        String rest = String.valueOf(divAndRemainder[1].abs().multiply(BigInteger.TEN.pow(k)).divide(denominator));
         String rrr = rest.substring(0, Math.min(rest.length(), k));
         if (rrr.equals("0.0") || rrr.equals("0")) {
             return whole + ".0";
         }
+        if(whole.equals("0") && numerator.compareTo(BigInteger.ZERO)<0){
+            whole = "-" + whole;
+        }
+        rrr = padZeros(k, rrr);
         int z = rrr.length() - 1;
         while (rrr.charAt(z) == '0') {
             z--;
         }
         return whole + "." + rrr.substring(0, z + 1);
+    }
+
+    public static String padZeros(int num, String str) {
+        StringBuilder padding = new StringBuilder();
+        for (int i = 0; i < num - str.length(); i++) {
+            padding.append("0");
+        }
+        return padding + str;
     }
 
 
@@ -126,7 +142,15 @@ public class Number extends Node {
     }
 
     public Number divide(Number other) {
-        return multiply(new Number(other.denominator, other.numerator, other.getToken()));
+
+        BigInteger newNumerator = other.numerator.compareTo(BigInteger.ZERO) < 0 ? other.denominator.negate() : other.denominator;
+        BigInteger newDenominator = other.numerator.abs();
+
+        return multiply(
+                new Number(other.numerator.compareTo(BigInteger.ZERO) < 0 ? other.denominator.negate() : other.denominator,
+                        other.numerator.abs(),
+                        other.getToken()
+                ));
     }
 
     public Number evaluate(Interpreter i) {
