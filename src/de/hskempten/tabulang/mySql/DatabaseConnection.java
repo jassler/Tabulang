@@ -2,19 +2,18 @@ package de.hskempten.tabulang.mySql;
 import de.hskempten.tabulang.libreOffice.CalcConnection;
 import de.hskempten.tabulang.mySql.Models.DbConnectionParameters;
 import de.hskempten.tabulang.mySql.Models.SqlExportWrapper;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseConnection {
-    private static DatabaseConnection instance;
-    private static Connection connection;
-    private static Statement statement;
+    private static DatabaseConnection _instance;
+    private static Connection _connection;
+    private static Statement _statement;
 
     private DatabaseConnection(DbConnectionParameters parameters) {
         try {
-            connection = DriverManager.getConnection(CreateConnectionString(parameters));
+            _connection = DriverManager.getConnection(CreateConnectionString(parameters));
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -22,28 +21,28 @@ public class DatabaseConnection {
     }
 
     public static void OpenConnection(DbConnectionParameters parameters) throws SQLException {
-        if (instance == null) {
-            instance = new DatabaseConnection(parameters);
+        if (_instance == null) {
+            _instance = new DatabaseConnection(parameters);
         }
-        else if (connection.isClosed()) {
-            instance = new DatabaseConnection(parameters);
+        else if (_connection.isClosed()) {
+            _instance = new DatabaseConnection(parameters);
         }
     }
 
     public static void CloseConnection() throws SQLException {
-        statement.close();
-        connection.close();
+        _statement.close();
+        _connection.close();
     }
 
     public static void Export(String query, CalcConnection calcConnection, boolean asFile){
         try {
-            statement = connection.createStatement();
-            var resultSet = statement.executeQuery(query);
+            _statement = _connection.createStatement();
+            var resultSet = _statement.executeQuery(query);
             var metaData = resultSet.getMetaData();
             var headlines = GetHeadlines(metaData);
             var values = GetColumnValues(headlines, resultSet);
             var sqlExportWrapper = new SqlExportWrapper(GetTableName(query), headlines, values);
-            statement.close();
+            _statement.close();
 
             if(asFile){
                 calcConnection.CreateCalcFile(sqlExportWrapper);
