@@ -28,17 +28,17 @@ public class StringUtils {
      * This is a substitute for the (ambigous) line break signs.
      */
     public static final char LINE_BREAK = '\n';
-    public static char[] JAVA_CHARS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    public static final char[] JAVA_CHARS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             '-', '_'};
-    public static char[] LC_LETTERS = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    public static final char[] LC_LETTERS = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    public static char[] UC_LETTERS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    public static final char[] UC_LETTERS = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    public static char[] DIGITS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    public static final char[] DIGITS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
 
 // ------------------ Methods for lists of strings which are stored in one string ------------------
@@ -211,7 +211,7 @@ public class StringUtils {
         if (i != -1) {
             int j = s.indexOf(separator, i + 1);
             if (j == -1) j = s.length();
-            return new Pair<Integer, Integer>(i, j);
+            return new Pair<>(i, j);
         } else return null;
     }
 
@@ -242,15 +242,15 @@ public class StringUtils {
      * If s == null, the method returns null;
      */
     public static String getLastPathEntry(String s, String separator) {
-        s.trim();
-        if (s != null) {
-            int i = s.lastIndexOf(separator);
-            if (i == -1) return s;
-            if (i == s.length() - 1)
-                return getLastPathEntry(s.substring(0, s.length() - 1), separator);
-            return s.substring(i + 1);
-        }
-        return null;
+        if (s == null)
+            return null;
+
+        s = s.trim();
+        int i = s.lastIndexOf(separator);
+        if (i == -1) return s;
+        if (i == s.length() - 1)
+            return getLastPathEntry(s.substring(0, s.length() - 1), separator);
+        return s.substring(i + 1);
     }
 
 
@@ -280,7 +280,7 @@ public class StringUtils {
      * Result: ["abc","bla","","wump"]
      */
     public static LinkedList<String> extractEntries(String s, String separator) {
-        LinkedList<String> l = new LinkedList<String>();
+        LinkedList<String> l = new LinkedList<>();
         if (s == null) return l;
         while (!"".equals(s)) {
             String t = getNextField(s, separator);
@@ -301,20 +301,21 @@ public class StringUtils {
      */
     public static String escapeQuotes(String s) {
         if (s == null) return null;
+        StringBuilder sb = new StringBuilder(s);
         int i = 0;
         while (i != -1) {
-            i = s.indexOf("\"", i);
+            i = sb.indexOf("\"", i);
             if (i != -1) {
                 if (i > 0) {
-                    if (s.charAt(i - 1) != '\\') {
-                        s = s.substring(0, i) + "\\" + s.substring(i);
+                    if (sb.charAt(i - 1) != '\\') {
+                        sb.insert(i, "\\");
                     }
                 } else {
-                    s = "\\" + s;
+                    sb.insert(0, "\\");
                 }
             }
         }
-        return s;
+        return sb.toString();
     }
 
 
@@ -331,9 +332,8 @@ public class StringUtils {
         File f = new File(fileName);
         if (!f.exists()) throw new IOException("File does not exist: " + fileName);
         LineNumberReader fis = new LineNumberReader(new FileReader(fileName));
-        String s = "";
         String line = "";
-        LinkedList<String> l = new LinkedList<String>();
+        LinkedList<String> l = new LinkedList<>();
         int len = 0;
         while (line != null) {
             line = fis.readLine();
@@ -345,17 +345,8 @@ public class StringUtils {
             }
         }
         fis.close();
-        char[] buf = new char[len + l.size()];
-        int p = 0;
-        for (String li : l) {
-            char[] c = li.toCharArray();
-            for (int j = 0; j < c.length; j++) buf[p + j] = c[j];
-            p = p + c.length;
-            buf[p] = LINE_BREAK;
-            p++;
-        }
-        s = new String(buf);
-        return s;
+
+        return String.join(String.valueOf(LINE_BREAK), l);
     }
 
     /**
@@ -385,9 +376,8 @@ public class StringUtils {
     public static String readFileString(String fileName, String charEncoding) throws IOException {
         InputStreamReader r = new InputStreamReader(new FileInputStream(fileName), charEncoding);
         LineNumberReader fis = new LineNumberReader(r);
-        String s = "";
         String line = "";
-        LinkedList<String> l = new LinkedList<String>();
+        LinkedList<String> l = new LinkedList<>();
         int len = 0;
         while (line != null) {
             line = fis.readLine();
@@ -399,17 +389,8 @@ public class StringUtils {
             }
         }
         fis.close();
-        char[] buf = new char[len + l.size()];
-        int p = 0;
-        for (String li : l) {
-            char[] c = li.toCharArray();
-            for (int j = 0; j < c.length; j++) buf[p + j] = c[j];
-            p = p + c.length;
-            buf[p] = LINE_BREAK;
-            p++;
-        }
-        s = new String(buf);
-        return s;
+
+        return String.join(String.valueOf(LINE_BREAK), l);
     }
 
 
@@ -461,7 +442,7 @@ public class StringUtils {
      * @created 19.10.2012
      */
     public static String insertLineBreaks(String text, String lineBreakMarker, int maxLineLength, String whiteSpaceMarker) {
-        LinkedList<String> build = new LinkedList<String>();
+        LinkedList<String> build = new LinkedList<>();
         while (text.length() > maxLineLength) {
             int i = maxLineLength - 1;
             while ((!whiteSpaceMarker.equals(text.charAt(i))) && (i > 0)) i--;
@@ -630,15 +611,16 @@ public class StringUtils {
      * Output: "Some BEAutiFUL poem"
      */
     public static String substringToLowerCase(String text, int from, int to) {
+        if (text == null)
+            return null;
+
         char[] chars = text.toCharArray();
-        if (text != null) {
-            if (from < 0) from = 0;
-            if (to > text.length()) to = text.length();
-            for (int i = from; i < to; i++) {
-                chars[i] = Character.toLowerCase(chars[i]);
-            }
-            return new String(chars);
-        } else return null;
+        if (from < 0) from = 0;
+        if (to > text.length()) to = text.length();
+        for (int i = from; i < to; i++) {
+            chars[i] = Character.toLowerCase(chars[i]);
+        }
+        return new String(chars);
     }
 
 
@@ -781,26 +763,15 @@ public class StringUtils {
     }
 
 
-    /**
-     * @param number The number of times, the string is repeated.
-     * @return A string consisting of a repetition of
-     * the given string s.
-     */
-    public static String getRepetition(int number, String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < number; i++) sb.append(s);
-        return sb.toString();
-    }
-
 
     /**
      * @return A string that consists of the given char, repeated several
      * times, namely as often as indicated by the given number.
      */
     public static String getChars(int number, char c) {
-        String s = "";
-        for (int i = 0; i < number; i++) s = s + c;
-        return s;
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < number; i++) s.append(c);
+        return s.toString();
     }
 
 
@@ -810,14 +781,12 @@ public class StringUtils {
             d[i][0] = i;
         for (int i = 0; i < t.length(); i++)
             d[0][i] = i;
-        int c = 0;
-        int m = 0;
+        int c, m;
         for (int j = 1; j < t.length(); j++) {
             for (int i = 1; i < s.length(); i++) {
                 if (s.charAt(i) == t.charAt(j)) c = 0;
                 else c = 1;
-                if (d[i - 1][j] < d[i][j - 1]) m = d[i - 1][j];
-                else m = d[i][j - 1];
+                m = Math.min(d[i - 1][j], d[i][j - 1]);
                 m++;
                 if (d[i - 1][j - 1] + c < m) m = d[i - 1][j - 1] + c;
                 d[i][j] = m;
@@ -1114,7 +1083,7 @@ public class StringUtils {
     public static String mapToShorterString(String s, int maxLength, char[] destAlphabet) {
         if (s.length() > maxLength) {
             int radix = destAlphabet.length;
-            BigInteger modulo = new BigInteger(new Integer(radix).toString());
+            BigInteger modulo = new BigInteger(String.valueOf(radix));
             modulo = modulo.pow(maxLength);
             BigInteger sMapping = getNumber(s, JAVA_CHARS);
             return getStringRepresentation(sMapping.mod(modulo), destAlphabet);
@@ -1125,7 +1094,7 @@ public class StringUtils {
     /**
      * This method implements a bijective function from the strings
      * over the given alphabet to the natural numbers.
-     * null is treatet as the empty string "", which is mapped to 0.
+     * null is treated as the empty string "", which is mapped to 0.
      * If the alphabet is {a_0,...,a_(k-1)}, then the computed function
      * is \SUM_{i=0}^{s.length()-1} s[s.length()-i-1] * k^i,
      * where s[j] is the number associated with the character at position
@@ -1141,12 +1110,12 @@ public class StringUtils {
         if ((s == null) || (s.equals(""))) return new BigInteger("0");
         BigInteger big = new BigInteger("0");
         int radix = alphabet.length;
-        BigInteger bigRadix = new BigInteger(new Integer(radix).toString());
+        BigInteger bigRadix = new BigInteger(String.valueOf(radix));
         for (int j = 0; j < s.length(); j++) {
             big = big.multiply(bigRadix);
             int i = 0;
             while (alphabet[i] != s.charAt(j)) i++;
-            big = big.add(new BigInteger(new Integer(i).toString()));
+            big = big.add(new BigInteger(String.valueOf(i)));
         }
         return big;
     }
@@ -1163,7 +1132,7 @@ public class StringUtils {
             s = s + alphabet[0];
             return s;
         }
-        BigInteger radix = new BigInteger(new Integer(alphabet.length).toString());
+        BigInteger radix = new BigInteger(String.valueOf(alphabet.length));
         while (n.compareTo(BigInteger.ZERO) == 1) {
             BigInteger[] r = n.divideAndRemainder(radix);
             n = r[0];
@@ -1197,7 +1166,7 @@ public class StringUtils {
     /**
      * Reads a string from the given InputStream and returns it.
      * The method will read until it reaches the end of the InputStream,
-     * i.e. until {@link InputStream.read()} returns -1.
+     * i.e. until {@link InputStream#read()} returns -1.
      *
      * @param input
      * @return

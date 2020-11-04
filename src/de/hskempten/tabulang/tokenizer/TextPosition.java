@@ -20,13 +20,13 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
 
 
     /**
-     * Create new position range from the range betweem two ranges including
+     * Create new position range from the range between two ranges including
      * these ranges.
      *
-     * @param positionStart
-     * @param positionEnd
-     * @thorws IllegalArgumentException When one argument is <tt>null</tt> or
-     * the ranges are defined over different {@link ParameterizedString}s.
+     * @param positionStart Starting position
+     * @param positionEnd   Ending position
+     * @throws IllegalArgumentException When one argument is <tt>null</tt> or
+     *                                  the ranges are defined over different {@link ParameterizedString}s.
      */
     public TextPosition(TextPosition positionStart,
                         TextPosition positionEnd) {
@@ -70,7 +70,6 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
      *
      * @param string Text this position is in.
      * @param start  Start position.
-     * @param end    End position.
      */
     public TextPosition(ParameterizedString string, int start) {
         if (string == null)
@@ -156,23 +155,23 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
 
 
     /**
-     * @param line
+     * @param line Line number
      * @return All of the text of the given line, that belongs to this  TextPosition, without leading or trailing white space.
      */
     public String get(int line) {
-        if ((line >= startCoords.getLine()) && (line <= endCoords.getLine())) {
+        if ((line >= startCoords.line) && (line <= endCoords.line)) {
             String fullLine = string.getLine(line);
-            if (line == startCoords.getLine()) {
+            if (line == startCoords.line) {
                 int end = fullLine.length();
-                if (endCoords.getLine() == line) end = endCoords.getCol();
+                if (endCoords.line == line) end = endCoords.col;
                 try {
-                    return fullLine.substring(startCoords.getCol(), end).trim();
+                    return fullLine.substring(startCoords.col, end).trim();
                 } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
-            if (line == endCoords.getLine()) {
-                return fullLine.substring(0, endCoords.getCol()).trim();
+            if (line == endCoords.line) {
+                return fullLine.substring(0, endCoords.col).trim();
             }
             return fullLine.trim();
         }
@@ -180,9 +179,9 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
     }
 
     public int getIndent(int line) {
-        if ((line >= startCoords.getLine()) && (line <= endCoords.getLine())) {
+        if ((line >= startCoords.line) && (line <= endCoords.line)) {
             String fullLine = string.getLine(line);
-            if (line == startCoords.getLine()) return startCoords.getCol();
+            if (line == startCoords.line) return startCoords.col;
             int count = 0;
             while (count < fullLine.length() && fullLine.charAt(count) == ' ') count++;
             return count;
@@ -194,18 +193,20 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (getSourceName() != null) sb.append(getSourceName() + ", ");
-        sb.append("Line " + getFromLine());
-        sb.append(", Column " + getFromCol());
-        sb.append(": \n");
+        if (getSourceName() != null) sb.append(getSourceName()).append(", ");
+        sb.append("Line ")
+                .append(getFromLine())
+                .append(", Column ")
+                .append(getFromCol())
+                .append(":\n");
+
         if (end == start) {
             sb.append(StringUtils.showPositionLine(string.getText(), start));
         } else {
-            StringBuilder sbTo = new StringBuilder();
-            sbTo.append("  (End: Line " + getToLine());
-            sbTo.append(", Column " + getToCol());
-            sbTo.append(")");
-            sb.append(StringUtils.showPositionLineRange(string.getText(), start, end, sbTo.toString()));
+            String sbTo = "  (End: Line " + getToLine() +
+                    ", Column " + getToCol() +
+                    ")";
+            sb.append(StringUtils.showPositionLineRange(string.getText(), start, end, sbTo));
         }
         return sb.toString();
     }

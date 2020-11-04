@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * A scanner based on regular expressions.
+ * @author boehler
  */
 public class Lexer implements Cloneable {
 
@@ -30,7 +31,6 @@ public class Lexer implements Cloneable {
     private ParameterizedString text;
     private int tokenPointer;
     private int lastPointer;
-    private int terminalCounter;
     private Hashtable<String, Integer> terminalNumbers;
     // Everything in a line starting with the given marker is ignored
     private LinkedList<String> oneLineCommentMarkers;
@@ -38,7 +38,7 @@ public class Lexer implements Cloneable {
     private String parenthesedCommentEnd;
     private List<Token> tokens;
 
-    {
+    static {
         EOFTOKEN_TOKEN_EXPRESSION.setNumber(-1);
     }
 
@@ -47,10 +47,9 @@ public class Lexer implements Cloneable {
         this.text = null;
         tokenPointer = 0;
         lastPointer = 0;
-        expressions = new LinkedList<TokenExpression>();
-        expressionPatterns = new ArrayList<Pattern>();
-        terminalCounter = 0;
-        terminalNumbers = new Hashtable<String, Integer>();
+        expressions = new LinkedList<>();
+        expressionPatterns = new ArrayList<>();
+        terminalNumbers = new Hashtable<>();
         oneLineCommentMarkers = new LinkedList<>();
         parenthesedCommentStart = null;
         parenthesedCommentEnd = null;
@@ -66,7 +65,6 @@ public class Lexer implements Cloneable {
         newOne.lastPointer = lastPointer;
         newOne.expressions = (LinkedList<TokenExpression>) expressions.clone();
         newOne.expressionPatterns = (ArrayList<Pattern>) expressionPatterns.clone();
-        newOne.terminalCounter = terminalCounter;
         newOne.terminalNumbers = terminalNumbers;
         newOne.oneLineCommentMarkers = new LinkedList<>();
         for (String s : oneLineCommentMarkers) newOne.oneLineCommentMarkers.add(s);
@@ -124,11 +122,9 @@ public class Lexer implements Cloneable {
 
 
     public void addExpression(TokenExpression e) {
-        e.setNumber(terminalCounter);
         expressions.add(e);
         expressionPatterns.add(Pattern.compile(e.getExpression()));
-        terminalNumbers.put(e.getType(), terminalCounter);
-        terminalCounter++;
+        terminalNumbers.put(e.getType(), e.getNumber());
     }
 
     public int getNumberOfTerminal(String type) {
@@ -136,7 +132,7 @@ public class Lexer implements Cloneable {
     }
 
     public int getNumberOfTerminals() {
-        return terminalCounter;
+        return terminalNumbers.size();
     }
 
     public Token lookahead() throws ParseTimeException {
@@ -172,7 +168,7 @@ public class Lexer implements Cloneable {
         Token t = getNextToken();
         if (t.getType().equals(type)) {
             return t;
-        } else expectedException(expected);
+        } else expectedException(expected, t);
         // line is never reached:
         assert false;
         return null;
@@ -180,7 +176,7 @@ public class Lexer implements Cloneable {
 
     public void reverseTokenOrder() throws ParseTimeException {
         makeTokenList();
-        ArrayList<Token> newList = new ArrayList<Token>();
+        ArrayList<Token> newList = new ArrayList<>();
         for (int i = tokens.size() - 1; i >= 0; i--) {
             newList.add(tokens.get(i));
         }
@@ -200,9 +196,32 @@ public class Lexer implements Cloneable {
         return currentToken.getPosition().getStartPosition();
     }
 
+    /**
+     * @author jassler
+     */
+    public Token getNextTokenAndExpect(TokenExpression type) throws ParseTimeException {
+        Token t = this.lookahead();
+        if(t.getTypeNumber() != type.getNumber())
+            expectedException(type.getType(), t);
+        this.getNextToken();
+        return t;
+    }
 
-    public void expectedException(String expected) throws ParseTimeException {
-        throw new ParseTimeException(getPosition(), "Expected " + expected + ".");
+    /**
+     * Check if we've reached the end of the source code.
+     *
+     * @return true, if lookahead is eof token
+     */
+    public boolean isDone() {
+        try {
+            return lookahead().getType().equals(EOFTokenType);
+        } catch (ParseTimeException e) {
+            return true;
+        }
+    }
+
+    public void expectedException(String expected, Token actual) throws ParseTimeException {
+        throw new ParseTimeException(getPosition(), "Expected \"" + expected + "\", got " + actual.getType());
     }
 
 
@@ -238,7 +257,7 @@ public class Lexer implements Cloneable {
 
     private void makeTokenList() throws ParseTimeException {
         if (tokens != null || text == null) return;
-        tokens = new ArrayList<Token>();
+        tokens = new ArrayList<>();
         int textPointer = 0;
 
         scanning:
@@ -299,7 +318,7 @@ public class Lexer implements Cloneable {
      * @throws ParseTimeException
      */
     private int moveOverComment(int textPointer) throws ParseTimeException {
-        int start = textPointer;
+        int start;
         do {
             start = textPointer;
             for (String marker : oneLineCommentMarkers) {
