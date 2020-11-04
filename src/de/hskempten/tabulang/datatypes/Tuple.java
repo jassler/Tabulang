@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public class Tuple implements Cloneable {
+public class Tuple<E> implements Cloneable {
 
-    private final Object[] objects;
+    private final E[] objects;
     private final String[] names;
     private boolean isHorizontal;
 
@@ -16,23 +16,23 @@ public class Tuple implements Cloneable {
     // best case, HashMap finds the index of a given name in O(1) complexity, worst O(n)
     private final HashMap<String, Integer> nameLookup;
 
-    public Tuple(Object[] objects) {
+    public Tuple(E[] objects) {
         this(
                 objects,
                 IntStream.range(0, objects.length).boxed().map(String::valueOf).toArray(String[]::new)
         );
     }
 
-    public Tuple(Object[] objects, String[] names) {
+    public Tuple(E[] objects, String[] names) {
         this(objects, names, true);
     }
 
-    public Tuple(Object[] objects, String[] names, boolean isHorizontal) {
+    public Tuple(E[] objects, String[] names, boolean isHorizontal) {
         this.objects = Arrays.copyOf(objects, objects.length);
         this.names = Arrays.copyOf(names, names.length);
 
         this.nameLookup = new HashMap<>(this.names.length);
-        for(int i = 0; i < this.names.length; i++)
+        for (int i = 0; i < this.names.length; i++)
             this.nameLookup.put(this.names[i], i);
 
         this.isHorizontal = isHorizontal;
@@ -42,7 +42,7 @@ public class Tuple implements Cloneable {
 
         // keys in map must not appear twice
         // thus if map-keys-size is not the same as array size, there must be a duplicate value
-        if(this.nameLookup.keySet().size() != this.names.length) {
+        if (this.nameLookup.keySet().size() != this.names.length) {
             Arrays.sort(this.names);
             String duplicate = findDuplicate(this.names);
 
@@ -50,19 +50,19 @@ public class Tuple implements Cloneable {
         }
     }
 
-    public Tuple(List<Object> objects) {
-        this(objects.toArray(new Object[0]));
+    public Tuple(List<E> objects) {
+        this(objects.toArray((E[]) new Object[0]));
     }
 
-    public Tuple(List<Object> objects, List<String> names) {
-        this(objects.toArray(new Object[0]), names.toArray(new String[0]));
+    public Tuple(List<E> objects, List<String> names) {
+        this(objects.toArray((E[]) new Object[0]), names.toArray(new String[0]));
     }
 
-    public Tuple(List<Object> objects, List<String> names, boolean isHorizontal) {
-        this(objects.toArray(new Object[0]), names.toArray(new String[0]), isHorizontal);
+    public Tuple(List<E> objects, List<String> names, boolean isHorizontal) {
+        this(objects.toArray((E[]) new Object[0]), names.toArray(new String[0]), isHorizontal);
     }
 
-    public Object[] getObjects() {
+    public E[] getObjects() {
         return objects;
     }
 
@@ -87,7 +87,7 @@ public class Tuple implements Cloneable {
      * @throws NumberFormatException          if name not present and not convertible into a number
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public Object get(String name) {
+    public E get(String name) {
         int index = nameLookup.getOrDefault(name, -1);
         if (index >= 0)
             return objects[index];
@@ -112,7 +112,7 @@ public class Tuple implements Cloneable {
      * @throws NumberFormatException          if name not present and not convertible into a number
      * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public void set(String name, Object value) {
+    public void set(String name, E value) {
         int index = nameLookup.getOrDefault(name, -1);
         if (index >= 0) {
             objects[index] = value;
@@ -137,8 +137,8 @@ public class Tuple implements Cloneable {
      * @param t Tuple with object elements and names to append
      * @return new concatenated tuple
      */
-    public Tuple concatenate(Tuple t) {
-        Object[] newObjects = new Object[objects.length + t.getObjects().length];
+    public Tuple<E> concatenate(Tuple<E> t) {
+        E[] newObjects = (E[]) new Object[objects.length + t.getObjects().length];
         System.arraycopy(objects, 0, newObjects, 0, objects.length);
         System.arraycopy(t.getObjects(), 0, newObjects, objects.length, t.getObjects().length);
 
@@ -146,7 +146,7 @@ public class Tuple implements Cloneable {
         System.arraycopy(names, 0, newNames, 0, names.length);
         System.arraycopy(t.getNames(), 0, newNames, names.length, t.getNames().length);
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -157,8 +157,8 @@ public class Tuple implements Cloneable {
      * @param elements Element indexes
      * @return Tuple with selected indexes
      */
-    public Tuple projection(int... elements) {
-        Object[] newObjects = new Object[elements.length];
+    public Tuple<E> projection(int... elements) {
+        E[] newObjects = (E[]) new Object[elements.length];
         String[] newNames = new String[elements.length];
 
         for (int i = 0; i < elements.length; i++) {
@@ -166,7 +166,7 @@ public class Tuple implements Cloneable {
             newNames[i] = names[elements[i]];
         }
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     // TODO projectgion with names
@@ -177,12 +177,12 @@ public class Tuple implements Cloneable {
      * @param newNames New names list, must be same size as this tuple size
      * @return New tuple with copied object list and new names
      */
-    public Tuple newTupleWithNames(String[] newNames) {
+    public Tuple<E> newTupleWithNames(String[] newNames) {
         if (newNames.length != objects.length) {
             throw new ArrayLengthMismatchException(objects.length, newNames.length);
         }
 
-        return new Tuple(objects, newNames, isHorizontal);
+        return new Tuple<>(objects, newNames, isHorizontal);
     }
 
     /**
@@ -201,15 +201,15 @@ public class Tuple implements Cloneable {
 
     @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
-    protected Tuple clone() {
-        return new Tuple(objects, names, isHorizontal);
+    protected Tuple<E> clone() {
+        return new Tuple<>(objects, names, isHorizontal);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple tuple = (Tuple) o;
+        Tuple<?> tuple = (Tuple<?>) o;
         return isHorizontal == tuple.isHorizontal &&
                 Arrays.equals(objects, tuple.objects) &&
                 Arrays.equals(names, tuple.names);
