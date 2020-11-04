@@ -14,17 +14,7 @@ public class AnyStatement extends Node {
 
         switch (l.lookahead().getType()) {
             case "keyword" -> {
-                switch (l.lookahead().getContent()) {
-                    case "return":
-                        this.n = new ReturnStmnt(l);
-                        break;
-                    case "set":
-                        this.n = new SetStmnt(l);
-                    case "hiding":
-                    case "group":
-                        this.n = new GroupStmnt(l);
-                        break;
-                    /*
+                /*
                     case "function":
                         this.n = new ProceduralF(l);
                         break;
@@ -33,10 +23,13 @@ public class AnyStatement extends Node {
                         this.n = new IfStmnt(l);
                         break;
                     */
-                    default:
-                        this.n = new Statement(l);
-                        break;
-                        //throw new ParseTimeException("Unknown keyword: " + l.lookahead().getContent());
+                //throw new ParseTimeException("Unknown keyword: " + l.lookahead().getContent());
+                switch (l.lookahead().getContent()) {
+                    case "function" -> this.n = new ProceduralF(l);
+                    case "return" -> this.n = new ReturnStmnt(l);
+                    case "set" -> this.n = new SetStmnt(l);
+                    case "hiding", "group" -> this.n = new GroupStmnt(l);
+                    default -> this.n = new Statement(l);
                 }
             }
             //case "variable" -> this.n = new Assignment(l);

@@ -18,7 +18,7 @@ public class VarDef extends Node {
                 }
             }
             case "variable" -> this.n = new Assignment(l);
-            default -> throw new ParseTimeException("Illegal type: " + l.lookahead().getContent());
+            default -> throw new ParseTimeException("Illegal type: " + l.lookahead().getType() + " contains " + l.lookahead().getContent());
         }
     }
 

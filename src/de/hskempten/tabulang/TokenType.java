@@ -11,17 +11,19 @@ public class TokenType {
     public static final TokenExpression BINARY_OPERATOR;
     public static final TokenExpression KEYWORD;
     public static final TokenExpression BRACKET;
+    public static final TokenExpression COMMA;
 
     public static final TokenExpression[] TOKEN_EXPRESSIONS;
 
     static {
-        KEYWORD = new TokenExpression("keyword", "(function)|(for)|(in)|(if)");
+        KEYWORD = new TokenExpression("keyword", "(function)|(for)|(in)|(if)|(return)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");
         ASSIGN = new TokenExpression(":=", ":=");
         BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/");
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)");
+        COMMA = new TokenExpression("comma", ",");
 
 
         TOKEN_EXPRESSIONS = new TokenExpression[]{
@@ -31,7 +33,8 @@ public class TokenType {
                 SEMICOLON,
                 ASSIGN,
                 BINARY_OPERATOR,
-                BRACKET
+                BRACKET,
+                COMMA
         };
     }
 }

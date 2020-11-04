@@ -15,7 +15,8 @@ public class Tabulang {
             l.addExpression(t);
         }
 
-        l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
+        //l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
+        l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);
