@@ -5,30 +5,43 @@ import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
 
-public class Directive extends Node {
+public class AnyStatement extends Node {
 
     Node n;
-    public Directive(Lexer l) throws ParseTimeException {
+
+    public AnyStatement(Lexer l) throws ParseTimeException {
         super(l.lookahead());
 
         switch (l.lookahead().getType()) {
             case "keyword" -> {
-                l.lookahead().getContent();
                 switch (l.lookahead().getContent()) {
+                    case "return":
+                        this.n = new ReturnStmnt(l);
+                        break;
+                    case "set":
+                        this.n = new SetStmnt(l);
+                    case "hiding":
+                    case "group":
+                        this.n = new GroupStmnt(l);
+                        break;
+                    /*
                     case "function":
                         this.n = new ProceduralF(l);
                         break;
+
                     case "if":
                         this.n = new IfStmnt(l);
                         break;
-
+                    */
                     default:
-                        throw new ParseTimeException("Unknown keyword: " + l.lookahead().getContent());
+                        this.n = new Statement(l);
+                        break;
+                        //throw new ParseTimeException("Unknown keyword: " + l.lookahead().getContent());
                 }
             }
-            case "variable" -> this.n = new Assignment(l);
+            //case "variable" -> this.n = new Assignment(l);
             //case "number" -> this.e = new Number(l);
-            default -> l.expectedException("number or variable", l.lookahead());
+            default -> this.n = new Statement(l);  //l.expectedException("number or variable", l.lookahead());
         }
     }
 
