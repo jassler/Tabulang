@@ -11,7 +11,7 @@ class TupleTest {
 
     @Test
     public void testTupleDefaultValues() {
-        Tuple t = new Tuple(new Object[]{"1", 2});
+        Tuple<Object> t = new Tuple<>(new Object[]{"1", 2});
         assertArrayEquals(new Object[]{"1", 2}, t.getObjects());
         assertArrayEquals(new Object[]{"0", "1"}, t.getNames());
         assertTrue(t.isHorizontal());
@@ -19,7 +19,7 @@ class TupleTest {
 
     @Test
     public void testTupleNameGeneration() {
-        Tuple t = new Tuple(new Object[]{12, 13, "1", "2"});
+        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
         assertArrayEquals(new String[]{"0", "1", "2", "3"}, t.getNames());
 
         t.getNames()[0] = "4";
@@ -28,7 +28,7 @@ class TupleTest {
 
     @Test
     public void testTupleAccess() {
-        final Tuple t = new Tuple(new Object[]{12, 13, "1", "2"});
+        final Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
         assertEquals(12, t.get("0"));
         assertEquals(13, t.get("1"));
         assertEquals("1", t.get("2"));
@@ -37,7 +37,7 @@ class TupleTest {
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> t.get("-1"));
         assertThrows(NumberFormatException.class, () -> t.get("a"));
 
-        final Tuple u = new Tuple(new Object[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
+        final Tuple<Integer> u = new Tuple<>(new Integer[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
         assertEquals(1, u.get("alpha"));
         assertEquals(4, u.get("beta"));
         assertEquals(2, u.get("gamma"));
@@ -48,10 +48,10 @@ class TupleTest {
 
     @Test
     public void testTupleAppend() {
-        Tuple t = new Tuple(new Object[]{12, 13});
+        Tuple<Object> t = new Tuple<>(new Object[]{12, 13});
         t.setHorizontal(false);
 
-        t = t.concatenate(new Tuple(new Object[]{"a", "b"}, new String[]{"c", "d"}));
+        t = t.concatenate(new Tuple<>(new String[]{"a", "b"}, new String[]{"c", "d"}));
         assertArrayEquals(new Object[]{12, 13, "a", "b"}, t.getObjects());
         assertArrayEquals(new Object[]{"0", "1", "c", "d"}, t.getNames());
         assertFalse(t.isHorizontal());
@@ -59,18 +59,18 @@ class TupleTest {
 
     @Test
     public void testTupleProjection() {
-        Tuple t = new Tuple(new Object[]{12, 13, "1", "2"});
+        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
 
-        assertEquals(new Tuple(
+        assertEquals(new Tuple<>(
                 Collections.emptyList()
         ), t.projection());
 
-        assertEquals(new Tuple(
+        assertEquals(new Tuple<>(
                 Collections.singletonList("1"),
                 Collections.singletonList("2")
         ), t.projection(2));
 
-        assertEquals(new Tuple(
+        assertEquals(new Tuple<>(
                 new Object[]{13, "2", 12, "1"},
                 new String[]{"1", "3", "0", "2"}
         ), t.projection(1, 3, 0, 2));
@@ -78,13 +78,13 @@ class TupleTest {
 
     @Test
     public void testTupleNewNames() {
-        Tuple t = new Tuple(new Object[]{12, 13, "1", "2"}, new String[]{"a", "b", "c", "d"});
-        Tuple t2 = t.newTupleWithNames(new String[]{"do", "re", "mi", "fa"});
+        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"}, new String[]{"a", "b", "c", "d"});
+        Tuple<Object> t2 = t.newTupleWithNames(new String[]{"do", "re", "mi", "fa"});
 
         // make sure it deep-copies
         t.set("a", null);
 
-        assertEquals(new Tuple(
+        assertEquals(new Tuple<>(
                 new Object[]{12, 13, "1", "2"},
                 new String[]{"do", "re", "mi", "fa"},
                 true
