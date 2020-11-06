@@ -18,12 +18,14 @@ public class ReturnStmnt extends Node {
         l.getNextTokenAndExpect(TokenType.SEMICOLON);
     }
 
-    public Term getReturnTerm() {
-        return returnTerm;
-    }
 
     @Override
     public Number evaluate(Interpreter i) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "return " + returnTerm;
     }
 }

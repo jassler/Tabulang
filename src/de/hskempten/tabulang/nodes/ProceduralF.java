@@ -48,7 +48,7 @@ public class ProceduralF extends Node {
 
 
         this.identifier = idToken.getContent();
-        this.parameters = parameterList; //.getVList()
+        this.parameters = parameterList;
         this.function = funcBody;
 
 

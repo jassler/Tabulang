@@ -41,11 +41,11 @@ public class FuncBody extends Node {
     @Override
     public String toString() {
         StringBuilder body = new StringBuilder();
-        for (Node i : functionStatements ){
+        for (Node n : functionStatements ){
             if (body.length()>0){
                 body.append(",");
             }
-            body.append(i.getToken().getContent());
+            body.append(n);
         }
         return "{" + body +
                 '}';

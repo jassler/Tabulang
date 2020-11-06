@@ -1,24 +1,32 @@
 package de.hskempten.tabulang.parser;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.nodes.AnyStatement;
 import de.hskempten.tabulang.nodes.Node;
-import de.hskempten.tabulang.nodes.Program;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabulangParser {
 
     private final Interpreter interpreter;
-    private Lexer lexer;
+    private Lexer l;
+    List<AnyStatement> lines = new ArrayList<AnyStatement>();
 
 
     public TabulangParser(Lexer lexer, Interpreter interpreter) {
-        this.lexer = lexer;
+        this.l = lexer;
         this.interpreter = interpreter;
     }
 
     public void parse() throws ParseTimeException {
-        Node node = new Program(lexer);
-        node.evaluate(interpreter);
+        while (!l.isDone()) {
+            lines.add(new AnyStatement(l));
+        }
+        for (Node node : lines) {
+            node.evaluate(interpreter);
+        }
     }
 }
