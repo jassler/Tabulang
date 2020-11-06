@@ -26,4 +26,16 @@ public class Term extends Node {
     public Number evaluate(Interpreter i) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder body = new StringBuilder();
+        for (Node i : terms ){
+            if (body.length()>0){
+                body.append(",");
+            }
+            body.append(i.getToken().getContent());
+        }
+        return  body.toString();
+    }
 }

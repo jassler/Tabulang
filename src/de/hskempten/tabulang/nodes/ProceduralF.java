@@ -12,7 +12,7 @@ import java.util.List;
 public class ProceduralF extends Node {
 
     private String identifier;
-    private List<Token> parameters = new ArrayList<Token>();
+    private VList parameters;
     private Node function;
 
 
@@ -48,7 +48,7 @@ public class ProceduralF extends Node {
 
 
         this.identifier = idToken.getContent();
-        this.parameters = parameterList.getVList();
+        this.parameters = parameterList; //.getVList()
         this.function = funcBody;
 
 
@@ -57,5 +57,14 @@ public class ProceduralF extends Node {
     @Override
     public Number evaluate(Interpreter i) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "ProceduralF{" +
+                "identifier='" + identifier + '\'' +
+                ", parameters=" + parameters +
+                ", function=" + function +
+                '}';
     }
 }

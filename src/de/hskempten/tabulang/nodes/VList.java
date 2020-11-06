@@ -44,4 +44,17 @@ public class VList extends Node {
     public Number evaluate(Interpreter i) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder parameters = new StringBuilder();
+        for (Token i : list ){
+            if (parameters.length()>0){
+                parameters.append(",");
+            }
+            parameters.append(i.getContent());
+        }
+        return "VList{" + parameters +
+                '}';
+    }
 }
