@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.parser;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.items.ProgramItem;
+import de.hskempten.tabulang.items.types.ProgramType;
 import de.hskempten.tabulang.nodes.AnyStatement;
 import de.hskempten.tabulang.nodes.Node;
 import de.hskempten.tabulang.tokenizer.Lexer;
@@ -29,4 +31,10 @@ public class TabulangParser {
             node.evaluate(interpreter);
         }
     }
+
+    public ProgramItem parseN() throws ParseTimeException{
+        ProgramItem prg = ProgramType.instance.parse(l);
+        return prg;
+    }
+
 }

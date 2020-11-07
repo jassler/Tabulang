@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class OrdinalItem {
+public class OrdinalItem implements LanguageItem {
     //"null"
     private String myString;
     private NumberItem myNumber;
@@ -22,6 +22,7 @@ public class OrdinalItem {
     public OrdinalItem(TupelItem myTupel) {
         this.setMyTupel(myTupel);
     }
+
 
     public String getMyString() {
         return myString;

@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class VarDefItem {
+public class VarDefItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     //':='
     private TermItem myTerm;

@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class StatementItem {
+public class StatementItem implements LanguageItem {
     private LoopItem myLoop;
     private IfStmntItem myIfStmnt;
     private VarDefItem myVarDef;

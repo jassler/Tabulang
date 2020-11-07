@@ -1,5 +1,6 @@
 package de.hskempten.tabulang;
 
+import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.nodes.Assignment;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.*;
@@ -21,6 +22,9 @@ public class Tabulang {
 
         TabulangParser parser = new TabulangParser(l, i);
         parser.parse();
+        l.reset();
+        ProgramItem prg = parser.parseN();
+        System.out.println(prg);
         /*
         while(!l.isDone()) {
             // assuming that everything must be an Assignment

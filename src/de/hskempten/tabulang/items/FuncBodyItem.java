@@ -3,10 +3,12 @@ package de.hskempten.tabulang.items;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FuncBodyItem {
+public class FuncBodyItem implements LanguageItem {
     private LinkedList<StatementItem> myStatements;
     private ArrayList<ReturnStmntItem> myReturnStmnts;
     private ReturnStmntItem myReturnStmnt;
+
+    //TODO there should be a constructor with statements AND returnStatements
 
     public FuncBodyItem(ReturnStmntItem myReturnStmnt) {
         this.setMyReturnStmnt(myReturnStmnt);
@@ -19,7 +21,6 @@ public class FuncBodyItem {
     public FuncBodyItem(ArrayList<ReturnStmntItem> myReturnStmnts) {
         this.myReturnStmnts = myReturnStmnts;
     }
-
 
 
     public ArrayList<ReturnStmntItem> getMyReturnStmnts() {

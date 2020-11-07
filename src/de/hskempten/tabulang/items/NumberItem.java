@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.math.BigInteger;
 
-public class NumberItem {
+public class NumberItem implements LanguageItem {
     private BigInteger myNumber;
 
     public NumberItem(BigInteger myNumber) {

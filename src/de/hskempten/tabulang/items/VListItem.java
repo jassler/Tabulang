@@ -2,9 +2,12 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class VListItem {
+public class VListItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private ArrayList<IdentifierItem> myOtherIdentifiers;
+
+    public VListItem() {
+    }
 
     public VListItem(IdentifierItem myIdentifier) {
         this.setMyIdentifier(myIdentifier);

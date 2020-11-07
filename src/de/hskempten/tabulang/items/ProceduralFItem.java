@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class ProceduralFItem {
+public class ProceduralFItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private VListItem myVList;
     private FuncBodyItem myFuncBody;

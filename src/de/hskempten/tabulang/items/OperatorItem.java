@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class OperatorItem {
+public class OperatorItem implements LanguageItem {
     //+ - * / div mod ^
     private String myString;
 
