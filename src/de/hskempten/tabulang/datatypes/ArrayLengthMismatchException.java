@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.datatypes;
 
-public class ArrayLengthMismatchException extends RuntimeException {
+public class ArrayLengthMismatchException extends DataTypeException {
 
     public ArrayLengthMismatchException(int l1, int l2) {
         super("Array lengths don't match, got an array of length " + l1
