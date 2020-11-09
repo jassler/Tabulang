@@ -1,56 +1,83 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table {
+public class Table<E> {
 
-    private ArrayList<Tuple> tuples;
+    private ArrayList<ArrayList<E>> tuples;
     private boolean transposed = false;
 
-    private String[] colNames;
-    private String[] rowNames;
+    private ArrayList<String> colNames;
+    private HashMap<String, Integer> colLookup;
 
-    public Table(String[] colNames, String[] rowNames, Tuple... tuples) {
+    /**
+     * Create table with rows of tuples.
+     *
+     * All tuples are assumed to have the same amount of elements.
+     * Elements will be copied. A table only has one set of column header names,
+     * so it will be taken from the first tuples parameter. All header names from the
+     * other tuples will be stripped away.
+     *
+     * @param tuples Rows of tuples
+     */
+    public Table(Tuple<E>... tuples) {
         this.tuples = new ArrayList<>(tuples.length);
+        this.colNames = new ArrayList<>(tuples[0].getNames());
 
-        Object[][] matrix = new Object[rowNames.length][];
-        for(int i = 0; i < matrix.length; i++)
-            matrix[i] = new Object[colNames.length];
+        this.colLookup = new HashMap<>(this.colNames.size());
+        for(int i = 0; i < this.colNames.size(); i++)
+            this.colLookup.put(this.colNames.get(i), i);
 
-        int curWidth = 0;
-        int curHeight = 0;
+        int l = this.colNames.size();
+        for(Tuple<E> t : tuples) {
+            if(t.size() != l)
+                throw new ArrayLengthMismatchException(t.size(), l);
 
-        for(Tuple t : tuples) {
-            if(t.isHorizontal()) {
-                if(t.getNames().length != curWidth)
-                    throw new ArrayLengthMismatchException(t.getNames().length, curWidth);
+            this.tuples.add(new ArrayList<>(t.getObjects()));
+        }
+    }
 
-                System.arraycopy(t.getObjects(), 0, matrix[curHeight], 0, curWidth);
-                curHeight++;
-            } else {
-                if(t.getNames().length != curHeight)
-                    throw new ArrayLengthMismatchException(t.getNames().length, curHeight);
+    /**
+     * See {@link Table#Table(Tuple[])}.
+     *
+     * @param colNames Column header names
+     * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
+     */
+    public Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples) {
+        this(colNames, tuples, true);
+    }
 
-                for(int y = 0; y < t.getObjects().length; y++)
-                    matrix[y][curWidth] = t.getObjects()[y];
-
-                curWidth++;
-            }
+    /**
+     * See {@link Table#Table(Tuple[])}.
+     *
+     * If {@code deepCopy} is {@code false}, no new object will be instantiated
+     * (beside the colLookup HashMap).
+     *
+     * @param colNames Column header names
+     * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
+     * @param deepCopy If false, simply point the lists to the parameters given. Else create new {@code ArrayList} for each tuple
+     */
+    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy) {
+        if(deepCopy) {
+            this.colNames = new ArrayList<>(colNames);
+            this.tuples = new ArrayList<>(tuples.size());
+            for(var t : tuples)
+                this.tuples.add(new ArrayList<>(t));
+        } else {
+            this.colNames = colNames;
+            this.tuples = tuples;
         }
 
-        if(curWidth != colNames.length)
-            throw new ArrayLengthMismatchException("Number of column header names (" + colNames.length + " does not match width of largest tuple passed to the constructor (" + curWidth + ")");
-        if(curHeight != rowNames.length)
-            throw new ArrayLengthMismatchException("Number of row names (" + rowNames.length + " does not match width of largest tuple passed to the constructor (" + curHeight + ")");
+        this.colLookup = new HashMap<>(this.colNames.size());
+        for(int i = 0; i < this.colNames.size(); i++)
+            this.colLookup.put(this.colNames.get(i), i);
+    }
 
-        for(Object[] row : matrix) {
-            this.tuples.add(new Tuple(row, colNames));
-        }
+    public Tuple<E> getRow(int rowNum) {
+        return new Tuple<>(tuples.get(rowNum), colNames, !transposed);
     }
 
     public void transpose() {
@@ -61,21 +88,19 @@ public class Table {
         return transposed;
     }
 
-    public Table filter(Predicate<Tuple> p) {
+    public int colIndex(String name) {
+        return colLookup.get(name);
+    }
 
-        var stream = IntStream.range(0, tuples.size())
-                .filter(i -> p.test(tuples.get(i)));
+    public Table<E> filter(Predicate<ArrayList<E>> p) {
 
-        int amount = (int) stream.count();
-        ArrayList<Tuple> newRows = new ArrayList<>(amount);
-        ArrayList<String> newRowNames = new ArrayList<>(amount);
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+        for(var row : tuples) {
+            if(p.test(row))
+                newRows.add(row);
+        }
 
-        stream.forEach(row -> {
-            newRowNames.add(rowNames[row]);
-            newRows.add(tuples.get(row));
-        });
-
-        return new Table(colNames, newRowNames.toArray(String[]::new), newRowNames.toArray(Tuple[]::new));
+        return new Table(colNames, newRows);
     }
 
     @Override
@@ -83,8 +108,22 @@ public class Table {
         return "Table{" +
                 "tuples=" + tuples +
                 ", transposed=" + transposed +
-                ", colNames=" + Arrays.toString(colNames) +
-                ", rowNames=" + Arrays.toString(rowNames) +
+                ", colNames=" + colNames +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table<?> table = (Table<?>) o;
+        return transposed == table.transposed &&
+                tuples.equals(table.tuples) &&
+                colNames.equals(table.colNames);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tuples, transposed, colNames);
     }
 }

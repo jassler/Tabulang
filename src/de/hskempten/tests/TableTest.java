@@ -4,6 +4,8 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TableTest {
@@ -19,15 +21,24 @@ class TableTest {
     @Test
     void filter() {
 
-        Table t = new Table(
-                new String[]{"First Name", "Second Name", "Location"},
-                new String[]{"One", "Two", "Three"},
-                new Tuple(new Object[]{"Felix", "Fritz"}),
-                new Tuple(new Object[]{"Tobias", "Teiher"}),
-                new Tuple(new Object[]{"Manfred", "Meher"}),
-                new Tuple(new Object[]{"Oberstdorf", "Kempten", "Berlin"}, new String[]{"Lo", "Ca", "Tion"}, false)
+        Table<String> t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}),
+                new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"})
         );
 
-        System.out.println(t);
+        assertEquals(new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}), t.getRow(0));
+        assertEquals(new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}, new String[]{"First name", "Last name", "Location"}), t.getRow(1));
+        assertEquals(new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"}, new String[]{"First name", "Last name", "Location"}), t.getRow(2));
+
+        Table<String> filtered = t.filter(tuple -> tuple.get(1).charAt(1) == 'e');
+
+        assertEquals(
+                new Table<>(
+                        new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}, new String[]{"First name", "Last name", "Location"}),
+                        new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"})
+                ),
+                filtered
+        );
     }
 }
