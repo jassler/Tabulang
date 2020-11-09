@@ -26,7 +26,7 @@ public class FuncBodyType implements Parser {
         switch (l.lookahead().getType()) {
             case "bracket" -> {
                 if (!l.lookahead().getContent().equals("{")) {
-                    throw new ParseTimeException("Illegal bracket: Expected '{' but got " + l.lookahead().getContent());
+                    throw new ParseTimeException(l, "Illegal bracket: Expected '{' but got " + l.lookahead().getContent());
                 }
                 l.getNextTokenAndExpect(TokenType.BRACKET);
                 while (!(l.lookahead().getType().equals("bracket") && l.lookahead().getContent().equals("}"))) {
@@ -49,7 +49,10 @@ public class FuncBodyType implements Parser {
                     }
                 }
             }
-            default -> throw new ParseTimeException("Illegal type: Expected '{' but got " + l.lookahead().getContent());
+            case "keyword" -> {
+                myReturnStmnt = ReturnStmntType.instance.parse(l);
+            }
+            default -> throw new ParseTimeException(l, "Illegal type: Expected '{' but got " + l.lookahead().getContent());
         }
 
         if (myReturnStmnts != null && !myReturnStmnts.isEmpty()) {
@@ -59,7 +62,7 @@ public class FuncBodyType implements Parser {
         } else if (myStatements != null && !myStatements.isEmpty()) {
             bodyItem = new FuncBodyItem(myStatements);
         } else {
-            throw new ParseTimeException("FuncBody cannot be empty");
+            throw new ParseTimeException(l, "FuncBody cannot be empty");
         }
 
         return bodyItem;

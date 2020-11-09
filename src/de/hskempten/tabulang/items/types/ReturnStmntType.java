@@ -3,7 +3,6 @@ package de.hskempten.tabulang.items.types;
 import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.ReturnStmntItem;
 import de.hskempten.tabulang.items.TermItem;
-import de.hskempten.tabulang.nodes.Term;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 

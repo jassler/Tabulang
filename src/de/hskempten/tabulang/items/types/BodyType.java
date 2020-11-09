@@ -10,6 +10,6 @@ public class BodyType implements Parser {
 
     @Override
     public BodyItem parse(Lexer l) throws ParseTimeException {
-        return null;
+        throw new ParseTimeException(l,"Not yet implemented");
     }
 }

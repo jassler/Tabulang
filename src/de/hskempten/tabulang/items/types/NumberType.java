@@ -4,7 +4,6 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.NumberItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
-import de.hskempten.tabulang.tokenizer.Token;
 
 import java.math.BigInteger;
 

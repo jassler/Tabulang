@@ -27,7 +27,7 @@ public class OrdinalType implements Parser {
                 myNumber = NumberType.instance.parse(l);
                 item = new OrdinalItem(myNumber);
             }
-            default -> throw new ParseTimeException("Not yet implemented case in Ordinal: " + l.lookahead().getType());
+            default -> throw new ParseTimeException(l, "Not yet implemented case in Ordinal: " + l.lookahead().getType());
         }
 
 

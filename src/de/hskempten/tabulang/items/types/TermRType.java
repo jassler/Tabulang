@@ -35,7 +35,7 @@ public class TermRType implements Parser {
 
                 item = new TermRItem();
             }
-            default -> throw new ParseTimeException("Not yet implemented type case in termR: " + l.lookahead().getType());
+            default -> throw new ParseTimeException(l, "Not yet implemented type case in termR: " + l.lookahead().getType());
         }
 
         //TODO Implement TermRItem cases

@@ -4,7 +4,6 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.IdentifierItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
-import de.hskempten.tabulang.tokenizer.Token;
 
 public class IdentifierType implements Parser {
 

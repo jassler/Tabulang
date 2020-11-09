@@ -9,6 +9,6 @@ public class LoopType implements Parser {
     public static LoopType instance = new LoopType();
 
     public LoopItem parse(Lexer l) throws ParseTimeException {
-        return null;
+        throw new ParseTimeException(l, "Not yet implemented");
     }
 }

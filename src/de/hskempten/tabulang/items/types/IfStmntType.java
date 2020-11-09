@@ -10,6 +10,6 @@ public class IfStmntType implements Parser {
 
     @Override
     public IfStmntItem parse(Lexer l) throws ParseTimeException {
-        return null;
+        throw new ParseTimeException(l, "Not yet implemented");
     }
 }

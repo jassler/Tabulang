@@ -12,7 +12,7 @@ public class Tabulang {
     public static void main(String[] args) throws ParseTimeException {
         Lexer l = new Lexer();
 
-        for(var t : TokenType.TOKEN_EXPRESSIONS) {
+        for (var t : TokenType.TOKEN_EXPRESSIONS) {
             l.addExpression(t);
         }
 
@@ -24,7 +24,7 @@ public class Tabulang {
         parser.parse();
         l.reset();
         ProgramItem prg = parser.parseN();
-        System.out.println(prg);
+        System.out.println("Number of statements: " + prg.getMyStatements().size());
         /*
         while(!l.isDone()) {
             // assuming that everything must be an Assignment

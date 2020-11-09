@@ -36,19 +36,18 @@ public class TermType implements Parser {
                 case "keyword" -> {
                     switch (l.lookahead().getContent()) {
                         case "for", "verticalflip", "horizontalflip", "horizontal", "vertical", "count", "average", "distinct", "null" -> {
-                            throw new ParseTimeException("Not yet implemented keyword case in term: " + l.lookahead().getContent());
+                            throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
                         }
                     }
                 }
                 case "number" -> {
                     myOrdinal = OrdinalType.instance.parse(l);
                 }
-                case "bracket" -> throw new ParseTimeException("Not yet implemented bracket case in term: " + l.lookahead().getContent());
-                default -> throw new ParseTimeException("Not yet implemented case in term: " + l.lookahead().getContent());
+                case "bracket" -> throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+                default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
             }
             myTermR = TermRType.instance.parse(l);
         }
-
 
 
         if (myTerm != null) {

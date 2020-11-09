@@ -19,10 +19,10 @@ public class ProceduralFType implements Parser {
         IdentifierItem myIdentifier = IdentifierType.instance.parse(l);
         Token bracket = l.getNextTokenAndExpect(TokenType.BRACKET);
         if (!bracket.getContent().equals("("))
-            throw new ParseTimeException("Illegal bracket: Expected '(' but got " + l.lookahead().getContent());
+            throw new ParseTimeException(l, "Illegal bracket: Expected '(' but got " + l.lookahead().getContent());
         VListItem myVList = VListType.instance.parse(l);
         if (!l.lookahead().getContent().equals(")"))
-            throw new ParseTimeException("Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
+            throw new ParseTimeException(l, "Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
 
         l.getNextToken();
         switch (l.lookahead().getType()) {
@@ -33,13 +33,18 @@ public class ProceduralFType implements Parser {
                         proceduralF = new ProceduralFItem(myIdentifier, myVList, myFuncBody);
                         l.getNextTokenAndExpect(TokenType.BRACKET);
                     }
-                    default -> throw new ParseTimeException("Illegal bracket: Expected '{' but got " + l.lookahead().getContent());
+                    default -> throw new ParseTimeException(l, "Illegal bracket: Expected '{' but got " + l.lookahead().getContent());
                 }
             }
             default -> {
-                TermItem myTerm = TermType.instance.parse(l);
-                proceduralF = new ProceduralFItem(myIdentifier, myVList, myTerm);
-                l.getNextTokenAndExpect(TokenType.SEMICOLON);
+                if (l.lookahead().getType().equals("keyword") && l.lookahead().getContent().equals("return")) {
+                    FuncBodyItem myFuncBody = FuncBodyType.instance.parse(l);
+                    proceduralF = new ProceduralFItem(myIdentifier, myVList, myFuncBody);
+                } else {
+                    TermItem myTerm = TermType.instance.parse(l);
+                    proceduralF = new ProceduralFItem(myIdentifier, myVList, myTerm);
+                    l.getNextTokenAndExpect(TokenType.SEMICOLON);
+                }
             }
         }
 
