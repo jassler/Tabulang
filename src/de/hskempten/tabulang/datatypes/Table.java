@@ -1,17 +1,17 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Table<E> {
 
-    private ArrayList<ArrayList<E>> tuples;
+    private final ArrayList<ArrayList<E>> tuples;
     private boolean transposed = false;
 
-    private ArrayList<String> colNames;
-    private HashMap<String, Integer> colLookup;
+    private final ArrayList<String> colNames;
+    private final HashMap<String, Integer> colLookup;
 
     /**
      * Create table with rows of tuples.
@@ -23,17 +23,22 @@ public class Table<E> {
      *
      * @param tuples Rows of tuples
      */
+    @SafeVarargs
     public Table(Tuple<E>... tuples) {
         this.tuples = new ArrayList<>(tuples.length);
-        this.colNames = new ArrayList<>(tuples[0].getNames());
+
+        if (tuples.length > 0)
+            this.colNames = new ArrayList<>(tuples[0].getNames());
+        else
+            this.colNames = new ArrayList<>(0);
 
         this.colLookup = new HashMap<>(this.colNames.size());
-        for(int i = 0; i < this.colNames.size(); i++)
+        for (int i = 0; i < this.colNames.size(); i++)
             this.colLookup.put(this.colNames.get(i), i);
 
         int l = this.colNames.size();
-        for(Tuple<E> t : tuples) {
-            if(t.size() != l)
+        for (Tuple<E> t : tuples) {
+            if (t.size() != l)
                 throw new ArrayLengthMismatchException(t.size(), l);
 
             this.tuples.add(new ArrayList<>(t.getObjects()));
@@ -95,12 +100,51 @@ public class Table<E> {
     public Table<E> filter(Predicate<ArrayList<E>> p) {
 
         ArrayList<ArrayList<E>> newRows = new ArrayList<>();
-        for(var row : tuples) {
-            if(p.test(row))
+        for (var row : tuples) {
+            if (p.test(row))
                 newRows.add(row);
         }
 
-        return new Table(colNames, newRows);
+        return new Table<>(colNames, newRows);
+    }
+
+    public Table<E> projection(int... indeces) {
+        // TODO p11 (c)
+        return null;
+    }
+
+    public Table<E> projection(String... colNames) {
+        // TODO p11 (c)
+        return null;
+    }
+
+    public Table<E> projection() {
+        return new Table<>();
+    }
+
+    public Table<E> intersection(Table<E> t1, Table<E> t2) {
+        // TODO p11 (d)
+        return null;
+    }
+
+    public Table<E> union(Table<E> t1, Table<E> t2) {
+        // TODO p11 (e)
+        return null;
+    }
+
+    public Table<E> difference(Table<E> t1, Table<E> t2) {
+        // TODO p11 (f)
+        return null;
+    }
+
+    public Table<E> horizontalPairing(Table<E> t1, Table<E> t2) {
+        // TODO p12 (g)
+        return null;
+    }
+
+    public Table<E> verticalPairing(Table<E> t1, Table<E> t2) {
+        // TODO p12 (h)
+        return null;
     }
 
     @Override
