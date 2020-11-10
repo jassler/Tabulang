@@ -1,8 +1,6 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Table<E> {
@@ -110,6 +108,7 @@ public class Table<E> {
 
     public Table<E> projection(int... indices) {
         ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
+        Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
         ArrayList<String> newColNames = new ArrayList<>(indices.length);
 
         for(var t : tuples) {
@@ -117,6 +116,10 @@ public class Table<E> {
             for(int i : indices)
                 newRow.add(t.get(i));
 
+            if(existingRows.contains(newRow))
+                continue;
+
+            existingRows.add(newRow);
             newRows.add(newRow);
         }
 

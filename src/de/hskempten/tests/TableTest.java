@@ -45,10 +45,10 @@ class TableTest {
     @Test
     void projection() {
         Table<String> t = new Table<>(
-                new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
                 new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
                 new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
-                new Tuple<>(new String[]{"Willi", "Wonky", "München"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
                 new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"})
         );
 
@@ -60,7 +60,25 @@ class TableTest {
                 new Tuple<>(new String[]{"Bierb", "Ierbi"})
         );
 
-        assertEquals(projected, t.projection(1, 2));
+        assertEquals(projected, t.projection(0, 1));
         assertEquals(projected, t.projection("First name", "Last name"));
+
+        // check that no duplicate rows exist
+        t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Berlin"})
+        );
+
+        projected = new Table<>(
+                new Tuple<>(new String[]{"Madrid"}, new String[]{"Location"}),
+                new Tuple<>(new String[]{"Kempten"}),
+                new Tuple<>(new String[]{"Berlin"})
+        );
+
+        assertEquals(projected, t.projection(2));
+        assertEquals(projected, t.projection("Location"));
     }
 }
