@@ -1,59 +1,96 @@
 package de.hskempten.tabulang.mySql;
 import de.hskempten.tabulang.libreOffice.CalcConnection;
-import de.hskempten.tabulang.mySql.Models.DbConnectionParameters;
-import de.hskempten.tabulang.mySql.Models.SqlExportWrapper;
+import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
+import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseConnection {
+    /* PROPERTIES */
     private static DatabaseConnection _instance;
     private static Connection _connection;
     private static Statement _statement;
+    private static MSqlConnectionParameters _parameters;
 
-    private DatabaseConnection(DbConnectionParameters parameters) {
+    /* CONSTRUCTOR */
+    private DatabaseConnection(MSqlConnectionParameters parameters) {
         try {
-            _connection = DriverManager.getConnection(CreateConnectionString(parameters));
+            _parameters = parameters;
+            _connection = DriverManager.getConnection(CreateConnectionString(_parameters));
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void OpenConnection(DbConnectionParameters parameters) throws SQLException {
-        if (_instance == null) {
-            _instance = new DatabaseConnection(parameters);
+    /* PUBLIC METHODS */
+    public static void CloseConnection() {
+        try {
+            _connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        else if (_connection.isClosed()) {
-            _instance = new DatabaseConnection(parameters);
-        }
-    }
-
-    public static void CloseConnection() throws SQLException {
-        _statement.close();
-        _connection.close();
     }
 
     public static void Export(String query, CalcConnection calcConnection, boolean asFile){
         try {
+            OpenConnection();
             _statement = _connection.createStatement();
             var resultSet = _statement.executeQuery(query);
             var metaData = resultSet.getMetaData();
             var headlines = GetHeadlines(metaData);
             var values = GetColumnValues(headlines, resultSet);
-            var sqlExportWrapper = new SqlExportWrapper(GetTableName(query), headlines, values);
+            var sqlTableContent = new MSqlTableContent(GetTableName(query), headlines, values);
             _statement.close();
 
             if(asFile){
-                calcConnection.CreateCalcFile(sqlExportWrapper);
+                calcConnection.Export(sqlTableContent);
             }
             else {
-                CreateTableHeader(sqlExportWrapper);
+                CreateTableHeader(sqlTableContent);
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void Import(MSqlTableContent sqlTableContent){
+        try {
+            var keys = GetContentOfArray(sqlTableContent.get_headlines());
+            for(var item : sqlTableContent.get_content()){
+                var values = GetContentOfArray(item);
+                var query = String.format("INSERT INTO %s (%s) VALUES (%s.);", sqlTableContent.get_dbName(), keys, values);
+                _statement = _connection.createStatement();
+                _statement.executeUpdate(query);
+                _statement.close();
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* PRIVATE METHODS */
+    private static void OpenConnection() throws SQLException {
+        if (_instance == null) {
+            _instance = new DatabaseConnection(_parameters);
+        }
+        else if (_connection.isClosed()) {
+            _instance = new DatabaseConnection(_parameters);
+        }
+    }
+
+    private static String GetContentOfArray(ArrayList<String> arr){
+        var stringBuilder = new StringBuilder();
+        var endIndex = arr.size();
+
+        for(var i = 0; i < endIndex; i++){
+            stringBuilder.append(arr.get(i));
+            if(i != endIndex - 1){ stringBuilder.append(", "); }
+        }
+        return stringBuilder.toString();
     }
 
     private static String GetTableName(String query) {
@@ -69,11 +106,7 @@ public class DatabaseConnection {
         return tableName.toString();
     }
 
-    public static void Import(){
-
-    }
-
-    public static void CreateTableHeader(SqlExportWrapper sqlExportWrapper){
+    private static void CreateTableHeader(MSqlTableContent MSqlTableContent){
         // var tableHeadline = String.format("Datenbankeinträge der Tabelle %s", exportWrapper.getTitle());
         //onTop(tableHeadline, aside(' ', headlines), aside(' ', , ''));
     }
@@ -111,14 +144,14 @@ public class DatabaseConnection {
         }
     }
 
-    private String CreateConnectionString(DbConnectionParameters parameters){
+    private String CreateConnectionString(MSqlConnectionParameters parameters){
         return String.format("jdbc:mysql://%s:%s/%s?" +
                 "user=%s&" +
                 "password=%s&" +
                 "useUnicode=true&" +
                 "useJDBCCompliantTimezoneShift=true&" +
                 "useLegacyDatetimeCode=false&" +
-                "serverTimezone=UTC", parameters.Ip, parameters.Port, parameters.DbName, parameters.Username, parameters.Password);
+                "serverTimezone=UTC", parameters.get_ip(), parameters.get_port(), parameters.get_dbName(), parameters.get_username(), parameters.get_password());
     }
 
     // PARSE FUNCTION - NOT NECESSARY (02.11.2020)
