@@ -19,6 +19,21 @@ class TableTest {
     }
 
     @Test
+    void getColumnIndex() {
+        Table<String> t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}),
+                new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"})
+        );
+
+        assertEquals(0, t.getColumnIndex("First name"));
+        assertEquals(1, t.getColumnIndex("Last name"));
+        assertEquals(2, t.getColumnIndex("Location"));
+        assertThrows(NullPointerException.class, () -> t.getColumnIndex("Not in there"));
+        assertThrows(NullPointerException.class, () -> t.getColumnIndex("first name"));
+    }
+
+    @Test
     void filter() {
 
         Table<String> t = new Table<>(
@@ -80,5 +95,7 @@ class TableTest {
 
         assertEquals(projected, t.projection(2));
         assertEquals(projected, t.projection("Location"));
+
+        assertEquals(new Table<>(), t.projection());
     }
 }

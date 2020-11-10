@@ -14,7 +14,7 @@ public class Table<E> {
     /**
      * Create table with rows of tuples.
      *
-     * All tuples are assumed to have the same amount of elements.
+     * <p>All tuples are assumed to have the same amount of elements.
      * Elements will be copied. A table only has one set of column header names,
      * so it will be taken from the first tuples parameter. All header names from the
      * other tuples will be stripped away.
@@ -56,7 +56,7 @@ public class Table<E> {
     /**
      * See {@link Table#Table(Tuple[])}.
      *
-     * If {@code deepCopy} is {@code false}, no new object will be instantiated
+     * <p>If {@code deepCopy} is {@code false}, no new object will be instantiated
      * (beside the colLookup HashMap).
      *
      * @param colNames Column header names
@@ -91,7 +91,14 @@ public class Table<E> {
         return transposed;
     }
 
-    public int colIndex(String name) {
+    /**
+     * Get column index from name.
+     *
+     * @param name Column header string
+     * @return Index of column
+     * @throws NullPointerException when {@code name} is not in column header
+     */
+    public int getColumnIndex(String name) {
         return colLookup.get(name);
     }
 
@@ -99,7 +106,7 @@ public class Table<E> {
      * Filter tuple rows based on predicate. For storage and timing reason, the parameter passed
      * to the predicate is an {@code ArrayList<E>} and not a {@code Tuple<E>}.
      *
-     * To get a column index by name, call {@link Table#colIndex(String)}.
+     * <p>To get a column index by name, call {@link Table#getColumnIndex(String)}.
      *
      * @param p Predicate by which to determine if a row should be included or not. For example: {@code filter(row -> row.get(0) != null)}
      * @return {@code Table<E>} with filtered rows
@@ -118,16 +125,21 @@ public class Table<E> {
     /**
      * Go through each tuple row in table and do a projection of that (see {@link Tuple#projection(int...)}).
      *
-     * A row may not appear twice in the resulting table. If for example by dropping a certain column duplicates start
+     * <p>A row may not appear twice in the resulting table. If for example by dropping a certain column duplicates start
      * to appear, those will be dropped.
      *
      * @param indices Column indices on which to project
      * @return {@code Table<E>} with projected table columns
      */
     public Table<E> projection(int... indices) {
+        // newRows keeps it in order
+        // existingRows makes sure each row only appears once
         ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
         Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
+
         ArrayList<String> newColNames = new ArrayList<>(indices.length);
+        for(int i : indices)
+            newColNames.add(colNames.get(i));
 
         for(var t : tuples) {
             ArrayList<E> newRow = new ArrayList<>(indices.length);
@@ -139,10 +151,6 @@ public class Table<E> {
 
             existingRows.add(newRow);
             newRows.add(newRow);
-        }
-
-        for(int i : indices) {
-            newColNames.add(colNames.get(i));
         }
 
         return new Table<>(newColNames, newRows, false);
@@ -157,7 +165,7 @@ public class Table<E> {
     public Table<E> projection(String... colNames) {
         int[] indices = new int[colNames.length];
         for(int i = 0; i < indices.length; i++)
-            indices[i] = colIndex(colNames[i]);
+            indices[i] = getColumnIndex(colNames[i]);
 
         return projection(indices);
     }
@@ -166,7 +174,7 @@ public class Table<E> {
      * Projection to no columns. This is kept here since function overloading doesn't know what to pick
      * when no parameter is given to a variadic function.
      *
-     * This method basically returns an empty table.
+     * <p>This method basically returns an empty table.
      *
      * @return an empty Table
      */
