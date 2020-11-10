@@ -228,9 +228,24 @@ public class Table<E> {
         return new Table<>(colNames, newRows, false);
     }
 
-    public Table<E> difference(Table<E> t1, Table<E> t2) {
-        // TODO p11 (f)
-        return null;
+    /**
+     * Generate new table with all rows removed that appear in {@code other}.
+     *
+     * @param other Rows which are to be removed from this object's tuple rows
+     * @return Table with removed rows
+     */
+    public Table<E> difference(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
+
+        for(var t : other.tuples) {
+            newRows.remove(t);
+        }
+
+        return new Table<>(colNames, newRows, false);
     }
 
     public Table<E> horizontalPairing(Table<E> t1, Table<E> t2) {
