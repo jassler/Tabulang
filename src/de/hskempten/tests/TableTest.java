@@ -128,4 +128,36 @@ class TableTest {
         Table<String> t3 = new Table<>(new Tuple<>(new String[]{"Wrong", "Column", "Headers"}, new String[]{"first name", "last name", "location"}));
         assertThrows(TableHeaderMismatchException.class, () -> t1.intersection(t3));
     }
+
+    @Test
+    public void union() {
+        Table<String> t1 = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"})
+        );
+
+        Table<String> t2 = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"}),
+                new Tuple<>(new String[]{"Nochw", "Ashie", "Rzuseh"})
+        );
+
+        Table<String> intersected = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"}),
+                new Tuple<>(new String[]{"Nochw", "Ashie", "Rzuseh"})
+        );
+
+        assertEquals(intersected, t1.union(t2));
+
+        Table<String> t3 = new Table<>(new Tuple<>(new String[]{"Wrong", "Column", "Headers"}, new String[]{"first name", "last name", "location"}));
+        assertThrows(TableHeaderMismatchException.class, () -> t1.union(t3));
+    }
 }

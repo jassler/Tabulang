@@ -204,9 +204,28 @@ public class Table<E> {
         return new Table<>(colNames, newRows, false);
     }
 
-    public Table<E> union(Table<E> t1, Table<E> t2) {
-        // TODO p11 (e)
-        return null;
+    /**
+     * Given two tables generate a new table with rows of both of them, though with no duplicates.
+     *
+     * @param other Table with which to create a union
+     * @return Table with tuple rows of {@code other} appended to tuples of this object
+     */
+    public Table<E> union(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
+        Set<ArrayList<E>> lookup = new HashSet<>(tuples);
+
+        for(var t : other.tuples) {
+            if(!lookup.contains(t)) {
+                newRows.add(t);
+                lookup.add(t);
+            }
+        }
+
+        return new Table<>(colNames, newRows, false);
     }
 
     public Table<E> difference(Table<E> t1, Table<E> t2) {
