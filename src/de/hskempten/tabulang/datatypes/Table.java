@@ -108,14 +108,31 @@ public class Table<E> {
         return new Table<>(colNames, newRows);
     }
 
-    public Table<E> projection(int... indeces) {
-        // TODO p11 (c)
-        return null;
+    public Table<E> projection(int... indices) {
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
+        ArrayList<String> newColNames = new ArrayList<>(indices.length);
+
+        for(var t : tuples) {
+            ArrayList<E> newRow = new ArrayList<>(indices.length);
+            for(int i : indices)
+                newRow.add(t.get(i));
+
+            newRows.add(newRow);
+        }
+
+        for(int i : indices) {
+            newColNames.add(colNames.get(i));
+        }
+
+        return new Table<>(newColNames, newRows, false);
     }
 
     public Table<E> projection(String... colNames) {
-        // TODO p11 (c)
-        return null;
+        int[] indices = new int[colNames.length];
+        for(int i = 0; i < indices.length; i++)
+            indices[i] = colIndex(colNames[i]);
+
+        return projection(indices);
     }
 
     public Table<E> projection() {

@@ -41,4 +41,26 @@ class TableTest {
                 filtered
         );
     }
+
+    @Test
+    void projection() {
+        Table<String> t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "München"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"})
+        );
+
+        var projected = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz"}, new String[]{"First name", "Last name"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch"}),
+                new Tuple<>(new String[]{"Hanna", "Meher"}),
+                new Tuple<>(new String[]{"Willi", "Wonky"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi"})
+        );
+
+        assertEquals(projected, t.projection(1, 2));
+        assertEquals(projected, t.projection("First name", "Last name"));
+    }
 }
