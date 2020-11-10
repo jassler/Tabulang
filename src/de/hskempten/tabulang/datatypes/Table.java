@@ -95,6 +95,15 @@ public class Table<E> {
         return colLookup.get(name);
     }
 
+    /**
+     * Filter tuple rows based on predicate. For storage and timing reason, the parameter passed
+     * to the predicate is an {@code ArrayList<E>} and not a {@code Tuple<E>}.
+     *
+     * To get a column index by name, call {@link Table#colIndex(String)}.
+     *
+     * @param p Predicate by which to determine if a row should be included or not. For example: {@code filter(row -> row.get(0) != null)}
+     * @return {@code Table<E>} with filtered rows
+     */
     public Table<E> filter(Predicate<ArrayList<E>> p) {
 
         ArrayList<ArrayList<E>> newRows = new ArrayList<>();
@@ -106,6 +115,15 @@ public class Table<E> {
         return new Table<>(colNames, newRows);
     }
 
+    /**
+     * Go through each tuple row in table and do a projection of that (see {@link Tuple#projection(int...)}).
+     *
+     * A row may not appear twice in the resulting table. If for example by dropping a certain column duplicates start
+     * to appear, those will be dropped.
+     *
+     * @param indices Column indices on which to project
+     * @return {@code Table<E>} with projected table columns
+     */
     public Table<E> projection(int... indices) {
         ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
         Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
@@ -130,6 +148,12 @@ public class Table<E> {
         return new Table<>(newColNames, newRows, false);
     }
 
+    /**
+     * See {@link Table#projection(int...)}
+     *
+     * @param colNames Column indices on which to project
+     * @return {@code Table<E>} with projected table columns
+     */
     public Table<E> projection(String... colNames) {
         int[] indices = new int[colNames.length];
         for(int i = 0; i < indices.length; i++)
@@ -138,6 +162,14 @@ public class Table<E> {
         return projection(indices);
     }
 
+    /**
+     * Projection to no columns. This is kept here since function overloading doesn't know what to pick
+     * when no parameter is given to a variadic function.
+     *
+     * This method basically returns an empty table.
+     *
+     * @return an empty Table
+     */
     public Table<E> projection() {
         return new Table<>();
     }
