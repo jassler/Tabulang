@@ -1,6 +1,7 @@
 package de.hskempten.tests;
 
 import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.TableHeaderMismatchException;
 import de.hskempten.tabulang.datatypes.Tuple;
 import org.junit.jupiter.api.Test;
 
@@ -97,5 +98,34 @@ class TableTest {
         assertEquals(projected, t.projection("Location"));
 
         assertEquals(new Table<>(), t.projection());
+    }
+
+    @Test
+    public void intersection() {
+        Table<String> t1 = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"})
+        );
+
+        Table<String> t2 = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"}),
+                new Tuple<>(new String[]{"Nochw", "Ashie", "Rzuseh"})
+        );
+
+        Table<String> intersected = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"})
+        );
+
+        assertEquals(intersected, t1.intersection(t2));
+
+        Table<String> t3 = new Table<>(new Tuple<>(new String[]{"Wrong", "Column", "Headers"}, new String[]{"first name", "last name", "location"}));
+        assertThrows(TableHeaderMismatchException.class, () -> t1.intersection(t3));
     }
 }

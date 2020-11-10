@@ -182,9 +182,26 @@ public class Table<E> {
         return new Table<>();
     }
 
-    public Table<E> intersection(Table<E> t1, Table<E> t2) {
-        // TODO p11 (d)
-        return null;
+    /**
+     * Given two tables generate a new table with rows that appear in both of them only.
+     *
+     * @param other Table with which to intersect
+     * @return Table intersection with this and the other Table
+     */
+    public Table<E> intersection(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+
+        // TODO solve for O(n^2) complexity
+        for(var t : tuples) {
+            if(other.tuples.contains(t))
+                newRows.add(new ArrayList<>(t));
+        }
+
+        return new Table<>(colNames, newRows, false);
     }
 
     public Table<E> union(Table<E> t1, Table<E> t2) {
