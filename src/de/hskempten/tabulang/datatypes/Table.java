@@ -248,14 +248,82 @@ public class Table<E> {
         return new Table<>(colNames, newRows, false);
     }
 
-    public Table<E> horizontalPairing(Table<E> t1, Table<E> t2) {
-        // TODO p12 (g)
-        return null;
+    /**
+     * Add {@code other} to the right of the table. If number of rows is not equal, missing cells will be filled with null.
+     *
+     * @param other Table which is to be appended to the right of this table
+     * @return New table with other table appended to the right
+     */
+    public Table<E> horizontalPairing(Table<E> other) {
+
+        int numRows = Math.max(tuples.size(), other.tuples.size());
+        int numCols = colNames.size() + other.colNames.size();
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<String> newColNames = new ArrayList<>(numCols);
+
+        for(int i = 0; i < numRows; i++) {
+            ArrayList<E> row = new ArrayList<>(numCols);
+            if(i < tuples.size())
+                row.addAll(tuples.get(i));
+            else
+                row.addAll(Collections.nCopies(colNames.size(), null));
+
+            if(i < other.tuples.size())
+                row.addAll(other.tuples.get(i));
+            else
+                row.addAll(Collections.nCopies(other.colNames.size(), null));
+
+            newRows.add(row);
+        }
+
+        newColNames.addAll(colNames);
+        newColNames.addAll(other.colNames);
+
+        return new Table<>(newColNames, newRows, false);
     }
 
-    public Table<E> verticalPairing(Table<E> t1, Table<E> t2) {
-        // TODO p12 (h)
-        return null;
+    /**
+     * Add {@code other} to the bottom of the table. If number of columns is not equal, missing cells will be filled with null.
+     *
+     * Column header will be taken from this table, each missing column from {@code other}.
+     *
+     * @param other Table which is to be appended to the bottom of this table
+     * @return New table with other table appended to the bottom
+     */
+    public Table<E> verticalPairing(Table<E> other) {
+
+        int numRows = tuples.size() + other.tuples.size();
+        int numCols = Math.max(colNames.size(), other.colNames.size());
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<String> newColNames = new ArrayList<>(numCols);
+
+        List<E> toAppend = Collections.nCopies(numCols - colNames.size(), null);
+        for(var row : tuples) {
+            ArrayList<E> newRow = new ArrayList<>(numCols);
+            newRow.addAll(row);
+            if(toAppend.size() > 0)
+                newRow.addAll(toAppend);
+            newRows.add(newRow);
+        }
+
+        toAppend = Collections.nCopies(numCols - other.colNames.size(), null);
+        for(var row : other.tuples) {
+            ArrayList<E> newRow = new ArrayList<>(numCols);
+            newRow.addAll(row);
+            if(toAppend.size() > 0)
+                newRow.addAll(toAppend);
+            newRows.add(newRow);
+        }
+
+        newColNames.addAll(colNames);
+        if(colNames.size() < other.colNames.size()) {
+            for(int i = colNames.size(); i < other.colNames.size(); i++)
+                newColNames.add(other.colNames.get(i));
+        }
+
+        return new Table<>(newColNames, newRows, false);
     }
 
     @Override
