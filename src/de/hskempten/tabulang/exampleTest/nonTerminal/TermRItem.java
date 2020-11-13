@@ -1,33 +1,36 @@
-package de.hskempten.tabulang.exampleTestInterpretation;
+package de.hskempten.tabulang.exampleTest.nonTerminal;
 
+import de.hskempten.tabulang.arithmetic.*;
+import de.hskempten.tabulang.exampleTest.Interpretation;
+import de.hskempten.tabulang.exampleTest.terminal.OperatorItem;
+import de.hskempten.tabulang.helper.CreateArithmeticItem;
+import de.hskempten.tabulang.helper.OperatorPrecedence;
 import de.hskempten.tabulang.items.MarkStmntItem;
-import de.hskempten.tabulang.items.OperatorItem;
 import de.hskempten.tabulang.items.PredItem;
 import de.hskempten.tabulang.items.TupelItem;
 
-
 import java.util.ArrayList;
 
-public class TermRItem {
+public class TermRItem implements NonTerminalItem {
     private ArrayList<PredItem> myPreds;
     private TermRItem myTermR;
     private TermItem myTerm;
     private OperatorItem myOperator;
     private MarkStmntItem myMarkStmnt;
     private TupelItem myTupel;
-    //"filter", "intersect", "unite", "."
-    private String myString;
+
+    private String myString; //"filter", "intersect", "unite", "."
 
     public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR, String myString) {
         this.myPreds = myPreds;
         this.myTermR = myTermR;
-        this.myString = myString;
+        this.setMyString(myString);
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm, String myString) {
         this.myTermR = myTermR;
         this.myTerm = myTerm;
-        this.myString = myString;
+        this.setMyString(myString);
     }
 
     public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR) {
@@ -107,12 +110,39 @@ public class TermRItem {
         this.myPreds = myPreds;
     }
 
-    public Interpretation eval(Interpretation i){
-        if(myPreds == null && myTermR == null && myMarkStmnt == null && myTerm == null && myOperator == null && myTupel == null){
-            System.out.println("Gerade evaluiert: " + this.getClass().getSimpleName() + ". Interpretation: Produktion TermR -> Epsilon");
-            return i;
+    public String getMyString() {
+        return myString;
+    }
+
+    public void setMyString(String myString) {
+        this.myString = myString;
+    }
+
+
+    @Override
+    public void traverse(Interpretation i) {
+        if (myPreds == null && myTermR == null && myMarkStmnt == null && myTerm == null && myOperator == null && myTupel == null) {
+            //Epsilon
+        } else if (myOperator != null) {
+            if (!i.getOperatorStack().empty()) {
+                String topOfStack = i.getOperatorStack().peek();
+                if (OperatorPrecedence.getInstance().precedence(myOperator.getMyString()) <= OperatorPrecedence.getInstance().precedence(topOfStack)) {
+                    CreateArithmeticItem.getInstance().createCorrespondingItem(i);
+                    myOperator.addToStack(i);
+                    myTerm.traverse(i);
+                    myTermR.traverse(i);
+                } else {
+                    myOperator.addToStack(i);
+                    myTerm.traverse(i);
+                    myTermR.traverse(i);
+                    //CreateArithmeticItem.getInstance().createCorrespondingItem(i);
+                }
+            } else {
+                myOperator.addToStack(i);
+                myTerm.traverse(i);
+                myTermR.traverse(i);
+                CreateArithmeticItem.getInstance().createCorrespondingItem(i);
+            }
         }
-        System.out.println("hmmmmm");
-        return i;
     }
 }

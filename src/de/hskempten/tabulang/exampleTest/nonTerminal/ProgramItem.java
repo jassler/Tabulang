@@ -1,10 +1,12 @@
-package de.hskempten.tabulang.exampleTestInterpretation;
+package de.hskempten.tabulang.exampleTest.nonTerminal;
 
 
+
+import de.hskempten.tabulang.exampleTest.Interpretation;
 
 import java.util.ArrayList;
 
-public class ProgramItem {
+public class ProgramItem implements NonTerminalItem {
     private ArrayList<StatementItem> myStatements;
 
     public ProgramItem(ArrayList<StatementItem> myStatements) {
@@ -19,13 +21,12 @@ public class ProgramItem {
         this.myStatements = myStatements;
     }
 
-    public Interpretation eval(Interpretation i){
+    @Override
+    public void traverse(Interpretation i) {
         for(StatementItem si : myStatements){
-            si.eval(i);
-            System.out.println("Gerade evaluiert: " + this.getClass().getSimpleName());
-            return i;
+            System.out.println("-------------------");
+            System.out.println("Neues Statement: ");
+            si.traverse(i);
         }
-        System.out.println(this.getClass().getSimpleName() + "hmmmm");
-        return i;
     }
 }

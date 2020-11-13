@@ -1,10 +1,11 @@
-package de.hskempten.tabulang.exampleTestInterpretation;
+package de.hskempten.tabulang.exampleTest.nonTerminal;
 
-
-import de.hskempten.tabulang.items.QuotedStringItem;
+import de.hskempten.tabulang.exampleTest.Interpretation;
+import de.hskempten.tabulang.exampleTest.terminal.NumberItem;
+import de.hskempten.tabulang.exampleTest.terminal.QuotedStringItem;
 import de.hskempten.tabulang.items.TupelItem;
 
-public class OrdinalItem {
+public class OrdinalItem implements NonTerminalItem {
     private String myString; //"null"
     private NumberItem myNumber;
     private QuotedStringItem myQuotedString;
@@ -58,14 +59,13 @@ public class OrdinalItem {
         this.myTupel = myTupel;
     }
 
-    public Interpretation eval(Interpretation i){
-        if(myNumber != null){
-            myNumber.eval(i);
-            System.out.println("Gerade evaluiert: " + this.getClass().getSimpleName());
-            return i;
-
+    @Override
+    public void traverse(de.hskempten.tabulang.exampleTest.Interpretation i) {
+        if (myNumber != null) {
+            myNumber.addToStack(i);
         }
-        System.out.println(this.getClass().getSimpleName() + " hmmmm");
-        return i;
+        if (myQuotedString != null){
+            myQuotedString.addToStack(i);
+        }
     }
 }

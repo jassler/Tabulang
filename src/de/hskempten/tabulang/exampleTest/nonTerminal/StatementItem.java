@@ -1,11 +1,12 @@
-package de.hskempten.tabulang.exampleTestInterpretation;
+package de.hskempten.tabulang.exampleTest.nonTerminal;
 
+import de.hskempten.tabulang.exampleTest.Interpretation;
 import de.hskempten.tabulang.items.BodyItem;
 import de.hskempten.tabulang.items.IfStmntItem;
 import de.hskempten.tabulang.items.LoopItem;
 
 
-public class StatementItem {
+public class StatementItem implements NonTerminalItem {
     private LoopItem myLoop;
     private IfStmntItem myIfStmnt;
     private VarDefItem myVarDef;
@@ -59,13 +60,11 @@ public class StatementItem {
         this.myBody = myBody;
     }
 
-    public Interpretation eval(Interpretation i){
+    @Override
+    public void traverse(Interpretation i){
         if(myVarDef != null) {
-            myVarDef.eval(i);
-            System.out.println("Gerade evaluiert: " + this.getClass().getSimpleName());
-            return i;
+            myVarDef.traverse(i);
         }
-        System.out.println(this.getClass().getSimpleName() + "hmmmm");
-        return i;
+
     }
 }
