@@ -2,38 +2,41 @@ package de.hskempten.tabulang.datatypes;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Table<E> {
 
-    private ArrayList<ArrayList<E>> tuples;
+    private final ArrayList<ArrayList<E>> tuples;
     private boolean transposed = false;
 
-    private ArrayList<String> colNames;
-    private HashMap<String, Integer> colLookup;
+    private final ArrayList<String> colNames;
+    private final HashMap<String, Integer> colLookup;
 
     /**
      * Create table with rows of tuples.
      *
-     * All tuples are assumed to have the same amount of elements.
+     * <p>All tuples are assumed to have the same amount of elements.
      * Elements will be copied. A table only has one set of column header names,
      * so it will be taken from the first tuples parameter. All header names from the
      * other tuples will be stripped away.
      *
      * @param tuples Rows of tuples
      */
+    @SafeVarargs
     public Table(Tuple<E>... tuples) {
         this.tuples = new ArrayList<>(tuples.length);
-        this.colNames = new ArrayList<>(tuples[0].getNames());
+
+        if (tuples.length > 0)
+            this.colNames = new ArrayList<>(tuples[0].getNames());
+        else
+            this.colNames = new ArrayList<>(0);
 
         this.colLookup = new HashMap<>(this.colNames.size());
-        for(int i = 0; i < this.colNames.size(); i++)
+        for (int i = 0; i < this.colNames.size(); i++)
             this.colLookup.put(this.colNames.get(i), i);
 
         int l = this.colNames.size();
-        for(Tuple<E> t : tuples) {
-            if(t.size() != l)
+        for (Tuple<E> t : tuples) {
+            if (t.size() != l)
                 throw new ArrayLengthMismatchException(t.size(), l);
 
             this.tuples.add(new ArrayList<>(t.getObjects()));
@@ -53,7 +56,7 @@ public class Table<E> {
     /**
      * See {@link Table#Table(Tuple[])}.
      *
-     * If {@code deepCopy} is {@code false}, no new object will be instantiated
+     * <p>If {@code deepCopy} is {@code false}, no new object will be instantiated
      * (beside the colLookup HashMap).
      *
      * @param colNames Column header names
@@ -88,19 +91,239 @@ public class Table<E> {
         return transposed;
     }
 
-    public int colIndex(String name) {
+    /**
+     * Get column index from name.
+     *
+     * @param name Column header string
+     * @return Index of column
+     * @throws NullPointerException when {@code name} is not in column header
+     */
+    public int getColumnIndex(String name) {
         return colLookup.get(name);
     }
 
+    /**
+     * Filter tuple rows based on predicate. For storage and timing reason, the parameter passed
+     * to the predicate is an {@code ArrayList<E>} and not a {@code Tuple<E>}.
+     *
+     * <p>To get a column index by name, call {@link Table#getColumnIndex(String)}.
+     *
+     * @param p Predicate by which to determine if a row should be included or not. For example: {@code filter(row -> row.get(0) != null)}
+     * @return {@code Table<E>} with filtered rows
+     */
     public Table<E> filter(Predicate<ArrayList<E>> p) {
 
         ArrayList<ArrayList<E>> newRows = new ArrayList<>();
-        for(var row : tuples) {
-            if(p.test(row))
+        for (var row : tuples) {
+            if (p.test(row))
                 newRows.add(row);
         }
 
-        return new Table(colNames, newRows);
+        return new Table<>(colNames, newRows);
+    }
+
+    /**
+     * Go through each tuple row in table and do a projection of that (see {@link Tuple#projection(int...)}).
+     *
+     * <p>A row may not appear twice in the resulting table. If for example by dropping a certain column duplicates start
+     * to appear, those will be dropped.
+     *
+     * @param indices Column indices on which to project
+     * @return {@code Table<E>} with projected table columns
+     */
+    public Table<E> projection(int... indices) {
+        // newRows keeps it in order
+        // existingRows makes sure each row only appears once
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
+        Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
+
+        ArrayList<String> newColNames = new ArrayList<>(indices.length);
+        for(int i : indices)
+            newColNames.add(colNames.get(i));
+
+        for(var t : tuples) {
+            ArrayList<E> newRow = new ArrayList<>(indices.length);
+            for(int i : indices)
+                newRow.add(t.get(i));
+
+            if(existingRows.contains(newRow))
+                continue;
+
+            existingRows.add(newRow);
+            newRows.add(newRow);
+        }
+
+        return new Table<>(newColNames, newRows, false);
+    }
+
+    /**
+     * See {@link Table#projection(int...)}
+     *
+     * @param colNames Column indices on which to project
+     * @return {@code Table<E>} with projected table columns
+     */
+    public Table<E> projection(String... colNames) {
+        int[] indices = new int[colNames.length];
+        for(int i = 0; i < indices.length; i++)
+            indices[i] = getColumnIndex(colNames[i]);
+
+        return projection(indices);
+    }
+
+    /**
+     * Projection to no columns. This is kept here since function overloading doesn't know what to pick
+     * when no parameter is given to a variadic function.
+     *
+     * <p>This method basically returns an empty table.
+     *
+     * @return an empty Table
+     */
+    public Table<E> projection() {
+        return new Table<>();
+    }
+
+    /**
+     * Given two tables generate a new table with rows that appear in both of them only.
+     *
+     * @param other Table with which to intersect
+     * @return Table intersection with this and the other Table
+     */
+    public Table<E> intersection(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+
+        // TODO solve for O(n^2) complexity
+        for(var t : tuples) {
+            if(other.tuples.contains(t))
+                newRows.add(new ArrayList<>(t));
+        }
+
+        return new Table<>(colNames, newRows, false);
+    }
+
+    /**
+     * Given two tables generate a new table with rows of both of them, though with no duplicates.
+     *
+     * @param other Table with which to create a union
+     * @return Table with tuple rows of {@code other} appended to tuples of this object
+     */
+    public Table<E> union(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
+        Set<ArrayList<E>> lookup = new HashSet<>(tuples);
+
+        for(var t : other.tuples) {
+            if(!lookup.contains(t)) {
+                newRows.add(t);
+                lookup.add(t);
+            }
+        }
+
+        return new Table<>(colNames, newRows, false);
+    }
+
+    /**
+     * Generate new table with all rows removed that appear in {@code other}.
+     *
+     * @param other Rows which are to be removed from this object's tuple rows
+     * @return Table with removed rows
+     */
+    public Table<E> difference(Table<E> other) {
+
+        if(!colNames.equals(other.colNames))
+            throw new TableHeaderMismatchException(colNames, other.colNames);
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
+
+        for(var t : other.tuples) {
+            newRows.remove(t);
+        }
+
+        return new Table<>(colNames, newRows, false);
+    }
+
+    /**
+     * Add {@code other} to the right of the table. If number of rows is not equal, missing cells will be filled with null.
+     *
+     * @param other Table which is to be appended to the right of this table
+     * @return New table with other table appended to the right
+     */
+    public Table<E> horizontalPairing(Table<E> other) {
+
+        int numRows = Math.max(tuples.size(), other.tuples.size());
+        int numCols = colNames.size() + other.colNames.size();
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<String> newColNames = new ArrayList<>(numCols);
+
+        for(int i = 0; i < numRows; i++) {
+            ArrayList<E> row = new ArrayList<>(numCols);
+            if(i < tuples.size())
+                row.addAll(tuples.get(i));
+            else
+                row.addAll(Collections.nCopies(colNames.size(), null));
+
+            if(i < other.tuples.size())
+                row.addAll(other.tuples.get(i));
+            else
+                row.addAll(Collections.nCopies(other.colNames.size(), null));
+
+            newRows.add(row);
+        }
+
+        newColNames.addAll(colNames);
+        newColNames.addAll(other.colNames);
+
+        return new Table<>(newColNames, newRows, false);
+    }
+
+    /**
+     * Add {@code other} to the bottom of the table. If number of columns is not equal, missing cells will be filled with null.
+     *
+     * Column header will be taken from this table, each missing column from {@code other}.
+     *
+     * @param other Table which is to be appended to the bottom of this table
+     * @return New table with other table appended to the bottom
+     */
+    public Table<E> verticalPairing(Table<E> other) {
+
+        int numRows = tuples.size() + other.tuples.size();
+        int numCols = Math.max(colNames.size(), other.colNames.size());
+
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<String> newColNames = new ArrayList<>(numCols);
+
+        List<E> toAppend = Collections.nCopies(numCols - colNames.size(), null);
+        for(var row : tuples) {
+            ArrayList<E> newRow = new ArrayList<>(numCols);
+            newRow.addAll(row);
+            if(toAppend.size() > 0)
+                newRow.addAll(toAppend);
+            newRows.add(newRow);
+        }
+
+        toAppend = Collections.nCopies(numCols - other.colNames.size(), null);
+        for(var row : other.tuples) {
+            ArrayList<E> newRow = new ArrayList<>(numCols);
+            newRow.addAll(row);
+            if(toAppend.size() > 0)
+                newRow.addAll(toAppend);
+            newRows.add(newRow);
+        }
+
+        newColNames.addAll(colNames);
+        if(colNames.size() < other.colNames.size()) {
+            for(int i = colNames.size(); i < other.colNames.size(); i++)
+                newColNames.add(other.colNames.get(i));
+        }
+
+        return new Table<>(newColNames, newRows, false);
     }
 
     @Override
