@@ -43,7 +43,6 @@ public class CalcConnection {
     private DocumentBuilder _documentBuilder;
     private Table _table;
     private Spreadsheet _spreadsheet;
-    private TableWrapper _tableWrapper;
     private ArrayList<Column> _columnList;
     private ArrayList<Row> _rowList;
 
@@ -53,7 +52,6 @@ public class CalcConnection {
         _tableName = tableName;
         _path = path;
         _fileName = fileName;
-        _tableWrapper = new TableWrapper();
         CreateCalcConnection();
     }
 
@@ -74,13 +72,16 @@ public class CalcConnection {
         try {
             _odfDocument = OdfDocument.loadDocument(path);
             FindElementInXml(_odfDocument.getContentDom().toString());
-            var selection = new StringSelection(_odfDocument.getContentDom().toString());
-            var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(selection, selection);
+            CopyToClipboard();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void CopyToClipboard() throws Exception {
+        var selection = new StringSelection(_odfDocument.getContentDom().toString());
+        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
     }
 
     /* PRIVATE METHODS */
@@ -272,8 +273,8 @@ public class CalcConnection {
 
     private void CreateTableContent(ArrayList<ArrayList<String>> content){
         try {
-            for(var i = 1; i < content.size(); i++){
-                var row = _table.getRow(i);
+            for(var i = 0; i < content.size(); i++){
+                var row = _table.getRow(i + 1);
                 for(var j = 0; j < content.get(i).size(); j++){
                     var cell = row.getOrCreateCell(j);
                     cell.setStringValue(content.get(i).get(j));
