@@ -1,6 +1,5 @@
 package de.hskempten.tabulang.items.types;
 
-import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
@@ -14,58 +13,51 @@ public class TermType implements Parser {
         TermItem item = null;
 
         //'('
-        TermItem myTerm = null;
+        TermItem myTerm;
         //')'
-        TermRItem myTermR = null;
-        IdentifierItem myIdentifier = null;
-        LoopItem myLoop = null;
-        FlipTItem myFlipT = null;
-        OrdinalItem myOrdinal = null;
-        DirectionalTermItem myDirectionalTerm = null;
-        FunDefItem myFunDef = null;
-        AggregationTItem myAggregationT = null;
-        DistinctTItem myDistinctT = null;
+        TermRItem myTermR;
+        IdentifierItem myIdentifier;
+        LoopItem myLoop;
+        FlipTItem myFlipT;
+        OrdinalItem myOrdinal;
+        DirectionalTermItem myDirectionalTerm;
+        FunDefItem myFunDef;
+        AggregationTItem myAggregationT;
+        DistinctTItem myDistinctT;
 
 
         //TODO find break conditions for term (loop, markStmnt, groupStmnt)
-        while (!(l.lookahead().getType().equals(";") || l.lookahead().getType().equals(TokenType.BRACKET))) {
-            switch (l.lookahead().getType()) {
-                case "variable" -> {
-                    myIdentifier = IdentifierType.instance.parse(l);
-                }
-                case "keyword" -> {
-                    switch (l.lookahead().getContent()) {
-                        case "for", "verticalflip", "horizontalflip", "horizontal", "vertical", "count", "average", "distinct", "null" -> {
-                            throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
-                        }
+
+        switch (l.lookahead().getType()) {
+            case "variable" -> {
+                myIdentifier = IdentifierType.instance.parse(l);
+                myTermR = TermRType.instance.parse(l);
+                item = new TermItem(myTermR, myIdentifier);
+            }
+            case "keyword" -> {
+                switch (l.lookahead().getContent()) {
+                    case "horizontal", "vertical" -> {
+                        myDirectionalTerm = DirectionalTermType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myDirectionalTerm);
+                    }
+                    case "for" -> {
+                        myLoop = LoopType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myLoop);
+                    }
+                    case "verticalflip", "horizontalflip", "count", "average", "distinct", "null" -> {
+                        throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
                     }
                 }
-                case "number" -> {
-                    myOrdinal = OrdinalType.instance.parse(l);
-                }
-                case "bracket" -> throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
-                default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
             }
-            myTermR = TermRType.instance.parse(l);
-        }
-
-
-        if (myTerm != null) {
-
-        } else if (myIdentifier != null) {
-            item = new TermItem(myTermR, myIdentifier);
-        } else if (myLoop != null) {
-
-        } else if (myFlipT != null) {
-
-        } else if (myOrdinal != null) {
-            item = new TermItem(myTermR, myOrdinal);
-        } else if (myDirectionalTerm != null) {
-
-        } else if (myFunDef != null) {
-
-        } else if (myDistinctT != null) {
-
+            case "number" -> {
+                myOrdinal = OrdinalType.instance.parse(l);
+                myTermR = TermRType.instance.parse(l);
+                item = new TermItem(myTermR, myOrdinal);
+            }
+            case "bracket" -> throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+            default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
         }
 
 

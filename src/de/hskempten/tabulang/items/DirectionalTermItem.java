@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class DirectionalTermItem {
+public class DirectionalTermItem implements LanguageItem {
     private String myString;
     private TermItem myTerm;
 

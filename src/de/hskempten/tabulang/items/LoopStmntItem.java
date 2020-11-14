@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class LoopStmntItem {
+public class LoopStmntItem implements LanguageItem {
     private StatementItem myStatement;
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;

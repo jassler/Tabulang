@@ -35,6 +35,13 @@ public class TermRType implements Parser {
 
                 item = new TermRItem();
             }
+            case "bracket" -> {
+                if ("{".equals(l.lookahead().getContent())) {
+                    item = new TermRItem();
+                } else {
+                    throw new ParseTimeException(l, "Illegal bracket: " + l.lookahead().getContent());
+                }
+            }
             default -> throw new ParseTimeException(l, "Not yet implemented type case in termR: " + l.lookahead().getType());
         }
 

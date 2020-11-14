@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class MarkStmntItem {
+public class MarkStmntItem implements LanguageItem {
     private TermItem myTerm;
     private TermItem mySecondTerm;
     private PredItem myPred;

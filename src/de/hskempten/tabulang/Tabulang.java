@@ -17,11 +17,18 @@ public class Tabulang {
         }
 
         //l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
-        l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
+        //l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
+        l.setText("function kopfZahlNachAbschluss(fach, semester)\n" +
+                "return horizontal for abschl in AbschlussListe{\n" +
+                "set kopfzahlEingeschriebene(fach, abschl, semester, semester);\n" +
+                "mark background 'red' if modularisiert(fach, abschl);\n" +
+                "mark background 'green' if not modularisiert(fach, abschl);\n" +
+                "group before 'Gesamt' using sum(mapValue);\n" +
+                "};");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);
-        parser.parse();
+        //parser.parse();
         l.reset();
         ProgramItem prg = parser.parseN();
         System.out.println("Number of statements: " + prg.getMyStatements().size());
