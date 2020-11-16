@@ -75,7 +75,7 @@ public class DatabaseConnection {
     }
 
     /* PRIVATE METHODS */
-    private static MSqlTableContent ExportCore(String query) {
+    public static MSqlTableContent ExportCore(String query) {
         try {
             _statement = _connection.createStatement();
             var resultSet = _statement.executeQuery(query);
