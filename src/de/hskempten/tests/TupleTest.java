@@ -75,6 +75,16 @@ class TupleTest {
                 new Object[]{13, "2", 12, "1"},
                 new String[]{"1", "3", "0", "2"}
         ), t.projection(1, 3, 0, 2));
+
+        assertEquals(new Tuple<>(
+                new Object[]{13, "2", 12, "1"},
+                new String[]{"1", "3", "0", "2"}
+        ), t.projection("1", "3", "0", "2"));
+
+        assertEquals(new Tuple<>(
+                new Object[]{13, "2", 12, "1"},
+                new String[]{"beta", "delta", "alpha", "gamma"}
+        ), t.newTupleWithNames(Arrays.asList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
     }
 
     @Test
