@@ -215,8 +215,15 @@ public class Table<E> {
         if(!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames, other.colNames);
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
-        Set<ArrayList<E>> lookup = new HashSet<>(tuples);
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+        Set<ArrayList<E>> lookup = new HashSet<>();
+
+        for(var t : tuples) {
+            if(!lookup.contains(t)) {
+                newRows.add(t);
+                lookup.add(t);
+            }
+        }
 
         for(var t : other.tuples) {
             if(!lookup.contains(t)) {
