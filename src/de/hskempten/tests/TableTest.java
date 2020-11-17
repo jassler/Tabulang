@@ -1,11 +1,9 @@
 package de.hskempten.tests;
 
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.TableHeaderMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
 import de.hskempten.tabulang.datatypes.Tuple;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 

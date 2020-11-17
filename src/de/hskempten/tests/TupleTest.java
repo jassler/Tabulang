@@ -13,7 +13,7 @@ class TupleTest {
     @Test
     public void testTupleDefaultValues() {
         Tuple<Object> t = new Tuple<>(new Object[]{"1", 2});
-        assertEquals(Arrays.asList("1", 2), t.getObjects());
+        assertEquals(Arrays.asList("1", 2), t.getElements());
         assertEquals(Arrays.asList("0", "1"), t.getNames());
         assertTrue(t.isHorizontal());
     }
@@ -53,7 +53,7 @@ class TupleTest {
         t.setHorizontal(false);
 
         t = t.concatenate(new Tuple<>(new String[]{"a", "b"}, new String[]{"c", "d"}));
-        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getObjects());
+        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getElements());
         assertEquals(Arrays.asList("0", "1", "c", "d"), t.getNames());
         assertFalse(t.isHorizontal());
     }

@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.datatypes;
+package de.hskempten.tabulang.datatypes.exceptions;
 
 import java.util.List;
 

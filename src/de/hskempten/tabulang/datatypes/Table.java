@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.datatypes;
 
+import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
+
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -39,7 +42,7 @@ public class Table<E> {
             if (t.size() != l)
                 throw new ArrayLengthMismatchException(t.size(), l);
 
-            this.tuples.add(new ArrayList<>(t.getObjects()));
+            this.tuples.add(new ArrayList<>(t.getElements()));
         }
     }
 
