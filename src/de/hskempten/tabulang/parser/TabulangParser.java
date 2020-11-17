@@ -33,6 +33,7 @@ public class TabulangParser {
     }
 
     public ProgramItem parseN() throws ParseTimeException{
+        l.lookahead();
         ProgramItem prg = ProgramType.instance.parse(l);
         return prg;
     }

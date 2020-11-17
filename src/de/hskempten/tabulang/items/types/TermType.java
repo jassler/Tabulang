@@ -24,15 +24,22 @@ public class TermType implements Parser {
         FunDefItem myFunDef;
         AggregationTItem myAggregationT;
         DistinctTItem myDistinctT;
+        FunCallItem myFunCall;
 
 
         //TODO find break conditions for term (loop, markStmnt, groupStmnt)
 
         switch (l.lookahead().getType()) {
             case "variable" -> {
-                myIdentifier = IdentifierType.instance.parse(l);
-                myTermR = TermRType.instance.parse(l);
-                item = new TermItem(myTermR, myIdentifier);
+                if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
+                    myFunCall = FunCallType.instance.parse(l);
+                    myTermR = TermRType.instance.parse(l);
+                    item = new TermItem(myTermR, myFunCall);
+                } else {
+                    myIdentifier = IdentifierType.instance.parse(l);
+                    myTermR = TermRType.instance.parse(l);
+                    item = new TermItem(myTermR, myIdentifier);
+                }
             }
             case "keyword" -> {
                 switch (l.lookahead().getContent()) {
@@ -46,17 +53,19 @@ public class TermType implements Parser {
                         myTermR = TermRType.instance.parse(l);
                         item = new TermItem(myTermR, myLoop);
                     }
-                    case "verticalflip", "horizontalflip", "count", "average", "distinct", "null" -> {
+                    case "verticalflip", "horizontalflip", "count", "average", "distinct", "null", "background", "foreground" -> {
                         throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
                     }
                 }
             }
-            case "number" -> {
+            case "number", "quotedString" -> {
                 myOrdinal = OrdinalType.instance.parse(l);
                 myTermR = TermRType.instance.parse(l);
                 item = new TermItem(myTermR, myOrdinal);
             }
-            case "bracket" -> throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+            case "bracket" -> {
+                throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+            }
             default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
         }
 

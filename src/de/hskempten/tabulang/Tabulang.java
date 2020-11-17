@@ -15,16 +15,18 @@ public class Tabulang {
         for (var t : TokenType.TOKEN_EXPRESSIONS) {
             l.addExpression(t);
         }
+        l.addOneLineCommentMarker("//");
 
         //l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
         //l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
         l.setText("function kopfZahlNachAbschluss(fach, semester)\n" +
                 "return horizontal for abschl in AbschlussListe{\n" +
                 "set kopfzahlEingeschriebene(fach, abschl, semester, semester);\n" +
-                "mark background 'red' if modularisiert(fach, abschl);\n" +
-                "mark background 'green' if not modularisiert(fach, abschl);\n" +
+                "//mark background 'red' if modularisiert(fach, abschl);\n" + // keyword background not yet implemented
+                "//mark background 'green' if not modularisiert(fach, abschl);\n" +
                 "group before 'Gesamt' using sum(mapValue);\n" +
                 "};");
+        //l.setText("");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);

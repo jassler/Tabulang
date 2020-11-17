@@ -19,8 +19,8 @@ public class TokenType {
     static {
         KEYWORD = new TokenExpression("keyword", "(after)|(and)|(as)|(background)|(before)|(direction)|" +
                 "(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|(function)|" +
-                "(hiding)|(horizontal)|(horizontalflip)|(if)|(iff)|(impl)|(in)|(intersect)|(mark)|(not)|(null)|(or)|" +
-                "(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)|(xor)");
+                "(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(iff)|(impl)|(in)|(intersect)|(mark)|(not)|(null)|" +
+                "(or)|(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)|(xor)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");
@@ -28,7 +28,7 @@ public class TokenType {
         BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/");
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)");
         COMMA = new TokenExpression("comma", ",");
-        QUOTEDSTRING = new TokenExpression("quotedString", "'[~']'");
+        QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
 
 
         TOKEN_EXPRESSIONS = new TokenExpression[]{

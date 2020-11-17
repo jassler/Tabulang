@@ -13,6 +13,7 @@ public class TermItem implements LanguageItem {
     private FunDefItem myFunDef;
     private AggregationTItem myAggregationT;
     private DistinctTItem myDistinctT;
+    private FunCallItem myFunCall;
 
     public TermItem(TermItem myTerm, TermRItem myTermR) {
         this.setMyTerm(myTerm);
@@ -57,6 +58,11 @@ public class TermItem implements LanguageItem {
     public TermItem(TermRItem myTermR, DistinctTItem myDistinctT) {
         this.setMyTermR(myTermR);
         this.setMyDistinctT(myDistinctT);
+    }
+
+    public TermItem(TermRItem myTermR, FunCallItem myFunCall){
+        this.setMyTermR(myTermR);
+        this.setMyFunCall(myFunCall);
     }
 
     public TermItem getMyTerm() {
@@ -137,5 +143,13 @@ public class TermItem implements LanguageItem {
 
     public void setMyDistinctT(DistinctTItem myDistinctT) {
         this.myDistinctT = myDistinctT;
+    }
+
+    public FunCallItem getMyFunCall() {
+        return myFunCall;
+    }
+
+    public void setMyFunCall(FunCallItem myFunCall) {
+        this.myFunCall = myFunCall;
     }
 }

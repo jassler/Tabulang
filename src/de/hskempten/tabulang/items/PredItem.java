@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class PredItem {
+public class PredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredRItem myPredR;

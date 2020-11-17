@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class QuotedStringItem {
+public class QuotedStringItem implements LanguageItem {
     //any char except the quote char
     private String myString;
 

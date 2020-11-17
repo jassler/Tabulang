@@ -31,15 +31,14 @@ public class TermRType implements Parser {
                 myTermR = TermRType.instance.parse(l);
                 item = new TermRItem(myTermR, myTerm, myOperator);
             }
-            case ";" -> {
-
+            case ";", "comma", "bracket" -> {
                 item = new TermRItem();
             }
-            case "bracket" -> {
-                if ("{".equals(l.lookahead().getContent())) {
+            case "keyword" -> {
+                if ("using".equals(l.lookahead().getContent())) {
                     item = new TermRItem();
                 } else {
-                    throw new ParseTimeException(l, "Illegal bracket: " + l.lookahead().getContent());
+                    throw new ParseTimeException(l, "Illegal keyword or not yet implemented: " + l.lookahead().getContent());
                 }
             }
             default -> throw new ParseTimeException(l, "Not yet implemented type case in termR: " + l.lookahead().getType());

@@ -19,7 +19,6 @@ public class LoopBodyType implements LanguageType {
 
         ArrayList<LoopStmntItem> myLoopStmnts = new ArrayList<LoopStmntItem>();
 
-        l.getNextTokenAndExpect(TokenType.BRACKET);
         while (!("bracket".equals(l.lookahead().getType()) && "}".equals(l.lookahead().getContent()))) {
             myLoopStmnts.add(LoopStmntType.instance.parse(l));
         }

@@ -2,20 +2,20 @@ package de.hskempten.tabulang.items;
 
 public class GroupStmntItem implements LanguageItem {
     private String myString;
-    private GroupAreaItem myGroupAream;
+    private GroupAreaItem myGroupArea;
     private TermItem myTerm;
     private FunCallItem myFunCall;
 
-    public GroupStmntItem(String myString, GroupAreaItem myGroupAream, TermItem myTerm, FunCallItem myFunCall) {
+    public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyString(myString);
-        this.setMyGroupAream(myGroupAream);
+        this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
     }
 
-    public GroupStmntItem(String myString, GroupAreaItem myGroupAream, TermItem myTerm) {
+    public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm) {
         this.setMyString(myString);
-        this.setMyGroupAream(myGroupAream);
+        this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
     }
 
@@ -30,14 +30,14 @@ public class GroupStmntItem implements LanguageItem {
         this.setMyTerm(myTerm);
     }
 
-    public GroupStmntItem(GroupAreaItem myGroupAream, TermItem myTerm, FunCallItem myFunCall) {
-        this.setMyGroupAream(myGroupAream);
+    public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
+        this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
     }
 
-    public GroupStmntItem(GroupAreaItem myGroupAream, TermItem myTerm) {
-        this.setMyGroupAream(myGroupAream);
+    public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm) {
+        this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
     }
 
@@ -58,12 +58,12 @@ public class GroupStmntItem implements LanguageItem {
         this.myString = myString;
     }
 
-    public GroupAreaItem getMyGroupAream() {
-        return myGroupAream;
+    public GroupAreaItem getMyGroupArea() {
+        return myGroupArea;
     }
 
-    public void setMyGroupAream(GroupAreaItem myGroupAream) {
-        this.myGroupAream = myGroupAream;
+    public void setMyGroupArea(GroupAreaItem myGroupArea) {
+        this.myGroupArea = myGroupArea;
     }
 
     public TermItem getMyTerm() {

@@ -26,7 +26,9 @@ public class LoopType implements Parser {
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         myTerm = TermType.instance.parse(l);
         if ("bracket".equals(l.lookahead().getType()) && "{".equals(l.lookahead().getContent())) {
+            l.getNextTokenAndExpect(TokenType.BRACKET);
             myLoopBody = LoopBodyType.instance.parse(l);
+            l.getNextTokenAndExpect(TokenType.BRACKET);
             item = new LoopItem(myIdentifier, myTerm, myLoopBody);
         } else {
             myLoopStmnt = LoopStmntType.instance.parse(l);

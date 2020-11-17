@@ -20,8 +20,6 @@ public class VListType implements Parser {
         IdentifierItem myIdentifier = null;
         ArrayList<IdentifierItem> myOtherIdentifiers = new ArrayList<>();
 
-        //TODO implement case if no identifiers in VList
-
         while (!l.lookahead().getContent().equals(")")) {
             if (myIdentifier == null) {
                 myIdentifier = IdentifierType.instance.parse(l);
@@ -49,7 +47,6 @@ public class VListType implements Parser {
         } else {
             item = new VListItem(myIdentifier, myOtherIdentifiers);
         }
-
 
         return item;
     }

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class TupelItem {
+public class TupelItem implements LanguageItem {
     private TermItem myTerm;
     private ArrayList<TermItem> myTerms;
     private IntervallItem myIntervall;
