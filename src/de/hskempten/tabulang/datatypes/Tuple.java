@@ -10,12 +10,8 @@ import java.util.stream.IntStream;
 public class Tuple<E> implements Cloneable, Iterable<E> {
 
     private final ArrayList<E> elements;
-    private final ArrayList<String> names;
+    private final HeaderNames names;
     private boolean isHorizontal;
-
-    // name - index lookup table
-    // best case, HashMap finds the index of a given name in O(1) complexity, worst O(n)
-    private final HashMap<String, Integer> nameLookup;
 
     /**
      * Create a new Tuple with the elements of the specified array in the order they are in.
@@ -107,24 +103,8 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      */
     public Tuple(List<E> elements, List<String> names, boolean isHorizontal) {
         this.elements = new ArrayList<>(elements);
-        this.names = new ArrayList<>(names);
+        this.names = new HeaderNames(names);
         this.isHorizontal = isHorizontal;
-
-        this.nameLookup = new HashMap<>(this.names.size());
-        for (int i = 0; i < this.names.size(); i++)
-            this.nameLookup.put(this.names.get(i), i);
-
-        if (this.elements.size() != this.names.size())
-            throw new ArrayLengthMismatchException(this.elements.size(), this.names.size());
-
-        // keys in map must not appear twice
-        // thus if map-keys-size is not the same as array size, there must be a duplicate value
-        if (this.nameLookup.keySet().size() != this.names.size()) {
-            Collections.sort(this.names);
-            String duplicate = findDuplicate(this.names);
-
-            throw new DuplicateNamesException(duplicate);
-        }
     }
 
     /**
@@ -151,7 +131,7 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      *
      * @return List of header names
      */
-    public List<String> getNames() {
+    public HeaderNames getNames() {
         return names;
     }
 
@@ -183,20 +163,7 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
     public E get(String name) {
-        int index = nameLookup.getOrDefault(name, -1);
-        if (index >= 0)
-            return elements.get(index);
-
-        try {
-            index = Integer.parseInt(name);
-            return elements.get(index);
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return elements.get(names.getIndexOf(name));
     }
 
     /**
@@ -208,22 +175,7 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
     public void set(String name, E value) {
-        int index = nameLookup.getOrDefault(name, -1);
-        if (index >= 0) {
-            elements.set(index, value);
-            return;
-        }
-
-        try {
-            index = Integer.parseInt(name);
-            elements.set(index, value);
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        elements.set(names.getIndexOf(name), value);
     }
 
     /**
@@ -238,8 +190,8 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
         newObjects.addAll(t.getElements());
 
         List<String> newNames = new ArrayList<>(names.size() + t.getNames().size());
-        newNames.addAll(names);
-        newNames.addAll(t.getNames());
+        newNames.addAll(names.getNames());
+        newNames.addAll(t.names.getNames());
 
         return new Tuple<>(newObjects, newNames, isHorizontal);
     }
@@ -333,7 +285,7 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
     @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
     protected Tuple<E> clone() {
-        return new Tuple<>(elements, names, isHorizontal);
+        return new Tuple<>(elements, names.getNames(), isHorizontal);
     }
 
     @Override

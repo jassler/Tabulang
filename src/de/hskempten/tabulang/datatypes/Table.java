@@ -29,7 +29,7 @@ public class Table<E> {
         this.tuples = new ArrayList<>(tuples.length);
 
         if (tuples.length > 0)
-            this.colNames = new ArrayList<>(tuples[0].getNames());
+            this.colNames = new ArrayList<>(tuples[0].getNames().getNames());
         else
             this.colNames = new ArrayList<>(0);
 
