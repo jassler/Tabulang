@@ -5,11 +5,9 @@ import com.github.jferard.fastods.OdsDocument;
 import com.github.jferard.fastods.OdsFactory;
 import com.github.jferard.fastods.Table;
 import de.hskempten.tabulang.libreOffice.Models.*;
-import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +15,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
 import org.w3c.dom.*;
@@ -28,7 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
-public class CalcConnection {
+public class OdsImportService {
     /* PROPERTIES */
     private String _instanceName;
     private String _tableName;
@@ -47,7 +46,7 @@ public class CalcConnection {
     private ArrayList<Row> _rowList;
 
     /* CONSTRUCTOR */
-    public CalcConnection(String instanceName, String tableName, String path, String fileName) {
+    public OdsImportService(String instanceName, String tableName, String path, String fileName) {
         _instanceName = instanceName;
         _tableName = tableName;
         _path = path;
@@ -56,6 +55,16 @@ public class CalcConnection {
     }
 
     /* PUBLIC METHODS */
+    public void Import(String path) {
+        try {
+            _odfDocument = OdfDocument.loadDocument(path);
+            FindElementInXml(_odfDocument.getContentDom().toString());
+            CopyToClipboard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void Export(MSqlTableContent MSqlTableContent){
         try {
             _table = _odsDocument.addTable(this._tableName);
@@ -68,12 +77,12 @@ public class CalcConnection {
         }
     }
 
-    public void Import(String path) {
+    /* PRIVATE METHODS */
+    private void SaveCalcFile(){
         try {
-            _odfDocument = OdfDocument.loadDocument(path);
-            FindElementInXml(_odfDocument.getContentDom().toString());
-            CopyToClipboard();
-        } catch (Exception e) {
+            _writer.saveAs(new File(this._path, this._fileName + ".ods"));
+        }
+        catch(IOException e){
             e.printStackTrace();
         }
     }
@@ -84,7 +93,6 @@ public class CalcConnection {
         clipboard.setContents(selection, selection);
     }
 
-    /* PRIVATE METHODS */
     private void FindElementInXml(String xml) {
         try {
             _documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -280,15 +288,6 @@ public class CalcConnection {
                     cell.setStringValue(content.get(i).get(j));
                 }
             }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void SaveCalcFile(){
-        try {
-            _writer.saveAs(new File(this._path, this._fileName + ".ods"));
         }
         catch(IOException e){
             e.printStackTrace();
