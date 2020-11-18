@@ -1,15 +1,8 @@
 package de.hskempten.tabulang.mySql;
 
-import de.hskempten.tabulang.libreOffice.CalcConnection;
-import de.hskempten.tabulang.libreOffice.OdfGenerator;
-import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
+import de.hskempten.tabulang.libreOffice.OdsExportService;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
-import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
-import java.io.File;
-import java.sql.Array;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MainClass {
@@ -91,7 +84,7 @@ public class MainClass {
 
         var wrapper = new MSqlTableContent("Test", headlines, content);
 
-        var odfGenerator = new OdfGenerator("YeahBlubb");
+        var odfGenerator = new OdsExportService("YeahBlubb");
         //var data = DatabaseConnection.ExportCore(query);
         odfGenerator.AddHeadlines(wrapper.get_headlines());
         odfGenerator.AddContent(wrapper.get_content());
@@ -116,6 +109,20 @@ public class MainClass {
         odfGenerator.SetBackgroundColor("#eaeaea");
         odfGenerator.SetColumnWidth(1, 8);
         odfGenerator.SetStyleToColumn(1);
+
+        odfGenerator.CreateTable("NOcheineTAbewlle");
+        odfGenerator.AddHeadlines(wrapper.get_headlines());
+        odfGenerator.AddContent(wrapper.get_content());
+        odfGenerator.CreateStyle();
+        odfGenerator.SetBold();
+        odfGenerator.SetCursive();
+        odfGenerator.SetUnderline();
+        odfGenerator.SetBackgroundColor("#ff0000");
+        odfGenerator.SetFontSize(30);
+        odfGenerator.SetFontColor("#007e8b");
+        odfGenerator.SetTextAlign("center");
+        odfGenerator.SetStyleToCell(0, 2);
+        odfGenerator.SetColumnWidth(2, 8);
 
         odfGenerator.CopyToClipboard();
 

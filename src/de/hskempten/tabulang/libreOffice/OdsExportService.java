@@ -17,7 +17,7 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.ArrayList;
 
-public class OdfGenerator {
+public class OdsExportService {
     private SpreadsheetDocument _spreadsheetDocument;
     private OdfFileDom _bodyDom;
     private OdfFileDom _stylesDom;
@@ -27,7 +27,7 @@ public class OdfGenerator {
     private Table _initTable;
     private ArrayList<Style> _styles;
 
-    public OdfGenerator(String tableName){
+    public OdsExportService(String tableName){
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
             _bodyDom = _spreadsheetDocument.getContentDom();
@@ -64,19 +64,9 @@ public class OdfGenerator {
         }
     }
 
-    public Table CreateTable(String tableName){
-        var table = _spreadsheetDocument.addTable();
-        table.setTableName(tableName);
-        return table;
-    }
-
-    public void AddTableToSpreadsheet(Table table){
-        try {
-            _spreadsheetDocument.appendSheet(table, table.getTableName());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void CreateTable(String tableName){
+        _initTable = _spreadsheetDocument.addTable();
+        _initTable.setTableName(tableName);
     }
 
     public void CreateStyle(){

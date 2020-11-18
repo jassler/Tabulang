@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.mySql;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.libreOffice.CalcConnection;
+import de.hskempten.tabulang.libreOffice.OdsExportService;
+import de.hskempten.tabulang.libreOffice.OdsImportService;
 import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 
@@ -45,8 +46,8 @@ public class DatabaseConnection {
         }
     }
 
-    public static void ExportToFile(String query, CalcConnection calcConnection){
-        calcConnection.Export(Objects.requireNonNull(ExportCore(query)));
+    public static void ExportToFile(String query, OdsImportService odsImportService){
+        odsImportService.Export(Objects.requireNonNull(ExportCore(query)));
     }
 
     public static Table<String> ExportAsTable(String query){
