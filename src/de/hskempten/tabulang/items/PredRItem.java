@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class PredRItem {
+public class PredRItem implements LanguageItem {
     private BinBoolItem myBinBool;
     private PredItem myPred;
 

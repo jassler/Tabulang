@@ -53,7 +53,13 @@ public class TermType implements Parser {
                         myTermR = TermRType.instance.parse(l);
                         item = new TermItem(myTermR, myLoop);
                     }
-                    case "verticalflip", "horizontalflip", "count", "average", "distinct", "null", "background", "foreground" -> {
+                    case "distinct" -> {
+                        myDistinctT = DistinctTType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myDistinctT);
+                    }
+
+                    case "verticalflip", "horizontalflip", "count", "average", "null", "background", "foreground" -> {
                         throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
                     }
                 }
@@ -64,7 +70,14 @@ public class TermType implements Parser {
                 item = new TermItem(myTermR, myOrdinal);
             }
             case "bracket" -> {
-                throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+                // TODO difference between "'(' term ')' termR" and "ordinal termR" if ordinal is a tuple?
+                if ("(".equals(l.lookahead().getContent())) {
+                    myOrdinal = OrdinalType.instance.parse(l);
+                    myTermR = TermRType.instance.parse(l);
+                    item = new TermItem(myTermR, myOrdinal);
+                } else {
+                    throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
+                }
             }
             default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
         }

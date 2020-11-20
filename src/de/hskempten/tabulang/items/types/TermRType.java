@@ -35,10 +35,17 @@ public class TermRType implements Parser {
                 item = new TermRItem();
             }
             case "keyword" -> {
-                if ("using".equals(l.lookahead().getContent())) {
-                    item = new TermRItem();
-                } else {
-                    throw new ParseTimeException(l, "Illegal keyword or not yet implemented: " + l.lookahead().getContent());
+
+                switch (l.lookahead().getContent()) {
+                    case "using", "as", "function", "if" -> {
+                        item = new TermRItem();
+                    }
+                    case "mark" -> {
+                        myMarkStmnt = MarkStmntType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermRItem(myTermR, myMarkStmnt);
+                    }
+                    default -> throw new ParseTimeException(l, "Illegal keyword or not yet implemented: " + l.lookahead().getContent());
                 }
             }
             default -> throw new ParseTimeException(l, "Not yet implemented type case in termR: " + l.lookahead().getType());

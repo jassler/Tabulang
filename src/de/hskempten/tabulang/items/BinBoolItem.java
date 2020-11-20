@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class BinBoolItem {
+public class BinBoolItem implements LanguageItem {
     //"and"/"or"/"xor"/"iff"/"impl"
     private String myString;
 

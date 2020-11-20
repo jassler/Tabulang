@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class PQuantifiedItem {
+public class PQuantifiedItem implements LanguageItem {
     private ExistsPredItem myExistsPred;
     private ForallPredItem myForallPred;
 

@@ -23,10 +23,10 @@ public class MarkStmntType implements LanguageType {
 
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         myTerm = TermType.instance.parse(l);
-        l.getNextTokenAndExpect(TokenType.KEYWORD);
         if (!"as".equals(l.lookahead().getContent())){
             throw new ParseTimeException(l, "Illegal keyword. Expected 'as', got: " + l.lookahead().getContent());
         }
+        l.getNextTokenAndExpect(TokenType.KEYWORD);
         mySecondTerm = TermType.instance.parse(l);
         if ("keyword".equals(l.lookahead().getType())){
             if(!"if".equals(l.lookahead().getContent())){
@@ -39,7 +39,6 @@ public class MarkStmntType implements LanguageType {
         }else{
             item = new MarkStmntItem(myTerm,mySecondTerm);
         }
-        l.getNextTokenAndExpect(TokenType.SEMICOLON);
 
         return item;
     }

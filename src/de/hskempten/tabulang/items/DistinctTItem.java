@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class DistinctTItem {
+public class DistinctTItem implements LanguageItem {
     private ArrayList<IdentifierItem> myIdentifiers;
     private TermItem myTerm;
 

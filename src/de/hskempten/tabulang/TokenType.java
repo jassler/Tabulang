@@ -13,14 +13,16 @@ public class TokenType {
     public static final TokenExpression BRACKET;
     public static final TokenExpression COMMA;
     public static final TokenExpression QUOTEDSTRING;
+    public static final TokenExpression BINRELSYM;
+    public static final TokenExpression BINBOOL;
 
     public static final TokenExpression[] TOKEN_EXPRESSIONS;
 
     static {
-        KEYWORD = new TokenExpression("keyword", "(after)|(and)|(as)|(background)|(before)|(direction)|" +
+        KEYWORD = new TokenExpression("keyword", "(after)|(as)|(background)|(before)|(direction)|" +
                 "(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|(function)|" +
-                "(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(iff)|(impl)|(in)|(intersect)|(mark)|(not)|(null)|" +
-                "(or)|(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)|(xor)");
+                "(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(in)|(intersect)|(mark)|(not)|(null)|" +
+                "(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");
@@ -29,6 +31,8 @@ public class TokenType {
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)");
         COMMA = new TokenExpression("comma", ",");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
+        BINRELSYM = new TokenExpression("binRelSym", "=|<|>|<=|>=|!=");
+        BINBOOL = new TokenExpression("binBool", "(and)|(or)|(xor)|(iff)|(impl)");
 
 
         TOKEN_EXPRESSIONS = new TokenExpression[]{
@@ -40,7 +44,9 @@ public class TokenType {
                 BINARY_OPERATOR,
                 BRACKET,
                 COMMA,
-                QUOTEDSTRING
+                QUOTEDSTRING,
+                BINRELSYM,
+                BINBOOL
         };
     }
 }

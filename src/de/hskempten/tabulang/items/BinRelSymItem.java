@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class BinRelSymItem {
+public class BinRelSymItem implements LanguageItem {
     private String myString;
 
     public BinRelSymItem(String myString) {
