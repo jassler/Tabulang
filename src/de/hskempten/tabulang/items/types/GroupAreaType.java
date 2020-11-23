@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.types;
 
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.GroupAreaItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
@@ -10,6 +11,16 @@ public class GroupAreaType implements Parser {
 
     @Override
     public GroupAreaItem parse(Lexer l) throws ParseTimeException {
-        throw new ParseTimeException(l, "Not yet implemented");
+        GroupAreaItem item;
+
+        //"before"/"after"
+        String myString;
+
+        myString = l.lookahead().getContent();
+        l.getNextTokenAndExpect(TokenType.KEYWORD);
+
+        item = new GroupAreaItem(myString);
+
+        return item;
     }
 }

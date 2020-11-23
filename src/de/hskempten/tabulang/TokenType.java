@@ -23,7 +23,7 @@ public class TokenType {
         KEYWORD = new TokenExpression("keyword", "(after)|(as)|(average)|(background)|(before)|(count)|" +
                 "(direction)|(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|" +
                 "(function)|(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(in)|(intersect)|(mark)|(not)|(null)|" +
-                "(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)");
+                "(return)|(set)|(size)|(suchThat)|(unite)|(using)|(vertical)|(verticalflip)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");

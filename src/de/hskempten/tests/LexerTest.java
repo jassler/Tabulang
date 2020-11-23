@@ -50,7 +50,7 @@ public class LexerTest {
                 "if in " +
                 //"intersect " +
                 "mark " +
-                "not null return set size suchthat unite using vertical " +
+                "not null return set size suchThat unite using vertical " +
                 //"verticalflip" +
                 "");
         l.lookahead();
