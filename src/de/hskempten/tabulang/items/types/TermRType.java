@@ -32,15 +32,9 @@ public class TermRType implements Parser {
                 myTermR = TermRType.instance.parse(l);
                 item = new TermRItem(myTermR, myTerm, myOperator);
             }
-            case ";", "comma", "bracket", "variable", "binRelSym" -> {
-                item = new TermRItem();
-            }
             case "keyword" -> {
 
                 switch (l.lookahead().getContent()) {
-                    case "using", "as", "function", "if" -> {
-                        item = new TermRItem();
-                    }
                     case "mark" -> {
                         myMarkStmnt = MarkStmntType.instance.parse(l);
                         myTermR = TermRType.instance.parse(l);
@@ -55,7 +49,16 @@ public class TermRType implements Parser {
                         myTermR = TermRType.instance.parse(l);
                         item = new TermRItem(myPreds, myTermR, myString);
                     }
-                    default -> throw new ParseTimeException(l, "Illegal keyword or not yet implemented: " + l.lookahead().getContent());
+                    case "intersect", "unite" -> {
+                        myString = l.lookahead().getContent();
+                        l.getNextTokenAndExpect(TokenType.KEYWORD);
+                        myTerm = TermType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermRItem(myTermR, myTerm, myString);
+                    }
+                    default -> {
+                        item = new TermRItem();
+                    }
                 }
             }
             case "." -> {
@@ -64,11 +67,19 @@ public class TermRType implements Parser {
                 myTermR = TermRType.instance.parse(l);
                 item = new TermRItem(myTermR, myTerm);
             }
-            default -> throw new ParseTimeException(l, "Not yet implemented type case in termR: " + l.lookahead().getType());
+            case "bracket" -> {
+                if ("(".equals(l.lookahead().getContent())) {
+                    myTupel = TupelType.instance.parse(l);
+                    myTermR = TermRType.instance.parse(l);
+                    item = new TermRItem(myTermR, myTupel);
+                } else {
+                    item = new TermRItem();
+                }
+            }
+            default -> {
+                item = new TermRItem();
+            }
         }
-
-        //TODO Implement TermRItem cases
-
 
         return item;
     }
