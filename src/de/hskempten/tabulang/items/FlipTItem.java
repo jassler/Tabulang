@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class FlipTItem {
+public class FlipTItem implements LanguageItem {
     private String myString; //"horizontal"/"vertical"
     private TermItem myTerm;
 

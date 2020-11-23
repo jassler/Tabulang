@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class ExistsPredItem {
+public class ExistsPredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredItem myPred;

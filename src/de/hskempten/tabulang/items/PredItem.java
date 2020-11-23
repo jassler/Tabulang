@@ -9,6 +9,7 @@ public class PredItem implements LanguageItem {
     private PredItem myPred;
     private PQuantifiedItem myPQuantified;
     private Boolean myBoolean;
+    private FunCallItem myFunCallItem; //TODO add funCall to pred?
 
     public PredItem(IdentifierItem myIdentifier, TermItem myTerm, PredRItem myPredR) {
         this.setMyIdentifier(myIdentifier);
@@ -41,6 +42,11 @@ public class PredItem implements LanguageItem {
     public PredItem(PredRItem myPredR, Boolean myBoolean) {
         this.myPredR = myPredR;
         this.myBoolean = myBoolean;
+    }
+
+    public PredItem(FunCallItem myFunCallItem, PredRItem myPredR) {
+        this.myFunCallItem = myFunCallItem;
+        this.myPredR = myPredR;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -105,5 +111,13 @@ public class PredItem implements LanguageItem {
 
     public void setMyBoolean(Boolean myBoolean) {
         this.myBoolean = myBoolean;
+    }
+
+    public FunCallItem getMyFunCallItem() {
+        return myFunCallItem;
+    }
+
+    public void setMyFunCallItem(FunCallItem myFunCallItem) {
+        this.myFunCallItem = myFunCallItem;
     }
 }

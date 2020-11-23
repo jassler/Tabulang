@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class CountTItem {
+public class CountTItem implements LanguageItem {
     //"horizontal"/"vertical"
     private String myString;
     private TermItem myTerm;

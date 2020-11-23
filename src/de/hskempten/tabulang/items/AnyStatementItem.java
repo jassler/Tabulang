@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class AnyStatementItem {
+public class AnyStatementItem implements LanguageItem {
     private StatementItem myStatement;
     private ReturnStmntItem myReturnStmnt;
     private SetStmntItem mySetStmnt;

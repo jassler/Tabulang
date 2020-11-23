@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class FunDefItem {
+public class FunDefItem implements LanguageItem {
     private VListItem myVList;
     private IdentifierItem myIdentifier;
     private FuncBodyItem myFuncBody;

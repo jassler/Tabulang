@@ -10,7 +10,7 @@ public class TermType implements Parser {
 
     @Override
     public TermItem parse(Lexer l) throws ParseTimeException {
-        TermItem item = null;
+        TermItem item;
 
         //'('
         TermItem myTerm;
@@ -58,8 +58,20 @@ public class TermType implements Parser {
                         myTermR = TermRType.instance.parse(l);
                         item = new TermItem(myTermR, myDistinctT);
                     }
-
-                    case "verticalflip", "horizontalflip", "count", "average", "null", "background", "foreground" -> {
+                    case "average", "count" -> {
+                        myAggregationT = AggregationTType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myAggregationT);
+                    }
+                    case "horizontalflip", "verticalflip" -> {
+                        myFlipT = FlipTType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myFlipT);
+                    }
+                    case "null" -> {
+                        throw new ParseTimeException(l, "Not yet implemented keyword case in the term: " + l.lookahead().getContent());
+                    }
+                    default -> {
                         throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
                     }
                 }
@@ -80,11 +92,6 @@ public class TermType implements Parser {
                 }
             }
             default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
-        }
-
-
-        if (item == null) {
-            throw new ParseTimeException("TermItem == null");
         }
 
         return item;

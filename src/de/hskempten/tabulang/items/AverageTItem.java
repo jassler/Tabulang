@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class AverageTItem {
+public class AverageTItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
 

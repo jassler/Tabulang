@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class AggregationTItem {
+public class AggregationTItem implements LanguageItem {
     private CountTItem myCountT;
     private AverageTItem myAverageT;
 

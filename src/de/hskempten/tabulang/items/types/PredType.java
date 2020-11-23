@@ -22,15 +22,20 @@ public class PredType implements LanguageType {
         PredItem myPred;
         PQuantifiedItem myPQuantified;
         Boolean myBoolean;
+        FunCallItem myFunCallItem;
 
         switch (l.lookahead().getType()) {
             case "variable" -> {
-                if ("keyword".equals(l.lookahead(2).getType()) && "if".equals(l.lookahead(2).getContent())) {
+                if ("keyword".equals(l.lookahead(2).getType()) && "in".equals(l.lookahead(2).getContent())) {
                     myIdentifier = IdentifierType.instance.parse(l);
                     l.getNextTokenAndExpect(TokenType.KEYWORD);
                     myTerm = TermType.instance.parse(l);
                     myPredR = PredRType.instance.parse(l);
                     item = new PredItem(myIdentifier, myTerm, myPredR);
+                } else if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
+                    myFunCallItem = FunCallType.instance.parse(l);
+                    myPredR = PredRType.instance.parse(l);
+                    item = new PredItem(myFunCallItem, myPredR);
                 } else {
                     myTerm = TermType.instance.parse(l);
                     if ("binRelSym".equals(l.lookahead().getType())) {

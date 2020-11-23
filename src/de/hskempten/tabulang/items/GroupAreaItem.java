@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class GroupAreaItem {
+public class GroupAreaItem implements LanguageItem {
     //"before"/"after"
     private String myString;
 

@@ -15,29 +15,30 @@ public class TokenType {
     public static final TokenExpression QUOTEDSTRING;
     public static final TokenExpression BINRELSYM;
     public static final TokenExpression BINBOOL;
+    public static final TokenExpression DOT;
 
     public static final TokenExpression[] TOKEN_EXPRESSIONS;
 
     static {
-        KEYWORD = new TokenExpression("keyword", "(after)|(as)|(background)|(before)|(direction)|" +
-                "(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|(function)|" +
-                "(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(in)|(intersect)|(mark)|(not)|(null)|" +
+        KEYWORD = new TokenExpression("keyword", "(after)|(as)|(average)|(background)|(before)|(count)|" +
+                "(direction)|(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|" +
+                "(function)|(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(in)|(intersect)|(mark)|(not)|(null)|" +
                 "(return)|(set)|(size)|(suchthat)|(unite)|(using)|(vertical)|(verticalflip)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");
         ASSIGN = new TokenExpression(":=", ":=");
-        BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/");
+        BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/|(div)|(mod)|\\^");
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)");
         COMMA = new TokenExpression("comma", ",");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
         BINRELSYM = new TokenExpression("binRelSym", "=|<|>|<=|>=|!=");
         BINBOOL = new TokenExpression("binBool", "(and)|(or)|(xor)|(iff)|(impl)");
+        DOT = new TokenExpression(".", "\\.");
 
 
         TOKEN_EXPRESSIONS = new TokenExpression[]{
                 KEYWORD,
-                VARIABLE,
                 NUMBER,
                 SEMICOLON,
                 ASSIGN,
@@ -46,7 +47,9 @@ public class TokenType {
                 COMMA,
                 QUOTEDSTRING,
                 BINRELSYM,
-                BINBOOL
+                BINBOOL,
+                DOT,
+                VARIABLE
         };
     }
 }
