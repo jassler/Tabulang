@@ -13,18 +13,18 @@ class TupleTest {
     @Test
     public void testTupleDefaultValues() {
         Tuple<Object> t = new Tuple<>(new Object[]{"1", 2});
-        assertEquals(Arrays.asList("1", 2), t.getObjects());
-        assertEquals(Arrays.asList("0", "1"), t.getNames());
+        assertEquals(Arrays.asList("1", 2), t.getElements());
+        assertEquals(Arrays.asList("0", "1"), t.getNames().getNames());
         assertTrue(t.isHorizontal());
     }
 
     @Test
     public void testTupleNameGeneration() {
         Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
-        assertEquals(Arrays.asList("0", "1", "2", "3"), t.getNames());
+        assertEquals(Arrays.asList("0", "1", "2", "3"), t.getNames().getNames());
 
-        t.getNames().set(0, "4");
-        assertEquals(Arrays.asList("4", "1", "2", "3"), t.getNames());
+        t.getNames().getNames().set(0, "4");
+        assertEquals(Arrays.asList("4", "1", "2", "3"), t.getNames().getNames());
     }
 
     @Test
@@ -53,8 +53,8 @@ class TupleTest {
         t.setHorizontal(false);
 
         t = t.concatenate(new Tuple<>(new String[]{"a", "b"}, new String[]{"c", "d"}));
-        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getObjects());
-        assertEquals(Arrays.asList("0", "1", "c", "d"), t.getNames());
+        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getElements());
+        assertEquals(Arrays.asList("0", "1", "c", "d"), t.getNames().getNames());
         assertFalse(t.isHorizontal());
     }
 
@@ -75,6 +75,16 @@ class TupleTest {
                 new Object[]{13, "2", 12, "1"},
                 new String[]{"1", "3", "0", "2"}
         ), t.projection(1, 3, 0, 2));
+
+        assertEquals(new Tuple<>(
+                new Object[]{13, "2", 12, "1"},
+                new String[]{"1", "3", "0", "2"}
+        ), t.projection("1", "3", "0", "2"));
+
+        assertEquals(new Tuple<>(
+                new Object[]{13, "2", 12, "1"},
+                new String[]{"beta", "delta", "alpha", "gamma"}
+        ), t.newTupleWithNames(Arrays.asList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
     }
 
     @Test

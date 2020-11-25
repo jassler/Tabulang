@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.datatypes;
 
+import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
+
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -26,7 +29,7 @@ public class Table<E> {
         this.tuples = new ArrayList<>(tuples.length);
 
         if (tuples.length > 0)
-            this.colNames = new ArrayList<>(tuples[0].getNames());
+            this.colNames = new ArrayList<>(tuples[0].getNames().getNames());
         else
             this.colNames = new ArrayList<>(0);
 
@@ -39,7 +42,7 @@ public class Table<E> {
             if (t.size() != l)
                 throw new ArrayLengthMismatchException(t.size(), l);
 
-            this.tuples.add(new ArrayList<>(t.getObjects()));
+            this.tuples.add(new ArrayList<>(t.getElements()));
         }
     }
 
@@ -215,8 +218,15 @@ public class Table<E> {
         if(!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames, other.colNames);
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
-        Set<ArrayList<E>> lookup = new HashSet<>(tuples);
+        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+        Set<ArrayList<E>> lookup = new HashSet<>();
+
+        for(var t : tuples) {
+            if(!lookup.contains(t)) {
+                newRows.add(t);
+                lookup.add(t);
+            }
+        }
 
         for(var t : other.tuples) {
             if(!lookup.contains(t)) {
