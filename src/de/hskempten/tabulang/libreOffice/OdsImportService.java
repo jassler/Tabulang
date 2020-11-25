@@ -1,9 +1,5 @@
 package de.hskempten.tabulang.libreOffice;
 
-import com.github.jferard.fastods.AnonymousOdsFileWriter;
-import com.github.jferard.fastods.OdsDocument;
-import com.github.jferard.fastods.OdsFactory;
-import com.github.jferard.fastods.Table;
 import de.hskempten.tabulang.libreOffice.Models.*;
 
 import java.awt.*;
@@ -11,11 +7,8 @@ import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.logging.Logger;
 
-import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
 import org.w3c.dom.*;
@@ -29,29 +22,14 @@ import java.io.*;
 
 public class OdsImportService {
     /* PROPERTIES */
-    private String _instanceName;
-    private String _tableName;
-    private String _path;
-    private String _fileName;
-    private OdsFactory _odsFactory;
-    private AnonymousOdsFileWriter _writer;
-    private OdsDocument _odsDocument;
     private OdfDocument _odfDocument;
     private Document _xmlDocument;
-    private DocumentBuilderFactory _documentBuilderFactory;
-    private DocumentBuilder _documentBuilder;
-    private Table _table;
     private Spreadsheet _spreadsheet;
     private ArrayList<Column> _columnList;
     private ArrayList<Row> _rowList;
 
     /* CONSTRUCTOR */
-    public OdsImportService(String instanceName, String tableName, String path, String fileName) {
-        _instanceName = instanceName;
-        _tableName = tableName;
-        _path = path;
-        _fileName = fileName;
-        CreateCalcConnection();
+    public OdsImportService() {
     }
 
     /* PUBLIC METHODS */
@@ -65,28 +43,7 @@ public class OdsImportService {
         }
     }
 
-    public void Export(MSqlTableContent MSqlTableContent){
-        try {
-            _table = _odsDocument.addTable(this._tableName);
-            CreateTableHeadline(MSqlTableContent.get_headlines());
-            CreateTableContent(MSqlTableContent.get_content());
-            SaveCalcFile();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
     /* PRIVATE METHODS */
-    private void SaveCalcFile(){
-        try {
-            _writer.saveAs(new File(this._path, this._fileName + ".ods"));
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
     private void CopyToClipboard() throws Exception {
         var selection = new StringSelection(_odfDocument.getContentDom().toString());
         var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -95,20 +52,14 @@ public class OdsImportService {
 
     private void FindElementInXml(String xml) {
         try {
-            _documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            _documentBuilder = _documentBuilderFactory.newDocumentBuilder();
+            DocumentBuilderFactory _documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder _documentBuilder = _documentBuilderFactory.newDocumentBuilder();
             _xmlDocument = _documentBuilder.parse(new InputSource(new StringReader(xml)));
             _xmlDocument.normalize();
             CreateAllLists();
             FontStyles();
             StylesWrapper();
             CreateTableWrapper();
-            /*
-            _tableWrapper._tableName = GetTableInformation("table:name");
-            _tableWrapper._styleName = GetTableInformation("table:style-name");
-            Columns();
-            Rows();
-             */
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
@@ -257,40 +208,6 @@ public class OdsImportService {
             if (node.hasChildNodes()) {
                 VisitRows(node.getChildNodes(), tagName);
             }
-        }
-    }
-
-    private void CreateCalcConnection(){
-        _odsFactory = OdsFactory.create(Logger.getLogger(this._instanceName), Locale.GERMANY);
-        _writer = _odsFactory.createWriter();
-        _odsDocument = _writer.document();
-    }
-
-    private void CreateTableHeadline(ArrayList<String> headlines) {
-        try {
-            for(var i = 0; i < headlines.size(); i++){
-                var row = _table.getRow(0);
-                var cell = row.getOrCreateCell(i);
-                cell.setStringValue(headlines.get(i));
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void CreateTableContent(ArrayList<ArrayList<String>> content){
-        try {
-            for(var i = 0; i < content.size(); i++){
-                var row = _table.getRow(i + 1);
-                for(var j = 0; j < content.get(i).size(); j++){
-                    var cell = row.getOrCreateCell(j);
-                    cell.setStringValue(content.get(i).get(j));
-                }
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
         }
     }
 }

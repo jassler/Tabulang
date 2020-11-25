@@ -1,14 +1,12 @@
 package de.hskempten.tabulang.libreOffice;
 
 import de.hskempten.tabulang.libreOffice.Models.Style;
-import org.odftoolkit.odfdom.dom.element.office.OfficeSpreadsheetElement;
+import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.dom.style.props.*;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
-import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
-import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
@@ -19,28 +17,26 @@ import java.util.ArrayList;
 
 public class OdsExportService {
     private SpreadsheetDocument _spreadsheetDocument;
-    private OdfFileDom _bodyDom;
-    private OdfFileDom _stylesDom;
     private OdfOfficeAutomaticStyles _odfOfficeAutomaticStyles;
-    private OdfOfficeStyles _odfOfficeStyles;
-    private OfficeSpreadsheetElement _officeSpreadsheetElement;
     private Table _initTable;
     private ArrayList<Style> _styles;
 
     public OdsExportService(String tableName){
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
-            _bodyDom = _spreadsheetDocument.getContentDom();
-            _stylesDom = _spreadsheetDocument.getStylesDom();
             _odfOfficeAutomaticStyles = _spreadsheetDocument.getContentDom().getOrCreateAutomaticStyles();
-            _odfOfficeStyles = _spreadsheetDocument.getOrCreateDocumentStyles();
-            _officeSpreadsheetElement = _spreadsheetDocument.getContentRoot();
             _initTable = _spreadsheetDocument.getSheetByIndex(0);
             _initTable.setTableName(tableName);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void InstantlyExportToFile(MSqlTableContent sqlTableContent, String path, String fileName){
+        AddHeadlines(sqlTableContent.get_headlines());
+        AddContent(sqlTableContent.get_content());
+        SaveFile(path, fileName);
     }
 
     public void AddHeadlines(ArrayList<String> headlines) {
@@ -57,8 +53,6 @@ public class OdsExportService {
     public void AddContent(ArrayList<ArrayList<String>> content){
         for(var i = 0; i < content.size(); i++){
             for(var j = 0; j < content.get(i).size(); j++){
-                var iIndex = content.get(i);
-                var jIndex = content.get(i).get(j);
                 _initTable.getCellByPosition(i, j + 1).setStringValue(String.valueOf(content.get(i).get(j)));
             }
         }
