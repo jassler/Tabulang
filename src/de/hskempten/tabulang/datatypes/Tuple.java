@@ -1,76 +1,154 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
+
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple {
+public class Tuple<E> implements Cloneable, Iterable<E> {
 
-    private final Object[] objects;
-
-    // namesSorted is sorted for binary search, hence we need to keep track on
-    // what index a name is actually pointing to
-    private final String[] names;
-    private final String[] namesSorted;
-    private final int[] nameIndex;
+    private final ArrayList<E> elements;
+    private final HeaderNames names;
     private boolean isHorizontal;
 
-    public Tuple(Object[] objects) {
+    /**
+     * Create a new Tuple with the elements of the specified array in the order they are in.
+     *
+     * <p>With no names given as second parameter, elements can be indexed by their position
+     * either as int or String, starting with 0.</p>
+     * 
+     * @param elements Elements inside the Tuple
+     */
+    public Tuple(E[] elements) {
         this(
-                objects,
-                IntStream.range(0, objects.length).boxed().map(String::valueOf).toArray(String[]::new)
+                elements,
+                IntStream.range(0, elements.length).boxed().map(String::valueOf).toArray(String[]::new)
         );
     }
 
-    public Tuple(Object[] objects, String[] names) {
-        this(objects, names, true);
+    /**
+     * See {@link Tuple#Tuple(Object[], String[], boolean)}
+     * 
+     * @param elements Elements inside the Tuple
+     * @param names Name for each element, where {@code objects.length == names.length}
+     *              
+     * @throws ArrayLengthMismatchException if objects and names array do not have the same length
+     * @throws DuplicateNamesException if names has at least one String appearing twice
+     */
+    public Tuple(E[] elements, String[] names) {
+        this(elements, names, true);
     }
 
-    public Tuple(Object[] objects, String[] names, boolean isHorizontal) {
-        this.objects = Arrays.copyOf(objects, objects.length);
-        this.names = Arrays.copyOf(names, names.length);
-        this.namesSorted = Arrays.copyOf(names, names.length);
-        this.nameIndex = IntStream.range(0, names.length)
-                .boxed().sorted(Comparator.comparing(i -> names[i]))
-                .mapToInt(ele -> ele).toArray();
+    /**
+     * Create a new Tuple with the elements of the specified array in the order they are in.
+     * Each element can be indexed either by its position as int, or by the corresponding tuple name.
+     *
+     * <p>It is assumed that {@code objects.length == names.length}, thus establishing a 1:1 relationship
+     * between element name and the element itself.</p>
+     *
+     * @param elements Elements inside the Tuple
+     * @param names Name for each element, where {@code objects.length == names.length}
+     * @param isHorizontal Are elements aligned horizontally or vertically?
+     *
+     * @throws ArrayLengthMismatchException if objects and names array do not have the same length
+     * @throws DuplicateNamesException if names has at least one String appearing twice
+     */
+    public Tuple(E[] elements, String[] names, boolean isHorizontal) {
+        this(Arrays.asList(elements), Arrays.asList(names), isHorizontal);
+    }
+
+    /**
+     * Create a new Tuple with the elements of the specified List in the order they are in.
+     *
+     * <p>With no names given as second parameter, elements can be indexed by their position
+     * either as int or String, starting with 0.</p>
+     *
+     * @param elements Elements inside the Tuple
+     */
+    public Tuple(List<E> elements) {
+        this(
+                elements,
+                IntStream.range(0, elements.size()).mapToObj(String::valueOf).collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * See {@link Tuple#Tuple(List, List, boolean)}
+     *
+     * @param elements Elements inside the Tuple
+     * @param names Name for each element, where {@code objects.size() == names.size()}
+     *
+     * @throws ArrayLengthMismatchException if objects and names List do not have the same length
+     * @throws DuplicateNamesException if names has at least one String appearing twice
+     */
+    public Tuple(List<E> elements, List<String> names) {
+        this(elements, names, true);
+    }
+
+    /**
+     * Create a new Tuple with the elements of the specified List in the order they are in.
+     * Each element can be indexed either by its position as int, or by the corresponding tuple name.
+     *
+     * <p>It is assumed that {@code objects.size() == names.size()}, thus establishing a 1:1 relationship
+     * between element name and the element itself. This also implies that each name must be unique.</p>
+     *
+     * @param elements Elements inside the Tuple
+     * @param names Name for each element, where {@code objects.length == names.length}
+     * @param isHorizontal Are elements aligned horizontally or vertically?
+     *
+     * @throws ArrayLengthMismatchException if objects and names array do not have the same length
+     * @throws DuplicateNamesException if names has at least one String appearing twice
+     */
+    public Tuple(List<E> elements, List<String> names, boolean isHorizontal) {
+        this.elements = new ArrayList<>(elements);
+        this.names = new HeaderNames(names);
         this.isHorizontal = isHorizontal;
-
-        Arrays.sort(this.namesSorted);
-
-        if (this.objects.length != this.namesSorted.length)
-            throw new ArrayLengthMismatchException(this.objects.length, this.namesSorted.length);
-
-        String duplicate = findDuplicate(this.namesSorted);
-        if(duplicate != null)
-            throw new DuplicateNamesException(duplicate);
     }
 
-    public Tuple(List<Object> objects) {
-        this(objects.toArray(new Object[0]));
+    /**
+     * Get elements of Tuple.
+     *
+     * <p><b>Do not tamper with the length of the list!</b> This method exists in good faith that one
+     * is only looking for through the elements and changing one or the other value. If the
+     * length of the list changes (eg. by adding an element or emptying the list), it's not synchronous
+     * to the tuple names anymore.</p>
+     *
+     * @return List of elements
+     */
+    public List<E> getElements() {
+        return elements;
     }
 
-    public Tuple(List<Object> objects, List<String> names) {
-        this(objects.toArray(new Object[0]), names.toArray(new String[0]));
-    }
-
-    public Tuple(List<Object> objects, List<String> names, boolean isHorizontal) {
-        this(objects.toArray(new Object[0]), names.toArray(new String[0]), isHorizontal);
-    }
-
-    public Object[] getObjects() {
-        return objects;
-    }
-
-    public String[] getNames() {
+    /**
+     * Get header names of tuple.
+     *
+     * <p><b>Do not tamper with the length of the list!</b> This method exists in good faith that one
+     * is only looking for through the header elements and changing one or the other value. If the
+     * length of the list changes (eg. by adding an element or emptying the list), it's not synchronous
+     * to the tuple elements anymore.</p>
+     *
+     * @return List of header names
+     */
+    public HeaderNames getNames() {
         return names;
     }
 
+    /**
+     * Get tuple orientation.
+     *
+     * @return {@code true} for horizontal, {@code false} for vertical.
+     */
     public boolean isHorizontal() {
         return isHorizontal;
     }
 
+    /**
+     * Set tuple orientation.
+     *
+     * @param horizontal Tuple orientation, {@code true} for horizontal, {@code false} for vertical.
+     */
     public void setHorizontal(boolean horizontal) {
         isHorizontal = horizontal;
     }
@@ -82,25 +160,10 @@ public class Tuple {
      * @param name Name or index number of element
      * @return Element object
      * @throws NumberFormatException          if name not present and not convertible into a number
-     * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
+     * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public Object get(String name) {
-        int index = Arrays.binarySearch(namesSorted, name);
-        if (index >= 0)
-            return objects[nameIndex[index]];
-
-        try {
-            index = Integer.parseInt(name);
-            return objects[index];
-        } catch (NumberFormatException e) {
-            // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+    public E get(String name) {
+        return elements.get(names.getIndexOf(name));
     }
 
     /**
@@ -109,27 +172,10 @@ public class Tuple {
      *
      * @param name Name or index number of element
      * @throws NumberFormatException          if name not present and not convertible into a number
-     * @throws ArrayIndexOutOfBoundsException if name not present and converted number is out of range
+     * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public void set(String name, Object value) {
-        int index = Arrays.binarySearch(namesSorted, name);
-        if (index >= 0) {
-            objects[nameIndex[index]] = value;
-            return;
-        }
-
-        try {
-            index = Integer.parseInt(name);
-            objects[index] = value;
-        } catch (NumberFormatException e) {
-            // TODO should those exceptions be handled differently?
-            throw e;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+    public void set(String name, E value) {
+        elements.set(names.getIndexOf(name), value);
     }
 
     /**
@@ -138,16 +184,16 @@ public class Tuple {
      * @param t Tuple with object elements and names to append
      * @return new concatenated tuple
      */
-    public Tuple concatenate(Tuple t) {
-        Object[] newObjects = new Object[objects.length + t.getObjects().length];
-        System.arraycopy(objects, 0, newObjects, 0, objects.length);
-        System.arraycopy(t.getObjects(), 0, newObjects, objects.length, t.getObjects().length);
+    public Tuple<E> concatenate(Tuple<E> t) {
+        List<E> newObjects = new ArrayList<>(elements.size() + t.getElements().size());
+        newObjects.addAll(elements);
+        newObjects.addAll(t.getElements());
 
-        String[] newNames = new String[names.length + t.getNames().length];
-        System.arraycopy(names, 0, newNames, 0, names.length);
-        System.arraycopy(t.getNames(), 0, newNames, names.length, t.getNames().length);
+        List<String> newNames = new ArrayList<>(names.size() + t.getNames().size());
+        newNames.addAll(names.getNames());
+        newNames.addAll(t.names.getNames());
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
     }
 
     /**
@@ -158,16 +204,45 @@ public class Tuple {
      * @param elements Element indexes
      * @return Tuple with selected indexes
      */
-    public Tuple projection(int... elements) {
-        Object[] newObjects = new Object[elements.length];
-        String[] newNames = new String[elements.length];
+    public Tuple<E> projection(int... elements) {
+        List<E> newObjects = new ArrayList<>(elements.length);
+        List<String> newNames = new ArrayList<>(elements.length);
 
-        for (int i = 0; i < elements.length; i++) {
-            newObjects[i] = objects[elements[i]];
-            newNames[i] = names[elements[i]];
+        for(int e : elements) {
+            newObjects.add(this.elements.get(e));
+            newNames.add(names.get(e));
         }
 
-        return new Tuple(newObjects, newNames, isHorizontal);
+        return new Tuple<>(newObjects, newNames, isHorizontal);
+    }
+
+    /**
+     * See {@link Tuple#projection(int...)}
+     *
+     * @param names Choose elements with (column) names
+     * @return Tuple with selected indexes
+     */
+    public Tuple<E> projection(String... names) {
+        List<E> newObjects = new ArrayList<>(names.length);
+        List<String> newNames = new ArrayList<>(names.length);
+
+        for(String name : names) {
+            newObjects.add(this.get(name));
+            newNames.add(name);
+        }
+
+        return new Tuple<>(newObjects, newNames, isHorizontal);
+    }
+
+    /**
+     * Tuple projection with no index, meaning this returns an empty tuple.
+     * This is kept here since function overloading with variadic parameters gets confused
+     * if no parameter is given.
+     *
+     * @return Tuple with no elements
+     */
+    public Tuple<E> projection() {
+        return new Tuple<>(new ArrayList<>(0));
     }
 
     /**
@@ -176,12 +251,12 @@ public class Tuple {
      * @param newNames New names list, must be same size as this tuple size
      * @return New tuple with copied object list and new names
      */
-    public Tuple newTupleWithNames(String[] newNames) {
-        if (newNames.length != objects.length) {
-            throw new ArrayLengthMismatchException(objects.length, newNames.length);
+    public Tuple<E> newTupleWithNames(List<String> newNames) {
+        if (newNames.size() != elements.size()) {
+            throw new ArrayLengthMismatchException(elements.size(), newNames.size());
         }
 
-        return new Tuple(objects, newNames, isHorizontal);
+        return new Tuple<>(elements, newNames, isHorizontal);
     }
 
     /**
@@ -190,41 +265,60 @@ public class Tuple {
      * @param arr Sorted String array with variable names
      * @return null, if no same string appears next to each other
      */
-    private static String findDuplicate(String[] arr) {
-        for(int i = 1; i < arr.length; i++) {
-            if(arr[i].equals(arr[i-1]))
-                return arr[i];
+    private static String findDuplicate(List<String> arr) {
+        for(int i = 1; i < arr.size(); i++) {
+            if(arr.get(i).equals(arr.get(i-1)))
+                return arr.get(i);
         }
         return null;
+    }
+
+    /**
+     * Number of elements in this tuple.
+     *
+     * @return Number of elements in this tuple.
+     */
+    public int size() {
+        return this.elements.size();
+    }
+
+    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
+    @Override
+    protected Tuple<E> clone() {
+        return new Tuple<>(elements, names.getNames(), isHorizontal);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple tuple = (Tuple) o;
+        Tuple<?> tuple = (Tuple<?>) o;
         return isHorizontal == tuple.isHorizontal &&
-                Arrays.equals(objects, tuple.objects) &&
-                Arrays.equals(names, tuple.names) &&
-                Arrays.equals(nameIndex, tuple.nameIndex);
+                elements.equals(tuple.elements) &&
+                names.equals(tuple.names);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(isHorizontal);
-        result = 31 * result + Arrays.hashCode(objects);
-        result = 31 * result + Arrays.hashCode(names);
-        result = 31 * result + Arrays.hashCode(nameIndex);
-        return result;
+        return Objects.hash(elements, names, isHorizontal);
     }
 
     @Override
     public String toString() {
         return "Tuple{" +
-                "objects=" + Arrays.toString(objects) +
-                ", names=" + Arrays.toString(names) +
-                ", nameIndex=" + Arrays.toString(nameIndex) +
+                "objects=" + elements +
+                ", names=" + names +
                 ", isHorizontal=" + isHorizontal +
                 '}';
+    }
+
+    /**
+     * Iterate through Tuple elements. Header names are dropped.
+     *
+     * @return iterator for elements List
+     */
+    @Override
+    public Iterator<E> iterator() {
+        return elements.iterator();
     }
 }
