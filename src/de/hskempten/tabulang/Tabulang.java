@@ -117,7 +117,7 @@ public class Tabulang {
         System.out.println("Number of statements: " + prg.getMyStatements().size());
         /*
         while(!l.isDone()) {
-            // assuming that everything must be an Assignment
+            // assuming that everything must be an AssignmentItem
             // later on, we can change it to Statement or Function or something
             var a = new Assignment(l);
             i.evaluate(a);

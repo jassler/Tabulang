@@ -1,4 +1,4 @@
-package de.hskempten.tests;
+/*package de.hskempten.tests;
 
 import de.hskempten.tabulang.datatypes.Tuple;
 import org.junit.jupiter.api.Test;
@@ -101,4 +101,4 @@ class TupleTest {
                 true
         ), t2);
     }
-}
+}*/

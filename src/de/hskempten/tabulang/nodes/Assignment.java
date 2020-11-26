@@ -40,7 +40,7 @@ public class Assignment extends Node {
 
     @Override
     public String toString() {
-        return "Assignment{" +
+        return "AssignmentItem{" +
                 "identifier='" + identifier + '\'' +
                 ", value=" + value +
                 '}';
