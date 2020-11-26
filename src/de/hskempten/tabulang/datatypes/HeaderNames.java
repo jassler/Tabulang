@@ -78,6 +78,14 @@ public class HeaderNames implements Iterable<String> {
         }
     }
 
+    /**
+     * <p>Get name list.</p>
+     *
+     * <p><b>Do not alter list</b>, otherwise the lookup table is not synced with the ArrayList! Use the
+     * {@link HeaderNames#add(String)} et al to change names.</p>
+     *
+     * @return names ArrayList
+     */
     public ArrayList<String> getNames() {
         return names;
     }
@@ -100,12 +108,7 @@ public class HeaderNames implements Iterable<String> {
     }
 
     public void addAll(Collection<? extends String> c) {
-        int index = names.size();
-        for(var s : c) {
-            nameLookup.put(s, index);
-            index++;
-        }
-        names.addAll(c);
+        c.stream().forEach(s -> add(s));
     }
 
     public boolean remove(String o) {
