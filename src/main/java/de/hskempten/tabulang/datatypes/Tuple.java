@@ -13,6 +13,8 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
     private final HeaderNames names;
     private boolean isHorizontal;
 
+    // TODO parent and style
+
     /**
      * Create a new Tuple with the elements of the specified array in the order they are in.
      *
@@ -320,5 +322,26 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
     @Override
     public Iterator<E> iterator() {
         return elements.iterator();
+    }
+
+    private class Itr implements Iterator<DataCell<E>> {
+        int cursor = 0;
+
+        private Itr() {}
+
+        @Override
+        public boolean hasNext() {
+            return cursor < elements.size();
+        }
+
+        @Override
+        public DataCell<E> next() {
+            if(!hasNext())
+                return null;
+
+            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), new Style());
+            cursor++;
+            return result;
+        }
     }
 }

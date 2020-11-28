@@ -35,6 +35,20 @@
             <version>5.7.0</version>
         </dependency>
 
+        <!-- https://search.maven.org/artifact/org.openjdk.jmh/jmh-core/1.26/jar -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.26</version>
+        </dependency>
+
+        <!-- https://search.maven.org/artifact/org.openjdk.jmh/jmh-generator-annprocess/1.26/jar -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.26</version>
+        </dependency>
+
     </dependencies>
 
 

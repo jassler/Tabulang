@@ -8,6 +8,8 @@ public class Style implements Iterable {
 
     private ArrayList<DataAnnotation> annotations;
 
+    public static final String FONT = "font";
+
     public Style(DataAnnotation... annotations) {
         this.annotations = new ArrayList<>(annotations.length);
         this.annotations.addAll(Arrays.asList(annotations));
