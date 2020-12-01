@@ -21,9 +21,9 @@ public class TokenType {
 
     static {
         KEYWORD = new TokenExpression("keyword", "(after)|(as)|(average)|(background)|(before)|(count)|" +
-                "(direction)|(distinct)|(else)|(exists)|(filter)|(forall)|(font)|(fontStyle)|(for)|(foreground)|(from)|" +
-                "(function)|(group)|(hiding)|(horizontal)|(horizontalflip)|(if)|(in)|(intersect)|(mark)|(not)|(null)|" +
-                "(return)|(set)|(size)|(suchThat)|(unite)|(using)|(vertical)|(verticalflip)");
+                "(direction)|(distinct)|(else)|(exists)|(filter)|(forall)|(fontStyle)|(font)|(foreground)|(for)|(from)|" +
+                "(function)|(group)|(hiding)|(horizontalflip)|(horizontal)|(if)|(intersect)|(in)|(mark)|(not)|(null)|" +
+                "(return)|(set)|(size)|(suchThat)|(unite)|(using)|(verticalflip)|(vertical)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
         SEMICOLON = new TokenExpression(";", ";");

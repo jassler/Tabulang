@@ -34,18 +34,18 @@ public class LexerTest {
 
     @Test
     void keywordLexer() throws ParseTimeException {
-        //TODO why doesn't lexer recognize the commented keywords as keywords?
+        //Keywords which start with an other keyword must be placed before the shorter one
         l.setText("after as average background before count direction distinct else exists filter forall font " +
-                //"fontStyle " +
+                "fontStyle " +
                 "for " +
-                //"foreground " +
+                "foreground " +
                 "from function group hiding horizontal " +
-                //"horizontalflip " +
+                "horizontalflip " +
                 "if in " +
-                //"intersect " +
+                "intersect " +
                 "mark " +
                 "not null return set size suchThat unite using vertical " +
-                //"verticalflip" +
+                "verticalflip" +
                 "");
         l.lookahead();
         while (!l.isDone()){
