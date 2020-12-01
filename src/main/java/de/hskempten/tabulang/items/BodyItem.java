@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class BodyItem implements LanguageItem {
+public class BodyItem implements StatementAST {
     //'{'
     private ArrayList<StatementItem> myStatements;
     //'}'

@@ -16,7 +16,7 @@ public class Tabulang {
         l.addOneLineCommentMarker("//");
 
         //l.setText("a := 9; b := 3; result := a + b * 3 - 20;");
-        //l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
+        l.setText("function xyz(asdf,jkl){return asdf;}a := 9; b := 3; result := a + b * 3 - 20;");
         /*l.setText("function kopfZahlNachAbschluss(fach, semester)\n" +
                 "return horizontal for abschl in AbschlussListe{\n" +
                 "set kopfzahlEingeschriebene(fach, abschl, semester, semester);\n" +
@@ -59,7 +59,7 @@ public class Tabulang {
                 "mark 'background' as 'green' if not modularisiert(fach, abschl);\n" +
                 "group before 'Gesamt' using sum(mapValue);\n" +
                 "};");*/
-        l.setText("// Beispiel 2\n" +
+        /*l.setText("// Beispiel 2\n" +
                 "function buildStatisticsRow(fach, abschlList, minSem, maxSem) {\n" +
                 "abs := absolventen(fach, abschlList, minSem, maxSem);\n" +
                 "return aside(count eingeschrieben(fach, abschlList, minSem, maxSem),\n" +
@@ -84,9 +84,9 @@ public class Tabulang {
                 "}\n" +
                 "function buildHeaderLinks(fachbereich)\n" +
                 "return ontop('Fächer/Abschlusse', ' ', vertical for fach in faecher{\n" +
-                /*"bereich:= ontop(fach mark fontstyle as 'fat',\n" +
-                "vertical for abschl in AbschlussListe filter\n" +
-                "abschlussExistiertFuerFach(fach) abschl);\n" +   // TODO no loopStmnt with only one identifier at page 8 function buildHeaderLinks*/
+                //"bereich:= ontop(fach mark fontstyle as 'fat',\n" +
+                //"vertical for abschl in AbschlussListe filter\n" +
+                //"abschlussExistiertFuerFach(fach) abschl);\n" +   // TODO no loopStmnt with only one identifier at page 8 function buildHeaderLinks
                 "c := count T1 filter abschl in (AbschlussListe- RelevanteAbschluesse);\n" +
                 "if (c > 0) bereich := ontop(bereich, 'Restliche' mark fontstyle as 'italic');\n" +
                 //"set horizontalflip bereich;\n" + //TODO lexer doesn't recognize some keywords as keywords at page 8
@@ -107,7 +107,7 @@ public class Tabulang {
                 "return aside(buildHaderLinks(fachbereich),\n" +
                 "ontop(jahresUeberschriften, alleJahreTab));\n" +
                 "}" +
-                "");
+                "");*/
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);

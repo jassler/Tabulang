@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class SetStmntItem implements LanguageItem {
+public class SetStmntItem implements AnyStatementAST {
     private TermItem myTerm;
 
     public SetStmntItem(TermItem myTerm) {

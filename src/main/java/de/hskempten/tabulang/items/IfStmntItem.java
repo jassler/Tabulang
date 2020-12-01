@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class IfStmntItem implements LanguageItem {
+public class IfStmntItem implements StatementAST {
     //'if'
     private PredItem myPred;
     private AnyStatementItem myAnyStatement;
