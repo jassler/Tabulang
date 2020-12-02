@@ -7,13 +7,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E> implements Cloneable, Iterable<E> {
+public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCell<E>> {
 
     private final ArrayList<E> elements;
     private final HeaderNames names;
     private boolean isHorizontal;
 
     // TODO parent and style
+    private final TupleStyle tupleStyle;
 
     /**
      * Create a new Tuple with the elements of the specified array in the order they are in.
@@ -104,8 +105,28 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
     public Tuple(List<E> elements, List<String> names, boolean isHorizontal) {
+        this(elements, names, isHorizontal, new TupleStyle(), null);
+    }
+
+    /**
+     * Create a new Tuple with the elements of the specified List in the order they are in.
+     * Each element can be indexed either by its position as int, or by the corresponding tuple name.
+     *
+     * <p>It is assumed that {@code objects.size() == names.size()}, thus establishing a 1:1 relationship
+     * between element name and the element itself. This also implies that each name must be unique.</p>
+     *
+     * @param elements     Elements inside the Tuple
+     * @param names        Name for each element, where {@code objects.length == names.length}
+     * @param isHorizontal Are elements aligned horizontally or vertically?
+     * @param parent       Parent table object this tuple belongs to
+     * @throws ArrayLengthMismatchException if objects and names array do not have the same length
+     * @throws DuplicateNamesException      if names has at least one String appearing twice
+     */
+    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, TupleStyle tupleStyle, TableObject parent) {
+        super(parent);
         this.elements = new ArrayList<>(elements);
         this.names = new HeaderNames(names);
+        this.tupleStyle = tupleStyle;
         this.isHorizontal = isHorizontal;
     }
 
@@ -320,14 +341,18 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
      * @return iterator for elements List
      */
     @Override
-    public Iterator<E> iterator() {
-        return elements.iterator();
+    public Iterator<DataCell<E>> iterator() {
+        return new Itr(this);
+        // return elements.iterator();
     }
 
     private class Itr implements Iterator<DataCell<E>> {
-        int cursor = 0;
+        private final TableObject parent;
+        private int cursor = 0;
 
-        private Itr() {}
+        private Itr(TableObject parent) {
+            this.parent = parent;
+        }
 
         @Override
         public boolean hasNext() {
@@ -336,10 +361,10 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
 
         @Override
         public DataCell<E> next() {
-            if(!hasNext())
+            if (!hasNext())
                 return null;
 
-            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), new Style());
+            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), new Style(), parent);
             cursor++;
             return result;
         }
