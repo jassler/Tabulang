@@ -6,7 +6,10 @@ import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class Table<E> {
+public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
+
+
+    private HashMap<Integer, TupleStyle> rowStyles;
 
     private final ArrayList<ArrayList<E>> tuples;
     private boolean transposed = false;
@@ -26,6 +29,23 @@ public class Table<E> {
      */
     @SafeVarargs
     public Table(Tuple<E>... tuples) {
+        this(null, tuples);
+    }
+
+    /**
+     * Create table with rows of tuples.
+     *
+     * <p>All tuples are assumed to have the same amount of elements.
+     * Elements will be copied. A table only has one set of column header names,
+     * so it will be taken from the first tuples parameter. All header names from the
+     * other tuples will be stripped away.
+     *
+     * @param parent Parent table object this table sits in
+     * @param tuples Rows of tuples
+     */
+    @SafeVarargs
+    public Table(TableObject parent, Tuple<E>... tuples) {
+        super(parent);
         this.tuples = new ArrayList<>(tuples.length);
 
         if (tuples.length > 0)
@@ -53,7 +73,7 @@ public class Table<E> {
      * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
      */
     public Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples) {
-        this(colNames, tuples, true);
+        this(colNames, tuples, true, null);
     }
 
     /**
@@ -63,14 +83,15 @@ public class Table<E> {
      * (beside the colLookup HashMap).
      *
      * @param colNames Column header names
-     * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
+     * @param tuples   Rows of tuples, each row having the same amount of elements as {@code colNames}
      * @param deepCopy If false, simply point the lists to the parameters given. Else create new {@code ArrayList} for each tuple
      */
-    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy) {
-        if(deepCopy) {
+    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy, TableObject parent) {
+        super(parent);
+        if (deepCopy) {
             this.colNames = new ArrayList<>(colNames);
             this.tuples = new ArrayList<>(tuples.size());
-            for(var t : tuples)
+            for (var t : tuples)
                 this.tuples.add(new ArrayList<>(t));
         } else {
             this.colNames = colNames;
@@ -78,12 +99,32 @@ public class Table<E> {
         }
 
         this.colLookup = new HashMap<>(this.colNames.size());
-        for(int i = 0; i < this.colNames.size(); i++)
+        for (int i = 0; i < this.colNames.size(); i++)
             this.colLookup.put(this.colNames.get(i), i);
     }
 
+    public static void main(String[] args) {
+        Table<String> t = new Table<>();
+
+
+        for (Tuple<String> row : t) {
+            for (DataCell cell : row) {
+
+            }
+        }
+    }
+
     public Tuple<E> getRow(int rowNum) {
-        return new Tuple<>(tuples.get(rowNum), colNames, !transposed);
+        return new Tuple<>(tuples.get(rowNum), colNames, !transposed, null, this);
+    }
+
+    /**
+     * Use carefully!
+     *
+     * @return tuple arraylist
+     */
+    public ArrayList<ArrayList<E>> getRows() {
+        return tuples;
     }
 
     public void transpose() {
@@ -92,6 +133,10 @@ public class Table<E> {
 
     public boolean isTransposed() {
         return transposed;
+    }
+
+    public ArrayList<String> getColNames() {
+        return colNames;
     }
 
     /**
@@ -122,7 +167,7 @@ public class Table<E> {
                 newRows.add(row);
         }
 
-        return new Table<>(colNames, newRows);
+        return new Table<>(colNames, newRows, true, getParent());
     }
 
     /**
@@ -156,7 +201,7 @@ public class Table<E> {
             newRows.add(newRow);
         }
 
-        return new Table<>(newColNames, newRows, false);
+        return new Table<>(newColNames, newRows, false, getParent());
     }
 
     /**
@@ -182,7 +227,7 @@ public class Table<E> {
      * @return an empty Table
      */
     public Table<E> projection() {
-        return new Table<>();
+        return new Table<>(getParent());
     }
 
     /**
@@ -204,7 +249,7 @@ public class Table<E> {
                 newRows.add(new ArrayList<>(t));
         }
 
-        return new Table<>(colNames, newRows, false);
+        return new Table<>(colNames, newRows, false, getParent());
     }
 
     /**
@@ -235,7 +280,7 @@ public class Table<E> {
             }
         }
 
-        return new Table<>(colNames, newRows, false);
+        return new Table<>(colNames, newRows, false, getParent());
     }
 
     /**
@@ -255,7 +300,7 @@ public class Table<E> {
             newRows.remove(t);
         }
 
-        return new Table<>(colNames, newRows, false);
+        return new Table<>(colNames, newRows, false, getParent());
     }
 
     /**
@@ -290,7 +335,7 @@ public class Table<E> {
         newColNames.addAll(colNames);
         newColNames.addAll(other.colNames);
 
-        return new Table<>(newColNames, newRows, false);
+        return new Table<>(newColNames, newRows, false, getParent());
     }
 
     /**
@@ -333,15 +378,15 @@ public class Table<E> {
                 newColNames.add(other.colNames.get(i));
         }
 
-        return new Table<>(newColNames, newRows, false);
+        return new Table<>(newColNames, newRows, false, getParent());
     }
 
     @Override
     public String toString() {
         return "Table{" +
-                "tuples=" + tuples +
-                ", transposed=" + transposed +
+                "transposed=" + transposed +
                 ", colNames=" + colNames +
+                ", tuples=" + tuples +
                 '}';
     }
 
@@ -358,5 +403,29 @@ public class Table<E> {
     @Override
     public int hashCode() {
         return Objects.hash(tuples, transposed, colNames);
+    }
+
+    @Override
+    public Iterator<Tuple<E>> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<Tuple<E>> {
+        private int cursor = 0;
+
+        @Override
+        public boolean hasNext() {
+            return cursor < tuples.size();
+        }
+
+        @Override
+        public Tuple<E> next() {
+            if (!hasNext())
+                return null;
+
+            Tuple<E> result = getRow(cursor);
+            cursor++;
+            return result;
+        }
     }
 }

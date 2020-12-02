@@ -1,39 +1,67 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.*;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-public class Style implements Iterable {
+public class Style implements Iterable<Map.Entry<String, String>> {
 
-    private ArrayList<DataAnnotation> annotations;
+    public static final String COLOR = "color";
 
-    public Style(DataAnnotation... annotations) {
-        this.annotations = new ArrayList<>(annotations.length);
-        this.annotations.addAll(Arrays.asList(annotations));
+    public static final String FONT = "font";
+    public static final String BACKGROUNDCOLOR = "backgroundcolor";
+    //    private ArrayList<DataAnnotation> annotations;
+    private final HashMap<String, String> annotations;
+
+
+    public Style() {
+        this.annotations = new HashMap<>();
     }
 
-    public ArrayList<DataAnnotation> getAnnotations() {
+    public HashMap<String, String> getAnnotations() {
         return annotations;
     }
 
-    public Style addFont(String fonttype) {
-        annotations.add(new DataAnnotation("font", fonttype));
+    public Style setFont(String font) {
+        annotations.put(FONT, font);
         return this;
     }
 
-    public Style addColor(String c) {
-        annotations.add(new DataAnnotation("color", c));
+    public Style setColor(String c) {
+        annotations.put(COLOR, c);
         return this;
     }
 
-    public Style addBackgroundColor(String c) {
-        annotations.add(new DataAnnotation("background", c));
+    public Style setColor(Color c) {
+        annotations.put(COLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
+        return this;
+    }
+
+    public Style setBackgroundColor(String c) {
+        annotations.put(BACKGROUNDCOLOR, c);
+        return this;
+    }
+
+    public Style setBackgroundColor(Color c) {
+        annotations.put(BACKGROUNDCOLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
+        return this;
+    }
+
+    public Style setAttribute(String attribute, String value) {
+        annotations.put(attribute, value);
+        return this;
+    }
+
+    public Style importStyle(Style s) {
+        for (var a : s) {
+            annotations.put(a.getKey(), a.getValue());
+        }
         return this;
     }
 
     @Override
-    public Iterator<DataAnnotation> iterator() {
-        return annotations.iterator();
+    public Iterator<Map.Entry<String, String>> iterator() {
+        return annotations.entrySet().iterator();
     }
 }
