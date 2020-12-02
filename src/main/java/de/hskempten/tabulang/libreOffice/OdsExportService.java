@@ -33,6 +33,10 @@ public class OdsExportService {
         }
     }
 
+    public void Export(de.hskempten.tabulang.datatypes.Table table){
+
+    }
+
     public void InstantlyExportToFile(MSqlTableContent sqlTableContent, String path, String fileName){
         AddHeadlines(sqlTableContent.get_headlines());
         AddContent(sqlTableContent.get_content());
