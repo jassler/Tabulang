@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.mySql;
 
+import de.hskempten.tabulang.datatypes.Style;
+import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.OdsExportService;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 
@@ -57,75 +60,100 @@ public class MainClass {
         // OPEN FILE AND CALL IMPORT FUNCTION
         //calcConnection.Import(new File(_path, _fileName+".ods").toString());
 
-        var headlines = new ArrayList<String>();
-        headlines.add("id");
-        headlines.add("firstname");
-        headlines.add("lastname");
+//        var headlines = new ArrayList<String>();
+//        headlines.add("id");
+//        headlines.add("firstname");
+//        headlines.add("lastname");
+//
+//        var content = new ArrayList<ArrayList<String>>();
+//        var line1 = new ArrayList<String>();
+//        line1.add("1");
+//        line1.add("2");
+//        line1.add("3");
+//
+//        var line2 = new ArrayList<String>();
+//        line2.add("simon");
+//        line2.add("anna");
+//        line2.add("michi");
+//
+//        var line3 = new ArrayList<String>();
+//        line3.add("staiger");
+//        line3.add("müller");
+//        line3.add("wolf");
+//
+//        content.add(line1);
+//        content.add(line2);
+//        content.add(line3);
+//
+//        var wrapper = new MSqlTableContent("Test", headlines, content);
+//
+//        var odfGenerator = new OdsExportService("YeahBlubb");
+//        //var data = DatabaseConnection.ExportCore(query);
+//        odfGenerator.AddHeadlines(wrapper.get_headlines());
+//        odfGenerator.AddContent(wrapper.get_content());
+//
+//        odfGenerator.CreateStyle();
+//        odfGenerator.SetBackgroundColor("#007e8b");
+//        odfGenerator.SetRowHeight(3, 7);
+//        odfGenerator.SetStyleToRow(2);
+//
+//        odfGenerator.CreateStyle();
+//        odfGenerator.SetBold();
+//        odfGenerator.SetCursive();
+//        odfGenerator.SetUnderline();
+//        odfGenerator.SetBackgroundColor("#ff0000");
+//        odfGenerator.SetFontSize(30);
+//        odfGenerator.SetFontColor("#007e8b");
+//        odfGenerator.SetTextAlign("center");
+//        odfGenerator.SetStyleToCell(0, 2);
+//        odfGenerator.SetColumnWidth(2, 8);
+//
+//        odfGenerator.CreateStyle();
+//        odfGenerator.SetBackgroundColor("#eaeaea");
+//        odfGenerator.SetColumnWidth(1, 8);
+//        odfGenerator.SetStyleToColumn(1);
+//
+//        odfGenerator.CreateTable("NOcheineTAbewlle");
+//        odfGenerator.AddHeadlines(wrapper.get_headlines());
+//        odfGenerator.AddContent(wrapper.get_content());
+//        odfGenerator.CreateStyle();
+//        odfGenerator.SetBold();
+//        odfGenerator.SetCursive();
+//        odfGenerator.SetUnderline();
+//        odfGenerator.SetBackgroundColor("#ff0000");
+//        odfGenerator.SetFontSize(30);
+//        odfGenerator.SetFontColor("#007e8b");
+//        odfGenerator.SetTextAlign("center");
+//        odfGenerator.SetStyleToCell(0, 2);
+//        odfGenerator.SetColumnWidth(2, 8);
+//
+//        odfGenerator.CopyToClipboard();
+//
+//        odfGenerator.SaveFile("C:\\Users\\sstaiger\\Desktop", "test_ods");
 
-        var content = new ArrayList<ArrayList<String>>();
-        var line1 = new ArrayList<String>();
-        line1.add("1");
-        line1.add("2");
-        line1.add("3");
+        Table<String> t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"}),
+                new Tuple<>(new String[]{"Fegex", "Fritz", "Dadrid"}),
+                new Tuple<>(new String[]{"Haana", "Meher", "Berlqn"}),
+                new Tuple<>(new String[]{"Vasrb", "IerbA", "Madrid"}),
+                new Tuple<>(new String[]{"Nocwa", "Ashsa", "Rzudsh"})
+        );
 
-        var line2 = new ArrayList<String>();
-        line2.add("simon");
-        line2.add("anna");
-        line2.add("michi");
+        t.setColumnStyle(1, new Style().setColor("#123456").setFont("Arial").setAttribute("colwidth", "12"));
+        t.setRowStyle(0, new Style().setFont("Times"));
+        t.setRowStyle(2, new Style().setFont("Monaco"));
 
-        var line3 = new ArrayList<String>();
-        line3.add("staiger");
-        line3.add("müller");
-        line3.add("wolf");
+        t.setRowHeight(3, 16.7);
+        t.setColumnWidth(1, 123);
 
-        content.add(line1);
-        content.add(line2);
-        content.add(line3);
+        t.setCellStyle(2, 2, new Style().setUnderlined(true).setBold(true));
+        t.setCellStyle(0, 0, new Style().setItalics(true));
 
-        var wrapper = new MSqlTableContent("Test", headlines, content);
-
-        var odfGenerator = new OdsExportService("YeahBlubb");
-        //var data = DatabaseConnection.ExportCore(query);
-        odfGenerator.AddHeadlines(wrapper.get_headlines());
-        odfGenerator.AddContent(wrapper.get_content());
-
-        odfGenerator.CreateStyle();
-        odfGenerator.SetBackgroundColor("#007e8b");
-        odfGenerator.SetRowHeight(3, 7);
-        odfGenerator.SetStyleToRow(2);
-
-        odfGenerator.CreateStyle();
-        odfGenerator.SetBold();
-        odfGenerator.SetCursive();
-        odfGenerator.SetUnderline();
-        odfGenerator.SetBackgroundColor("#ff0000");
-        odfGenerator.SetFontSize(30);
-        odfGenerator.SetFontColor("#007e8b");
-        odfGenerator.SetTextAlign("center");
-        odfGenerator.SetStyleToCell(0, 2);
-        odfGenerator.SetColumnWidth(2, 8);
-
-        odfGenerator.CreateStyle();
-        odfGenerator.SetBackgroundColor("#eaeaea");
-        odfGenerator.SetColumnWidth(1, 8);
-        odfGenerator.SetStyleToColumn(1);
-
-        odfGenerator.CreateTable("NOcheineTAbewlle");
-        odfGenerator.AddHeadlines(wrapper.get_headlines());
-        odfGenerator.AddContent(wrapper.get_content());
-        odfGenerator.CreateStyle();
-        odfGenerator.SetBold();
-        odfGenerator.SetCursive();
-        odfGenerator.SetUnderline();
-        odfGenerator.SetBackgroundColor("#ff0000");
-        odfGenerator.SetFontSize(30);
-        odfGenerator.SetFontColor("#007e8b");
-        odfGenerator.SetTextAlign("center");
-        odfGenerator.SetStyleToCell(0, 2);
-        odfGenerator.SetColumnWidth(2, 8);
-
-        odfGenerator.CopyToClipboard();
-
-        odfGenerator.SaveFile("C:\\Users\\sstaiger\\Desktop", "test_ods");
+        var service = new OdsExportService("Test");
+        service.Export(t, "C:\\Users\\sstaiger\\Desktop", "transformed");
     }
 }

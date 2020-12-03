@@ -28,8 +28,7 @@ public class OdsImportService {
     private ArrayList<Row> _rowList;
 
     /* CONSTRUCTOR */
-    public OdsImportService() {
-    }
+    public OdsImportService() {}
 
     /* PUBLIC METHODS */
     public void Import(String path) {

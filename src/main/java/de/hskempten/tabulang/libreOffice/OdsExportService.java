@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.libreOffice;
 
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Models.Style;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
@@ -10,17 +11,19 @@ import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
+import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OdsExportService {
+    /* PROPERTIES */
     private SpreadsheetDocument _spreadsheetDocument;
     private OdfOfficeAutomaticStyles _odfOfficeAutomaticStyles;
     private Table _initTable;
     private ArrayList<Style> _styles;
 
+    /* PUBLIC METHODS */
     public OdsExportService(String tableName){
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
@@ -33,8 +36,29 @@ public class OdsExportService {
         }
     }
 
-    public void Export(de.hskempten.tabulang.datatypes.Table table){
+    public void Export(de.hskempten.tabulang.datatypes.Table table, String path, String fileName){
+        var content = new ArrayList<ArrayList<String>>();
+        for(var item : table){
+            var contentRows = new ArrayList<String>();
+            for(var cell : (Tuple<String>) item){
+                contentRows.add(cell.getData());
+            }
+            content.add(contentRows);
+        }
+        AddHeadlines(table.getColNames().getNames());
+        AddContentFromTable(content);
+        SetRowStylesFromTable(table.getRowStyles());
+        SetColumnStylesFromTable(table.getColumnStyles());
+        SetCellStylesFromTable(table.getCellStyles());
+        SaveFile(path, fileName);
+    }
 
+    public void AddContentFromTable(ArrayList<ArrayList<String>> content){
+        for(var i = 0; i < content.size(); i++){
+            for(var j = 0; j < content.get(i).size(); j++){
+                _initTable.getCellByPosition(j, i + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+            }
+        }
     }
 
     public void InstantlyExportToFile(MSqlTableContent sqlTableContent, String path, String fileName){
@@ -69,7 +93,6 @@ public class OdsExportService {
 
     public void CreateStyle(){
         this._styles = new ArrayList<>();
-        //this.OdfStyle = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
     }
     
     public void SetStyleToRow(int rowIndex){
@@ -91,52 +114,43 @@ public class OdsExportService {
         cell.setCellStyleName(CreateOdfStyle().getStyleNameAttribute());
     }
 
-    private OdfStyle CreateOdfStyle(){
-        var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
-        _styles.forEach(item -> style.setProperty(item.property, item.value));
-        return style;
-    }
-
     public void SetBackgroundColor(String value){
         this._styles.add(new Style(OdfTableCellProperties.BackgroundColor, value));
-        //this.OdfStyle.setProperty(OdfTableCellProperties.BackgroundColor, value);
     }
 
     public void SetBold() {
         this._styles.add(new Style(OdfTextProperties.FontWeight, "bold"));
         this._styles.add(new Style(OdfTextProperties.FontWeightAsian, "bold"));
         this._styles.add(new Style(OdfTextProperties.FontWeightComplex, "bold"));
-        //this.OdfStyle.setProperty(OdfTextProperties.FontWeight, "bold");
-        //this.OdfStyle.setProperty(OdfTextProperties.FontWeightAsian, "bold");
-        //this.OdfStyle.setProperty(OdfTextProperties.FontWeightComplex, "bold");
     }
 
     public void SetCursive() {
         this._styles.add(new Style(OdfTextProperties.FontStyle, "italic"));
         this._styles.add(new Style(OdfTextProperties.FontStyleAsian, "italic"));
         this._styles.add(new Style(OdfTextProperties.FontStyleComplex, "italic"));
-        //this.OdfStyle.setProperty(OdfTextProperties.FontStyle, "italic");
-        //this.OdfStyle.setProperty(OdfTextProperties.FontStyleAsian, "italic");
-        //this.OdfStyle.setProperty(OdfTextProperties.FontStyleComplex, "italic");
     }
 
     public void SetUnderline() {
         this._styles.add(new Style(OdfTextProperties.TextUnderlineStyle, "solid"));
         this._styles.add(new Style(OdfTextProperties.TextUnderlineColor, "font-color"));
         this._styles.add(new Style(OdfTextProperties.TextUnderlineWidth, "auto"));
-        //this.OdfStyle.setProperty(OdfTextProperties.TextUnderlineStyle, "solid");
-        //this.OdfStyle.setProperty(OdfTextProperties.TextUnderlineColor, "font-color");
-        //this.OdfStyle.setProperty(OdfTextProperties.TextUnderlineWidth, "auto");
+    }
+
+    public void SetFontFamliy(String value){
+        this._styles.add(new Style(OdfTextProperties.FontFamily, value));
+        this._styles.add(new Style(OdfTextProperties.FontFamilyAsian, value));
+        this._styles.add(new Style(OdfTextProperties.FontFamilyComplex, value));
+        this._styles.add(new Style(OdfTextProperties.FontFamilyGeneric, value));
+        this._styles.add(new Style(OdfTextProperties.FontFamilyGenericAsian, value));
+        this._styles.add(new Style(OdfTextProperties.FontFamilyGenericComplex, value));
     }
 
     public void SetFontColor(String value){
         this._styles.add(new Style(OdfTextProperties.Color, value));
-        //this.OdfStyle.setProperty(OdfTextProperties.Color, value);
     }
 
     public void SetFontSize(double value){
         this._styles.add(new Style(OdfTextProperties.FontSize, String.valueOf(value)));
-        //this.OdfStyle.setProperty(OdfTextProperties.FontSize, String.valueOf(value));
     }
 
     public void SetColumnWidth(int columnIndex, double value){
@@ -151,7 +165,6 @@ public class OdsExportService {
         if(value.equals("right")) { value = "end"; }
         if(value.equals("left")) { value = "start"; }
         this._styles.add(new Style(OdfParagraphProperties.TextAlign, value));
-        //this.OdfStyle.setProperty(OdfParagraphProperties.TextAlign, value);
     }
 
     public void SaveFile(String path, String fileName){
@@ -163,13 +176,74 @@ public class OdsExportService {
         }
     }
 
-    public void CopyToClipboard() {
-        try {
-            var selection = new StringSelection(_spreadsheetDocument.getContentDom().toString());
-            var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(selection, selection);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /* PRIVATE METHODS */
+    private OdfStyle CreateOdfStyle(){
+        var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
+        _styles.forEach(item -> style.setProperty(item.property, item.value));
+        return style;
+    }
+
+    private void SetRowStylesFromTable(HashMap styles){
+        styles.forEach((key, value) -> {
+            CreateStyle();
+            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, (Integer) key, -1);
+            SetStyleToRow((Integer) key);
+        });
+    }
+
+    private void SetColumnStylesFromTable(HashMap styles){
+        styles.forEach((key, value) -> {
+            CreateStyle();
+            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, -1, (Integer) key);
+            SetStyleToColumn((Integer) key);
+        });
+    }
+
+    private void SetCellStylesFromTable(HashMap styles){
+        styles.forEach((key, value) -> {
+            CreateStyle();
+            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, ((Point)key).x, ((Point)key).y);
+            SetStyleToCell(((Point)key).x, ((Point)key).y);
+        });
+    }
+
+    private void WrapperSetStyleToTable(de.hskempten.tabulang.datatypes.Style styles, int rowIndex, int columnIndex) {
+        styles.forEach(item -> {
+            var key = item.getKey();
+            var value = item.getValue();
+            switch(key){
+                case "font-color":
+                    SetFontColor(value);
+                    break;
+                case "font-family":
+                    SetFontFamliy(value);
+                    break;
+                case "font-size":
+                    SetFontSize(Double.parseDouble(value));
+                    break;
+                case "text-align":
+                    SetTextAlign(value);
+                    break;
+                case "background-color":
+                    SetBackgroundColor(value);
+                    break;
+                case "bold":
+                    SetBold();
+                    break;
+                case "italics":
+                    SetCursive();
+                    break;
+                case "underlined":
+                    SetUnderline();
+                    break;
+                case "rowheight":
+                    SetRowHeight(rowIndex, Double.parseDouble(value));
+                    break;
+                case "colwidth":
+                    SetColumnWidth(columnIndex, Double.parseDouble(value));
+                    break;
+            }
+            System.out.println("Key ---------" + key);
+        });
     }
 }

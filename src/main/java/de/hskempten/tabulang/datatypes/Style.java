@@ -8,14 +8,14 @@ import java.util.Objects;
 
 public class Style implements Iterable<Map.Entry<String, String>> {
 
-    public static final String COLOR = "color";
-
-    public static final String FONT = "font";
-    public static final String BACKGROUND_COLOR = "background_color";
+    public static final String FONT_COLOR = "font-color";
+    public static final String FONT_FAMILY = "font-family";
+    public static final String FONT_SIZE = "font-size";
+    public static final String TEXT_ALIGN = "text-align";
+    public static final String BACKGROUND_COLOR = "background-color";
     public static final String BOLD = "bold";
     public static final String ITALICS = "italics";
     public static final String UNDERLINED = "underlined";
-
     public static final String ROW_HEIGHT = "rowheight";
     public static final String COLUMN_WIDTH = "colwidth";
 
@@ -31,18 +31,28 @@ public class Style implements Iterable<Map.Entry<String, String>> {
         return annotations;
     }
 
+    public Style setFontSize(double size) {
+        annotations.put(FONT_SIZE, Double.toString(size));
+        return this;
+    }
+
+    public Style setFontSize(String align) {
+        annotations.put(TEXT_ALIGN, align);
+        return this;
+    }
+
     public Style setFont(String font) {
-        annotations.put(FONT, font);
+        annotations.put(FONT_FAMILY, font);
         return this;
     }
 
     public Style setColor(String c) {
-        annotations.put(COLOR, c);
+        annotations.put(FONT_COLOR, c);
         return this;
     }
 
     public Style setColor(Color c) {
-        annotations.put(COLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
+        annotations.put(FONT_COLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
         return this;
     }
 
