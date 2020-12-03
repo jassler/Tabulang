@@ -14,7 +14,7 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
     private boolean isHorizontal;
 
     // TODO parent and style
-    private final TupleStyle tupleStyle;
+    private final HashMap<Integer, Style> elementStyles;
 
     /**
      * Create a new Tuple with the elements of the specified array in the order they are in.
@@ -105,7 +105,7 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
     public Tuple(List<E> elements, List<String> names, boolean isHorizontal) {
-        this(elements, names, isHorizontal, new TupleStyle(), null);
+        this(elements, names, isHorizontal, null);
     }
 
     /**
@@ -122,11 +122,15 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
-    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, TupleStyle tupleStyle, TableObject parent) {
+    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, TableObject parent) {
+        this(elements, new HeaderNames(names), isHorizontal, parent);
+    }
+
+    protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, TableObject parent) {
         super(parent);
         this.elements = new ArrayList<>(elements);
         this.names = new HeaderNames(names);
-        this.tupleStyle = tupleStyle;
+        this.elementStyles = new HashMap<>();
         this.isHorizontal = isHorizontal;
     }
 
@@ -189,16 +193,31 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
         return elements.get(names.getIndexOf(name));
     }
 
+    public DataCell<E> getDataCell(String name) {
+        int index = names.getIndexOf(name);
+        Style s = elementStyles.getOrDefault(index, new Style());
+        return new DataCell<>(elements.get(index), names.get(index), s, this);
+    }
+
     /**
      * Set tuple element with name or index to value.
      * Note that if names are also indexes, the named index will be prioritized over the number index.
      *
      * @param name Name or index number of element
-     * @throws NumberFormatException          if name not present and not convertible into a number
+     * @throws NumberFormatException     if name not present and not convertible into a number
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
     public void set(String name, E value) {
         elements.set(names.getIndexOf(name), value);
+    }
+
+
+    public void setElementStyle(int index, Style s) {
+        elementStyles.put(index, s);
+    }
+
+    public HashMap<Integer, Style> getElementStyles() {
+        return elementStyles;
     }
 
     /**
@@ -364,7 +383,8 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
             if (!hasNext())
                 return null;
 
-            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), new Style(), parent);
+            Style s = elementStyles.getOrDefault(cursor, new Style());
+            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), s, parent);
             cursor++;
             return result;
         }
