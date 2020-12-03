@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class GroupStmntItem implements AnyStatementAST {
+public class GroupStmntItem implements LanguageItem {
     private String myString;
     private GroupAreaItem myGroupArea;
     private TermItem myTerm;

@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class TermItem implements LanguageItem, FuncBodyAST, AnyTermAST {
+public class TermItem implements LanguageItem {
     //'('
     private TermItem myTerm;
     //')'
@@ -15,66 +15,54 @@ public class TermItem implements LanguageItem, FuncBodyAST, AnyTermAST {
     private DistinctTItem myDistinctT;
     private FunCallItem myFunCall;
 
-    private TermTypeAST myTermTypeAST;
-
     public TermItem(TermItem myTerm, TermRItem myTermR) {
         this.setMyTerm(myTerm);
         this.setMyTermR(myTermR);
-        this.setMyTermTypeAST(TermTypeAST.TERM);
     }
 
     public TermItem(TermRItem myTermR, IdentifierItem myIdentifier) {
         this.setMyTermR(myTermR);
         this.setMyIdentifier(myIdentifier);
-        this.setMyTermTypeAST(TermTypeAST.IDENTIFIER);
     }
 
     public TermItem(TermRItem myTermR, LoopItem myLoop) {
         this.setMyTermR(myTermR);
         this.setMyLoop(myLoop);
-        this.setMyTermTypeAST(TermTypeAST.LOOP);
     }
 
     public TermItem(TermRItem myTermR, FlipTItem myFlipT) {
         this.setMyTermR(myTermR);
         this.setMyFlipT(myFlipT);
-        this.setMyTermTypeAST(TermTypeAST.FLIP);
     }
 
     public TermItem(TermRItem myTermR, OrdinalItem myOrdinal) {
         this.setMyTermR(myTermR);
         this.setMyOrdinal(myOrdinal);
-        this.setMyTermTypeAST(TermTypeAST.ORDINAL);
     }
 
     public TermItem(TermRItem myTermR, DirectionalTermItem myDirectionalTerm) {
         this.setMyTermR(myTermR);
         this.setMyDirectionalTerm(myDirectionalTerm);
-        this.setMyTermTypeAST(TermTypeAST.DIRECTIONAL);
     }
 
     public TermItem(TermRItem myTermR, FunDefItem myFunDef) {
         this.setMyTermR(myTermR);
         this.setMyFunDef(myFunDef);
-        this.setMyTermTypeAST(TermTypeAST.FUNDEF);
     }
 
     public TermItem(TermRItem myTermR, AggregationTItem myAggregationT) {
         this.setMyTermR(myTermR);
         this.setMyAggregationT(myAggregationT);
-        this.setMyTermTypeAST(TermTypeAST.AGGREGATION);
     }
 
     public TermItem(TermRItem myTermR, DistinctTItem myDistinctT) {
         this.setMyTermR(myTermR);
         this.setMyDistinctT(myDistinctT);
-        this.setMyTermTypeAST(TermTypeAST.DISTINCT);
     }
 
     public TermItem(TermRItem myTermR, FunCallItem myFunCall){
         this.setMyTermR(myTermR);
         this.setMyFunCall(myFunCall);
-        this.setMyTermTypeAST(TermTypeAST.FUNCALL);
     }
 
     public TermItem getMyTerm() {
@@ -163,18 +151,5 @@ public class TermItem implements LanguageItem, FuncBodyAST, AnyTermAST {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
-    }
-
-    public TermTypeAST getMyTermTypeAST() {
-        return myTermTypeAST;
-    }
-
-    public void setMyTermTypeAST(TermTypeAST myTermTypeAST) {
-        this.myTermTypeAST = myTermTypeAST;
-    }
-
-    @Override
-    public TermTypeAST getTermTypeAST() {
-        return TermTypeAST.TERM;
     }
 }

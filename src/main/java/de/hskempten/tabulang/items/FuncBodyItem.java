@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FuncBodyItem implements FuncBodyAST {
+public class FuncBodyItem implements LanguageItem {
     private LinkedList<StatementItem> myStatements;
     private ArrayList<ReturnStmntItem> myReturnStmnts;
     private ReturnStmntItem myReturnStmnt;

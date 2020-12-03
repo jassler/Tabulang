@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class LoopItem implements StatementAST {
+public class LoopItem implements LanguageItem {
     //'for'
     private IdentifierItem myIdentifier;
     //'in'

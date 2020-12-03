@@ -54,17 +54,13 @@ public class ParserTest {
 
         ProgramItem act = parser.parseN();
         assertEquals(prg.getMyStatements().size(), act.getMyStatements().size());
-
-        Assignment asAct = (Assignment)((VarDefItem)act.getMyStatements().get(0).getStatement()).getAssignmentOrProceduralF();
-        Assignment asPrg = (Assignment)((VarDefItem)prg.getMyStatements().get(0).getStatement()).getAssignmentOrProceduralF();
-
         assertEquals(
-                asPrg.getIdentifier().getMyString(),
-                asAct.getIdentifier().getMyString()
+                prg.getMyStatements().get(0).getMyVarDef().getMyIdentifier().getMyString(),
+                act.getMyStatements().get(0).getMyVarDef().getMyIdentifier().getMyString()
         );
         assertEquals(
-                asPrg.getTerm().getMyOrdinal().getMyNumber().getMyNumber(),
-                asAct.getTerm().getMyOrdinal().getMyNumber().getMyNumber()
+                prg.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getMyNumber(),
+                act.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getMyNumber()
         );
     }
 }

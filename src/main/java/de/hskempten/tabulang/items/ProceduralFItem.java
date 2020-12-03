@@ -1,9 +1,8 @@
 package de.hskempten.tabulang.items;
 
-public class ProceduralFItem implements ProceduralFAST {
+public class ProceduralFItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private VListItem myVList;
-    private FuncBodyAST myFuncBodyOrTerm;
     private FuncBodyItem myFuncBody;
     private TermItem myTerm;
 
