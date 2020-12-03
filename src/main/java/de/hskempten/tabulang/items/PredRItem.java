@@ -4,12 +4,16 @@ public class PredRItem implements LanguageItem {
     private BinBoolItem myBinBool;
     private PredItem myPred;
 
+    LanguageItemType itemType;
+
     public PredRItem(BinBoolItem myBinBool, PredItem myPred) {
         this.setMyBinBool(myBinBool);
         this.setMyPred(myPred);
+        this.itemType = LanguageItemType.PREDR_BOOL;
     }
 
     public PredRItem() {
+        this.itemType = LanguageItemType.PREDR_NULL;
     }
 
     public BinBoolItem getMyBinBool() {
@@ -26,5 +30,10 @@ public class PredRItem implements LanguageItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

@@ -7,13 +7,17 @@ public class VarDefItem implements LanguageItem {
     //';'
     private ProceduralFItem myProceduralF;
 
+    private LanguageItemType itemType;
+
     public VarDefItem(IdentifierItem myIdentifier, TermItem myTerm) {
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.VARDEF_ASSIGNMENT;
     }
 
     public VarDefItem(ProceduralFItem myProceduralF) {
         this.setMyProceduralF(myProceduralF);
+        this.itemType = LanguageItemType.VARDEF_PROCEDURALF;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -38,5 +42,10 @@ public class VarDefItem implements LanguageItem {
 
     public void setMyProceduralF(ProceduralFItem myProceduralF) {
         this.myProceduralF = myProceduralF;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

@@ -11,10 +11,13 @@ public class PredItem implements LanguageItem {
     private Boolean myBoolean;
     private FunCallItem myFunCallItem; //TODO add funCall to pred?
 
+    LanguageItemType itemType;
+
     public PredItem(IdentifierItem myIdentifier, TermItem myTerm, PredRItem myPredR) {
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
+        this.itemType = LanguageItemType.PRED_IN;
     }
 
     public PredItem(TermItem myTerm, PredRItem myPredR, BinRelSymItem myBinResSym, TermItem mySecondTerm) {
@@ -22,31 +25,38 @@ public class PredItem implements LanguageItem {
         this.setMyPredR(myPredR);
         this.setMyBinResSym(myBinResSym);
         this.setMySecondTerm(mySecondTerm);
+        this.itemType = LanguageItemType.PRED_BINRELSYM;
     }
 
     public PredItem(TermItem myTerm, PredRItem myPredR) {
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
+        this.itemType = LanguageItemType.PRED_TERM;
     }
 
     public PredItem(PredRItem myPredR, PredItem myPred) {
         this.setMyPredR(myPredR);
         this.setMyPred(myPred);
+        this.itemType = LanguageItemType.PRED_BRACKET;
+        // TODO case for 'not'
     }
 
     public PredItem(PredRItem myPredR, PQuantifiedItem myPQuantified) {
         this.setMyPredR(myPredR);
         this.setMyPQuantified(myPQuantified);
+        this.itemType = LanguageItemType.PRED_QUANTIFIED;
     }
 
     public PredItem(PredRItem myPredR, Boolean myBoolean) {
         this.myPredR = myPredR;
         this.myBoolean = myBoolean;
+        this.itemType = LanguageItemType.PRED_BOOLEAN;
     }
 
     public PredItem(FunCallItem myFunCallItem, PredRItem myPredR) {
         this.myFunCallItem = myFunCallItem;
         this.myPredR = myPredR;
+        this.itemType = LanguageItemType.PRED_FUNCALL;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -119,5 +129,10 @@ public class PredItem implements LanguageItem {
 
     public void setMyFunCallItem(FunCallItem myFunCallItem) {
         this.myFunCallItem = myFunCallItem;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

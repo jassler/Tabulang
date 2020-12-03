@@ -6,16 +6,21 @@ public class VListItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private ArrayList<IdentifierItem> myOtherIdentifiers;
 
+    private LanguageItemType itemType;
+
     public VListItem() {
+        this.itemType = LanguageItemType.VLIST_EMPTY;
     }
 
     public VListItem(IdentifierItem myIdentifier) {
         this.setMyIdentifier(myIdentifier);
+        this.itemType= LanguageItemType.VLIST_ONE;
     }
 
     public VListItem(IdentifierItem myIdentifier, ArrayList<IdentifierItem> myOtherIdentifiers) {
         this.setMyIdentifier(myIdentifier);
         this.setMyOtherIdentifiers(myOtherIdentifiers);
+        this.itemType = LanguageItemType.VLIST_MULTI;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -32,5 +37,10 @@ public class VListItem implements LanguageItem {
 
     public void setMyOtherIdentifiers(ArrayList<IdentifierItem> myOtherIdentifiers) {
         this.myOtherIdentifiers = myOtherIdentifiers;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

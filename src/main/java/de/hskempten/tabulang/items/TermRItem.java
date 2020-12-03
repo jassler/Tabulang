@@ -13,45 +13,58 @@ public class TermRItem implements LanguageItem {
     //"filter", "intersect", "unite", "."
     private String myString;
 
+    private LanguageItemType itemType;
+
     public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR, String myString) {
         this.myPreds = myPreds;
         this.myTermR = myTermR;
         this.myString = myString;
+        this.itemType = LanguageItemType.TERMR_FILTER;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm, String myString) {
         this.myTermR = myTermR;
         this.myTerm = myTerm;
         this.myString = myString;
+        switch (myString) {
+            case "intersect" -> this.itemType = LanguageItemType.TERMR_INTERSECT;
+            case "unite" -> this.itemType = LanguageItemType.TERMR_UNITE;
+        }
     }
 
     public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR) {
         this.setMyPreds(myPreds);
         this.myTermR = myTermR;
+        this.itemType = LanguageItemType.TERMR_FILTER;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm) {
         this.setMyTermR(myTermR);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.TERMR_DOT;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm, OperatorItem myOperator) {
         this.setMyTermR(myTermR);
         this.setMyTerm(myTerm);
         this.setMyOperator(myOperator);
+        this.itemType = LanguageItemType.TERMR_OPERATOR;
     }
 
     public TermRItem(TermRItem myTermR, MarkStmntItem myMarkStmnt) {
         this.setMyTermR(myTermR);
         this.setMyMarkStmnt(myMarkStmnt);
+        this.itemType = LanguageItemType.TERMR_MARK;
     }
 
     public TermRItem(TermRItem myTermR, TupelItem myTupel) {
         this.setMyTermR(myTermR);
         this.setMyTupel(myTupel);
+        this.itemType = LanguageItemType.TERMR_TUPEL;
     }
 
     public TermRItem() {
+        this.itemType = LanguageItemType.TERMR_NULL;
     }
 
 
@@ -101,5 +114,10 @@ public class TermRItem implements LanguageItem {
 
     public void setMyPreds(ArrayList<PredItem> myPreds) {
         this.myPreds = myPreds;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

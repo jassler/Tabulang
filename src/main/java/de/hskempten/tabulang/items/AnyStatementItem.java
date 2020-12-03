@@ -5,21 +5,26 @@ public class AnyStatementItem implements LanguageItem {
     private ReturnStmntItem myReturnStmnt;
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;
+    private LanguageItemType itemType;
 
     public AnyStatementItem(StatementItem myStatement) {
         this.setMyStatement(myStatement);
+        this.itemType= LanguageItemType.ANYSTATEMENT_STATEMENT;
     }
 
     public AnyStatementItem(ReturnStmntItem myReturnStmnt) {
         this.setMyReturnStmnt(myReturnStmnt);
+        this.itemType= LanguageItemType.ANYSTATEMENT_RETURN;
     }
 
     public AnyStatementItem(SetStmntItem mySetStmnt) {
         this.setMySetStmnt(mySetStmnt);
+        this.itemType= LanguageItemType.ANYSTATEMENT_SET;
     }
 
     public AnyStatementItem(GroupStmntItem myGroupStmnt) {
         this.setMyGroupStmnt(myGroupStmnt);
+        this.itemType= LanguageItemType.ANYSTATEMENT_GROUP;
     }
 
     public StatementItem getMyStatement() {
@@ -52,5 +57,10 @@ public class AnyStatementItem implements LanguageItem {
 
     public void setMyGroupStmnt(GroupStmntItem myGroupStmnt) {
         this.myGroupStmnt = myGroupStmnt;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }
