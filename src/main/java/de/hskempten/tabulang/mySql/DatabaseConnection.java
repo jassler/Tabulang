@@ -74,6 +74,9 @@ public class DatabaseConnection {
         }
     }
 
+    public static void ImportFromTable(Table table){
+    }
+
     /* PRIVATE METHODS */
     public static MSqlTableContent ExportCore(String query) {
         try {
