@@ -27,4 +27,9 @@ public class OperatorItem implements LanguageItem {
     public void setMyString(String myString) {
         this.myString = myString;
     }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
+    }
 }

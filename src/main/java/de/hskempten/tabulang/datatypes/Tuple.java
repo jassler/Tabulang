@@ -276,9 +276,9 @@ public class Tuple<E> implements Cloneable, Iterable<E> {
     }
 
     /**
-     * Number of elements in this tuple.
+     * NumberAST of elements in this tuple.
      *
-     * @return Number of elements in this tuple.
+     * @return NumberAST of elements in this tuple.
      */
     public int size() {
         return this.elements.size();

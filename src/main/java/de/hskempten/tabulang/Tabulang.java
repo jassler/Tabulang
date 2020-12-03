@@ -1,13 +1,15 @@
 package de.hskempten.tabulang;
 
 import de.hskempten.tabulang.items.ProgramItem;
+import de.hskempten.tabulang.items.ast.ASTProgramParser;
+import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 
 public class Tabulang {
 
-    public static void main(String[] args) throws ParseTimeException {
+    public static void main(String[] args) throws Exception {
         Lexer l = new Lexer();
 
         for (var t : TokenType.TOKEN_EXPRESSIONS) {
@@ -108,21 +110,26 @@ public class Tabulang {
                 "ontop(jahresUeberschriften, alleJahreTab));\n" +
                 "}" +
                 "");
+        l.setText("a := 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8;");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);
         //parser.parse();
         l.reset();
         ProgramItem prg = parser.parseN();
-        System.out.println("Number of statements: " + prg.getMyStatements().size());
+        System.out.println("NumberAST of statements: " + prg.getMyStatements().size());
         /*
         while(!l.isDone()) {
             // assuming that everything must be an AssignmentItem
             // later on, we can change it to Statement or Function or something
-            var a = new Assignment(l);
+            var a = new AssignmentAST(l);
             i.evaluate(a);
         }
          */
+
+        ProgramAST prgAST = ASTProgramParser.instance.parse(prg);
+        System.out.println(prgAST);
+        prgAST.print(0);
 
         System.out.println("Evaluated \"" + l.getText() + "\" and got:\n");
         System.out.println(i);
