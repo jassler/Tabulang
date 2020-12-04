@@ -11,9 +11,9 @@ public class AddNode extends ArithmeticNode{
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        Object left = getLeftNode().evaluateNode(i);
-        Object right = getRightNode().evaluateNode(i);
+    public Object evaluateNode(Interpretation interpretation) {
+        Object left = getLeftNode().evaluateNode(interpretation);
+        Object right = getRightNode().evaluateNode(interpretation);
         if(left instanceof String || right instanceof String){
             return left.toString() + right.toString();
         } else {
@@ -21,5 +21,10 @@ public class AddNode extends ArithmeticNode{
             BigDecimal r = (BigDecimal) right;
             return l.add(r);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AddNode{} " + super.toString();
     }
 }

@@ -12,9 +12,9 @@ public class SpreadNode extends BinaryNode{
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        BigDecimal left = convertLeftNodeToBigDecimal(i);
-        BigDecimal right = convertRightNodeToBigDecimal(i);
+    public Object evaluateNode(Interpretation interpretation) {
+        BigDecimal left = convertLeftNodeToBigDecimal(interpretation);
+        BigDecimal right = convertRightNodeToBigDecimal(interpretation);
         ArrayList<Integer> a = new ArrayList<>();
         ArrayList<String> s = new ArrayList<>();
         Integer name = 0;

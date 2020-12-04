@@ -1,11 +1,10 @@
 package de.hskempten.tabulang.astNodes;
 
-
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class AssignmentNode extends BinaryNode {
-
-    public AssignmentNode(Node leftNode, Node rightNode) {
+public class UniteNode extends BinaryNode{
+    public UniteNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
@@ -13,7 +12,6 @@ public class AssignmentNode extends BinaryNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        interpretation.getEnvironment().put(left.toString(), right);
-        return right;
+        return ((Table) left).union((Table) right);
     }
 }

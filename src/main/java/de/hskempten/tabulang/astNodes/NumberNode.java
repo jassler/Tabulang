@@ -22,7 +22,14 @@ public class NumberNode extends Node{
     }
 
     @Override
-    public BigDecimal evaluateNode(Interpretation i) {
+    public BigDecimal evaluateNode(Interpretation interpretation) {
         return number;
+    }
+
+    @Override
+    public String toString() {
+        return "NumberNode{" +
+                "number=" + number +
+                "} ";
     }
 }

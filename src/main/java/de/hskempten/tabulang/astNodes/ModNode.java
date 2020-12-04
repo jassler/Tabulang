@@ -9,7 +9,7 @@ public class ModNode extends ArithmeticNode{
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        return convertLeftNodeToBigDecimal(i).remainder(convertRightNodeToBigDecimal(i));
+    public Object evaluateNode(Interpretation interpretation) {
+        return convertLeftNodeToBigDecimal(interpretation).remainder(convertRightNodeToBigDecimal(interpretation));
     }
 }

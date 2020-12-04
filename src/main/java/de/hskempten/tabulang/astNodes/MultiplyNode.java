@@ -9,7 +9,7 @@ public class MultiplyNode extends ArithmeticNode{
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        return convertLeftNodeToBigDecimal(i).multiply(convertRightNodeToBigDecimal(i));
+    public Object evaluateNode(Interpretation interpretation) {
+        return convertLeftNodeToBigDecimal(interpretation).multiply(convertRightNodeToBigDecimal(interpretation));
     }
 }

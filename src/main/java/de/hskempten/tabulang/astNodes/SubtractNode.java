@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
@@ -11,16 +12,15 @@ public class SubtractNode extends ArithmeticNode{
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        Object left = getLeftNode().evaluateNode(i);
-        Object right = getRightNode().evaluateNode(i);
+    public Object evaluateNode(Interpretation interpretation) {
+        Object left = getLeftNode().evaluateNode(interpretation);
+        Object right = getRightNode().evaluateNode(interpretation);
         if(left instanceof BigDecimal && right instanceof BigDecimal){
             BigDecimal l = (BigDecimal) left;
             BigDecimal r = (BigDecimal) right;
             return l.subtract(r);
         } else {
-            //TODO Tabellen
-            return null;
+            return ((Table) left).difference((Table) right);
         }
     }
 }

@@ -9,7 +9,7 @@ public class DivisionNode extends ArithmeticNode {
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        return convertLeftNodeToBigDecimal(i).divide(convertRightNodeToBigDecimal(i));
+    public Object evaluateNode(Interpretation interpretation) {
+        return convertLeftNodeToBigDecimal(interpretation).divide(convertRightNodeToBigDecimal(interpretation));
     }
 }

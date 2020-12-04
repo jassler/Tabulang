@@ -18,5 +18,13 @@ public abstract class Node {
         this.nodeType = nodeType;
     }
 
-    public abstract Object evaluateNode(Interpretation i);
+    public abstract Object evaluateNode(Interpretation interpretation);
+
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "nodeType=" + nodeType +
+                '}';
+    }
 }

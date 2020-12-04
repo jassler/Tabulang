@@ -38,4 +38,12 @@ public abstract class BinaryNode extends Node{
     public BigDecimal convertRightNodeToBigDecimal(Interpretation i){
         return (BigDecimal) getRightNode().evaluateNode(i);
     }
+
+    @Override
+    public String toString() {
+        return "BinaryNode{" +
+                "leftNode=" + leftNode +
+                ", rightNode=" + rightNode +
+                "} ";
+    }
 }

@@ -19,7 +19,14 @@ public class StringNode extends Node{
     }
 
     @Override
-    public String evaluateNode(Interpretation i) {
+    public String evaluateNode(Interpretation interpretation) {
         return string;
+    }
+
+    @Override
+    public String toString() {
+        return "StringNode{" +
+                "string='" + string + '\'' +
+                "} ";
     }
 }

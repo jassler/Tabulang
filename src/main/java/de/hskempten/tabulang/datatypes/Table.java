@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 public class Table<E> {
 
     private final ArrayList<ArrayList<E>> tuples;
+
     private boolean transposed = false;
 
     private final ArrayList<String> colNames;
@@ -80,6 +81,10 @@ public class Table<E> {
         this.colLookup = new HashMap<>(this.colNames.size());
         for(int i = 0; i < this.colNames.size(); i++)
             this.colLookup.put(this.colNames.get(i), i);
+    }
+
+    public ArrayList<ArrayList<E>> getTuples() {
+        return tuples;
     }
 
     public Tuple<E> getRow(int rowNum) {
