@@ -56,8 +56,9 @@ public class DatabaseConnection {
         return new Table<>(sqlTableContent.get_headlines(), sqlTableContent.get_content());
     }
 
-    public static void Import(MSqlTableContent sqlTableContent){
+    public static void Import(MSqlTableContent sqlTableContent) throws Exception {
         try {
+            if(!DatabaseExists(sqlTableContent)) throw new Exception("Database not exist");
             var selectQuery = String.format("SELECT * FROM %s", sqlTableContent.get_dbName());
             _statement = _connection.createStatement();
             var resultSet = _statement.executeQuery(selectQuery);
@@ -75,7 +76,7 @@ public class DatabaseConnection {
         }
     }
 
-    public static void ImportFromTable(Table table, String sqlTableName){
+    public static void ImportFromTable(Table table, String sqlTableName) throws Exception {
         var content = new ArrayList<ArrayList<String>>();
         for(var item : table){
             var contentRows = new ArrayList<String>();
@@ -103,6 +104,24 @@ public class DatabaseConnection {
     }
 
     /* PRIVATE METHODS */
+    private static boolean DatabaseExists(MSqlTableContent sqlTableContent){
+        try {
+            _statement = _connection.createStatement();
+            var resultSet = _statement.executeQuery("SELECT * FROM " + sqlTableContent.get_dbName());
+            _statement.close();
+            var headlinesFromObject = sqlTableContent.get_headlines();
+            var headlinesFromDatabase = GetHeadlines(resultSet.getMetaData());
+            if(headlinesFromObject.size() != headlinesFromDatabase.size()) return false;
+            for(var i = 0; i < headlinesFromDatabase.size(); i++){
+                if(!(headlinesFromDatabase.get(i).equals(headlinesFromObject.get(i)))) return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private static ArrayList<String> ReplaceHeadline(Table table){
         var replacedItems = new ArrayList<String>();
         table
