@@ -110,7 +110,7 @@ public class Tabulang {
                 "ontop(jahresUeberschriften, alleJahreTab));\n" +
                 "}" +
                 "");
-        l.setText("x := (a + b) - (c + d) * e;");
+        l.setText("x := a * (b - c) + d;");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);

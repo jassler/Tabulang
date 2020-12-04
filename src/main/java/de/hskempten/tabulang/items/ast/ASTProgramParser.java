@@ -10,10 +10,9 @@ public class ASTProgramParser {
 
     public static ASTProgramParser instance = new ASTProgramParser();
 
-    private ArrayList<StatementAST>statements = new ArrayList<StatementAST>();
-
     public ProgramAST parse(ProgramItem prg) throws Exception {
-        for (int i = 0; i < prg.getMyStatements().size();i++){
+        ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
+        for (int i = 0; i < prg.getMyStatements().size(); i++) {
             StatementAST statement = ASTStatementParser.instance.parse(prg.getMyStatements().get(i));
             statements.add(statement);
         }

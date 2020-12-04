@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class TermRItem implements LanguageItem {
+public class TermRItem implements TermOrRItem {
     //myPreds darf nicht null sein; pred+
     private ArrayList<PredItem> myPreds;
     private TermRItem myTermR;

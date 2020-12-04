@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class TermItem implements LanguageItem {
+public class TermItem implements TermOrRItem {
     //'('
     private TermItem myTerm;
     //')'

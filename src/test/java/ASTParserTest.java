@@ -126,7 +126,9 @@ public class ASTParserTest {
                 ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber(),
                 ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber()
         );
-    }@Test
+    }
+
+    @Test
     void assignAddAdd() throws Exception {
         l.setText("a := 1 + 2 + 3;");
 

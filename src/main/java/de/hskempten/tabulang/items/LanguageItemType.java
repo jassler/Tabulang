@@ -58,9 +58,20 @@ public enum LanguageItemType {
             case TERM_IDENTIFIER, TERM_LOOP, TERM_FLIP,
                     TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNDEF,
                     TERM_AGGREGATION, TERM_DISTINCT, TERM_FUNCALL -> 10;
-            case TERM_BRACKET, TERMR_BRACKET -> 20;
+            case TERM_BRACKET, TERMR_BRACKET -> -2;
             case NULL, TERMR_NULL -> 99;
             default -> -1;
         };
+    }
+
+    public static boolean isLeftAssociative(LanguageItemType type) {
+        return switch (type) {
+            case OPERATOR_POWER -> false;
+            default -> true;
+        };
+    }
+
+    public static boolean isRightAssociative(LanguageItemType type) {
+        return !isLeftAssociative(type);
     }
 }
