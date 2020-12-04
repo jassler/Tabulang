@@ -12,7 +12,7 @@ public class AssignmentAST implements StatementAST {
         this.setTerm(term);
     }
 
-    private String getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
