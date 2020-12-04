@@ -25,19 +25,19 @@ public class TupelType implements LanguageType {
 
 
         Token bracket = l.getNextTokenAndExpect(TokenType.BRACKET);
-        if (!bracket.getContent().equals("("))
-            throw new ParseTimeException(l, "Illegal bracket: Expected '(' but got " + l.lookahead().getContent());
+        if (!bracket.getContent().equals("["))
+            throw new ParseTimeException(l, "Illegal bracket: Expected '[' but got " + l.lookahead().getContent());
 
 
-        while (!l.lookahead().getContent().equals(")")) {
+        while (!l.lookahead().getContent().equals("]")) {
             if (myTerm == null) {
                 myTerm = TermType.instance.parse(l);
             }
             Token bracketOrComma = l.lookahead();
             switch (bracketOrComma.getType()) {
                 case "bracket":
-                    if (!bracketOrComma.getContent().equals(")"))
-                        throw new ParseTimeException("Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
+                    if (!bracketOrComma.getContent().equals("]"))
+                        throw new ParseTimeException("Illegal bracket: Expected ']' but got " + l.lookahead().getContent());
                     break;
                 case "comma":
                     l.getNextTokenAndExpect(TokenType.COMMA);

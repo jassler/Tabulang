@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.types;
 
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
@@ -83,11 +84,17 @@ public class TermType implements Parser {
             }
             case "bracket" -> {
                 // TODO difference between "'(' term ')' termR" and "ordinal termR" if ordinal is a tuple?
-                if ("(".equals(l.lookahead().getContent())) {
+                if ("[".equals(l.lookahead().getContent())) {
                     myOrdinal = OrdinalType.instance.parse(l);
                     myTermR = TermRType.instance.parse(l);
                     item = new TermItem(myTermR, myOrdinal);
-                } else {
+                } else if("(".equals(l.lookahead().getContent())){
+                    l.getNextTokenAndExpect(TokenType.BRACKET);
+                    myTerm = TermType.instance.parse(l);
+                    l.getNextTokenAndExpect(TokenType.BRACKET);
+                    myTermR = TermRType.instance.parse(l);
+                    item = new TermItem(myTerm,myTermR);
+                }else{
                     throw new ParseTimeException(l, "Not yet implemented bracket case in term: " + l.lookahead().getContent());
                 }
             }

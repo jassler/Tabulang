@@ -14,4 +14,9 @@ public class IdentifierItem implements LanguageItem {
     public void setMyString(String myString) {
         this.myString = myString;
     }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return LanguageItemType.STATEMENT_IDENTIFIER;
+    }
 }

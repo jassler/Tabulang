@@ -43,7 +43,7 @@ public enum LanguageItemType {
 
     ANYSTATEMENT_STATEMENT, ANYSTATEMENT_RETURN, ANYSTATEMENT_SET, ANYSTATEMENT_GROUP,
 
-    AGGREGATION_COUNT, AGGREGATION_AVERAGE;
+    AGGREGATION_COUNT, AGGREGATION_AVERAGE, TERMR_BRACKET, STATEMENT_IDENTIFIER;
 
     public static int getPrecedence(LanguageItemType type) {
         return switch (type) {
@@ -58,7 +58,7 @@ public enum LanguageItemType {
             case TERM_IDENTIFIER, TERM_LOOP, TERM_FLIP,
                     TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNDEF,
                     TERM_AGGREGATION, TERM_DISTINCT, TERM_FUNCALL -> 10;
-            case TERM_BRACKET -> 20;
+            case TERM_BRACKET, TERMR_BRACKET -> 20;
             case NULL, TERMR_NULL -> 99;
             default -> -1;
         };
