@@ -121,6 +121,9 @@ public class ASTTermParser {
                 } else {
                     throw new Exception("Illegal Type in ASTTermParser " + types.get(i));
                 }
+            }else if(LanguageItemType.OPERATOR_POWER.equals(types.get(i)) && lowestPrecedence == LanguageItemType.getPrecedence(types.get(i))){
+                lowestPrecedence = LanguageItemType.getPrecedence(types.get(i));
+                lowestPosition = i;
             }
         }
         return lowestPosition;

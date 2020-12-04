@@ -139,8 +139,8 @@ public class ASTParserTest {
         ProgramItem actPrg = parser.parseN();
         ProgramAST act = ASTProgramParser.instance.parse(actPrg);
 
-        exp.print(0);
-        act.print(0);
+        //exp.print(0);
+        //act.print(0);
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
@@ -174,8 +174,8 @@ public class ASTParserTest {
         ProgramItem actPrg = parser.parseN();
         ProgramAST act = ASTProgramParser.instance.parse(actPrg);
 
-        exp.print(0);
-        act.print(0);
+        //exp.print(0);
+        //act.print(0);
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
