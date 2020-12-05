@@ -13,7 +13,7 @@ public class ASTProgramParser {
     public ProgramAST parse(ProgramItem prg) throws Exception {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         for (int i = 0; i < prg.getMyStatements().size(); i++) {
-            StatementAST statement = ASTStatementParser.instance.parse(prg.getMyStatements().get(i));
+            StatementAST statement = new ASTStatementParser().parse(prg.getMyStatements().get(i));
             statements.add(statement);
         }
         return new ProgramAST(statements);

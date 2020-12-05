@@ -29,7 +29,7 @@ public class TokenType {
         SEMICOLON = new TokenExpression(";", ";");
         ASSIGN = new TokenExpression(":=", ":=");
         BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/|(div)|(mod)|\\^");
-        BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)");
+        BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)|\\[|\\]");
         COMMA = new TokenExpression("comma", ",");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
         BINRELSYM = new TokenExpression("binRelSym", "=|<|>|<=|>=|!=");

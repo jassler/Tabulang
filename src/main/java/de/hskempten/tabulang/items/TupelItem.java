@@ -28,6 +28,38 @@ public class TupelItem implements LanguageItem {
         this.myIntervall = myIntervall;
     }
 
+    public TermItem getMyTerm() {
+        return myTerm;
+    }
+
+    public void setMyTerm(TermItem myTerm) {
+        this.myTerm = myTerm;
+    }
+
+    public ArrayList<TermItem> getMyTerms() {
+        return myTerms;
+    }
+
+    public void setMyTerms(ArrayList<TermItem> myTerms) {
+        this.myTerms = myTerms;
+    }
+
+    public IntervallItem getMyIntervall() {
+        return myIntervall;
+    }
+
+    public void setMyIntervall(IntervallItem myIntervall) {
+        this.myIntervall = myIntervall;
+    }
+
+    public LanguageItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(LanguageItemType itemType) {
+        this.itemType = itemType;
+    }
+
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;

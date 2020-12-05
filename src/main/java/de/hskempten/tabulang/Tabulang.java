@@ -5,7 +5,6 @@ import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.Lexer;
-import de.hskempten.tabulang.tokenizer.ParseTimeException;
 
 public class Tabulang {
 
@@ -110,7 +109,10 @@ public class Tabulang {
                 "ontop(jahresUeberschriften, alleJahreTab));\n" +
                 "}" +
                 "");
-        l.setText("x := a * (b - c) + d;");
+        l.setText("\n" +
+                "for x in y {set x;}\n" +
+                "" +
+                "\n");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);

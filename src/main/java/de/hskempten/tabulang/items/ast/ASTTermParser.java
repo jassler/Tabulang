@@ -9,16 +9,12 @@ import java.util.Stack;
 
 public class ASTTermParser {
 
-    public static ASTTermParser instance = new ASTTermParser();
-
     ShuntingYardBuilder syBuilder = new ShuntingYardBuilder();
 
     public TermAST parse(TermItem originalTerm) throws Exception {
 
-
         traverseTerm(originalTerm);
         TermAST parsedTerm = termParser(syBuilder.getOutput());
-
 
         return parsedTerm;
     }
@@ -34,6 +30,7 @@ public class ASTTermParser {
                         case ORDINAL_NUMBER -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyNumber());
                         case ORDINAL_TUPEL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyTupel());
                         case ORDINAL_QUOTEDSTRING -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyQuotedString());
+                        case ORDINAL_NULL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal());
                         default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actTerm).getMyOrdinal().getLanguageItemType());
                     }
                 }
@@ -49,12 +46,15 @@ public class ASTTermParser {
                 case TERMR_NULL -> {
                     return;
                 }
+                case TERM_DIRECTIONAL -> {
+                    syBuilder.add(((TermItem) actTerm).getMyDirectionalTerm());
+                }
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
                 }
             }
             actTerm = switch (actTerm.getLanguageItemType()) {
-                case TERM_IDENTIFIER, TERM_ORDINAL -> actTerm.getMyTermR();
+                case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL -> actTerm.getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actTerm).getMyTerm();
                 case TERM_BRACKET -> actTerm.getMyTermR();
                 default -> {
@@ -65,69 +65,103 @@ public class ASTTermParser {
         }
     }
 
-    private TermAST termParser(ArrayList<LanguageItem> items) {
+    private TermAST termParser(ArrayList<LanguageItem> items) throws Exception {
 
 
-        switch (items.get(items.size() - 1).getLanguageItemType()) {
+        LanguageItem actItem = items.get(items.size() - 1);
+        items.remove(items.size() - 1);
+
+        switch (actItem.getLanguageItemType()) {
             case OPERATOR_ADD -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new AddAST(left, right);
             }
             case OPERATOR_SUBTRACT -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new SubtractAST(left, right);
             }
             case OPERATOR_MULTIPLY -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new MultiplyAST(left, right);
             }
             case OPERATOR_MOD -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new ModAST(left, right);
             }
             case OPERATOR_DIV -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new DivAST(left, right);
             }
             case OPERATOR_DIVIDE -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new DivideAST(left, right);
             }
             case OPERATOR_POWER -> {
-                items.remove(items.size() - 1);
                 TermAST right = termParser(items);
                 TermAST left = termParser(items);
                 return new PowerAST(left, right);
             }
             case ORDINAL_NUMBER -> {
-                NumberAST item = new NumberAST((NumberItem) items.get(items.size() - 1));
-                items.remove(items.size() - 1);
+                NumberAST item = new NumberAST((NumberItem) actItem);
+
                 return item;
             }
             case STATEMENT_IDENTIFIER -> {
-                IdentifierAST item = new IdentifierAST(((IdentifierItem) items.get(items.size() - 1)).getMyString());
-                items.remove(items.size() - 1);
+                IdentifierAST item = new IdentifierAST(((IdentifierItem) actItem).getMyString());
                 return item;
             }
-            default -> throw new IllegalStateException("Unexpected value: " + items.get(items.size() - 1).getLanguageItemType());
+            case TUPEL_EMPTY -> {
+                TupelAST item = new TupelAST();
+                return item;
+            }
+            case TUPEL_ONE -> {
+                TupelItem tupel = (TupelItem) actItem;
+                TermAST term = new ASTTermParser().parse(tupel.getMyTerm());
+                TupelAST item = new TupelAST(term);
+                return item;
+            }
+            case TUPEL_MULTI -> {
+                TupelItem tupel = (TupelItem) actItem;
+                ArrayList<TermAST> terms = new ArrayList<TermAST>();
+                terms.add(new ASTTermParser().parse(tupel.getMyTerm()));
+                for (int i = 0; i < tupel.getMyTerms().size(); i++) {
+                    terms.add(new ASTTermParser().parse(tupel.getMyTerms().get(i)));
+                }
+                TupelAST item = new TupelAST(terms);
+                return item;
+            }
+            case ORDINAL_QUOTEDSTRING -> {
+                String string = ((QuotedStringItem) actItem).getMyString();
+                QuotedStringAST item = new QuotedStringAST(string);
+                return item;
+            }
+            case ORDINAL_NULL -> {
+                NullAST item = new NullAST();
+                return item;
+            }
+            case TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
+                DirectionalAST item;
+                TermAST term = new ASTTermParser().parse(((DirectionalTermItem)actItem).getMyTerm());
+                switch(actItem.getLanguageItemType()){
+                    case TERM_DIRECTIONAL_H->  item = new DirectionalAST(DirectionalAST.Dir.HORIZONTAL, term);
+                    case TERM_DIRECTIONAL_V->  item = new DirectionalAST(DirectionalAST.Dir.VERTICAL, term);
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
+                return item;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
 
     }
 
 
-    private class ShuntingYardBuilder {
+    private static class ShuntingYardBuilder {
         Stack<LanguageItem> stack;
         ArrayList<LanguageItem> output;
 
@@ -138,7 +172,7 @@ public class ASTTermParser {
 
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
-                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER -> {
+                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL -> {
                     output.add(item);
                 }
                 case TERM_BRACKET -> {
@@ -152,13 +186,14 @@ public class ASTTermParser {
                     stack.pop();
                 }
                 case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
-                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD -> {
+                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
                     while (!stack.isEmpty()
                             && isHigherPrecedence(item.getLanguageItemType())) {
                         output.add(stack.pop());
                     }
                     stack.push(item);
                 }
+                default -> throw new IllegalStateException("Unexpected value: " + item.getLanguageItemType());
             }
         }
 

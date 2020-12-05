@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.items.NumberItem;
-import de.hskempten.tabulang.items.ast.interfaces.TermAST;
+import de.hskempten.tabulang.items.ast.interfaces.OrdinalAST;
 
-public class NumberAST implements TermAST {
+public class NumberAST implements OrdinalAST {
     private NumberItem number;
 
     public NumberAST(NumberItem item) {

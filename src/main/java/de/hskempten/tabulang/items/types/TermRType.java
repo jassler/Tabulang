@@ -75,7 +75,7 @@ public class TermRType implements Parser {
                     item = new TermRItem(myTermR, myTupel);
                 } else {
                     item = new TermRItem();
-                    if (")".equals(l.lookahead().getContent()) || "]".equals(l.lookahead().getContent())){
+                    if (")".equals(l.lookahead().getContent())){
                         item.setLanguageItemType(LanguageItemType.TERMR_BRACKET);
                     }
                 }

@@ -50,8 +50,8 @@ public class TupelType implements LanguageType {
         }
 
 
-        if (!l.lookahead().getContent().equals(")"))
-            throw new ParseTimeException(l, "Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
+        if (!l.lookahead().getContent().equals("]"))
+            throw new ParseTimeException(l, "Illegal bracket: Expected ']' but got " + l.lookahead().getContent());
         l.getNextTokenAndExpect(TokenType.BRACKET);
 
         if (myIntervall != null) {

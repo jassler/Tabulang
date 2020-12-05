@@ -70,7 +70,9 @@ public class TermType implements Parser {
                         item = new TermItem(myTermR, myFlipT);
                     }
                     case "null" -> {
-                        throw new ParseTimeException(l, "Not yet implemented keyword case in the term: " + l.lookahead().getContent());
+                        myOrdinal = OrdinalType.instance.parse(l);
+                        myTermR = TermRType.instance.parse(l);
+                        item = new TermItem(myTermR, myOrdinal);
                     }
                     default -> {
                         throw new ParseTimeException(l, "Not yet implemented keyword case in term: " + l.lookahead().getContent());
