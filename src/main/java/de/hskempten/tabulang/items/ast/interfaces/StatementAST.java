@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items.ast.interfaces;
 
-public interface StatementAST {
+public interface StatementAST extends AST{
     default TermAST getTerm() throws Exception {
         throw new Exception(this.getClass().getSimpleName() + " has no term");
     }

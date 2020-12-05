@@ -110,7 +110,7 @@ public class Tabulang {
                 "}" +
                 "");
         l.setText("\n" +
-                "for x in y {set x;}\n" +
+                "if a and b set x;\n" +
                 "" +
                 "\n");
         Interpreter i = new Interpreter();

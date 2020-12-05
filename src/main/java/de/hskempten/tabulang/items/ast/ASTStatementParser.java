@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import de.hskempten.tabulang.items.ast.nodes.*;
@@ -45,7 +46,14 @@ public class ASTStatementParser {
                 case LOOP_STMT_SET -> {
                     syBuilder.add(((LoopStmntItem) actStatement).getMySetStmnt());
                 }
-                default -> throw new IllegalStateException("Unexpected value: " + actStatement.getLanguageItemType());
+                case ANYSTATEMENT_SET -> {
+                    syBuilder.add(((AnyStatementItem) actStatement).getMySetStmnt());
+                }
+                case STATEMENT_IF -> {
+                    syBuilder.add(((StatementItem) actStatement).getMyIfStmnt());
+                }
+                default -> throw new IllegalStateException("Unexpected value: " +
+                        actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
             }
             return;
         }
@@ -132,8 +140,24 @@ public class ASTStatementParser {
                 return new LoopAST(identifier, term, statements);
             }
             case ANYSTATEMENT_SET -> {
-                TermAST term = new ASTTermParser().parse(((SetStmntItem)actItem).getMyTerm());
+                TermAST term = new ASTTermParser().parse(((SetStmntItem) actItem).getMyTerm());
                 return new StatementSetAST(term);
+            }
+            case IF_WITHELSE, IF_WITHOUTELSE -> {
+                IfStmntItem ifStmnt = (IfStmntItem) actItem;
+                PredAST pred = new ASTPredParser().parse(ifStmnt.getMyPred());
+                StatementAST ifStatement = new ASTStatementParser().parse(ifStmnt.getMyAnyStatement());
+
+                switch (actItem.getLanguageItemType()) {
+                    case IF_WITHOUTELSE -> {
+                        return new StatementIfAST(pred, ifStatement);
+                    }
+                    case IF_WITHELSE -> {
+                        StatementAST elseStatement = new ASTStatementParser().parse(ifStmnt.getMyOptionalAnyStatement());
+                        return new StatementIfElseAST(pred, ifStatement, elseStatement);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
@@ -152,7 +176,7 @@ public class ASTStatementParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, VARDEF_ASSIGNMENT,
                         PROCEDURALF_FUNCBODY, PROCEDURALF_TERM, ANYSTATEMENT_RETURN,
-                        LOOP_LOOPBODY, LOOP_STATEMENT, ANYSTATEMENT_SET -> {
+                        LOOP_LOOPBODY, LOOP_STATEMENT, ANYSTATEMENT_SET, IF_WITHELSE, IF_WITHOUTELSE -> {
                     output.add(item);
                 }
                 /*case TERM_BRACKET -> {
