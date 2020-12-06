@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.items.ast.interfaces.PredAST;
+import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import de.hskempten.tabulang.items.ast.nodes.*;
 
@@ -49,12 +51,31 @@ public class ASTTermParser {
                 case TERM_DIRECTIONAL -> {
                     syBuilder.add(((TermItem) actTerm).getMyDirectionalTerm());
                 }
+                case TERM_FUNCALL -> {
+                    syBuilder.add(((TermItem) actTerm).getMyFunCall());
+                }
+                case TERM_AGGREGATION -> {
+                    syBuilder.add(((TermItem) actTerm).getMyAggregationT());
+                }
+                case TERM_DISTINCT -> {
+                    syBuilder.add(((TermItem) actTerm).getMyDistinctT());
+                }
+                case TERM_LOOP -> {
+                    syBuilder.add(((TermItem) actTerm).getMyLoop());
+                }
+                case TERMR_MARK -> {
+                    syBuilder.add(((TermRItem) actTerm).getMyMarkStmnt());
+                }
+                case TERMR_FILTER -> {
+                    syBuilder.add(actTerm);
+                }
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
                 }
             }
             actTerm = switch (actTerm.getLanguageItemType()) {
-                case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL -> actTerm.getMyTermR();
+                case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
+                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER -> actTerm.getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actTerm).getMyTerm();
                 case TERM_BRACKET -> actTerm.getMyTermR();
                 default -> {
@@ -147,13 +168,86 @@ public class ASTTermParser {
             }
             case TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
                 DirectionalAST item;
-                TermAST term = new ASTTermParser().parse(((DirectionalTermItem)actItem).getMyTerm());
-                switch(actItem.getLanguageItemType()){
-                    case TERM_DIRECTIONAL_H->  item = new DirectionalAST(DirectionalAST.Dir.HORIZONTAL, term);
-                    case TERM_DIRECTIONAL_V->  item = new DirectionalAST(DirectionalAST.Dir.VERTICAL, term);
+                TermAST term = new ASTTermParser().parse(((DirectionalTermItem) actItem).getMyTerm());
+                switch (actItem.getLanguageItemType()) {
+                    case TERM_DIRECTIONAL_H -> item = new DirectionalAST(DirectionalAST.Dir.HORIZONTAL, term);
+                    case TERM_DIRECTIONAL_V -> item = new DirectionalAST(DirectionalAST.Dir.VERTICAL, term);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
                 return item;
+            }
+            case TERM_FUNCALL -> {
+                String identifier = ((FunCallItem) actItem).getMyIdentifier().getMyString();
+                ArrayList<TermAST> terms = new ArrayList<TermAST>();
+                for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
+                    terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
+                }
+                return new FunCallAST(identifier, terms);
+            }
+            case AGGREGATION_AVERAGE -> {
+                AverageTItem ave = ((AggregationTItem) actItem).getMyAverageT();
+                String identifier = ave.getMyIdentifier().getMyString();
+                TermAST term = new ASTTermParser().parse(ave.getMyTerm());
+                return new AverageAST(identifier, term);
+
+            }
+            case AGGREGATION_COUNT -> {
+                CountTItem cnt = ((AggregationTItem) actItem).getMyCountT();
+                TermAST term = new ASTTermParser().parse(cnt.getMyTerm());
+                switch (cnt.getLanguageItemType()) {
+                    case COUNT_EMPTY -> {
+                        return new CountAST(CountAST.Dir.NONE, term);
+                    }
+                    case COUNT_DIRECTIONAL -> {
+                        switch (cnt.getMyString()) {
+                            case "horizontal":
+                                return new CountAST(CountAST.Dir.HORIZONTAL, term);
+                            case "vertical":
+                                return new CountAST(CountAST.Dir.VERTICAL, term);
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + cnt.getMyString());
+                        }
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + cnt.getLanguageItemType());
+                }
+            }
+            case DISTINCT_ITEM -> {
+                DistinctTItem dis = (DistinctTItem) actItem;
+                ArrayList<String> identifiers = new ArrayList<String>();
+                for (int i = 0; i < dis.getMyIdentifiers().size(); i++) {
+                    identifiers.add(dis.getMyIdentifiers().get(i).getMyString());
+                }
+                TermAST term = new ASTTermParser().parse(dis.getMyTerm());
+                return new DistinctAST(identifiers, term);
+            }
+            case LOOP_LOOPBODY -> {
+                LoopItem loop = (LoopItem) actItem;
+                String identifier = loop.getMyIdentifier().getMyString();
+                TermAST term = new ASTTermParser().parse(loop.getMyTerm());
+                ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
+                for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
+                    statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i)));
+                }
+                return new LoopAST(identifier, term, statements);
+            }
+            case MARK_WITHIF, MARK_WITHOUTIF -> {
+                MarkStmntItem mark = (MarkStmntItem) actItem;
+                TermAST markTerm = new ASTTermParser().parse(mark.getMyTerm());
+                TermAST asTerm = new ASTTermParser().parse(mark.getMySecondTerm());
+                switch (actItem.getLanguageItemType()) {
+                    case MARK_WITHOUTIF -> {
+                        return new StatementMarkAST(markTerm, asTerm);
+                    }
+                    case MARK_WITHIF -> {
+                        PredAST pred = new ASTPredParser().parse(mark.getMyPred());
+                        return new StatementMarkIfAST(markTerm, asTerm, pred);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
+            }
+            case TERMR_FILTER -> {
+                ArrayList<PredAST> preds = new ArrayList<PredAST>();
+                return new FilterAST(preds);
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
@@ -172,7 +266,9 @@ public class ASTTermParser {
 
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
-                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL -> {
+                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI,
+                        ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
+                        DISTINCT_ITEM, LOOP_LOOPBODY, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER -> {
                     output.add(item);
                 }
                 case TERM_BRACKET -> {
@@ -183,7 +279,7 @@ public class ASTTermParser {
                             && !stack.peek().getLanguageItemType().equals(LanguageItemType.TERM_BRACKET)) {
                         output.add(stack.pop());
                     }
-                    stack.pop();
+                    if (!stack.isEmpty()) stack.pop();
                 }
                 case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
                         OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {

@@ -37,10 +37,18 @@ public class ASTPredParser {
                         default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actPred).getMyOrdinal().getLanguageItemType());
                     }
                 }
-                case PRED_BINRELSYM, PRED_BRACKET, PREDR_BOOL, PRED_TERM -> {
+                case PRED_BINRELSYM, PREDR_BOOL, PRED_TERM -> {
                     syBuilder.add(actPred);
                 }
                 case PREDR_NULL -> {
+                    return;
+                }
+                case PRED_BRACKET -> {
+                    syBuilder.add(actPred);
+                    traversePred(((PredItem) actPred).getMyPred());
+                }
+                case PREDR_BRACKET -> {
+                    syBuilder.add(actPred);
                     return;
                 }
 
@@ -118,18 +126,18 @@ public class ASTPredParser {
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL,
-                        PRED_BINRELSYM, PRED_BRACKET, PRED_TERM -> {
+                        PRED_BINRELSYM, PRED_TERM -> {
                     output.add(item);
                 }
-                case TERM_BRACKET -> {
+                case  PRED_BRACKET -> {
                     stack.push(item);
                 }
-                case TERMR_BRACKET -> {
+                case  PREDR_BRACKET -> {
                     while (!stack.isEmpty()
-                            && !stack.peek().getLanguageItemType().equals(LanguageItemType.TERM_BRACKET)) {
+                            && !stack.peek().getLanguageItemType().equals(LanguageItemType.PRED_BRACKET)) {
                         output.add(stack.pop());
                     }
-                    stack.pop();
+                    if (!stack.isEmpty()) stack.pop();
                 }
                 case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
                         OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,

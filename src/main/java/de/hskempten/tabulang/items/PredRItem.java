@@ -36,4 +36,8 @@ public class PredRItem implements LanguageItem {
     public LanguageItemType getLanguageItemType() {
         return itemType;
     }
+
+    public void setLanguageItemType(LanguageItemType itemType) {
+        this.itemType = itemType;
+    }
 }

@@ -5,7 +5,7 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 import java.util.ArrayList;
 
-public class LoopAST implements StatementAST {
+public class LoopAST implements StatementAST, TermAST {
     String identifier;
     TermAST term;
     ArrayList<StatementAST> statements;

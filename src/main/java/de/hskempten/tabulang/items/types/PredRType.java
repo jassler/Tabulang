@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.items.types;
 
 import de.hskempten.tabulang.items.BinBoolItem;
+import de.hskempten.tabulang.items.LanguageItemType;
 import de.hskempten.tabulang.items.PredItem;
 import de.hskempten.tabulang.items.PredRItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
@@ -24,6 +25,9 @@ public class PredRType implements LanguageType {
             item = new PredRItem(myBinBool, myPred);
         } else {
             item = new PredRItem();
+            if ("bracket".equals(l.lookahead().getType())&& ")".equals(l.lookahead().getContent())){
+                item.setLanguageItemType(LanguageItemType.PREDR_BRACKET);
+            }
         }
 
         return item;

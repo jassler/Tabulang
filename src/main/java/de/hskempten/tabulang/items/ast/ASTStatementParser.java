@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 
+
 public class ASTStatementParser {
 
     ASTStatementParser.ShuntingYardBuilder syBuilder = new ASTStatementParser.ShuntingYardBuilder();
@@ -35,10 +36,34 @@ public class ASTStatementParser {
                         case VARDEF_PROCEDURALF -> {
                             syBuilder.add(((StatementItem) actStatement).getMyVarDef().getMyProceduralF());
                         }
+                        default -> throw new IllegalStateException("Unexpected value: " + ((StatementItem) actStatement).getMyVarDef().getLanguageItemType());
+                    }
+                }
+                case ANYSTATEMENT_STATEMENT -> {
+                    StatementItem statement = ((AnyStatementItem) actStatement).getMyStatement();
+                    switch (statement.getLanguageItemType()) {
+                        case STATEMENT_LOOP -> {
+                            syBuilder.add(statement.getMyLoop());
+                        }
+                        case STATEMENT_IF -> {
+                            syBuilder.add(statement.getMyIfStmnt());
+                        }
+                        case STATEMENT_BODY -> {
+                            syBuilder.add(statement.getMyBody());
+                        }
+                        case STATEMENT_VARDEF -> {
+                            syBuilder.add(statement.getMyVarDef());
+                        }
                     }
                 }
                 case ANYSTATEMENT_RETURN -> {
                     syBuilder.add(actStatement);
+                }
+                case ANYSTATEMENT_SET -> {
+                    syBuilder.add(((AnyStatementItem) actStatement).getMySetStmnt());
+                }
+                case ANYSTATEMENT_GROUP -> {
+                    syBuilder.add(((AnyStatementItem) actStatement).getMyGroupStmnt());
                 }
                 case STATEMENT_LOOP -> {
                     syBuilder.add(((StatementItem) actStatement).getMyLoop());
@@ -46,8 +71,20 @@ public class ASTStatementParser {
                 case LOOP_STMT_SET -> {
                     syBuilder.add(((LoopStmntItem) actStatement).getMySetStmnt());
                 }
-                case ANYSTATEMENT_SET -> {
-                    syBuilder.add(((AnyStatementItem) actStatement).getMySetStmnt());
+                case LOOP_STMT_GROUP -> {
+                    syBuilder.add(((LoopStmntItem) actStatement).getMyGroupStmnt());
+                }
+                case LOOP_STMT_MARK -> {
+                    syBuilder.add(((LoopStmntItem) actStatement).getMyMarkStmnt());
+                }
+                case LOOP_STMT_STATEMENT -> {
+                    StatementItem statement = ((LoopStmntItem) actStatement).getMyStatement();
+                    switch (statement.getLanguageItemType()) {
+                        case STATEMENT_LOOP -> syBuilder.add(statement.getMyLoop());
+                        case STATEMENT_IF -> syBuilder.add(statement.getMyIfStmnt());
+                        case STATEMENT_VARDEF -> syBuilder.add(statement.getMyVarDef());
+                        case STATEMENT_BODY -> syBuilder.add(statement.getMyBody());
+                    }
                 }
                 case STATEMENT_IF -> {
                     syBuilder.add(((StatementItem) actStatement).getMyIfStmnt());
@@ -159,6 +196,17 @@ public class ASTStatementParser {
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
             }
+            case GROUP_EMPTY, GROUP_AREA, GROUP_HIDING_AREA, GROUP_HIDING -> {
+                GroupStmntItem grp = (GroupStmntItem) actItem;
+                TermAST term = new ASTTermParser().parse(grp.getMyTerm());
+                return switch (actItem.getLanguageItemType()) {
+                    case GROUP_EMPTY -> new GroupAST(false, false, term);
+                    case GROUP_AREA -> new GroupAST(false, true, term);
+                    case GROUP_HIDING_AREA -> new GroupAST(true, true, term);
+                    case GROUP_HIDING -> new GroupAST(true, false, term);
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                };
+            }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
     }
@@ -176,7 +224,9 @@ public class ASTStatementParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, VARDEF_ASSIGNMENT,
                         PROCEDURALF_FUNCBODY, PROCEDURALF_TERM, ANYSTATEMENT_RETURN,
-                        LOOP_LOOPBODY, LOOP_STATEMENT, ANYSTATEMENT_SET, IF_WITHELSE, IF_WITHOUTELSE -> {
+                        LOOP_LOOPBODY, LOOP_STATEMENT, ANYSTATEMENT_SET, IF_WITHELSE, IF_WITHOUTELSE,
+                        GROUP_EMPTY, GROUP_AREA, GROUP_AREA_FUNCALL, GROUP_HIDING_AREA, GROUP_HIDING_AREA_FUNCALL,
+                        GROUP_HIDING, GROUP_HIDING_FUNCALL, GROUP_FUNCALL, STATEMENT_VARDEF -> {
                     output.add(item);
                 }
                 /*case TERM_BRACKET -> {

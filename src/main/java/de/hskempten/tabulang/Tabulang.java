@@ -94,25 +94,29 @@ public class Tabulang {
                 "set bereich;\n" +
                 "});\n" +
                 "function buildTabelle(fachbereich) {\n" +
-                "jahre:= ((20071, 20112), (20111, 20112), (20101, 20102),\n" +
-                "(20091, 20092), (20081, 20082), (20071, 20072));\n" +
-                "jahresUeberschriften := ('Gesamt(2007-2011)', 2011, 2010, 2009, 2008, 2007);\n" +
+                "jahre:= [[20071, 20112], [20111, 20112], [20101, 20102],\n" +
+                "[20091, 20092], [20081, 20082], [20071, 20072]];\n" +
+                "jahresUeberschriften := ['Gesamt(2007-2011)', 2011, 2010, 2009, 2008, 2007];\n" +
                 "faecher := Fachliste filter fachInFachbereich(fachbereich);\n" +
                 "x := 1; // Benutzen x um die grüne Hintergrundmarkierung zu erzeugen\n" +
                 "alleJahreTab:= horizontal for jahr in jahre {\n" +
                 //"tab := vertical for fach in faecher buildStatisticsTable(fach, jahr.0, jahr.1);\n" +  // TODO no funCall in loopStmnt at page 8 function buildTabelle
                 "tab := tab mark 'background' as 'green'if (x mod 2 = 0);\n" +
                 "x := x + 1;\n" +
-                "set ontop(('Alle', 'Anf', 'W+', 'W-', 'Abs', 'FS', 'Note'), tab);\n" +
+                "set ontop(['Alle', 'Anf', 'W+', 'W-', 'Abs', 'FS', 'Note'], tab);\n" +
                 "};\n" +
                 "return aside(buildHaderLinks(fachbereich),\n" +
                 "ontop(jahresUeberschriften, alleJahreTab));\n" +
                 "}" +
                 "");
         l.setText("\n" +
-                "if a and b set x;\n" +
-                "" +
-                "\n");
+                "function buildHeaderLinks(fachbereich)\n" +
+                "return ontop('Fächer/Abschlusse', ' ', vertical for fach in faecher{\n" +
+                "c := count T1 filter abschl in (AbschlussListe- RelevanteAbschluesse);\n" +
+                "if (c > 0) bereich := ontop(bereich, 'Restliche' mark fontstyle as 'italic');\n" +
+                "set bereich;\n" +
+                "});\n" +
+                "");
         Interpreter i = new Interpreter();
 
         TabulangParser parser = new TabulangParser(l, i);
