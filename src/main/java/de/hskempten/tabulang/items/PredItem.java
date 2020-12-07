@@ -131,6 +131,10 @@ public class PredItem implements LanguageItem {
         this.myFunCallItem = myFunCallItem;
     }
 
+    public void setLanguageItemType(LanguageItemType itemType) {
+        this.itemType = itemType;
+    }
+
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;

@@ -3,9 +3,7 @@ package de.hskempten.tabulang.items.ast;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
-import de.hskempten.tabulang.items.ast.nodes.BinBoolAST;
-import de.hskempten.tabulang.items.ast.nodes.BinRelAST;
-import de.hskempten.tabulang.items.ast.nodes.PredTermAST;
+import de.hskempten.tabulang.items.ast.nodes.*;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -37,7 +35,7 @@ public class ASTPredParser {
                         default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actPred).getMyOrdinal().getLanguageItemType());
                     }
                 }
-                case PRED_BINRELSYM, PREDR_BOOL, PRED_TERM -> {
+                case PRED_BINRELSYM, PREDR_BOOL, PRED_TERM, PRED_IN, PRED_NOT -> {
                     syBuilder.add(actPred);
                 }
                 case PREDR_NULL -> {
@@ -51,6 +49,13 @@ public class ASTPredParser {
                     syBuilder.add(actPred);
                     return;
                 }
+                case PRED_QUANTIFIED -> {
+                    switch (((PredItem) actPred).getMyPQuantified().getLanguageItemType()) {
+                        case QUANTIFIED_EXISTS -> syBuilder.add(((PredItem) actPred).getMyPQuantified().getMyExistsPred());
+                        case QUANTIFIED_FORALL -> syBuilder.add(((PredItem) actPred).getMyPQuantified().getMyForallPred());
+                        default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actPred).getMyPQuantified().getLanguageItemType());
+                    }
+                }
 
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actPred.getLanguageItemType());
@@ -59,9 +64,9 @@ public class ASTPredParser {
             actPred = switch (actPred.getLanguageItemType()) {
                 case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_BRACKET -> ((TermItem) actPred).getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actPred).getMyTerm();
-                case PRED_BINRELSYM, PRED_BRACKET -> ((PredItem) actPred).getMyPredR();
+                case PRED_BINRELSYM, PRED_BRACKET, PRED_NOT -> ((PredItem) actPred).getMyPredR();
                 case PREDR_BOOL -> ((PredRItem) actPred).getMyPred();
-                case PRED_TERM -> ((PredItem) actPred).getMyPredR();
+                case PRED_TERM, PRED_IN, PRED_QUANTIFIED -> ((PredItem) actPred).getMyPredR();
                 default -> {
                     throw new IllegalStateException("Unexpected value: " + actPred.getLanguageItemType());
                 }
@@ -108,6 +113,29 @@ public class ASTPredParser {
                 };
                 return new BinBoolAST(left, binBool, right);
             }
+            case PRED_NOT -> {
+                PredAST pred = new ASTPredParser().parse(((PredItem) actItem).getMyPred());
+                return new NotAST(pred);
+            }
+            case PRED_IN -> {
+                IdentifierAST identifier = new IdentifierAST(((PredItem) actItem).getMyIdentifier().getMyString());
+                TermAST term = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
+                return new PredInAST(identifier, term);
+            }
+            case QUANTIFIED_EXISTS -> {
+                ExistsPredItem exi = ((ExistsPredItem) actItem);
+                IdentifierAST identifier = new IdentifierAST(exi.getMyIdentifier().getMyString());
+                TermAST term = new ASTTermParser().parse(exi.getMyTerm());
+                PredAST pred = new ASTPredParser().parse(exi.getMyPred());
+                return new ExistsAST(identifier, term, pred);
+            }
+            case QUANTIFIED_FORALL -> {
+                ForallPredItem fora = ((ForallPredItem) actItem);
+                IdentifierAST identifier = new IdentifierAST(fora.getMyIdentifier().getMyString());
+                TermAST term = new ASTTermParser().parse(fora.getMyTerm());
+                PredAST pred = new ASTPredParser().parse(fora.getMyPred());
+                return new ForAllAST(identifier, term, pred);
+            }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
 
@@ -126,18 +154,19 @@ public class ASTPredParser {
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL,
-                        PRED_BINRELSYM, PRED_TERM -> {
+                        PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT -> {
                     output.add(item);
                 }
-                case  PRED_BRACKET -> {
+                case PRED_BRACKET -> {
                     stack.push(item);
                 }
-                case  PREDR_BRACKET -> {
+                case PREDR_BRACKET -> {
                     while (!stack.isEmpty()
                             && !stack.peek().getLanguageItemType().equals(LanguageItemType.PRED_BRACKET)) {
                         output.add(stack.pop());
                     }
-                    if (!stack.isEmpty()) stack.pop();
+                    /*if (!stack.isEmpty())*/
+                    stack.pop();
                 }
                 case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
                         OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,

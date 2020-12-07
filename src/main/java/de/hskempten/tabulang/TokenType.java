@@ -21,8 +21,8 @@ public class TokenType {
 
     static {
         KEYWORD = new TokenExpression("keyword", "(after)|(as)|(average)|(background)|(before)|(count)|" +
-                "(direction)|(distinct)|(else)|(exists)|(filter)|(forall)|(fontStyle)|(font)|(foreground)|(for)|(from)|" +
-                "(function)|(group)|(hiding)|(horizontalflip)|(horizontal)|(if)|(intersect)|(in)|(mark)|(not)|(null)|" +
+                "(direction)|(distinct)|(else)|(exists)|(filter)|(forAll)|(fontStyle)|(font)|(foreground)|(for)|(from)|" +
+                "(function)|(group)|(hiding)|(holds)|(horizontalflip)|(horizontal)|(if)|(intersect)|(in)|(mark)|(not)|(null)|" +
                 "(return)|(set)|(size)|(suchThat)|(unite)|(using)|(verticalflip)|(vertical)");
         VARIABLE = new TokenExpression("variable", "[a-zA-Z]\\w*");
         NUMBER = new TokenExpression("number", "-?[0-9]+(\\.[0-9]+)?");
@@ -32,7 +32,7 @@ public class TokenType {
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)|\\[|\\]");
         COMMA = new TokenExpression("comma", ",");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
-        BINRELSYM = new TokenExpression("binRelSym", "=|<|>|<=|>=|!=");
+        BINRELSYM = new TokenExpression("binRelSym", "<=|>=|!=|=|<|>");
         BINBOOL = new TokenExpression("binBool", "(and)|(or)|(xor)|(iff)|(impl)");
         DOT = new TokenExpression(".", "\\.");
 
