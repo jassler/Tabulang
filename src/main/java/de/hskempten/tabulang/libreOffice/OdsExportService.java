@@ -23,6 +23,12 @@ public class OdsExportService {
     private Table _initTable;
     private ArrayList<Style> _styles;
 
+    /**
+     * Constructor: Create a new instance of a table to be exported
+     *
+     * @param tableName Specific name of the table in the *.ods-File
+     */
+
     /* PUBLIC METHODS */
     public OdsExportService(String tableName){
         try {
@@ -35,6 +41,14 @@ public class OdsExportService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Export a table of the language to an *.ods-File
+     *
+     * @param table     Table to be exported
+     * @param path      Specification of the path where the ods file should be saved
+     * @param fileName  File name of the table to be exported (without specifying ods)
+     */
 
     public void Export(de.hskempten.tabulang.datatypes.Table table, String path, String fileName){
         var content = new ArrayList<ArrayList<String>>();
@@ -53,19 +67,25 @@ public class OdsExportService {
         SaveFile(path, fileName);
     }
 
-    public void AddContentFromTable(ArrayList<ArrayList<String>> content){
-        for(var i = 0; i < content.size(); i++){
-            for(var j = 0; j < content.get(i).size(); j++){
-                _initTable.getCellByPosition(j, i + 1).setStringValue(String.valueOf(content.get(i).get(j)));
-            }
-        }
-    }
+    /**
+     * Export a SQL-Statement to an *.ods-File
+     *
+     * @param sqlTableContent   Object of type MSqlTableContent, which contains all information for export
+     * @param path              Specification of the path where the ods file should be saved
+     * @param fileName          File name of the table to be exported (without specifying ods)
+     */
 
     public void InstantlyExportToFile(MSqlTableContent sqlTableContent, String path, String fileName){
         AddHeadlines(sqlTableContent.get_headlines());
         AddContent(sqlTableContent.get_content());
         SaveFile(path, fileName);
     }
+
+    /**
+     * Add all column headlines to the table to be exported
+     *
+     * @param headlines ArrayList of string, which contains all headlines (as Strings)
+     */
 
     public void AddHeadlines(ArrayList<String> headlines) {
         try {
@@ -78,6 +98,12 @@ public class OdsExportService {
         }
     }
 
+    /**
+     * Adds the rows with the associated contents to the table to be exported
+     *
+     * @param content ArrayList of ArrayList with Strings, which contains all associated contents
+     */
+
     public void AddContent(ArrayList<ArrayList<String>> content){
         for(var i = 0; i < content.size(); i++){
             for(var j = 0; j < content.get(i).size(); j++){
@@ -86,21 +112,42 @@ public class OdsExportService {
         }
     }
 
+    /**
+     * Create a new instance for a table to be exported
+     * @param tableName Specific name of the table in the *.ods-File
+     */
+
     public void CreateTable(String tableName){
         _initTable = _spreadsheetDocument.addTable();
         _initTable.setTableName(tableName);
     }
 
+    /**
+     * Create a new instance to style a row, column or cell of a table
+     */
+
     public void CreateStyle(){
         this._styles = new ArrayList<>();
     }
-    
+
+    /**
+     * Adds all called up styles to a specific row
+     *
+     * @param rowIndex  Index of the row in the table (starts with 0)
+     */
+
     public void SetStyleToRow(int rowIndex){
         var row = _initTable.getRowByIndex(rowIndex);
         for(int i = 0; i < row.getCellCount(); i++){
             SetStyleToCell(row.getRowIndex(), i);
         }
     }
+
+    /**
+     * Adds all called up styles to a specific column
+     *
+     * @param columnIndex  Index of the column in the table (starts with 0)
+     */
 
     public void SetStyleToColumn(int columnIndex){
         var column = _initTable.getColumnByIndex(columnIndex);
@@ -109,14 +156,31 @@ public class OdsExportService {
         }
     }
 
+    /**
+     * Adds all called up styles to a specific cell
+     *
+     * @param rowIndex      Index of the row in the table (starts with 0)
+     * @param columnIndex   Index of the column in the table (starts with 0)
+     */
+
     public void SetStyleToCell(int rowIndex, int columnIndex){
         var cell = _initTable.getCellByPosition(columnIndex, rowIndex);
         cell.setCellStyleName(CreateOdfStyle().getStyleNameAttribute());
     }
 
+    /**
+     * Add background color to the style-instance
+     *
+     * @param value Value of the background color as HEX or name (#000000 or 'red')
+     */
+
     public void SetBackgroundColor(String value){
         this._styles.add(new Style(OdfTableCellProperties.BackgroundColor, value));
     }
+
+    /**
+     * Add bold property to the style-instance
+     */
 
     public void SetBold() {
         this._styles.add(new Style(OdfTextProperties.FontWeight, "bold"));
@@ -124,17 +188,31 @@ public class OdsExportService {
         this._styles.add(new Style(OdfTextProperties.FontWeightComplex, "bold"));
     }
 
-    public void SetCursive() {
+    /**
+     * Add italic property to the style-instance
+     */
+
+    public void SetItalic() {
         this._styles.add(new Style(OdfTextProperties.FontStyle, "italic"));
         this._styles.add(new Style(OdfTextProperties.FontStyleAsian, "italic"));
         this._styles.add(new Style(OdfTextProperties.FontStyleComplex, "italic"));
     }
+
+    /**
+     * Add underline property to the style-instance
+     */
 
     public void SetUnderline() {
         this._styles.add(new Style(OdfTextProperties.TextUnderlineStyle, "solid"));
         this._styles.add(new Style(OdfTextProperties.TextUnderlineColor, "font-color"));
         this._styles.add(new Style(OdfTextProperties.TextUnderlineWidth, "auto"));
     }
+
+    /**
+     * Change the font family of the specific region (row, column, cell)
+     *
+     * @param value Font-Family name as String (e. g. 'Arial')
+     */
 
     public void SetFontFamliy(String value){
         this._styles.add(new Style(OdfTextProperties.FontFamily, value));
@@ -145,27 +223,66 @@ public class OdsExportService {
         this._styles.add(new Style(OdfTextProperties.FontFamilyGenericComplex, value));
     }
 
+    /**
+     * Change the font color of the specific region (row, column, cell)
+     *
+     * @param value Value of the font color as HEX or name (#000000 or 'red')
+     */
+
     public void SetFontColor(String value){
         this._styles.add(new Style(OdfTextProperties.Color, value));
     }
+
+    /**
+     * Change the font size of the specific region (row, column, cell)
+     *
+     * @param value Size as double value (e. g. 10)
+     */
 
     public void SetFontSize(double value){
         this._styles.add(new Style(OdfTextProperties.FontSize, String.valueOf(value)));
     }
 
+    /**
+     * Change the column width of a specific column
+     *
+     * @param columnIndex   Index of the column in the table (starts with 0)
+     * @param value         Size of the column (in cm)
+     */
+
     public void SetColumnWidth(int columnIndex, double value){
         _initTable.getColumnByIndex(columnIndex).setWidth(value * 10);
     }
 
+    /**
+     * Change the row height of a specific row
+     *
+     * @param rowIndex  Index of the row in the table (starts with 0)
+     * @param value     Size of the row (in cm)
+     */
+
     public void SetRowHeight(int rowIndex, double value){
         _initTable.getRowByIndex(rowIndex).setHeight(value * 10, false);
     }
+
+    /**
+     * Change the align of specific region (row, column, cell)
+     *
+     * @param value Align of the text ('left', 'right' or 'center')
+     */
 
     public void SetTextAlign(String value){
         if(value.equals("right")) { value = "end"; }
         if(value.equals("left")) { value = "start"; }
         this._styles.add(new Style(OdfParagraphProperties.TextAlign, value));
     }
+
+    /**
+     * Save the table instance and export it as an *.ods-File
+     *
+     * @param path      Specification of the path where the ods file should be saved
+     * @param fileName  File name of the table to be exported (without specifying ods)
+     */
 
     public void SaveFile(String path, String fileName){
         try {
@@ -177,11 +294,41 @@ public class OdsExportService {
     }
 
     /* PRIVATE METHODS */
+
+    /**
+     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Modify the content to the correct form
+     *
+     * @param content   Contains all associated contents
+     */
+
+    private void AddContentFromTable(ArrayList<ArrayList<String>> content){
+        for(var i = 0; i < content.size(); i++){
+            for(var j = 0; j < content.get(i).size(); j++){
+                _initTable.getCellByPosition(j, i + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+            }
+        }
+    }
+
+    /**
+     * Helper function for {@link OdsExportService#SetStyleToCell(int, int)}
+     * Create a new OdfStyle-Object as a style instance
+     *
+     * @return
+     */
+
     private OdfStyle CreateOdfStyle(){
         var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
         _styles.forEach(item -> style.setProperty(item.property, item.value));
         return style;
     }
+
+    /**
+     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Filter the row styles of the table of the language and modify it to the correct form
+     *
+     * @param styles Specific style for a row
+     */
 
     private void SetRowStylesFromTable(HashMap styles){
         styles.forEach((key, value) -> {
@@ -191,6 +338,13 @@ public class OdsExportService {
         });
     }
 
+    /**
+     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Filter the column styles of the table of the language and modify it to the correct form
+     *
+     * @param styles Specific style for a column
+     */
+
     private void SetColumnStylesFromTable(HashMap styles){
         styles.forEach((key, value) -> {
             CreateStyle();
@@ -199,6 +353,13 @@ public class OdsExportService {
         });
     }
 
+    /**
+     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Filter the cell styles of the table of the language and modify it to the correct form
+     *
+     * @param styles Specific style for a cell
+     */
+
     private void SetCellStylesFromTable(HashMap styles){
         styles.forEach((key, value) -> {
             CreateStyle();
@@ -206,6 +367,19 @@ public class OdsExportService {
             SetStyleToCell(((Point)key).x, ((Point)key).y);
         });
     }
+
+    /**
+     * Helper function for:
+     * {@link OdsExportService#SetRowStylesFromTable(HashMap)}
+     * {@link OdsExportService#SetColumnStylesFromTable(HashMap)} (HashMap)}
+     * {@link OdsExportService#SetCellStylesFromTable(HashMap)} (HashMap)}
+     *
+     * Find the correct style methods with the help of keywords
+     *
+     * @param styles        List of all styles for a region (row, column or cell)
+     * @param rowIndex      Index of the row in the table (starts with 0)
+     * @param columnIndex   Index of the column in the table (starts with 0)
+     */
 
     private void WrapperSetStyleToTable(de.hskempten.tabulang.datatypes.Style styles, int rowIndex, int columnIndex) {
         styles.forEach(item -> {
@@ -231,7 +405,7 @@ public class OdsExportService {
                     SetBold();
                     break;
                 case "italics":
-                    SetCursive();
+                    SetItalic();
                     break;
                 case "underlined":
                     SetUnderline();
