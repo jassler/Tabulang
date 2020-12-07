@@ -129,7 +129,8 @@ public class ASTTermParser {
                 return new PowerAST(left, right);
             }
             case ORDINAL_NUMBER -> {
-                NumberAST item = new NumberAST((NumberItem) actItem);
+                NumberItem nItem = (NumberItem) actItem;
+                NumberAST item = new NumberAST(nItem.getNumerator(), nItem.getDenominator());
 
                 return item;
             }

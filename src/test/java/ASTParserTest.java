@@ -1,6 +1,5 @@
 import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.TokenType;
-import de.hskempten.tabulang.items.NumberItem;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
@@ -10,7 +9,6 @@ import de.hskempten.tabulang.tokenizer.Lexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,9 +17,9 @@ public class ASTParserTest {
     private Lexer l;
     private TabulangParser parser;
 
-    private final NumberAST number1 = new NumberAST(new NumberItem(BigInteger.valueOf(1)));
-    private final NumberAST number2 = new NumberAST(new NumberItem(BigInteger.valueOf(2)));
-    private final NumberAST number3 = new NumberAST(new NumberItem(BigInteger.valueOf(3)));
+    private final NumberAST number1 = new NumberAST(1);
+    private final NumberAST number2 = new NumberAST(2);
+    private final NumberAST number3 = new NumberAST(3);
 
     @BeforeEach
     void setUp() {
@@ -58,8 +56,8 @@ public class ASTParserTest {
                 ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
-                ((NumberAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getNumber().getMyNumber(),
-                ((NumberAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getNumber().getMyNumber()
+                ((NumberAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getFloatValue(),
+                ((NumberAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getFloatValue()
         );
     }
 
@@ -84,12 +82,12 @@ public class ASTParserTest {
                 ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getFloatValue()
         );
     }
 
@@ -115,16 +113,12 @@ public class ASTParserTest {
                 ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getLeft()).getNumber().getMyNumber()
-        );
-        assertEquals(
-                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber(),
-                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber()
+                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getLeft()).getFloatValue(),
+                ((NumberAST) ((MultiplyAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getLeft()).getFloatValue()
         );
     }
 
@@ -150,16 +144,16 @@ public class ASTParserTest {
                 ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getLeft()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getLeft()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getLeft()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getRight()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getRight()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getRight()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getRight()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getNumber().getMyNumber(),
-                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getNumber().getMyNumber()
+                ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getFloatValue(),
+                ((NumberAST) ((AddAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getFloatValue()
         );
     }
 
@@ -185,16 +179,16 @@ public class ASTParserTest {
                 ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
-                ((NumberAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber()
+                ((NumberAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getFloatValue(),
+                ((NumberAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getLeft()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getLeft()).getNumber().getMyNumber(),
-                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getLeft()).getNumber().getMyNumber()
+                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getLeft()).getFloatValue(),
+                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getLeft()).getFloatValue()
         );
         assertEquals(
-                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber(),
-                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getRight()).getNumber().getMyNumber()
+                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getRight()).getRight()).getFloatValue(),
+                ((NumberAST) ((PowerAST) ((PowerAST) ((AssignmentAST) act.getStatements().get(0)).getTerm()).getRight()).getRight()).getFloatValue()
         );
     }
 }

@@ -49,7 +49,7 @@ public class ParserTest {
     void assign() throws ParseTimeException {
         l.setText("a := 9;");
         ArrayList<StatementItem> statements = new ArrayList<>();
-        statements.add(new StatementItem(new VarDefItem(new IdentifierItem("a"), new TermItem(new TermRItem(), new OrdinalItem(new NumberItem(BigInteger.valueOf(9)))))));
+        statements.add(new StatementItem(new VarDefItem(new IdentifierItem("a"), new TermItem(new TermRItem(), new OrdinalItem(new NumberItem("9"))))));
         ProgramItem prg = new ProgramItem(statements);
 
         ProgramItem act = parser.parseN();
@@ -59,8 +59,8 @@ public class ParserTest {
                 act.getMyStatements().get(0).getMyVarDef().getMyIdentifier().getMyString()
         );
         assertEquals(
-                prg.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getMyNumber(),
-                act.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getMyNumber()
+                prg.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getNumerator(),
+                act.getMyStatements().get(0).getMyVarDef().getMyTerm().getMyOrdinal().getMyNumber().getNumerator()
         );
     }
 }
