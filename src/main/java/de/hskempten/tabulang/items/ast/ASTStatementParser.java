@@ -8,99 +8,77 @@ import de.hskempten.tabulang.items.ast.nodes.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Stack;
 
 
 public class ASTStatementParser {
 
-    ASTStatementParser.ShuntingYardBuilder syBuilder = new ASTStatementParser.ShuntingYardBuilder();
-
     public StatementAST parse(StatementAnyItem originalStatement) throws Exception {
 
-        traverseStatement(originalStatement);
-        StatementAST parsedStatement = statementParser(syBuilder.getOutput());
-
-        return parsedStatement;
+        return statementParser(traverseStatement(originalStatement));
     }
 
-    private void traverseStatement(StatementAnyItem originalStatement) {
+    private LanguageItem traverseStatement(StatementAnyItem originalStatement) throws Exception {
         StatementAnyItem actStatement = originalStatement;
-        int i = 20;
-        while (i > 0) {
-            switch (actStatement.getLanguageItemType()) {
-                case STATEMENT_VARDEF -> {
-                    switch (((StatementItem) actStatement).getMyVarDef().getLanguageItemType()) {
-                        case VARDEF_ASSIGNMENT -> {
-                            syBuilder.add(((StatementItem) actStatement).getMyVarDef());
-                        }
-                        case VARDEF_PROCEDURALF -> {
-                            syBuilder.add(((StatementItem) actStatement).getMyVarDef().getMyProceduralF());
-                        }
-                        default -> throw new IllegalStateException("Unexpected value: " + ((StatementItem) actStatement).getMyVarDef().getLanguageItemType());
-                    }
-                }
-                case ANYSTATEMENT_STATEMENT -> {
-                    StatementItem statement = ((AnyStatementItem) actStatement).getMyStatement();
-                    switch (statement.getLanguageItemType()) {
-                        case STATEMENT_LOOP -> {
-                            syBuilder.add(statement.getMyLoop());
-                        }
-                        case STATEMENT_IF -> {
-                            syBuilder.add(statement.getMyIfStmnt());
-                        }
-                        case STATEMENT_BODY -> {
-                            syBuilder.add(statement.getMyBody());
-                        }
-                        case STATEMENT_VARDEF -> {
-                            syBuilder.add(statement.getMyVarDef());
-                        }
-                    }
-                }
-                case ANYSTATEMENT_RETURN -> {
-                    syBuilder.add(actStatement);
-                }
-                case ANYSTATEMENT_SET -> {
-                    syBuilder.add(((AnyStatementItem) actStatement).getMySetStmnt());
-                }
-                case ANYSTATEMENT_GROUP -> {
-                    syBuilder.add(((AnyStatementItem) actStatement).getMyGroupStmnt());
-                }
-                case STATEMENT_LOOP -> {
-                    syBuilder.add(((StatementItem) actStatement).getMyLoop());
-                }
-                case LOOP_STMT_SET -> {
-                    syBuilder.add(((LoopStmntItem) actStatement).getMySetStmnt());
-                }
-                case LOOP_STMT_GROUP -> {
-                    syBuilder.add(((LoopStmntItem) actStatement).getMyGroupStmnt());
-                }
-                case LOOP_STMT_MARK -> {
-                    syBuilder.add(((LoopStmntItem) actStatement).getMyMarkStmnt());
-                }
-                case LOOP_STMT_STATEMENT -> {
-                    StatementItem statement = ((LoopStmntItem) actStatement).getMyStatement();
-                    switch (statement.getLanguageItemType()) {
-                        case STATEMENT_LOOP -> syBuilder.add(statement.getMyLoop());
-                        case STATEMENT_IF -> syBuilder.add(statement.getMyIfStmnt());
-                        case STATEMENT_VARDEF -> syBuilder.add(statement.getMyVarDef());
-                        case STATEMENT_BODY -> syBuilder.add(statement.getMyBody());
-                    }
-                }
-                case STATEMENT_IF -> {
-                    syBuilder.add(((StatementItem) actStatement).getMyIfStmnt());
-                }
-                default -> throw new IllegalStateException("Unexpected value: " +
-                        actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
+
+
+        switch (actStatement.getLanguageItemType()) {
+            case STATEMENT_VARDEF -> {
+                return switch (((StatementItem) actStatement).getMyVarDef().getLanguageItemType()) {
+                    case VARDEF_ASSIGNMENT -> ((StatementItem) actStatement).getMyVarDef();
+                    case VARDEF_PROCEDURALF -> ((StatementItem) actStatement).getMyVarDef().getMyProceduralF();
+                    default -> throw new IllegalStateException("Unexpected value: " + ((StatementItem) actStatement).getMyVarDef().getLanguageItemType());
+                };
             }
-            return;
+            case ANYSTATEMENT_STATEMENT -> {
+                StatementItem statement = ((AnyStatementItem) actStatement).getMyStatement();
+                return switch (statement.getLanguageItemType()) {
+                    case STATEMENT_LOOP -> statement.getMyLoop();
+                    case STATEMENT_IF -> statement.getMyIfStmnt();
+                    case STATEMENT_BODY -> statement.getMyBody();
+                    case STATEMENT_VARDEF -> statement.getMyVarDef();
+                    default -> throw new IllegalStateException("Unexpected value: " + statement.getLanguageItemType());
+                };
+            }
+            case ANYSTATEMENT_RETURN -> {
+                return actStatement;
+            }
+            case ANYSTATEMENT_SET -> {
+                return ((AnyStatementItem) actStatement).getMySetStmnt();
+            }
+            case ANYSTATEMENT_GROUP -> {
+                return ((AnyStatementItem) actStatement).getMyGroupStmnt();
+            }
+            case STATEMENT_LOOP -> {
+                return ((StatementItem) actStatement).getMyLoop();
+            }
+            case LOOP_STMT_SET -> {
+                return ((LoopStmntItem) actStatement).getMySetStmnt();
+            }
+            case LOOP_STMT_GROUP -> {
+                return ((LoopStmntItem) actStatement).getMyGroupStmnt();
+            }
+            case LOOP_STMT_MARK -> {
+                return ((LoopStmntItem) actStatement).getMyMarkStmnt();
+            }
+            case LOOP_STMT_STATEMENT -> {
+                StatementItem statement = ((LoopStmntItem) actStatement).getMyStatement();
+                return switch (statement.getLanguageItemType()) {
+                    case STATEMENT_LOOP -> statement.getMyLoop();
+                    case STATEMENT_IF -> statement.getMyIfStmnt();
+                    case STATEMENT_VARDEF -> statement.getMyVarDef();
+                    case STATEMENT_BODY -> statement.getMyBody();
+                    default -> throw new IllegalStateException("Unexpected value: " + statement.getLanguageItemType());
+                };
+            }
+            case STATEMENT_IF -> {
+                return ((StatementItem) actStatement).getMyIfStmnt();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " +
+                    actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
         }
     }
 
-    private StatementAST statementParser(ArrayList<LanguageItem> items) throws Exception {
-
-
-        LanguageItem actItem = items.get(items.size() - 1);
-        items.remove(items.size() - 1);
+    private StatementAST statementParser(LanguageItem actItem) throws Exception {
 
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
@@ -209,65 +187,5 @@ public class ASTStatementParser {
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
-    }
-
-    private static class ShuntingYardBuilder {
-        Stack<LanguageItem> stack;
-        ArrayList<LanguageItem> output;
-
-        public ShuntingYardBuilder() {
-            this.stack = new Stack<LanguageItem>();
-            this.output = new ArrayList<LanguageItem>();
-        }
-
-        public void add(LanguageItem item) {
-            switch (item.getLanguageItemType()) {
-                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, VARDEF_ASSIGNMENT,
-                        PROCEDURALF_FUNCBODY, PROCEDURALF_TERM, ANYSTATEMENT_RETURN,
-                        LOOP_LOOPBODY, LOOP_STATEMENT, ANYSTATEMENT_SET, IF_WITHELSE, IF_WITHOUTELSE,
-                        GROUP_EMPTY, GROUP_AREA, GROUP_AREA_FUNCALL, GROUP_HIDING_AREA, GROUP_HIDING_AREA_FUNCALL,
-                        GROUP_HIDING, GROUP_HIDING_FUNCALL, GROUP_FUNCALL, STATEMENT_VARDEF -> {
-                    output.add(item);
-                }
-                /*case TERM_BRACKET -> {
-                    stack.push(item);
-                }
-                case TERMR_BRACKET -> {
-                    while (!stack.isEmpty()
-                            && !stack.peek().getLanguageItemType().equals(LanguageItemType.TERM_BRACKET)) {
-                        output.add(stack.pop());
-                    }
-                    stack.pop();
-                }
-                case OPERATOR_ADD -> {
-                    while (!stack.isEmpty()
-                            && isHigherPrecedence(item.getLanguageItemType())) {
-                        output.add(stack.pop());
-                    }
-                    stack.push(item);
-                }*/
-                default -> throw new IllegalStateException("Unexpected value: " + item.getLanguageItemType());
-            }
-        }
-
-        public boolean isHigherPrecedence(LanguageItemType type) {
-            return LanguageItemType.isLeftAssociative(type)
-                    && LanguageItemType.getPrecedence(type)
-                    <= LanguageItemType.getPrecedence(stack.peek().getLanguageItemType())
-                    || LanguageItemType.isRightAssociative(type)
-                    && LanguageItemType.getPrecedence(type)
-                    < LanguageItemType.getPrecedence(stack.peek().getLanguageItemType());
-        }
-
-        public ArrayList<LanguageItem> getOutput() throws Exception {
-            while (!stack.isEmpty()) {
-                if (LanguageItemType.TERM_BRACKET.equals(stack.peek().getLanguageItemType())) {
-                    throw new Exception("Shunting Yard Builder Term invalid");
-                }
-                output.add(stack.pop());
-            }
-            return output;
-        }
-
     }
 }
