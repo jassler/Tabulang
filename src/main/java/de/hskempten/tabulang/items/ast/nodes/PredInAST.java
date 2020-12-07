@@ -4,8 +4,8 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class PredInAST implements PredAST {
-    IdentifierAST identifier;
-    TermAST term;
+    private IdentifierAST identifier;
+    private TermAST term;
 
     public PredInAST(IdentifierAST identifier, TermAST term) {
         this.identifier = identifier;

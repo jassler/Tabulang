@@ -3,8 +3,8 @@ package de.hskempten.tabulang.items.ast.nodes;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class DirectionalAST implements TermAST {
-    Dir direction;
-    TermAST term;
+    private Dir direction;
+    private TermAST term;
 
     public DirectionalAST(Dir direction, TermAST term) {
         this.direction = direction;

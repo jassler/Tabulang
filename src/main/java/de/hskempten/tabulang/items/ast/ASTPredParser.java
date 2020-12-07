@@ -56,7 +56,9 @@ public class ASTPredParser {
                         default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actPred).getMyPQuantified().getLanguageItemType());
                     }
                 }
-
+                case PRED_FUNCALL -> {
+                    syBuilder.add(((PredItem) actPred).getMyFunCallItem());
+                }
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actPred.getLanguageItemType());
                 }
@@ -64,7 +66,7 @@ public class ASTPredParser {
             actPred = switch (actPred.getLanguageItemType()) {
                 case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_BRACKET -> ((TermItem) actPred).getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actPred).getMyTerm();
-                case PRED_BINRELSYM, PRED_BRACKET, PRED_NOT -> ((PredItem) actPred).getMyPredR();
+                case PRED_BINRELSYM, PRED_BRACKET, PRED_NOT, PRED_FUNCALL -> ((PredItem) actPred).getMyPredR();
                 case PREDR_BOOL -> ((PredRItem) actPred).getMyPred();
                 case PRED_TERM, PRED_IN, PRED_QUANTIFIED -> ((PredItem) actPred).getMyPredR();
                 default -> {
@@ -136,6 +138,14 @@ public class ASTPredParser {
                 PredAST pred = new ASTPredParser().parse(fora.getMyPred());
                 return new ForAllAST(identifier, term, pred);
             }
+            case TERM_FUNCALL -> {
+                IdentifierAST identifier = new IdentifierAST(((FunCallItem) actItem).getMyIdentifier().getMyString());
+                ArrayList<TermAST> terms = new ArrayList<TermAST>();
+                for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
+                    terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
+                }
+                return new FunCallAST(identifier, terms);
+            }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
 
@@ -153,8 +163,8 @@ public class ASTPredParser {
 
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
-                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL,
-                        PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT -> {
+                case /*STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, ORDINAL_QUOTEDSTRING, ORDINAL_NULL,*/
+                        PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT, TERM_FUNCALL -> {
                     output.add(item);
                 }
                 case PRED_BRACKET -> {
@@ -168,8 +178,8 @@ public class ASTPredParser {
                     /*if (!stack.isEmpty())*/
                     stack.pop();
                 }
-                case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
-                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,
+                case /*OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
+                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,*/
                         PREDR_BOOL -> {
                     while (!stack.isEmpty()
                             && isHigherPrecedence(item.getLanguageItemType())) {

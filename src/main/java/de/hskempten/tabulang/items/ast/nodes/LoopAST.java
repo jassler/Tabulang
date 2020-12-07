@@ -6,21 +6,21 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class LoopAST implements StatementAST, TermAST {
-    String identifier;
-    TermAST term;
-    ArrayList<StatementAST> statements;
+    private IdentifierAST identifier;
+    private TermAST term;
+    private ArrayList<StatementAST> statements;
 
-    public LoopAST(String identifier, TermAST term, ArrayList<StatementAST> statements) {
+    public LoopAST(IdentifierAST identifier, TermAST term, ArrayList<StatementAST> statements) {
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
     }
 
-    public String getIdentifier() {
+    public IdentifierAST getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierAST identifier) {
         this.identifier = identifier;
     }
 
@@ -43,7 +43,7 @@ public class LoopAST implements StatementAST, TermAST {
 
     public void print(int offset) {
         String gOffset = " ".repeat(offset);
-        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier);
+        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier.getString());
         System.out.println(gOffset + " ".repeat(this.getClass().getSimpleName().length()) + " Term: ");
         this.getTerm().print((gOffset + " ".repeat((this.getClass().getSimpleName() + " Term: ").length())).length());
         System.out.println(gOffset + " ".repeat(this.getClass().getSimpleName().length()) + " Statements: ");

@@ -6,21 +6,21 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class ProceduralFTermAST implements StatementAST {
-    private String identifier;
+    private IdentifierAST identifier;
     private ArrayList<IdentifierAST> identifierList;
     private TermAST term;
 
-    public ProceduralFTermAST(String identifier, ArrayList<IdentifierAST> identifierList, TermAST term) {
+    public ProceduralFTermAST(IdentifierAST identifier, ArrayList<IdentifierAST> identifierList, TermAST term) {
         this.setIdentifier(identifier);
         this.setIdentifierList(identifierList);
         this.setTerm(term);
     }
 
-    public String getIdentifier() {
+    public IdentifierAST getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierAST identifier) {
         this.identifier = identifier;
     }
 
@@ -42,7 +42,7 @@ public class ProceduralFTermAST implements StatementAST {
 
     public void print(int offset) {
         String gOffset = " ".repeat(offset);
-        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier);
+        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier.getString());
         System.out.println(gOffset + " ".repeat(this.getClass().getSimpleName().length()) + " IdentifierList: ");
         for (int i = 0; i < this.getIdentifierList().size(); i++) {
             this.getIdentifierList().get(i).print((gOffset + " ".repeat((this.getClass().getSimpleName() + " IdentifierList: ").length())).length());

@@ -6,7 +6,7 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class TupelAST implements OrdinalAST {
-    ArrayList<TermAST> tList;
+    private ArrayList<TermAST> tList;
 
     public TupelAST() {
         this.tList = new ArrayList<TermAST>();

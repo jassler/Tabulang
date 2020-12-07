@@ -3,9 +3,9 @@ package de.hskempten.tabulang.items.ast.nodes;
 import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 
 public class BinBoolAST implements PredAST {
-    BinBool binBool;
-    PredAST left;
-    PredAST right;
+    private BinBool binBool;
+    private PredAST left;
+    private PredAST right;
 
     public BinBoolAST(PredAST left, BinBool binBool, PredAST right) {
         this.setLeft(left);

@@ -4,9 +4,9 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class BinRelAST implements PredAST {
-    BinRelSym binRelSym;
-    TermAST leftTerm;
-    TermAST rightTerm;
+    private BinRelSym binRelSym;
+    private TermAST leftTerm;
+    private TermAST rightTerm;
 
     public BinRelAST(TermAST leftTerm, BinRelSym binRelSym, TermAST rightTerm) {
         this.setLeftTerm(leftTerm);

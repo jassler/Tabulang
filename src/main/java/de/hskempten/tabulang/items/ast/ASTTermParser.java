@@ -177,7 +177,7 @@ public class ASTTermParser {
                 return item;
             }
             case TERM_FUNCALL -> {
-                String identifier = ((FunCallItem) actItem).getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(((FunCallItem) actItem).getMyIdentifier().getMyString());
                 ArrayList<TermAST> terms = new ArrayList<TermAST>();
                 for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
@@ -186,7 +186,7 @@ public class ASTTermParser {
             }
             case AGGREGATION_AVERAGE -> {
                 AverageTItem ave = ((AggregationTItem) actItem).getMyAverageT();
-                String identifier = ave.getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(ave.getMyIdentifier().getMyString());
                 TermAST term = new ASTTermParser().parse(ave.getMyTerm());
                 return new AverageAST(identifier, term);
 
@@ -213,20 +213,27 @@ public class ASTTermParser {
             }
             case DISTINCT_ITEM -> {
                 DistinctTItem dis = (DistinctTItem) actItem;
-                ArrayList<String> identifiers = new ArrayList<String>();
+                ArrayList<IdentifierAST> identifiers = new ArrayList<IdentifierAST>();
                 for (int i = 0; i < dis.getMyIdentifiers().size(); i++) {
-                    identifiers.add(dis.getMyIdentifiers().get(i).getMyString());
+                    identifiers.add(new IdentifierAST(dis.getMyIdentifiers().get(i).getMyString()));
                 }
                 TermAST term = new ASTTermParser().parse(dis.getMyTerm());
                 return new DistinctAST(identifiers, term);
             }
-            case LOOP_LOOPBODY -> {
+            case LOOP_LOOPBODY, LOOP_STATEMENT -> {
                 LoopItem loop = (LoopItem) actItem;
-                String identifier = loop.getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(loop.getMyIdentifier().getMyString());
                 TermAST term = new ASTTermParser().parse(loop.getMyTerm());
                 ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
-                for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                    statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i)));
+                switch (actItem.getLanguageItemType()) {
+                    case LOOP_LOOPBODY -> {
+                        for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
+                            statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i)));
+                        }
+                    }
+                    case LOOP_STATEMENT -> {
+                        statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt()));
+                    }
                 }
                 return new LoopAST(identifier, term, statements);
             }
@@ -268,7 +275,7 @@ public class ASTTermParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
-                        DISTINCT_ITEM, LOOP_LOOPBODY, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER -> {
+                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER -> {
                     output.add(item);
                 }
                 case TERM_BRACKET -> {

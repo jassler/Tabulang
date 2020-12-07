@@ -3,8 +3,8 @@ package de.hskempten.tabulang.items.ast.nodes;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class CountAST implements TermAST {
-    Dir direction;
-    TermAST term;
+    private Dir direction;
+    private TermAST term;
 
     public CountAST(Dir direction, TermAST term) {
         this.setDirection(direction);
@@ -33,7 +33,7 @@ public class CountAST implements TermAST {
 
     public void print(int offset) {
         String gOffset = " ".repeat(offset);
-        System.out.println(gOffset + this.getClass().getSimpleName()+" "+ this.getDirection());
+        System.out.println(gOffset + this.getClass().getSimpleName() + " " + this.getDirection());
         this.getTerm().print((gOffset + " ".repeat((this.getClass().getSimpleName()).length()) + " ").length());
     }
 }

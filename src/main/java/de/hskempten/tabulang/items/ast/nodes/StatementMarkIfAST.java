@@ -4,9 +4,9 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class StatementMarkIfAST implements TermAST {
-    TermAST markTerm;
-    TermAST asTerm;
-    PredAST pred;
+    private TermAST markTerm;
+    private TermAST asTerm;
+    private PredAST pred;
 
     public StatementMarkIfAST(TermAST markTerm, TermAST asTerm, PredAST pred) {
         this.setMarkTerm(markTerm);

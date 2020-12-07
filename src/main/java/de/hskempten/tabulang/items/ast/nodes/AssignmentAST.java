@@ -4,19 +4,19 @@ import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class AssignmentAST implements StatementAST {
-    private String identifier;
+    private IdentifierAST identifier;
     private TermAST term;
 
-    public AssignmentAST(String identifier, TermAST term) {
+    public AssignmentAST(IdentifierAST identifier, TermAST term) {
         this.setIdentifier(identifier);
         this.setTerm(term);
     }
 
-    public String getIdentifier() {
+    public IdentifierAST getIdentifier() {
         return identifier;
     }
 
-    private void setIdentifier(String identifier) {
+    private void setIdentifier(IdentifierAST identifier) {
         this.identifier = identifier;
     }
 
@@ -30,7 +30,7 @@ public class AssignmentAST implements StatementAST {
 
     public void print(int offset) {
         String gOffset = " ".repeat(offset);
-        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier);
+        System.out.println(gOffset + this.getClass().getSimpleName() + " Identifier: " + identifier.getString());
         this.getTerm().print(offset + this.getClass().getSimpleName().length() + 1);
     }
 }

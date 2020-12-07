@@ -6,7 +6,7 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class FilterAST implements TermAST {
-    ArrayList<PredAST> preds;
+    private ArrayList<PredAST> preds;
 
     public FilterAST(ArrayList<PredAST> preds) {
         this.setPreds(preds);

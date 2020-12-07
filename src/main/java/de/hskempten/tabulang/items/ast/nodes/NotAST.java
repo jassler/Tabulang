@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items.ast.nodes;
 import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 
 public class NotAST implements PredAST {
-    PredAST pred;
+    private PredAST pred;
 
     public NotAST(PredAST pred) {
         this.setPred(pred);

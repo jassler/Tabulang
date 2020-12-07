@@ -4,9 +4,9 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 
 public class StatementIfElseAST implements StatementAST {
-    PredAST pred;
-    StatementAST ifStatement;
-    StatementAST elseStatement;
+    private PredAST pred;
+    private StatementAST ifStatement;
+    private StatementAST elseStatement;
 
     public StatementIfElseAST(PredAST pred, StatementAST ifStatement, StatementAST elseStatement) {
         this.setPred(pred);

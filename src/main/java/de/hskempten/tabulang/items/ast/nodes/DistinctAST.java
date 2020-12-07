@@ -5,19 +5,19 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class DistinctAST implements TermAST {
-    ArrayList<String> identifiers;
-    TermAST term;
+    private ArrayList<IdentifierAST> identifiers;
+    private TermAST term;
 
-    public DistinctAST(ArrayList<String> identifiers, TermAST term) {
+    public DistinctAST(ArrayList<IdentifierAST> identifiers, TermAST term) {
         this.setIdentifiers(identifiers);
         this.setTerm(term);
     }
 
-    public ArrayList<String> getIdentifiers() {
+    public ArrayList<IdentifierAST> getIdentifiers() {
         return identifiers;
     }
 
-    public void setIdentifiers(ArrayList<String> identifiers) {
+    public void setIdentifiers(ArrayList<IdentifierAST> identifiers) {
         this.identifiers = identifiers;
     }
 

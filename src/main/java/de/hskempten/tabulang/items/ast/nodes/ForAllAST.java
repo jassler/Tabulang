@@ -4,9 +4,9 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class ForAllAST implements PredAST {
-    IdentifierAST identifier;
-    TermAST term;
-    PredAST pred;
+    private IdentifierAST identifier;
+    private TermAST term;
+    private PredAST pred;
 
     public ForAllAST(IdentifierAST identifier, TermAST term, PredAST pred) {
         this.setIdentifier(identifier);

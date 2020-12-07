@@ -4,7 +4,7 @@ import de.hskempten.tabulang.items.ast.interfaces.PredAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class PredTermAST implements PredAST {
-    TermAST term;
+    private TermAST term;
 
     public PredTermAST(TermAST term) {
         this.setTerm(term);

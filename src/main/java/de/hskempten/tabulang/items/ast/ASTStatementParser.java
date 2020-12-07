@@ -82,12 +82,12 @@ public class ASTStatementParser {
 
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
-                String identifier = ((VarDefItem) actItem).getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(((VarDefItem) actItem).getMyIdentifier().getMyString());
                 TermAST term = new ASTTermParser().parse(((VarDefItem) actItem).getMyTerm());
                 return new AssignmentAST(identifier, term);
             }
             case PROCEDURALF_FUNCBODY, PROCEDURALF_TERM -> {
-                String identifier = ((ProceduralFItem) actItem).getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(((ProceduralFItem) actItem).getMyIdentifier().getMyString());
                 VListItem vList = ((ProceduralFItem) actItem).getMyVList();
                 ArrayList<IdentifierAST> identifierList = new ArrayList<IdentifierAST>();
                 if (!LanguageItemType.VLIST_EMPTY.equals(vList.getLanguageItemType())) {
@@ -139,7 +139,7 @@ public class ASTStatementParser {
             }
             case LOOP_LOOPBODY, LOOP_STATEMENT -> {
                 LoopItem loopItem = (LoopItem) actItem;
-                String identifier = loopItem.getMyIdentifier().getMyString();
+                IdentifierAST identifier = new IdentifierAST(loopItem.getMyIdentifier().getMyString());
                 TermAST term = new ASTTermParser().parse(loopItem.getMyTerm());
                 ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
                 switch (actItem.getLanguageItemType()) {
@@ -184,6 +184,38 @@ public class ASTStatementParser {
                     case GROUP_HIDING -> new GroupAST(true, false, term);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
+            }
+            case GROUP_FUNCALL, GROUP_AREA_FUNCALL, GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> {
+                GroupStmntItem grp = (GroupStmntItem) actItem;
+                TermAST term = new ASTTermParser().parse(grp.getMyTerm());
+                IdentifierAST fcIdentifier = new IdentifierAST(grp.getMyFunCall().getMyIdentifier().getMyString());
+                ArrayList<TermAST> fcTerms = new ArrayList<TermAST>();
+                for (int i = 0; i < grp.getMyFunCall().getTerms().size(); i++) {
+                    fcTerms.add(new ASTTermParser().parse(grp.getMyFunCall().getTerms().get(i)));
+                }
+                FunCallAST funCall = new FunCallAST(fcIdentifier, fcTerms);
+                return switch (actItem.getLanguageItemType()) {
+                    case GROUP_FUNCALL -> new GroupFunCallAST(false, false, term, funCall);
+                    case GROUP_AREA_FUNCALL -> new GroupFunCallAST(false, true, term, funCall);
+                    case GROUP_HIDING_AREA_FUNCALL -> new GroupFunCallAST(true, true, term, funCall);
+                    case GROUP_HIDING_FUNCALL -> new GroupFunCallAST(true, false, term, funCall);
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                };
+            }
+            case MARK_WITHIF, MARK_WITHOUTIF -> {
+                MarkStmntItem mrk = (MarkStmntItem) actItem;
+                TermAST markTerm = new ASTTermParser().parse(mrk.getMyTerm());
+                TermAST asTerm = new ASTTermParser().parse(mrk.getMySecondTerm());
+                switch (actItem.getLanguageItemType()) {
+                    case MARK_WITHOUTIF -> {
+                        return new MarkAST(markTerm, asTerm);
+                    }
+                    case MARK_WITHIF -> {
+                        PredAST ifPred = new ASTPredParser().parse(mrk.getMyPred());
+                        return new MarkIfAST(markTerm, asTerm, ifPred);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }

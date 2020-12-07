@@ -1,14 +1,18 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.interfaces.PredAST;
+import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
-public class StatementMarkAST implements TermAST {
+public class MarkIfAST implements StatementAST {
     private TermAST markTerm;
     private TermAST asTerm;
+    private PredAST ifPred;
 
-    public StatementMarkAST(TermAST markTerm, TermAST asTerm) {
+    public MarkIfAST(TermAST markTerm, TermAST asTerm, PredAST ifPred) {
         this.setMarkTerm(markTerm);
         this.setAsTerm(asTerm);
+        this.setIfPred(ifPred);
     }
 
     public TermAST getMarkTerm() {
@@ -27,10 +31,11 @@ public class StatementMarkAST implements TermAST {
         this.asTerm = asTerm;
     }
 
-    public void print(int offset) {
-        String gOffset = " ".repeat(offset);
-        System.out.println(gOffset + this.getClass().getSimpleName());
-        this.getMarkTerm().print((gOffset + " ".repeat((this.getClass().getSimpleName()).length()) + " ").length());
-        this.getAsTerm().print((gOffset + " ".repeat((this.getClass().getSimpleName()).length()) + " ").length());
+    public PredAST getIfPred() {
+        return ifPred;
+    }
+
+    public void setIfPred(PredAST ifPred) {
+        this.ifPred = ifPred;
     }
 }

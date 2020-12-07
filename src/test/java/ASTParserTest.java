@@ -43,7 +43,7 @@ public class ASTParserTest {
         l.setText("a := 1;");
 
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
-        statements.add(new AssignmentAST("a", number1));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), number1));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -54,8 +54,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier(),
-                ((AssignmentAST) act.getStatements().get(0)).getIdentifier()
+                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier().getString(),
+                ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
                 ((NumberAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getNumber().getMyNumber(),
@@ -69,7 +69,7 @@ public class ASTParserTest {
 
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         AddAST addition = new AddAST(number1, number2);
-        statements.add(new AssignmentAST("a", addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -80,8 +80,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier(),
-                ((AssignmentAST) act.getStatements().get(0)).getIdentifier()
+                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier().getString(),
+                ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
                 ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
@@ -100,7 +100,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         MultiplyAST multiplication = new MultiplyAST(number2, number3);
         AddAST addition = new AddAST(number1, multiplication);
-        statements.add(new AssignmentAST("a", addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -111,8 +111,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier(),
-                ((AssignmentAST) act.getStatements().get(0)).getIdentifier()
+                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier().getString(),
+                ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
                 ((NumberAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
@@ -135,7 +135,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         AddAST additionI = new AddAST(number1, number2);
         AddAST addition = new AddAST(additionI, number3);
-        statements.add(new AssignmentAST("a", addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -146,8 +146,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier(),
-                ((AssignmentAST) act.getStatements().get(0)).getIdentifier()
+                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier().getString(),
+                ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
                 ((NumberAST) ((AddAST) ((AddAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getLeft()).getNumber().getMyNumber(),
@@ -170,7 +170,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         PowerAST powerI = new PowerAST(number2, number3);
         PowerAST power = new PowerAST(number1, powerI);
-        statements.add(new AssignmentAST("a", power));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), power));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -181,8 +181,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier(),
-                ((AssignmentAST) act.getStatements().get(0)).getIdentifier()
+                ((AssignmentAST) exp.getStatements().get(0)).getIdentifier().getString(),
+                ((AssignmentAST) act.getStatements().get(0)).getIdentifier().getString()
         );
         assertEquals(
                 ((NumberAST) ((PowerAST) ((AssignmentAST) exp.getStatements().get(0)).getTerm()).getLeft()).getNumber().getMyNumber(),
