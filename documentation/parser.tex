@@ -1,0 +1,21 @@
+\section{Parser}
+
+Parser stuff
+
+\begin{lstlisting}[label={list:first},caption=Sample Python code -- Fibonacci sequence calculated analytically.]
+from math import *
+
+# define function 
+def analytic_fibonacci(n):
+  sqrt_5 = sqrt(5);
+  p = (1 + sqrt_5) / 2;
+  q = 1/p;
+  return int( (p**n + q**n) / sqrt_5 + 0.5 )
+ 
+# define range
+for i in range(1,31):
+  print analytic_fibonacci(i)
+\end{lstlisting}
+
+Following Listing~\ref{list:first}\ldots{} 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
