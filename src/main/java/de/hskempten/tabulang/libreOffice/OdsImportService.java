@@ -11,8 +11,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -27,27 +25,37 @@ public class OdsImportService {
     private ArrayList<Column> _columnList;
     private ArrayList<Row> _rowList;
 
-    /* CONSTRUCTOR */
-    public OdsImportService() {
-    }
-
     /* PUBLIC METHODS */
+
+    /**
+     * Constructor
+     */
+
+    public OdsImportService() {}
+
+    /**
+     * Import an *.ods-File from a specific path of the file explorer
+     *
+     * @param path  Specific path
+     */
+
     public void Import(String path) {
         try {
             _odfDocument = OdfDocument.loadDocument(path);
             FindElementInXml(_odfDocument.getContentDom().toString());
-            CopyToClipboard();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /* PRIVATE METHODS */
-    private void CopyToClipboard() throws Exception {
-        var selection = new StringSelection(_odfDocument.getContentDom().toString());
-        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
-    }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Wrapper function to filter all styles and contents from the xml-File
+     *
+     * @param xml   Path to XML-File
+     */
 
     private void FindElementInXml(String xml) {
         try {
@@ -64,6 +72,11 @@ public class OdsImportService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Create a new object of the type {@link TableWrapper} and insert all rows and columns into this object
+     */
 
     private void CreateTableWrapper() {
         var nodeList = GetNodeList("table:table");
@@ -90,6 +103,11 @@ public class OdsImportService {
         _spreadsheet._tables = temp;
     }
 
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Create all necessary lists for the spreadsheet
+     */
+
     private void CreateAllLists() {
         _spreadsheet = new Spreadsheet();
         _spreadsheet._fontStyles = new ArrayList<>();
@@ -99,9 +117,25 @@ public class OdsImportService {
         _spreadsheet._cellStyles = new HashMap<>();
     }
 
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     * Helper function for {@link OdsImportService#FontStyles()}
+     * Helper function for {@link OdsImportService#StylesWrapper()}
+     *
+     * Returns all nodes with a specific tag name
+     *
+     * @param tagName Specific tag name
+     * @return List of nodes (NodeList)
+     */
+
     private NodeList GetNodeList(String tagName){
         return _xmlDocument.getElementsByTagName(tagName);
     }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Filter the font styles from a NodeList-object
+     */
 
     private void FontStyles() {
         var nodeList = GetNodeList("style:font-face");
@@ -114,6 +148,11 @@ public class OdsImportService {
         }
         _spreadsheet._fontStyles = temp;
     }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Filter the styles for the whole document from a NodeList-object
+     */
 
     private void StylesWrapper(){
         var nodeList = GetNodeList("style:style");
@@ -146,6 +185,13 @@ public class OdsImportService {
         }
     }
 
+    /**
+     * Get all attributes from a node tag
+     *
+     * @param node  Specific node from which the attributes are to be extracted
+     * @return Hashmap (key as string and value as string) which represent all attributes
+     */
+
     private HashMap<String,String> GetAttributes(Node node){
         var returnList = new HashMap<String, String>();
         if (node.hasAttributes()) {
@@ -159,6 +205,20 @@ public class OdsImportService {
         }
         return null;
     }
+
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     * Helper function for {@link OdsImportService#FontStyles()}
+     * Helper function for {@link OdsImportService#StylesWrapper()}
+     * Helper function for {@link OdsImportService#SearchCell(NodeList)}
+     * Helper function for {@link OdsImportService#VisitColumns(NodeList, String)}
+     * Helper function for {@link OdsImportService#VisitRows(NodeList, String)}
+     *
+     * Filter every cell of a table and get the cell attributes and the value
+     *
+     * @param nList NodeList of a specific tag
+     * @return ArrayList of Cell objects
+     */
 
     private ArrayList<Cell> SearchCell(NodeList nList) {
         var list = new ArrayList<Cell>();
@@ -179,6 +239,15 @@ public class OdsImportService {
         return list;
     }
 
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     *
+     * Visit all columns recursive
+     *
+     * @param nList     List of nodes to visit
+     * @param tagName   Specific tag name
+     */
+
     private void VisitColumns(NodeList nList, String tagName) {
         for (int temp = 0; temp < nList.getLength(); temp++)
         {
@@ -193,6 +262,15 @@ public class OdsImportService {
             }
         }
     }
+
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     *
+     * Visit all rows recursive
+     *
+     * @param nList     List of nodes to visit
+     * @param tagName   Specific tag name
+     */
 
     private void VisitRows(NodeList nList, String tagName) {
         for (int temp = 0; temp < nList.getLength(); temp++)

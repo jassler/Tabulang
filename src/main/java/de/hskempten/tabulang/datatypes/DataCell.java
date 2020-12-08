@@ -1,15 +1,28 @@
 package de.hskempten.tabulang.datatypes;
 
-public class DataCell<E> {
+import java.util.function.Predicate;
 
-    private E data;
-    private String name;
-    private Style style;
+public class DataCell<E> extends TableObject {
 
-    public DataCell(E data, String name, Style style) {
+    private final E data;
+    private final String name;
+    private final Style style;
+    private final Predicate<E> conditionalStyle;
+
+//    public DataCell(E data, String name, Style style) {
+//        this(data, name, style, null);
+//    }
+
+    public DataCell(E data, String name, Style style, TableObject parent) {
+        this(data, name, style, parent, null);
+    }
+
+    public DataCell(E data, String name, Style style, TableObject parent, Predicate<E> conditionForStyleToApply) {
+        super(parent);
         this.data = data;
         this.name = name;
         this.style = style;
+        this.conditionalStyle = conditionForStyleToApply;
     }
 
     public E getData() {
@@ -21,6 +34,8 @@ public class DataCell<E> {
     }
 
     public Style getStyle() {
-        return style;
+        if (conditionalStyle == null || conditionalStyle.test(data))
+            return style;
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.mySql;
 import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.OdsExportService;
 import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
@@ -16,6 +17,14 @@ public class DatabaseConnection {
     private static MSqlConnectionParameters _parameters;
 
     /* CONSTRUCTOR */
+
+    /**
+     * See {@link DatabaseConnection#OpenConnection(MSqlConnectionParameters)}
+     *
+     * Create a new instance of DatabaseConnection
+     * @param parameters Contains all necessary information for a stable connection
+     */
+
     private DatabaseConnection(MSqlConnectionParameters parameters) {
         try {
             _parameters = parameters;
@@ -27,15 +36,29 @@ public class DatabaseConnection {
     }
 
     /* PUBLIC METHODS */
-    public static void OpenConnection(MSqlConnectionParameters parameters) throws SQLException {
-        _parameters = parameters;
-        if (_instance == null) {
-            _instance = new DatabaseConnection(_parameters);
-        }
-        else if (_connection.isClosed()) {
-            _instance = new DatabaseConnection(_parameters);
+
+    /**
+     * Open a MySQL connection as Singleton
+     * @param parameters Contains all necessary information for a stable connection
+     */
+
+    public static void OpenConnection(MSqlConnectionParameters parameters){
+        try {
+            _parameters = parameters;
+            if (_instance == null) {
+                _instance = new DatabaseConnection(_parameters);
+            }
+            else if (_connection.isClosed()) {
+                _instance = new DatabaseConnection(_parameters);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
+    /**
+     * Close a MySQL connection
+     */
 
     public static void CloseConnection() {
         try {
@@ -45,9 +68,25 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Export a MySQL table to an *.ods file
+     *
+     * @param query             SQL query which should be exported
+     * @param odsExportService  Instance of {@link OdsExportService}
+     * @param path              Specification of the path where the ods file should be saved
+     * @param fileName          File name of the table to be exported (without specifying ods)
+     */
+
     public static void ExportToFile(String query, OdsExportService odsExportService, String path, String fileName){
         odsExportService.InstantlyExportToFile(Objects.requireNonNull(ExportCore(query)), path, fileName);
     }
+
+    /**
+     * Export a MySQL table to an instance of {@link Table}
+     *
+     * @param query SQL query which should be exported
+     * @return {@link Table} of strings
+     */
 
     public static Table<String> ExportAsTable(String query){
         var sqlTableContent = ExportCore(query);
@@ -55,8 +94,15 @@ public class DatabaseConnection {
         return new Table<>(sqlTableContent.get_headlines(), sqlTableContent.get_content());
     }
 
+    /**
+     * Insert into a table in the MySQL database
+     *
+     * @param sqlTableContent Contains all headlines content-rows
+     */
+
     public static void Import(MSqlTableContent sqlTableContent){
         try {
+            if(!DatabaseExists(sqlTableContent)) throw new SQLException("Database not exist");
             var selectQuery = String.format("SELECT * FROM %s", sqlTableContent.get_dbName());
             _statement = _connection.createStatement();
             var resultSet = _statement.executeQuery(selectQuery);
@@ -74,8 +120,43 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Insert into a table in the MySQL database from a table of the language
+     *
+     * @param table         Instance of {@link Table} with all headlines and contents
+     * @param sqlTableName  MySQL table name where the record should be added
+     */
+
+    public static void ImportFromTable(Table table, String sqlTableName) {
+        try {
+            var content = new ArrayList<ArrayList<String>>();
+            for(var item : table){
+                var contentRows = new ArrayList<String>();
+                for(var cell : (Tuple<String>) item){
+                    contentRows.add(cell.getData());
+                }
+                content.add(contentRows);
+            }
+            Import(new MSqlTableContent(sqlTableName, ReplaceHeadline(table), content));
+        } catch(Exception e){
+          e.printStackTrace();
+        }
+
+    }
+
     /* PRIVATE METHODS */
-    public static MSqlTableContent ExportCore(String query) {
+
+    /**
+     * Helper function for {@link DatabaseConnection#ExportToFile(String, OdsExportService, String, String)}
+     * Helper function for {@link DatabaseConnection#ExportAsTable(String)}
+     *
+     * Core function for export service
+     *
+     * @param query MySQL statement (query)
+     * @return An instance of the object {@link MSqlTableContent}
+     */
+
+    private static MSqlTableContent ExportCore(String query) {
         try {
             _statement = _connection.createStatement();
             var resultSet = _statement.executeQuery(query);
@@ -90,13 +171,67 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     *
+     * Check, if a database exists or not
+     *
+     * @param sqlTableContent Instance of {@link MSqlTableContent} which contains all information
+     * @return True or false (Database exists or not)
+     */
+
+    private static boolean DatabaseExists(MSqlTableContent sqlTableContent){
+        try {
+            _statement = _connection.createStatement();
+            var resultSet = _statement.executeQuery("SELECT * FROM " + sqlTableContent.get_dbName());
+            _statement.close();
+            var headlinesFromObject = sqlTableContent.get_headlines();
+            var headlinesFromDatabase = GetHeadlines(resultSet.getMetaData());
+            if(headlinesFromObject.size() != headlinesFromDatabase.size()) return false;
+            for(var i = 0; i < headlinesFromDatabase.size(); i++){
+                if(!(headlinesFromDatabase.get(i).equals(headlinesFromObject.get(i)))) return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     *
+     * Remove every blank from each headlines
+     *
+     * @param table Instance of {@link Table} which contains all headlines and contents
+     * @return The modified ArrayList of headlines (Strings)
+     */
+
+    private static ArrayList<String> ReplaceHeadline(Table table){
+        var replacedItems = new ArrayList<String>();
+        table
+                .getColNames()
+                .getNames()
+                .stream()
+                .forEach(headline -> replacedItems.add(headline.replace(" ", "").toLowerCase()));
+        return replacedItems;
+    }
+
+    /**
+     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     *
+     * @param arr           Values as String (e. g. headlines)
+     * @param columnTypes   Types of each value
+     * @param headline      Flag, to differentiate if the current row is a headline or not
+     * @return              String, to complete the MySQL statement
+     */
+
     private static String GetContentOfArray(ArrayList<String> arr, ArrayList<String> columnTypes, boolean headline){
         var stringBuilder = new StringBuilder();
         var endIndex = arr.size();
 
         for(var i = 0; i < endIndex; i++){
             if (columnTypes.get(i + 1).equals("VARCHAR") && !headline) {
-                var item = arr.get(i);
                 arr.set(i, String.format("\"%s\"", arr.get(i)));
             }
             stringBuilder.append(arr.get(i));
@@ -104,6 +239,15 @@ public class DatabaseConnection {
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * Helper function for {@link DatabaseConnection#ExportCore(String)}
+     *
+     * Search the table name from a MySQL statement
+     *
+     * @param query MySQL statement as a String
+     * @return      Filtered table name
+     */
 
     private static String GetTableName(String query) {
         var charArray = query.substring(query.indexOf("FROM") + 5).toCharArray();
@@ -117,6 +261,16 @@ public class DatabaseConnection {
         }
         return tableName.toString();
     }
+
+    /**
+     * Helper function for {@link DatabaseConnection#ExportCore(String)}
+     *
+     * Return a list of content from a specific MySQL statement (filtered by column names)
+     *
+     * @param names     Name of the headlines
+     * @param resultSet ResultSet which contains all data from a table
+     * @return          An ArrayList of an ArrayList with string, which contains all contents (order by headlines)
+     */
 
     private static ArrayList<ArrayList<String>> GetColumnValues(ArrayList<String> names, ResultSet resultSet) {
         try {
@@ -137,6 +291,16 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Helper function for {@link DatabaseConnection#ExportCore(String)}
+     * Helper function for {@link DatabaseConnection#DatabaseExists(MSqlTableContent)}
+     *
+     * Filter the table headlines from a ResultSetMetaData object
+     *
+     * @param metaData  ResultSetMetaData object as a result from a MySQL statement
+     * @return          A list of Strings with the column names (headlines) from a table
+     */
+
     private static ArrayList<String> GetHeadlines(ResultSetMetaData metaData) {
         try {
             var columnNameList = new ArrayList<String>();
@@ -150,6 +314,15 @@ public class DatabaseConnection {
             return null;
         }
     }
+
+    /**
+     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     *
+     * Get all column types of each column
+     *
+     * @param metaData  List of table headlines and their specific informatin
+     * @return          List of Array which contains all column data types in the correct order
+     */
 
     private static ArrayList<String> GetColumnTypes(ResultSetMetaData metaData){
         try {
@@ -165,6 +338,13 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Helper function for {@link DatabaseConnection#DatabaseConnection(MSqlConnectionParameters)}
+     *
+     * @param parameters    Contains all necessary information for a stable connection
+     * @return              Modified connection string for MySQL connection
+     */
+
     private String CreateConnectionString(MSqlConnectionParameters parameters){
         return String.format("jdbc:mysql://%s:%s/%s?" +
                 "user=%s&" +
@@ -174,76 +354,4 @@ public class DatabaseConnection {
                 "useLegacyDatetimeCode=false&" +
                 "serverTimezone=UTC", parameters.get_ip(), parameters.get_port(), parameters.get_dbName(), parameters.get_username(), parameters.get_password());
     }
-
-    // PARSE FUNCTION - NOT NECESSARY (02.11.2020)
-    /*
-    private static <T> ArrayList<T> Parse(ResultSet rs, Class<T> obj) {
-        try {
-            var arrayList = new ArrayList<T>();
-            var metaData = rs.getMetaData();
-            int count = metaData.getColumnCount();
-            while (rs.next()) {
-                T newInstance = obj.getDeclaredConstructor().newInstance();
-                for (int i = 1; i <= count; i++) {
-                    var originalName = metaData.getColumnName(i).toLowerCase();
-                    var name = ToJavaField(originalName);
-                    var substring = name.substring(0, 1);
-                    var replace = name.replaceFirst(substring, substring.toUpperCase());
-                    Class<?> type;
-                    try {
-                        type = obj.getDeclaredField(originalName).getType();
-                    } catch (NoSuchFieldException e) {
-                        continue;
-                    }
-
-                    var method = obj.getMethod("set" + replace, type);
-                    if (type.isAssignableFrom(String.class)) {
-                        method.invoke(newInstance, rs.getString(i));
-                    } else if (type.isAssignableFrom(byte.class) || type.isAssignableFrom(Byte.class)) {
-                        method.invoke(newInstance, rs.getByte(i));
-                    } else if (type.isAssignableFrom(short.class) || type.isAssignableFrom(Short.class)) {
-                        method.invoke(newInstance, rs.getShort(i));
-                    } else if (type.isAssignableFrom(int.class) || type.isAssignableFrom(Integer.class)) {
-                        method.invoke(newInstance, rs.getInt(i));
-                    } else if (type.isAssignableFrom(long.class) || type.isAssignableFrom(Long.class)) {
-                        method.invoke(newInstance, rs.getLong(i));
-                    } else if (type.isAssignableFrom(float.class) || type.isAssignableFrom(Float.class)) {
-                        method.invoke(newInstance, rs.getFloat(i));
-                    } else if (type.isAssignableFrom(double.class) || type.isAssignableFrom(Double.class)) {
-                        method.invoke(newInstance, rs.getDouble(i));
-                    } else if (type.isAssignableFrom(BigDecimal.class)) {
-                        method.invoke(newInstance, rs.getBigDecimal(i));
-                    } else if (type.isAssignableFrom(boolean.class) || type.isAssignableFrom(Boolean.class)) {
-                        method.invoke(newInstance, rs.getBoolean(i));
-                    } else if (type.isAssignableFrom(Date.class)) {
-                        method.invoke(newInstance, rs.getDate(i));
-                    }
-                }
-                arrayList.add(newInstance);
-            }
-            return arrayList;
-        }
-        catch (InstantiationException | IllegalAccessException | SQLException | SecurityException | NoSuchMethodException | IllegalArgumentException
-                | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static String ToJavaField(String str) {
-        var split = str.split("_");
-        var builder = new StringBuilder();
-        builder.append(split[0]);// Concatenate first character
-        if (split.length > 1) {
-            for (int i = 1; i < split.length; i++) {
-                // Remove underscores and capitalize initial
-                var string = split[i];
-                var substring = string.substring(0, 1);
-                split[i] = string.replaceFirst(substring, substring.toUpperCase());
-                builder.append(split[i]);
-            }
-        }
-        return builder.toString();
-    }
-    */
 }
