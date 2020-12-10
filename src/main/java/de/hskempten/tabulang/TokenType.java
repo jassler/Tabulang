@@ -13,6 +13,7 @@ public class TokenType {
     public static final TokenExpression BRACKET;
     public static final TokenExpression COMMA;
     public static final TokenExpression INTERVAL;
+    public static final TokenExpression FUNDEF;
     public static final TokenExpression QUOTEDSTRING;
     public static final TokenExpression BINRELSYM;
     public static final TokenExpression BINBOOL;
@@ -33,6 +34,7 @@ public class TokenType {
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)|\\[|\\]");
         COMMA = new TokenExpression("comma", ",");
         INTERVAL = new TokenExpression("interval", "\\.\\.\\.");
+        FUNDEF = new TokenExpression("fundef", "->");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
         BINRELSYM = new TokenExpression("binRelSym", "<=|>=|!=|=|<|>");
         BINBOOL = new TokenExpression("binBool", "(and)|(or)|(xor)|(iff)|(impl)");
@@ -48,6 +50,7 @@ public class TokenType {
                 BRACKET,
                 COMMA,
                 INTERVAL,
+                FUNDEF,
                 QUOTEDSTRING,
                 BINRELSYM,
                 BINBOOL,

@@ -115,22 +115,7 @@ public class Tabulang {
         }
         if (true) {
             l.setText("\n" +
-                    "function buildHeaderLinks(fachbereich)\n" +
-                    "return ontop('Fächer/Abschlusse', ' ', vertical for fach in faecher{\n" +
-                    "c := count T1 filter abschl in (AbschlussListe- RelevanteAbschluesse);\n" +
-                    "if (c > 0) bereich := ontop(bereich, 'Restliche' mark fontstyle as 'italic');\n" +
-                    "set bereich;\n" +
-                    "});\n" +
-                    "if " +
-                    "x <= 10 " +
-                    "and " +
-                    " x in [5,8] " +
-                    "and " +
-                    "not false " +
-                    "xor " +
-                    " forAll e in ['5' ... '15'] holds e > 10 " +
-                    "set x;" +
-                    " else set y;" +
+                    "if true set (x,y) -> x;;" +
                     "\n" +
                     "");
         }

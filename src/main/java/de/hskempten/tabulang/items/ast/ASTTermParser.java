@@ -69,13 +69,16 @@ public class ASTTermParser {
                 case TERMR_FILTER -> {
                     syBuilder.add(actTerm);
                 }
+                case TERM_FUNDEF -> {
+                    syBuilder.add(((TermItem) actTerm).getMyFunDef());
+                }
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
                 }
             }
             actTerm = switch (actTerm.getLanguageItemType()) {
                 case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
-                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER -> actTerm.getMyTermR();
+                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF -> actTerm.getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actTerm).getMyTerm();
                 case TERM_BRACKET -> actTerm.getMyTermR();
                 default -> {
@@ -263,6 +266,59 @@ public class ASTTermParser {
                 ArrayList<PredAST> preds = new ArrayList<PredAST>();
                 return new FilterAST(preds);
             }
+            case FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
+                FunDefItem fundef = (FunDefItem) actItem;
+                ArrayList<IdentifierAST> identifiers = new ArrayList<IdentifierAST>();
+                switch (actItem.getLanguageItemType()) {
+                    case FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY -> {
+                        identifiers.add(new IdentifierAST(fundef.getMyIdentifier().getMyString()));
+                    }
+                    case FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
+                        switch (fundef.getMyVList().getLanguageItemType()) {
+                            case VLIST_ONE, VLIST_MULTI -> {
+                                identifiers.add(new IdentifierAST(fundef.getMyVList().getMyIdentifier().getMyString()));
+                                if (LanguageItemType.VLIST_MULTI.equals(fundef.getMyVList().getLanguageItemType())) {
+                                    for (int i = 0; i < fundef.getMyVList().getMyOtherIdentifiers().size(); i++) {
+                                        identifiers.add(new IdentifierAST(fundef.getMyVList().getMyOtherIdentifiers().get(i).getMyString()));
+                                    }
+                                }
+                            }
+                            default -> throw new IllegalStateException("Unexpected value: " + fundef.getMyVList().getLanguageItemType());
+                        }
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
+                switch (actItem.getLanguageItemType()) {
+                    case FUNDEF_IDENTIFIER_TERM, FUNDEF_VLIST_TERM -> {
+                        TermAST term = new ASTTermParser().parse(fundef.getMyTerm());
+                        return new FunDefTermAST(identifiers, term);
+                    }
+                    case FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_FUNCBODY -> {
+                        ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
+                        switch (fundef.getMyFuncBody().getLanguageItemType()) {
+                            // TODO change FuncBodyType and FuncBodyItem to one case
+                            case FUNCBODY_STATEMENTS -> {
+                                for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
+                                    statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
+                                }
+                                return new FunDefStatementsAST(identifiers, statements);
+                            }
+                            case FUNCBODY_RETURNS -> {
+                                for (int i = 0; i < fundef.getMyFuncBody().getMyReturnStmnts().size(); i++) {
+                                    statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnts().get(i)));
+                                }
+                                return new FunDefStatementsAST(identifiers, statements);
+                            }
+                            case FUNCBODY_RETURN -> {
+                                statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnt()));
+                                return new FunDefStatementsAST(identifiers, statements);
+                            }
+                        }
+                        return new FunDefStatementsAST(identifiers, statements);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
+            }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
 
@@ -282,7 +338,8 @@ public class ASTTermParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, TUPEL_INTERVAL,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
-                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER -> {
+                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER,
+                        FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                     output.add(item);
                 }
                 case TERM_BRACKET -> {
