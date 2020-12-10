@@ -12,6 +12,7 @@ public class TokenType {
     public static final TokenExpression KEYWORD;
     public static final TokenExpression BRACKET;
     public static final TokenExpression COMMA;
+    public static final TokenExpression INTERVAL;
     public static final TokenExpression QUOTEDSTRING;
     public static final TokenExpression BINRELSYM;
     public static final TokenExpression BINBOOL;
@@ -31,6 +32,7 @@ public class TokenType {
         BINARY_OPERATOR = new TokenExpression("binaryOperator", "\\+|-|\\*|/|(div)|(mod)|\\^");
         BRACKET = new TokenExpression("bracket", "\\{|\\}|\\(|\\)|\\[|\\]");
         COMMA = new TokenExpression("comma", ",");
+        INTERVAL = new TokenExpression("interval", "\\.\\.\\.");
         QUOTEDSTRING = new TokenExpression("quotedString", "'[^']*'");
         BINRELSYM = new TokenExpression("binRelSym", "<=|>=|!=|=|<|>");
         BINBOOL = new TokenExpression("binBool", "(and)|(or)|(xor)|(iff)|(impl)");
@@ -45,6 +47,7 @@ public class TokenType {
                 BINARY_OPERATOR,
                 BRACKET,
                 COMMA,
+                INTERVAL,
                 QUOTEDSTRING,
                 BINRELSYM,
                 BINBOOL,

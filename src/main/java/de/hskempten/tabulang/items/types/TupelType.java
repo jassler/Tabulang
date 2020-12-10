@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.TupelItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.Token;
+import de.hskempten.tabulang.tokenizer.TokenExpression;
 import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class TupelType implements LanguageType {
         if (!bracket.getContent().equals("["))
             throw new ParseTimeException(l, "Illegal bracket: Expected '[' but got " + l.lookahead().getContent());
 
-
+        TokenExpression kindOfTupel = null;
         while (!l.lookahead().getContent().equals("]")) {
             if (myTerm == null) {
                 myTerm = TermType.instance.parse(l);
@@ -40,11 +41,25 @@ public class TupelType implements LanguageType {
                         throw new ParseTimeException("Illegal bracket: Expected ']' but got " + l.lookahead().getContent());
                     break;
                 case "comma":
+                    if (TokenType.INTERVAL.equals(kindOfTupel)) {
+                        throw new ParseTimeException("Comma not allowed in Interval " + l.lookahead().getContent());
+                    }
+                    if (kindOfTupel == null) kindOfTupel = TokenType.COMMA;
+
                     l.getNextTokenAndExpect(TokenType.COMMA);
                     myTerms.add(TermType.instance.parse(l));
                     break;
+                case "interval":
+                    if (TokenType.COMMA.equals(kindOfTupel)) {
+                        throw new ParseTimeException("Interval not allowed in Tupel with multiple Terms " + l.lookahead().getContent());
+                    }
+                    if (kindOfTupel == null) kindOfTupel = TokenType.INTERVAL;
+
+                    l.getNextTokenAndExpect(TokenType.INTERVAL);
+                    TermItem secondIntervalTerm = TermType.instance.parse(l);
+                    myIntervall = new IntervallItem(myTerm, secondIntervalTerm);
+                    break;
                 default:
-                    // TODO add case for Intervall
                     throw new ParseTimeException("Illegal Token: " + l.lookahead().getContent());
             }
         }

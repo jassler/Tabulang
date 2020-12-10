@@ -62,7 +62,7 @@ public class Tabulang {
                     "group before 'Gesamt' using sum(mapValue);\n" +
                     "};");
         }
-        if (true) {
+        if (false) {
             l.setText("// Beispiel 2\n" +
                     "function buildStatisticsRow(fach, abschlList, minSem, maxSem) {\n" +
                     "abs := absolventen(fach, abschlList, minSem, maxSem);\n" +
@@ -113,7 +113,7 @@ public class Tabulang {
                     "}" +
                     "");
         }
-        if (false) {
+        if (true) {
             l.setText("\n" +
                     "function buildHeaderLinks(fachbereich)\n" +
                     "return ontop('Fächer/Abschlusse', ' ', vertical for fach in faecher{\n" +
@@ -128,7 +128,7 @@ public class Tabulang {
                     "and " +
                     "not false " +
                     "xor " +
-                    " forAll e in ['5', '7', '15'] holds e > 10 " +
+                    " forAll e in ['5' ... '15'] holds e > 10 " +
                     "set x;" +
                     " else set y;" +
                     "\n" +

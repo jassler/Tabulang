@@ -158,6 +158,12 @@ public class ASTTermParser {
                 TupelAST item = new TupelAST(terms);
                 return item;
             }
+            case TUPEL_INTERVAL -> {
+                TupelItem tupel = (TupelItem) actItem;
+                TermAST firstTerm = new ASTTermParser().parse(tupel.getMyIntervall().getMyTerm());
+                TermAST secondTerm = new ASTTermParser().parse(tupel.getMyIntervall().getMySecondTerm());
+                return new IntervalAST(firstTerm, secondTerm);
+            }
             case ORDINAL_QUOTEDSTRING -> {
                 String string = ((QuotedStringItem) actItem).getMyString();
                 QuotedStringAST item = new QuotedStringAST(string);
@@ -274,7 +280,7 @@ public class ASTTermParser {
 
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
-                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI,
+                case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, TUPEL_INTERVAL,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
                         DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER -> {
                     output.add(item);

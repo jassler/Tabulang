@@ -26,6 +26,7 @@ public class TupelItem implements LanguageItem {
 
     public TupelItem(IntervallItem myIntervall) {
         this.myIntervall = myIntervall;
+        this.itemType = LanguageItemType.TUPEL_INTERVAL;
     }
 
     public TermItem getMyTerm() {
