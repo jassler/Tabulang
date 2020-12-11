@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class ForAllSuchThatNode extends BinaryNode{
@@ -22,21 +23,20 @@ public class ForAllSuchThatNode extends BinaryNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Tuple t = (Tuple) getLeftNode().evaluateNode(interpretation);
-        Object val = null;
         if(interpretation.getEnvironment().containsKey(variableName)){
-            val = interpretation.getEnvironment().get(variableName);
+            throw new VariableAlreadyDefinedException(variableName);
         }
         for(Object o : t.getElements()){
+            //TODO evtl umändern so wie bei ExistsSuchThatNode
             interpretation.getEnvironment().put(variableName, o);
             Boolean result = (Boolean) getRightNode().evaluateNode(interpretation);
             if(!result){
-                //i.getEnvironment().remove(variableName);
-                interpretation.getEnvironment().put(variableName, val);
+                interpretation.getEnvironment().remove(variableName);
                 return false;
             }
         }
-        //i.getEnvironment().remove(variableName);
-        interpretation.getEnvironment().put(variableName, val);
+        interpretation.getEnvironment().remove(variableName);
+
         return true;
     }
 }

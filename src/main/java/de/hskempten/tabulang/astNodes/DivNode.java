@@ -3,13 +3,15 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class DivNode extends ArithmeticNode{
+import java.math.BigDecimal;
+
+public class DivNode extends BinaryArithmeticNode{
     public DivNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return convertLeftNodeToBigDecimal(interpretation).divideToIntegralValue(convertRightNodeToBigDecimal(interpretation));
+        return ((BigDecimal) getLeftNode().evaluateNode(interpretation)).divideToIntegralValue((BigDecimal) getRightNode().evaluateNode(interpretation));
     }
 }

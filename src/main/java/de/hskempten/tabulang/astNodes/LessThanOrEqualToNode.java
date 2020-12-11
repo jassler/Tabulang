@@ -3,13 +3,16 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class LessThanOrEqualToNode extends PredicateNode {
+import java.math.BigDecimal;
+
+public class LessThanOrEqualToNode extends BinaryPredicateNode {
     public LessThanOrEqualToNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return convertLeftNodeToBigDecimal(interpretation).compareTo(convertRightNodeToBigDecimal(interpretation)) <= 0;
-    }
+        BigDecimal valueLeft = getNumericValue(getLeftNode(), interpretation);
+        BigDecimal valueRight = getNumericValue(getRightNode(), interpretation);
+        return valueLeft.compareTo(valueRight) <= 0;    }
 }

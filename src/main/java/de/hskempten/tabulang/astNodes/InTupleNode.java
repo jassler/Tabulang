@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class InTupleNode extends PredicateNode {
+public class InTupleNode extends BinaryPredicateNode {
     public InTupleNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }

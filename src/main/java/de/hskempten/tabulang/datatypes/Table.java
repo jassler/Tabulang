@@ -87,6 +87,14 @@ public class Table<E> {
         return tuples;
     }
 
+    public ArrayList<String> getColNames() {
+        return colNames;
+    }
+
+    public HashMap<String, Integer> getColLookup() {
+        return colLookup;
+    }
+
     public Tuple<E> getRow(int rowNum) {
         return new Tuple<>(tuples.get(rowNum), colNames, !transposed);
     }

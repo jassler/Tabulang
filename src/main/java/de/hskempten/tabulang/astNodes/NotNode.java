@@ -2,11 +2,10 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class NotNode extends Node{
+public class NotNode extends PredicateNode{
     private Node node;
 
     public NotNode(Node node) {
-        super(NodeType.NODE);
         this.node = node;
     }
 

@@ -1,18 +1,12 @@
 package de.hskempten.tabulang.astNodes;
 
-
-import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.math.BigDecimal;
-
-public abstract class BinaryNode extends Node{
+public abstract class BinaryArithmeticNode extends ArithmeticNode{
     private Node leftNode;
     private Node rightNode;
 
-    public BinaryNode(Node leftNode, Node rightNode) {
-        super(NodeType.BINARY);
+    public BinaryArithmeticNode(Node leftNode, Node rightNod) {
         this.leftNode = leftNode;
-        this.rightNode = rightNode;
+        this.rightNode = rightNod;
     }
 
     public Node getLeftNode() {
@@ -33,9 +27,9 @@ public abstract class BinaryNode extends Node{
 
     @Override
     public String toString() {
-        return "BinaryNode{" +
+        return "BinaryArithmeticNode{" +
                 "leftNode=" + leftNode +
                 ", rightNode=" + rightNode +
-                "} ";
+                "} " + super.toString();
     }
 }

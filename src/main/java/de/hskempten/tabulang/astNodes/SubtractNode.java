@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
 
-public class SubtractNode extends ArithmeticNode{
+public class SubtractNode extends BinaryArithmeticNode{
     public SubtractNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
