@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
@@ -27,7 +28,7 @@ public class FunDefStatementsAST implements TermAST {
     }
 
     public void setStatements(ArrayList<StatementAST> statements) {
-        this.statements = statements;
+        this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     public void print(int offset) {

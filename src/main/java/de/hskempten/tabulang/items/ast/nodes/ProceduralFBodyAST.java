@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ProceduralFBodyAST implements StatementAST {
     }
 
     public void setStatements(ArrayList<StatementAST> statements) {
-        this.statements = statements;
+        this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     public void print(int offset) {

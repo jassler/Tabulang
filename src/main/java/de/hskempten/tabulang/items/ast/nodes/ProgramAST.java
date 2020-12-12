@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.AST;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 
@@ -9,7 +10,7 @@ public class ProgramAST implements AST {
     private ArrayList<StatementAST> statements;
 
     public ProgramAST(ArrayList<StatementAST> statements) {
-        this.statements = statements;
+        this.setStatements(statements);
     }
 
     public ArrayList<StatementAST> getStatements() {
@@ -17,7 +18,7 @@ public class ProgramAST implements AST {
     }
 
     public void setStatements(ArrayList<StatementAST> statements) {
-        this.statements = statements;
+        this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     @Override

@@ -115,7 +115,12 @@ public class Tabulang {
         }
         if (true) {
             l.setText("\n" +
-                    "x := [ ['1', 5, x], ['7', 3, y] ].'0'.'2';" +
+                    "v3 := '3';\n" +
+                    "v4 := f2(4);\n" +
+                    "v5 := 5;\n" +
+                    "function f2(x) f1(x);\n" +
+                    "function f1(x) return x;\n" +
+                    "v6 := f1('6');\n" +
                     "\n" +
                     "");
         }

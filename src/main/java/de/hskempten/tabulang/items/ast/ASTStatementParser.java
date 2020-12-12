@@ -80,6 +80,7 @@ public class ASTStatementParser {
             case STATEMENT_IF -> {
                 return ((StatementItem) actStatement).getMyIfStmnt();
             }
+            // TODO implement case STATEMENT_BODY
             default -> throw new IllegalStateException("Unexpected value: " +
                     actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
         }

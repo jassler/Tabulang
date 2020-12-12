@@ -1,11 +1,12 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.items.ast.interfaces.PredAST;
+import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 import java.util.ArrayList;
 
-public class FunCallAST implements TermAST, PredAST {
+public class FunCallAST implements StatementAST, TermAST, PredAST {
     private IdentifierAST identifier;
     private ArrayList<TermAST> terms;
 

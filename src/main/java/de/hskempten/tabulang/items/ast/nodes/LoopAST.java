@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
@@ -40,7 +41,7 @@ public class LoopAST implements StatementAST, TermAST {
     }
 
     public void setStatements(ArrayList<StatementAST> statements) {
-        this.statements = statements;
+        this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     public int getNestingLevel() {
