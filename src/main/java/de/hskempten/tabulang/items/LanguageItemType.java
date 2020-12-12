@@ -56,6 +56,7 @@ public enum LanguageItemType {
             case OPERATOR_DIVIDE -> 6;
             case OPERATOR_POWER -> 7;
             case BINBOOL_AND, BINBOOL_OR, BINBOOL_XOR, BINBOOL_IFF, BINBOOL_IMPL -> 8;
+            case TERMR_DOT -> 9;
             case TERM_IDENTIFIER, TERM_LOOP, TERM_FLIP,
                     TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNDEF,
                     TERM_AGGREGATION, TERM_DISTINCT, TERM_FUNCALL -> 10;

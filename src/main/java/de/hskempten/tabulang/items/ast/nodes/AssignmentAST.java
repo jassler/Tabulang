@@ -4,12 +4,22 @@ import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class AssignmentAST implements StatementAST {
+    private boolean isNewAssignment;
     private IdentifierAST identifier;
     private TermAST term;
 
-    public AssignmentAST(IdentifierAST identifier, TermAST term) {
+    public AssignmentAST(IdentifierAST identifier, TermAST term, boolean isNewAssignment) {
         this.setIdentifier(identifier);
         this.setTerm(term);
+        this.setNewAssignment(isNewAssignment);
+    }
+
+    public boolean isNewAssignment() {
+        return isNewAssignment;
+    }
+
+    public void setNewAssignment(boolean newAssignment) {
+        isNewAssignment = newAssignment;
     }
 
     public IdentifierAST getIdentifier() {

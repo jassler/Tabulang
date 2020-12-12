@@ -41,7 +41,7 @@ public class ASTParserTest {
         l.setText("a := 1;");
 
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
-        statements.add(new AssignmentAST(new IdentifierAST("a"), number1));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), number1, true));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -67,7 +67,7 @@ public class ASTParserTest {
 
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         AddAST addition = new AddAST(number1, number2);
-        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition, true));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -98,7 +98,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         MultiplyAST multiplication = new MultiplyAST(number2, number3);
         AddAST addition = new AddAST(number1, multiplication);
-        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition, true));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -129,7 +129,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         AddAST additionI = new AddAST(number1, number2);
         AddAST addition = new AddAST(additionI, number3);
-        statements.add(new AssignmentAST(new IdentifierAST("a"), addition));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), addition, true));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -164,7 +164,7 @@ public class ASTParserTest {
         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
         PowerAST powerI = new PowerAST(number2, number3);
         PowerAST power = new PowerAST(number1, powerI);
-        statements.add(new AssignmentAST(new IdentifierAST("a"), power));
+        statements.add(new AssignmentAST(new IdentifierAST("a"), power, true));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();

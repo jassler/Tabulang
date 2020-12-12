@@ -5,9 +5,11 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 public class StatementSetAST implements StatementAST {
     private TermAST term;
+    private int nestingLevel;
 
-    public StatementSetAST(TermAST term) {
+    public StatementSetAST(TermAST term, int nestingLevel) {
         this.setTerm(term);
+        this.setNestingLevel(nestingLevel);
     }
 
     @Override
@@ -17,6 +19,14 @@ public class StatementSetAST implements StatementAST {
 
     public void setTerm(TermAST term) {
         this.term = term;
+    }
+
+    public int getNestingLevel() {
+        return nestingLevel;
+    }
+
+    public void setNestingLevel(int nestingLevel) {
+        this.nestingLevel = nestingLevel;
     }
 
     public void print(int offset) {

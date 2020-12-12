@@ -12,6 +12,13 @@ import java.util.LinkedList;
 
 public class ASTStatementParser {
 
+    private int nestingLevel = 0;
+
+    public StatementAST parse(StatementAnyItem originalStatement, int nestingLevel) throws Exception {
+        this.nestingLevel = nestingLevel;
+        return parse(originalStatement);
+    }
+
     public StatementAST parse(StatementAnyItem originalStatement) throws Exception {
 
         return statementParser(traverseStatement(originalStatement));
@@ -84,7 +91,8 @@ public class ASTStatementParser {
             case VARDEF_ASSIGNMENT -> {
                 IdentifierAST identifier = new IdentifierAST(((VarDefItem) actItem).getMyIdentifier().getMyString());
                 TermAST term = new ASTTermParser().parse(((VarDefItem) actItem).getMyTerm());
-                return new AssignmentAST(identifier, term);
+                boolean isNewAssignment = ((VarDefItem) actItem).isNewAssignment();
+                return new AssignmentAST(identifier, term, isNewAssignment);
             }
             case PROCEDURALF_FUNCBODY, PROCEDURALF_TERM -> {
                 IdentifierAST identifier = new IdentifierAST(((ProceduralFItem) actItem).getMyIdentifier().getMyString());
@@ -144,19 +152,19 @@ public class ASTStatementParser {
                 ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
                 switch (actItem.getLanguageItemType()) {
                     case LOOP_STATEMENT -> {
-                        statements.add(new ASTStatementParser().parse(loopItem.getMyLoopStmnt()));
+                        statements.add(new ASTStatementParser().parse(loopItem.getMyLoopStmnt(), nestingLevel + 1));
                     }
                     case LOOP_LOOPBODY -> {
                         for (int i = 0; i < loopItem.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                            statements.add(new ASTStatementParser().parse(loopItem.getMyLoopBody().getMyLoopStmnts().get(i)));
+                            statements.add(new ASTStatementParser().parse(loopItem.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
                         }
                     }
                 }
-                return new LoopAST(identifier, term, statements);
+                return new LoopAST(identifier, term, statements, nestingLevel + 1);
             }
             case ANYSTATEMENT_SET -> {
                 TermAST term = new ASTTermParser().parse(((SetStmntItem) actItem).getMyTerm());
-                return new StatementSetAST(term);
+                return new StatementSetAST(term, nestingLevel);
             }
             case IF_WITHELSE, IF_WITHOUTELSE -> {
                 IfStmntItem ifStmnt = (IfStmntItem) actItem;

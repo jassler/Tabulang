@@ -115,7 +115,7 @@ public class Tabulang {
         }
         if (true) {
             l.setText("\n" +
-                    "if true set (x,y) -> x;;" +
+                    "x := [ ['1', 5, x], ['7', 3, y] ].'0'.'2';" +
                     "\n" +
                     "");
         }

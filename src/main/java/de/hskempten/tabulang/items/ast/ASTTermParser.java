@@ -12,6 +12,12 @@ import java.util.Stack;
 public class ASTTermParser {
 
     ShuntingYardBuilder syBuilder = new ShuntingYardBuilder();
+    private int nestingLevel = 0;
+
+    public TermAST parse(TermItem originalTerm, int nestingLevel) throws Exception {
+        this.nestingLevel = nestingLevel;
+        return parse(originalTerm);
+    }
 
     public TermAST parse(TermItem originalTerm) throws Exception {
 
@@ -72,13 +78,17 @@ public class ASTTermParser {
                 case TERM_FUNDEF -> {
                     syBuilder.add(((TermItem) actTerm).getMyFunDef());
                 }
+                case TERMR_DOT -> {
+                    syBuilder.add(actTerm);
+                    traverseTerm(((TermRItem) actTerm).getMyTerm());
+                }
                 default -> {
                     throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
                 }
             }
             actTerm = switch (actTerm.getLanguageItemType()) {
                 case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
-                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF -> actTerm.getMyTermR();
+                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF, TERMR_DOT -> actTerm.getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actTerm).getMyTerm();
                 case TERM_BRACKET -> actTerm.getMyTermR();
                 default -> {
@@ -238,14 +248,14 @@ public class ASTTermParser {
                 switch (actItem.getLanguageItemType()) {
                     case LOOP_LOOPBODY -> {
                         for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                            statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i)));
+                            statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
                         }
                     }
                     case LOOP_STATEMENT -> {
-                        statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt()));
+                        statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
                     }
                 }
-                return new LoopAST(identifier, term, statements);
+                return new LoopAST(identifier, term, statements, nestingLevel + 1);
             }
             case MARK_WITHIF, MARK_WITHOUTIF -> {
                 MarkStmntItem mark = (MarkStmntItem) actItem;
@@ -318,6 +328,12 @@ public class ASTTermParser {
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
+
+            }
+            case TERMR_DOT -> {
+                TermAST right = termParser(items);
+                TermAST left = termParser(items);
+                return new DotAST(left, right);
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
@@ -353,7 +369,7 @@ public class ASTTermParser {
                     if (!stack.isEmpty()) stack.pop();
                 }
                 case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
-                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
+                        OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V, TERMR_DOT -> {
                     while (!stack.isEmpty()
                             && isHigherPrecedence(item.getLanguageItemType())) {
                         output.add(stack.pop());

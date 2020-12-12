@@ -9,11 +9,13 @@ public class LoopAST implements StatementAST, TermAST {
     private IdentifierAST identifier;
     private TermAST term;
     private ArrayList<StatementAST> statements;
+    private int nestingLevel;
 
-    public LoopAST(IdentifierAST identifier, TermAST term, ArrayList<StatementAST> statements) {
+    public LoopAST(IdentifierAST identifier, TermAST term, ArrayList<StatementAST> statements, int nestingLevel) {
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
+        this.setNestingLevel(nestingLevel);
     }
 
     public IdentifierAST getIdentifier() {
@@ -39,6 +41,14 @@ public class LoopAST implements StatementAST, TermAST {
 
     public void setStatements(ArrayList<StatementAST> statements) {
         this.statements = statements;
+    }
+
+    public int getNestingLevel() {
+        return nestingLevel;
+    }
+
+    public void setNestingLevel(int nestingLevel) {
+        this.nestingLevel = nestingLevel;
     }
 
     public void print(int offset) {
