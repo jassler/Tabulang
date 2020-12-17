@@ -21,9 +21,9 @@ public class OdsImportService {
     /* PROPERTIES */
     private OdfDocument _odfDocument;
     private Document _xmlDocument;
-    private Spreadsheet _spreadsheet;
-    private ArrayList<Column> _columnList;
-    private ArrayList<Row> _rowList;
+    private MSpreadsheet _spreadsheet;
+    private ArrayList<MColumn> _columnList;
+    private ArrayList<MRow> _rowList;
 
     /* PUBLIC METHODS */
 
@@ -75,32 +75,32 @@ public class OdsImportService {
 
     /**
      * Helper function for {@link OdsImportService#FindElementInXml(String)}
-     * Create a new object of the type {@link TableWrapper} and insert all rows and columns into this object
+     * Create a new object of the type {@link MTableWrapper} and insert all rows and columns into this object
      */
 
     private void CreateTableWrapper() {
         var nodeList = GetNodeList("table:table");
         var nodeListLength = nodeList.getLength();
 
-        var temp = new ArrayList<TableWrapper>();
+        var temp = new ArrayList<MTableWrapper>();
         for(var i = 0; i < nodeListLength; i++){
-            var tableWrapper = new TableWrapper();
+            var tableWrapper = new MTableWrapper();
             var item = nodeList.item(i);
-            tableWrapper._attributes = GetAttributes(item);
+            tableWrapper.set_attributes(GetAttributes(item));
 
             var selectCorrectChildren = item.getChildNodes();
 
             _columnList = new ArrayList<>();
             VisitColumns(selectCorrectChildren, "table:table-column");
-            tableWrapper._columns = _columnList;
+            tableWrapper.set_columns(_columnList);
 
             _rowList = new ArrayList<>();
             VisitRows(selectCorrectChildren, "table:table-row");
-            tableWrapper._rows = _rowList;
+            tableWrapper.set_rows(_rowList);
 
             temp.add(tableWrapper);
         }
-        _spreadsheet._tables = temp;
+        _spreadsheet.set_tables(temp);
     }
 
     /**
@@ -109,12 +109,12 @@ public class OdsImportService {
      */
 
     private void CreateAllLists() {
-        _spreadsheet = new Spreadsheet();
-        _spreadsheet._fontStyles = new ArrayList<>();
-        _spreadsheet._tableStyles = new HashMap<>();
-        _spreadsheet._rowStyles = new HashMap<>();
-        _spreadsheet._columnStyles = new HashMap<>();
-        _spreadsheet._cellStyles = new HashMap<>();
+        _spreadsheet = new MSpreadsheet();
+        _spreadsheet.set_fontStyles(new ArrayList<>());
+        _spreadsheet.set_tableStyles(new HashMap<>());
+        _spreadsheet.set_rowStyles(new HashMap<>());
+        _spreadsheet.set_columnStyles(new HashMap<>());
+        _spreadsheet.set_cellStyles(new HashMap<>());
     }
 
     /**
@@ -146,7 +146,7 @@ public class OdsImportService {
             var item = nodeList.item(i);
             temp.add(GetAttributes(item));
         }
-        _spreadsheet._fontStyles = temp;
+        _spreadsheet.set_fontStyles(temp);
     }
 
     /**
@@ -165,19 +165,19 @@ public class OdsImportService {
             switch (Objects.requireNonNull(nodeAttributes).get("style:family")){
                 case "table":
                     var nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._tableStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_tableStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-row":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._rowStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_rowStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-column":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._columnStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_columnStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-cell":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._cellStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_cellStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 default:
                     break;
@@ -220,18 +220,18 @@ public class OdsImportService {
      * @return ArrayList of Cell objects
      */
 
-    private ArrayList<Cell> SearchCell(NodeList nList) {
-        var list = new ArrayList<Cell>();
+    private ArrayList<MCell> SearchCell(NodeList nList) {
+        var list = new ArrayList<MCell>();
         for (int temp = 0; temp < nList.getLength(); temp++)
         {
             var node = nList.item(temp);
-            var cell = new Cell();
-            cell.Attributes = GetAttributes(node);
+            var cell = new MCell();
+            cell.setAttributes(GetAttributes(node));
             if (node.hasChildNodes()) {
                 var children = node.getChildNodes();
                 for(int valueIndex = 0; valueIndex < children.getLength(); valueIndex++){
                     var cellValue = children.item(valueIndex);
-                    cell._value = cellValue.getFirstChild().getNodeValue();
+                    cell.set_value(cellValue.getFirstChild().getNodeValue());
                 }
             }
             list.add(cell);
@@ -253,8 +253,8 @@ public class OdsImportService {
         {
             var node = nList.item(temp);
             if(node.getNodeName().equals(tagName)){
-                var column = new Column();
-                column.Attributes = GetAttributes(node);
+                var column = new MColumn();
+                column.setAttributes(GetAttributes(node));
                 _columnList.add(column);
             }
             if (node.hasChildNodes()) {
@@ -277,10 +277,10 @@ public class OdsImportService {
         {
             var node = nList.item(temp);
             if(node.getNodeName().equals(tagName)){
-                var row = new Row();
-                row.Attributes = GetAttributes(node);
+                var row = new MRow();
+                row.setAttributes(GetAttributes(node));
                 _rowList.add(row);
-                row._cells = SearchCell(node.getChildNodes());
+                row.set_cells(SearchCell(node.getChildNodes()));
             }
             if (node.hasChildNodes()) {
                 VisitRows(node.getChildNodes(), tagName);

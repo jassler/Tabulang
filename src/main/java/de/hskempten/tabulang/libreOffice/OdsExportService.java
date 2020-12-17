@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.libreOffice;
 
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.libreOffice.Models.Style;
+import de.hskempten.tabulang.libreOffice.Models.MStyle;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.dom.style.props.*;
@@ -21,7 +21,7 @@ public class OdsExportService {
     private SpreadsheetDocument _spreadsheetDocument;
     private OdfOfficeAutomaticStyles _odfOfficeAutomaticStyles;
     private Table _initTable;
-    private ArrayList<Style> _styles;
+    private ArrayList<MStyle> _styles;
 
     /**
      * Constructor: Create a new instance of a table to be exported
@@ -175,7 +175,7 @@ public class OdsExportService {
      */
 
     public void SetBackgroundColor(String value){
-        this._styles.add(new Style(OdfTableCellProperties.BackgroundColor, value));
+        this._styles.add(new MStyle(OdfTableCellProperties.BackgroundColor, value));
     }
 
     /**
@@ -183,9 +183,9 @@ public class OdsExportService {
      */
 
     public void SetBold() {
-        this._styles.add(new Style(OdfTextProperties.FontWeight, "bold"));
-        this._styles.add(new Style(OdfTextProperties.FontWeightAsian, "bold"));
-        this._styles.add(new Style(OdfTextProperties.FontWeightComplex, "bold"));
+        this._styles.add(new MStyle(OdfTextProperties.FontWeight, "bold"));
+        this._styles.add(new MStyle(OdfTextProperties.FontWeightAsian, "bold"));
+        this._styles.add(new MStyle(OdfTextProperties.FontWeightComplex, "bold"));
     }
 
     /**
@@ -193,9 +193,9 @@ public class OdsExportService {
      */
 
     public void SetItalic() {
-        this._styles.add(new Style(OdfTextProperties.FontStyle, "italic"));
-        this._styles.add(new Style(OdfTextProperties.FontStyleAsian, "italic"));
-        this._styles.add(new Style(OdfTextProperties.FontStyleComplex, "italic"));
+        this._styles.add(new MStyle(OdfTextProperties.FontStyle, "italic"));
+        this._styles.add(new MStyle(OdfTextProperties.FontStyleAsian, "italic"));
+        this._styles.add(new MStyle(OdfTextProperties.FontStyleComplex, "italic"));
     }
 
     /**
@@ -203,9 +203,9 @@ public class OdsExportService {
      */
 
     public void SetUnderline() {
-        this._styles.add(new Style(OdfTextProperties.TextUnderlineStyle, "solid"));
-        this._styles.add(new Style(OdfTextProperties.TextUnderlineColor, "font-color"));
-        this._styles.add(new Style(OdfTextProperties.TextUnderlineWidth, "auto"));
+        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineStyle, "solid"));
+        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineColor, "font-color"));
+        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineWidth, "auto"));
     }
 
     /**
@@ -215,12 +215,12 @@ public class OdsExportService {
      */
 
     public void SetFontFamliy(String value){
-        this._styles.add(new Style(OdfTextProperties.FontFamily, value));
-        this._styles.add(new Style(OdfTextProperties.FontFamilyAsian, value));
-        this._styles.add(new Style(OdfTextProperties.FontFamilyComplex, value));
-        this._styles.add(new Style(OdfTextProperties.FontFamilyGeneric, value));
-        this._styles.add(new Style(OdfTextProperties.FontFamilyGenericAsian, value));
-        this._styles.add(new Style(OdfTextProperties.FontFamilyGenericComplex, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamily, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamilyAsian, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamilyComplex, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGeneric, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericAsian, value));
+        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericComplex, value));
     }
 
     /**
@@ -230,7 +230,7 @@ public class OdsExportService {
      */
 
     public void SetFontColor(String value){
-        this._styles.add(new Style(OdfTextProperties.Color, value));
+        this._styles.add(new MStyle(OdfTextProperties.Color, value));
     }
 
     /**
@@ -240,7 +240,7 @@ public class OdsExportService {
      */
 
     public void SetFontSize(double value){
-        this._styles.add(new Style(OdfTextProperties.FontSize, String.valueOf(value)));
+        this._styles.add(new MStyle(OdfTextProperties.FontSize, String.valueOf(value)));
     }
 
     /**
@@ -274,7 +274,7 @@ public class OdsExportService {
     public void SetTextAlign(String value){
         if(value.equals("right")) { value = "end"; }
         if(value.equals("left")) { value = "start"; }
-        this._styles.add(new Style(OdfParagraphProperties.TextAlign, value));
+        this._styles.add(new MStyle(OdfParagraphProperties.TextAlign, value));
     }
 
     /**
@@ -319,7 +319,7 @@ public class OdsExportService {
 
     private OdfStyle CreateOdfStyle(){
         var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
-        _styles.forEach(item -> style.setProperty(item.property, item.value));
+        _styles.forEach(item -> style.setProperty(item.getProperty(), item.getValue()));
         return style;
     }
 

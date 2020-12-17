@@ -4,7 +4,11 @@ public class MSqlConnectionParameters {
     /* PROPERTIES */
     private String _ip;
     private int _port;
+    private String _dbName;
+    private String _username;
+    private String _password;
 
+    /* SETTER */
     public void set_ip(String _ip) {
         this._ip = _ip;
     }
@@ -24,10 +28,6 @@ public class MSqlConnectionParameters {
     public void set_password(String _password) {
         this._password = _password;
     }
-
-    private String _dbName;
-    private String _username;
-    private String _password;
 
     /* GETTER */
     public String get_ip() {

@@ -1,3 +1,91 @@
 \section{Import Export}
+\label{sectionImportExport}
 
-Import Export stuff
+Mit Hilfe dieser Implementierung ist es möglich, einen Import- bzw. Exportprozess zu starten. Diese beiden Funktionalitäten stehen für das Arbeiten mit der relationalen Datenbank \textbf{MySQL} und der Open Office Lösung \textbf{Libre Office} und dem dazugehörigen Kalkulationsprogramm \textbf{Calc} bereit. Es ist somit möglich, Daten aus einer Tabellensprache in einer MySQL-Datenbank zu archivieren und auszulesen. Außerdem können Daten aus einer *.ods-Datei, die das Dateiformat von Libre Office Calc darstellt, ausgelesen werden. Ferner kann aus der Tabellensprache eine *.ods-Datei generiert werden. In den nächsten zwei Unterkapiteln \ref{subsectionMySql} und \ref{subsectionLibreOffice} werden die einzelnen Kernfunktionalitäten näher erläutert.
+
+\subsection{MySQL}
+\label{subsectionMySql}
+
+\subsubsection{Models}
+\label{subsubsectionMySqlModels}
+\textbf{MSqlConnectionParameters}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Parameter für eine MySQL-Datenbankverbindung, language=Java]
+private String _ip;
+private int _port;
+private String _dbName;
+private String _username;
+private String _password;
+\end{lstlisting}
+
+\textbf{MSqlTableContent}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer MySQL-Tabelle als Java-Objekt, language=Java]
+private String _dbName;
+private ArrayList<String> _headlines;
+private ArrayList<ArrayList<String>> _content;
+\end{lstlisting}
+
+\subsubsection{Öffentliche Funktionen}
+\label{subsubsectionMySqlPublicFunctions}
+
+\subsubsection{Private Funktionen}
+\label{subsubsectionMySqlPrivateFunctions}
+
+\subsection{Libre Office}
+\label{subsectionLibreOffice}
+
+\subsubsection{Models}
+\label{subsubsectionLibreOfficeModels}
+
+\textbf{MCell}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer Zelle einer Libre Office Calc Datei, language=Java]
+private HashMap<String,String> Attributes;
+private Object _value;
+\end{lstlisting}
+
+\textbf{MColumn}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer Spalte einer Libre Office Calc Datei, language=Java]
+private HashMap<String,String> Attributes;
+\end{lstlisting}
+
+\textbf{MRow}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer Zeile einer Libre Office Calc Datei, language=Java]
+private HashMap<String,String> Attributes;
+private ArrayList<Cell> _cells;
+\end{lstlisting}
+
+\textbf{MSpreadsheet}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer kompletten Libre Office Calc Datei, language=Java]
+private ArrayList<HashMap<String, String>> _fontStyles;
+private HashMap<String, HashMap<String, String>> _tableStyles;
+private HashMap<String, HashMap<String, String>> _rowStyles;
+private HashMap<String, HashMap<String, String>> _columnStyles;
+private HashMap<String, HashMap<String, String>> _cellStyles;
+private ArrayList<TableWrapper> _tables;
+\end{lstlisting}
+
+\textbf{MStyle}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation eines Styles einer Libre Office Calc Datei, language=Java]
+private OdfStyleProperty property;
+private String value;
+\end{lstlisting}
+
+\textbf{MTableWrapper}
+
+\begin{lstlisting}[label={labelMySqlConnectionParameters},caption=Repräsentation einer Tabelle einer Libre Office Calc Datei inkl. aller Zeilen und Spalten, language=Java]
+private HashMap<String,String> _attributes;
+private ArrayList<Column> _columns;
+private ArrayList<Row> _rows;
+\end{lstlisting}
+
+\subsubsection{Öffentliche Funktionen}
+\label{subsubsectionLibreOfficePublicFunctions}
+
+\subsubsection{Private Funktionen}
+\label{subsubsectionLibreOfficePrivateFunctions}

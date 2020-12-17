@@ -3,6 +3,12 @@ package de.hskempten.tabulang.mySql.Models;
 import java.util.ArrayList;
 
 public class MSqlTableContent {
+    /* PROPERTIES */
+    private String _dbName;
+    private ArrayList<String> _headlines;
+    private ArrayList<ArrayList<String>> _content;
+
+    /* SETTER */
     public void set_dbName(String _dbName) {
         this._dbName = _dbName;
     }
@@ -14,11 +20,6 @@ public class MSqlTableContent {
     public void set_content(ArrayList<ArrayList<String>> _content) {
         this._content = _content;
     }
-
-    /* PROPERTIES */
-    private String _dbName;
-    private ArrayList<String> _headlines;
-    private ArrayList<ArrayList<String>> _content;
 
     /* GETTER */
     public String get_dbName() {
