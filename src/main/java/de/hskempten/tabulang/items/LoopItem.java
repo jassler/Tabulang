@@ -10,16 +10,20 @@ public class LoopItem implements LanguageItem {
     private LoopBodyItem myLoopBody;
     //')'
 
+    private LanguageItemType itemType;
+
     public LoopItem(IdentifierItem myIdentifier, TermItem myTerm, LoopStmntItem myLoopStmnt) {
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyLoopStmnt(myLoopStmnt);
+        this.itemType = LanguageItemType.LOOP_STATEMENT;
     }
 
     public LoopItem(IdentifierItem myIdentifier, TermItem myTerm, LoopBodyItem myLoopBody) {
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyLoopBody(myLoopBody);
+        this.itemType = LanguageItemType.LOOP_LOOPBODY;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -52,5 +56,10 @@ public class LoopItem implements LanguageItem {
 
     public void setMyLoopBody(LoopBodyItem myLoopBody) {
         this.myLoopBody = myLoopBody;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

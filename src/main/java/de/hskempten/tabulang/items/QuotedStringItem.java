@@ -15,4 +15,9 @@ public class QuotedStringItem implements LanguageItem {
     public void setMyString(String myString) {
         this.myString = myString;
     }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return LanguageItemType.ORDINAL_QUOTEDSTRING;
+    }
 }

@@ -15,9 +15,9 @@ public class NumberType implements Parser {
     public NumberItem parse(Lexer l) throws ParseTimeException {
         NumberItem item;
 
-        BigInteger myNumber;
+        String myNumber;
 
-        myNumber = new BigInteger(l.lookahead().getContent());
+        myNumber = l.lookahead().getContent();
         l.getNextTokenAndExpect(TokenType.NUMBER);
         item = new NumberItem(myNumber);
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class DistinctTItem implements LanguageItem {
     private ArrayList<IdentifierItem> myIdentifiers;
     private TermItem myTerm;
+    private LanguageItemType itemType = LanguageItemType.DISTINCT_ITEM;
 
     public DistinctTItem(ArrayList<IdentifierItem> myIdentifiers, TermItem myTerm) {
         this.setMyIdentifiers(myIdentifiers);
@@ -25,5 +26,10 @@ public class DistinctTItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return LanguageItemType.DISTINCT_ITEM;
     }
 }

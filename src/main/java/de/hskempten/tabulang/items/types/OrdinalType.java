@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.items.types;
 
+import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.NumberItem;
 import de.hskempten.tabulang.items.OrdinalItem;
 import de.hskempten.tabulang.items.QuotedStringItem;
@@ -34,6 +35,15 @@ public class OrdinalType implements Parser {
             case "bracket" -> {
                 myTupel = TupelType.instance.parse(l);
                 item = new OrdinalItem(myTupel);
+            }
+            case "keyword" -> {
+                if ("null".equals(l.lookahead().getContent())) {
+                    item = new OrdinalItem("null");
+                    l.getNextTokenAndExpect(TokenType.KEYWORD);
+                } else {
+                    throw new ParseTimeException(l, "Not yet implemented case in Ordinal: " + l.lookahead().getType());
+
+                }
             }
             default -> throw new ParseTimeException(l, "Not yet implemented case in Ordinal: " + l.lookahead().getType());
         }

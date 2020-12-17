@@ -4,6 +4,7 @@ public class ExistsPredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredItem myPred;
+    private LanguageItemType itemType = LanguageItemType.QUANTIFIED_EXISTS;
 
     public ExistsPredItem(IdentifierItem myIdentifier, TermItem myTerm, PredItem myPred) {
         this.setMyIdentifier(myIdentifier);
@@ -33,5 +34,10 @@ public class ExistsPredItem implements LanguageItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }
