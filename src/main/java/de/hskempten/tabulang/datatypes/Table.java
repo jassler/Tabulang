@@ -15,7 +15,6 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
     private final HashMap<Point, Style> cellStyles = new HashMap<>();
 
     private final ArrayList<ArrayList<E>> tuples;
-
     private boolean transposed = false;
 
     private final HeaderNames colNames;
@@ -96,18 +95,6 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
         } else {
             this.tuples = tuples;
         }
-    }
-
-    public ArrayList<ArrayList<E>> getTuples() {
-        return tuples;
-    }
-
-    public ArrayList<String> getColNames() {
-        return colNames;
-    }
-
-    public HashMap<String, Integer> getColLookup() {
-        return colLookup;
     }
 
     public Tuple<E> getRow(int rowNum) {
