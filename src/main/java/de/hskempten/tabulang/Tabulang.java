@@ -134,8 +134,8 @@ public class Tabulang {
         /*
         while(!l.isDone()) {
             // assuming that everything must be an AssignmentItem
-            // later on, we can change it to Statement or Function or something
-            var a = new AssignmentAST(l);
+            // later on, we can change it to Statement or InternalFunction or something
+            var a = new Assignment(l);
             i.evaluate(a);
         }
          */

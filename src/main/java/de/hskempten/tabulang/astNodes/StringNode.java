@@ -6,7 +6,6 @@ public class StringNode extends Node{
     private String string;
 
     public StringNode(String string) {
-        super(NodeType.STRING);
         this.string = string;
     }
 
@@ -19,7 +18,14 @@ public class StringNode extends Node{
     }
 
     @Override
-    public String evaluateNode(Interpretation i) {
+    public String evaluateNode(Interpretation interpretation) {
         return string;
+    }
+
+    @Override
+    public String toString() {
+        return "StringNode{" +
+                "string='" + string + '\'' +
+                "} ";
     }
 }

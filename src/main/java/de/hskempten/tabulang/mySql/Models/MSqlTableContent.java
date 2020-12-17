@@ -8,6 +8,19 @@ public class MSqlTableContent {
     private ArrayList<String> _headlines;
     private ArrayList<ArrayList<String>> _content;
 
+    /* SETTER */
+    public void set_dbName(String _dbName) {
+        this._dbName = _dbName;
+    }
+
+    public void set_headlines(ArrayList<String> _headlines) {
+        this._headlines = _headlines;
+    }
+
+    public void set_content(ArrayList<ArrayList<String>> _content) {
+        this._content = _content;
+    }
+
     /* GETTER */
     public String get_dbName() {
         return _dbName;

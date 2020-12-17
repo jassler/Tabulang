@@ -9,7 +9,7 @@ public class NumberNode extends Node{
     private BigDecimal number;
 
     public NumberNode(BigDecimal number) {
-        super(NodeType.NUMBER);
+        super();
         this.number = number;
     }
 
@@ -22,7 +22,14 @@ public class NumberNode extends Node{
     }
 
     @Override
-    public BigDecimal evaluateNode(Interpretation i) {
+    public BigDecimal evaluateNode(Interpretation interpretation) {
         return number;
+    }
+
+    @Override
+    public String toString() {
+        return "NumberNode{" +
+                "number=" + number +
+                "} ";
     }
 }

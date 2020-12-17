@@ -1,9 +1,11 @@
+import de.hskempten.tabulang.datatypes.Style;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TableTest {
 
@@ -26,8 +28,8 @@ class TableTest {
         assertEquals(0, t.getColumnIndex("First name"));
         assertEquals(1, t.getColumnIndex("Last name"));
         assertEquals(2, t.getColumnIndex("Location"));
-        assertThrows(NullPointerException.class, () -> t.getColumnIndex("Not in there"));
-        assertThrows(NullPointerException.class, () -> t.getColumnIndex("first name"));
+        assertThrows(NumberFormatException.class, () -> t.getColumnIndex("Not in there"));
+        assertThrows(IndexOutOfBoundsException.class, () -> t.getColumnIndex("-1"));
     }
 
     @Test
@@ -275,5 +277,45 @@ class TableTest {
         );
 
         assertEquals(paired, t1.verticalPairing(t2.projection(0)));
+    }
+
+    @Test
+    public void styling() {
+        Table<String> t = new Table<>(
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid"}, new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid"}),
+                new Tuple<>(new String[]{"Fegex", "Fritz", "Dadrid"}),
+                new Tuple<>(new String[]{"Haana", "Meher", "Berlqn"}),
+                new Tuple<>(new String[]{"Vasrb", "IerbA", "Madrid"}),
+                new Tuple<>(new String[]{"Nocwa", "Ashsa", "Rzudsh"})
+        );
+
+        t.setColumnStyle(1, new Style().setColor("#123456").setFont("Arial").setAttribute("colwidth", "12"));
+        t.setRowStyle(0, new Style().setFont("Times"));
+        t.setRowStyle(2, new Style().setFont("Monaco"));
+
+        t.setRowHeight(3, 16.7);
+        t.setColumnWidth(1, 123);
+
+        t.setCellStyle(2, 2, new Style().setUnderlined(true).setBold(true));
+        t.setCellStyle(0, 0, new Style().setItalics(true));
+
+        Style s = new Style().setItalics(true);
+        assertEquals(s, t.getRow(0).iterator().next().getStyle());
+
+        s.reset().setUnderlined(true).setBold(true);
+        assertEquals(s, t.getRow(2).getDataCell("Location").getStyle());
+
+        s.reset().setFont("Monaco");
+        assertEquals(s, t.getRow(2).getDataCell("First name").getStyle());
+
+        s.reset().setFont("Times");
+        assertEquals(s, t.getRow(0).getDataCell("Location").getStyle());
+
+        s.reset().setColor("#123456").setFont("Arial").setAttribute(Style.COLUMN_WIDTH, Double.toString(123));
+        assertEquals(s, t.getRow(0).getDataCell("Last name").getStyle());
     }
 }

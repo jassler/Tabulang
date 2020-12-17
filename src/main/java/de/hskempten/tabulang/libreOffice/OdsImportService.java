@@ -11,8 +11,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -23,31 +21,41 @@ public class OdsImportService {
     /* PROPERTIES */
     private OdfDocument _odfDocument;
     private Document _xmlDocument;
-    private Spreadsheet _spreadsheet;
-    private ArrayList<Column> _columnList;
-    private ArrayList<Row> _rowList;
-
-    /* CONSTRUCTOR */
-    public OdsImportService() {
-    }
+    private MSpreadsheet _spreadsheet;
+    private ArrayList<MColumn> _columnList;
+    private ArrayList<MRow> _rowList;
 
     /* PUBLIC METHODS */
+
+    /**
+     * Constructor
+     */
+
+    public OdsImportService() {}
+
+    /**
+     * Import an *.ods-File from a specific path of the file explorer
+     *
+     * @param path  Specific path
+     */
+
     public void Import(String path) {
         try {
             _odfDocument = OdfDocument.loadDocument(path);
             FindElementInXml(_odfDocument.getContentDom().toString());
-            CopyToClipboard();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /* PRIVATE METHODS */
-    private void CopyToClipboard() throws Exception {
-        var selection = new StringSelection(_odfDocument.getContentDom().toString());
-        var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
-    }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Wrapper function to filter all styles and contents from the xml-File
+     *
+     * @param xml   Path to XML-File
+     */
 
     private void FindElementInXml(String xml) {
         try {
@@ -65,43 +73,69 @@ public class OdsImportService {
         }
     }
 
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Create a new object of the type {@link MTableWrapper} and insert all rows and columns into this object
+     */
+
     private void CreateTableWrapper() {
         var nodeList = GetNodeList("table:table");
         var nodeListLength = nodeList.getLength();
 
-        var temp = new ArrayList<TableWrapper>();
+        var temp = new ArrayList<MTableWrapper>();
         for(var i = 0; i < nodeListLength; i++){
-            var tableWrapper = new TableWrapper();
+            var tableWrapper = new MTableWrapper();
             var item = nodeList.item(i);
-            tableWrapper._attributes = GetAttributes(item);
+            tableWrapper.set_attributes(GetAttributes(item));
 
             var selectCorrectChildren = item.getChildNodes();
 
             _columnList = new ArrayList<>();
             VisitColumns(selectCorrectChildren, "table:table-column");
-            tableWrapper._columns = _columnList;
+            tableWrapper.set_columns(_columnList);
 
             _rowList = new ArrayList<>();
             VisitRows(selectCorrectChildren, "table:table-row");
-            tableWrapper._rows = _rowList;
+            tableWrapper.set_rows(_rowList);
 
             temp.add(tableWrapper);
         }
-        _spreadsheet._tables = temp;
+        _spreadsheet.set_tables(temp);
     }
 
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Create all necessary lists for the spreadsheet
+     */
+
     private void CreateAllLists() {
-        _spreadsheet = new Spreadsheet();
-        _spreadsheet._fontStyles = new ArrayList<>();
-        _spreadsheet._tableStyles = new HashMap<>();
-        _spreadsheet._rowStyles = new HashMap<>();
-        _spreadsheet._columnStyles = new HashMap<>();
-        _spreadsheet._cellStyles = new HashMap<>();
+        _spreadsheet = new MSpreadsheet();
+        _spreadsheet.set_fontStyles(new ArrayList<>());
+        _spreadsheet.set_tableStyles(new HashMap<>());
+        _spreadsheet.set_rowStyles(new HashMap<>());
+        _spreadsheet.set_columnStyles(new HashMap<>());
+        _spreadsheet.set_cellStyles(new HashMap<>());
     }
+
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     * Helper function for {@link OdsImportService#FontStyles()}
+     * Helper function for {@link OdsImportService#StylesWrapper()}
+     *
+     * Returns all nodes with a specific tag name
+     *
+     * @param tagName Specific tag name
+     * @return List of nodes (NodeList)
+     */
 
     private NodeList GetNodeList(String tagName){
         return _xmlDocument.getElementsByTagName(tagName);
     }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Filter the font styles from a NodeList-object
+     */
 
     private void FontStyles() {
         var nodeList = GetNodeList("style:font-face");
@@ -112,8 +146,13 @@ public class OdsImportService {
             var item = nodeList.item(i);
             temp.add(GetAttributes(item));
         }
-        _spreadsheet._fontStyles = temp;
+        _spreadsheet.set_fontStyles(temp);
     }
+
+    /**
+     * Helper function for {@link OdsImportService#FindElementInXml(String)}
+     * Filter the styles for the whole document from a NodeList-object
+     */
 
     private void StylesWrapper(){
         var nodeList = GetNodeList("style:style");
@@ -126,25 +165,32 @@ public class OdsImportService {
             switch (Objects.requireNonNull(nodeAttributes).get("style:family")){
                 case "table":
                     var nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._tableStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_tableStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-row":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._rowStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_rowStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-column":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._columnStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_columnStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 case "table-cell":
                     nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet._cellStyles.put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                    _spreadsheet.get_cellStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
                     break;
                 default:
                     break;
             }
         }
     }
+
+    /**
+     * Get all attributes from a node tag
+     *
+     * @param node  Specific node from which the attributes are to be extracted
+     * @return Hashmap (key as string and value as string) which represent all attributes
+     */
 
     private HashMap<String,String> GetAttributes(Node node){
         var returnList = new HashMap<String, String>();
@@ -160,18 +206,32 @@ public class OdsImportService {
         return null;
     }
 
-    private ArrayList<Cell> SearchCell(NodeList nList) {
-        var list = new ArrayList<Cell>();
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     * Helper function for {@link OdsImportService#FontStyles()}
+     * Helper function for {@link OdsImportService#StylesWrapper()}
+     * Helper function for {@link OdsImportService#SearchCell(NodeList)}
+     * Helper function for {@link OdsImportService#VisitColumns(NodeList, String)}
+     * Helper function for {@link OdsImportService#VisitRows(NodeList, String)}
+     *
+     * Filter every cell of a table and get the cell attributes and the value
+     *
+     * @param nList NodeList of a specific tag
+     * @return ArrayList of Cell objects
+     */
+
+    private ArrayList<MCell> SearchCell(NodeList nList) {
+        var list = new ArrayList<MCell>();
         for (int temp = 0; temp < nList.getLength(); temp++)
         {
             var node = nList.item(temp);
-            var cell = new Cell();
-            cell.Attributes = GetAttributes(node);
+            var cell = new MCell();
+            cell.setAttributes(GetAttributes(node));
             if (node.hasChildNodes()) {
                 var children = node.getChildNodes();
                 for(int valueIndex = 0; valueIndex < children.getLength(); valueIndex++){
                     var cellValue = children.item(valueIndex);
-                    cell._value = cellValue.getFirstChild().getNodeValue();
+                    cell.set_value(cellValue.getFirstChild().getNodeValue());
                 }
             }
             list.add(cell);
@@ -179,13 +239,22 @@ public class OdsImportService {
         return list;
     }
 
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     *
+     * Visit all columns recursive
+     *
+     * @param nList     List of nodes to visit
+     * @param tagName   Specific tag name
+     */
+
     private void VisitColumns(NodeList nList, String tagName) {
         for (int temp = 0; temp < nList.getLength(); temp++)
         {
             var node = nList.item(temp);
             if(node.getNodeName().equals(tagName)){
-                var column = new Column();
-                column.Attributes = GetAttributes(node);
+                var column = new MColumn();
+                column.setAttributes(GetAttributes(node));
                 _columnList.add(column);
             }
             if (node.hasChildNodes()) {
@@ -194,15 +263,24 @@ public class OdsImportService {
         }
     }
 
+    /**
+     * Helper function for {@link OdsImportService#CreateTableWrapper()}
+     *
+     * Visit all rows recursive
+     *
+     * @param nList     List of nodes to visit
+     * @param tagName   Specific tag name
+     */
+
     private void VisitRows(NodeList nList, String tagName) {
         for (int temp = 0; temp < nList.getLength(); temp++)
         {
             var node = nList.item(temp);
             if(node.getNodeName().equals(tagName)){
-                var row = new Row();
-                row.Attributes = GetAttributes(node);
+                var row = new MRow();
+                row.setAttributes(GetAttributes(node));
                 _rowList.add(row);
-                row._cells = SearchCell(node.getChildNodes());
+                row.set_cells(SearchCell(node.getChildNodes()));
             }
             if (node.hasChildNodes()) {
                 VisitRows(node.getChildNodes(), tagName);
