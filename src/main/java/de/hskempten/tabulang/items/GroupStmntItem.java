@@ -6,48 +6,58 @@ public class GroupStmntItem implements LanguageItem {
     private TermItem myTerm;
     private FunCallItem myFunCall;
 
+    private LanguageItemType itemType;
+
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyString(myString);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
+        this.itemType = LanguageItemType.GROUP_HIDING_AREA_FUNCALL;
     }
 
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm) {
         this.setMyString(myString);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.GROUP_HIDING_AREA;
     }
 
     public GroupStmntItem(String myString, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyString(myString);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
+        this.itemType = LanguageItemType.GROUP_HIDING_FUNCALL;
     }
 
     public GroupStmntItem(String myString, TermItem myTerm) {
         this.setMyString(myString);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.GROUP_HIDING;
     }
 
     public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
+        this.itemType = LanguageItemType.GROUP_AREA_FUNCALL;
     }
 
     public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm) {
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.GROUP_AREA;
     }
 
     public GroupStmntItem(TermItem myTerm, FunCallItem myFunCall) {
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
+        this.itemType = LanguageItemType.GROUP_FUNCALL;
     }
 
     public GroupStmntItem(TermItem myTerm) {
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.GROUP_EMPTY;
     }
 
     public String getMyString() {
@@ -80,5 +90,10 @@ public class GroupStmntItem implements LanguageItem {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

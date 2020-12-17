@@ -27,7 +27,7 @@ public class FunDefType implements Parser {
         } else {
             throw new ParseTimeException(l, "Expected '(' or identifier, but got: " + l.lookahead().getContent());
         }
-        //l.getNextTokenAndExpect(TokenType.ARROW); //TODO create new TokenType or extend one
+        l.getNextTokenAndExpect(TokenType.FUNDEF);
         if ("bracket".equals(l.lookahead().getType()) && "{".equals(l.lookahead().getContent())) {
             myFuncBody = FuncBodyType.instance.parse(l);
         } else {

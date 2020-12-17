@@ -51,7 +51,7 @@ public class Number extends Node {
 
     @Override
     public String toString() {
-        return "Number{" +
+        return "NumberAST{" +
                 "value=" + value +
                 '}';
     }

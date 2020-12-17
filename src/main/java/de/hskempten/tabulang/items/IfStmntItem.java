@@ -7,15 +7,19 @@ public class IfStmntItem implements LanguageItem {
     //'else'
     private AnyStatementItem myOptionalAnyStatement;
 
+    private LanguageItemType itemType;
+
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement) {
         this.setMyPred(myPred);
         this.setMyAnyStatement(myAnyStatement);
+        this.itemType = LanguageItemType.IF_WITHOUTELSE;
     }
 
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement, AnyStatementItem myOptionalAnyStatement) {
         this.setMyPred(myPred);
         this.setMyAnyStatement(myAnyStatement);
         this.setMyOptionalAnyStatement(myOptionalAnyStatement);
+        this.itemType = LanguageItemType.IF_WITHELSE;
     }
 
     public PredItem getMyPred() {
@@ -40,5 +44,10 @@ public class IfStmntItem implements LanguageItem {
 
     public void setMyOptionalAnyStatement(AnyStatementItem myOptionalAnyStatement) {
         this.myOptionalAnyStatement = myOptionalAnyStatement;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

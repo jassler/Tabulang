@@ -22,7 +22,17 @@ public class VarDefType implements Parser {
                 if ("function".equals(l.lookahead().getContent())) {
                     ProceduralFItem myProceduralF = ProceduralFType.instance.parse(l);
                     item = new VarDefItem(myProceduralF);
-                } else {
+                } else if ("var".equals(l.lookahead().getContent())) {
+                    l.getNextTokenAndExpect(TokenType.KEYWORD);
+                    if (!"variable".equals(l.lookahead().getType())){
+                        throw new ParseTimeException("Illegal type: " + l.lookahead().getType() + " at " + l.lookahead().getContent() + " expected Identifier");
+                    }
+                    IdentifierItem myIdentifier = IdentifierType.instance.parse(l);
+                    l.getNextTokenAndExpect(TokenType.ASSIGN);
+                    TermItem myTerm = TermType.instance.parse(l);
+                    l.getNextTokenAndExpect(TokenType.SEMICOLON);
+                    item = new VarDefItem(myIdentifier, myTerm, true);
+                }else{
                     throw new ParseTimeException("Illegal keyword: " + l.lookahead().getContent());
                 }
             }
@@ -31,7 +41,7 @@ public class VarDefType implements Parser {
                 l.getNextTokenAndExpect(TokenType.ASSIGN);
                 TermItem myTerm = TermType.instance.parse(l);
                 l.getNextTokenAndExpect(TokenType.SEMICOLON);
-                item = new VarDefItem(myIdentifier, myTerm);
+                item = new VarDefItem(myIdentifier, myTerm, false);
             }
             default -> throw new ParseTimeException("Illegal type: " + l.lookahead().getType() + " at " + l.lookahead().getContent());
         }

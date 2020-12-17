@@ -6,16 +6,20 @@ public class ProceduralFItem implements LanguageItem {
     private FuncBodyItem myFuncBody;
     private TermItem myTerm;
 
+    LanguageItemType itemType;
+
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, FuncBodyItem myFuncBody) {
         this.setMyIdentifier(myIdentifier);
         this.setMyVList(myVList);
         this.setMyFuncBody(myFuncBody);
+        this.itemType = LanguageItemType.PROCEDURALF_FUNCBODY;
     }
 
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, TermItem myTerm) {
         this.setMyIdentifier(myIdentifier);
         this.setMyVList(myVList);
         this.setMyTerm(myTerm);
+        this.itemType = LanguageItemType.PROCEDURALF_TERM;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -48,5 +52,10 @@ public class ProceduralFItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

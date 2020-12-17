@@ -23,7 +23,7 @@ public class TableNode<E> extends Node{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        for(ArrayList<E> a : table.getTuples()){
+        for(ArrayList<E> a : table.getRows()){
             System.out.println(a);
             int i = 0;
             for(int j = 0; j < a.size(); j++) {

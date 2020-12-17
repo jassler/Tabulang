@@ -69,11 +69,15 @@ public class TermRType implements Parser {
             }
             case "bracket" -> {
                 if ("(".equals(l.lookahead().getContent())) {
+                    // TODO case for funCall
                     myTupel = TupelType.instance.parse(l);
                     myTermR = TermRType.instance.parse(l);
                     item = new TermRItem(myTermR, myTupel);
                 } else {
                     item = new TermRItem();
+                    if (")".equals(l.lookahead().getContent())){
+                        item.setLanguageItemType(LanguageItemType.TERMR_BRACKET);
+                    }
                 }
             }
             default -> {

@@ -7,20 +7,26 @@ public class OrdinalItem implements LanguageItem {
     private QuotedStringItem myQuotedString;
     private TupelItem myTupel;
 
+    LanguageItemType itemType;
+
     public OrdinalItem(String myString) {
         this.setMyString(myString);
+        this.itemType = LanguageItemType.ORDINAL_NULL;
     }
 
     public OrdinalItem(NumberItem myNumber) {
         this.setMyNumber(myNumber);
+        this.itemType = LanguageItemType.ORDINAL_NUMBER;
     }
 
     public OrdinalItem(QuotedStringItem myQuotedString) {
         this.setMyQuotedString(myQuotedString);
+        this.itemType = LanguageItemType.ORDINAL_QUOTEDSTRING;
     }
 
     public OrdinalItem(TupelItem myTupel) {
         this.setMyTupel(myTupel);
+        this.itemType = LanguageItemType.ORDINAL_TUPEL;
     }
 
 
@@ -54,5 +60,10 @@ public class OrdinalItem implements LanguageItem {
 
     public void setMyTupel(TupelItem myTupel) {
         this.myTupel = myTupel;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

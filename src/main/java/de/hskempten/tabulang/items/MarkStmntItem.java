@@ -5,15 +5,20 @@ public class MarkStmntItem implements LanguageItem {
     private TermItem mySecondTerm;
     private PredItem myPred;
 
+    private LanguageItemType itemType;
+
+
     public MarkStmntItem(TermItem myTerm, TermItem mySecondTerm, PredItem myPred) {
         this.setMyTerm(myTerm);
         this.setMySecondTerm(mySecondTerm);
         this.setMyPred(myPred);
+        this.itemType = LanguageItemType.MARK_WITHIF;
     }
 
     public MarkStmntItem(TermItem myTerm, TermItem mySecondTerm) {
         this.setMyTerm(myTerm);
         this.setMySecondTerm(mySecondTerm);
+        this.itemType = LanguageItemType.MARK_WITHOUTIF;
     }
 
     public TermItem getMyTerm() {
@@ -38,5 +43,10 @@ public class MarkStmntItem implements LanguageItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

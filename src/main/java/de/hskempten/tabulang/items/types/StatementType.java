@@ -17,7 +17,7 @@ public class StatementType implements Parser {
                 switch (l.lookahead().getContent()) {
                     case "for" -> statement = new StatementItem(LoopType.instance.parse(l));
                     case "if" -> statement = new StatementItem(IfStmntType.instance.parse(l));
-                    case "function" -> statement = new StatementItem(VarDefType.instance.parse(l));
+                    case "function", "var" -> statement = new StatementItem(VarDefType.instance.parse(l));
                     default -> throw new ParseTimeException(l, "Illegal keyword: " + l.lookahead().getContent());
                 }
             }
