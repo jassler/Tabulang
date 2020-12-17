@@ -23,7 +23,7 @@ public class CountVerticalNode extends Node{
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         if(o instanceof Table){
-            return ((Table<?>) o).getTuples().size();
+            return ((Table<?>) o).getRows().size();
         } else {
             return 1;
         }

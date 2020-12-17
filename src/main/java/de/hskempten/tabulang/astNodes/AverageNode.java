@@ -19,10 +19,10 @@ public class AverageNode<E> extends BinaryNode{
         if(table instanceof Table) {
             Object columnIdentifier = getLeftNode().evaluateNode(interpretation);
             if(columnIdentifier instanceof String) {
-                if(((Table)table).getColNames().contains(columnIdentifier)) {
+                if(((Table)table).getColNames().getNames().contains(columnIdentifier)) {
                     BigDecimal sum = BigDecimal.ZERO;
                     BigDecimal numberElements = BigDecimal.ZERO;
-                    for (ArrayList<E> a : ((Table<E>) table).getTuples()) {
+                    for (ArrayList<E> a : ((Table<E>) table).getRows()) {
                         //TODO remove println after further testing
                         System.out.println("......");
                         System.out.println(a);

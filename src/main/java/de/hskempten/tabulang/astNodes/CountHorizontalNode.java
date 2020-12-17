@@ -29,8 +29,8 @@ public class CountHorizontalNode extends Node{
                 return 1;
             }
         } else {
-            if(((Table<?>) o).getTuples().size() > 0){
-                return ((Table<?>) o).getTuples().get(0).size();
+            if(((Table<?>) o).getRows().size() > 0){
+                return ((Table<?>) o).getRows().get(0).size();
             } else {
                 return 0;
             }

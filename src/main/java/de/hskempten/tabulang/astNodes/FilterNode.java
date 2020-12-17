@@ -17,8 +17,8 @@ public class FilterNode<E> extends BinaryNode{
         //TODO gute tests finden
         if (object instanceof Table) {
             ArrayList<ArrayList<E>> newRows = new ArrayList<>();
-            ArrayList<String> colNames = new ArrayList<String>(((Table) object).getColNames());
-            for (Object tuple : ((Table) object).getTuples()) {
+            ArrayList<String> colNames = new ArrayList<String>(((Table) object).getColNames().getNames());
+            for (Object tuple : ((Table) object).getRows()) {
                 HashMap<String, Object> nestedHashmap = new HashMap<>(interpretation.getEnvironment());
                 Interpretation nestedInterpretation = new Interpretation(nestedHashmap);
                 for (int j = 0; j < ((ArrayList) tuple).size(); j++) {
