@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class TermItem implements LanguageItem {
+public class TermItem implements TermOrRItem {
     //'('
     private TermItem myTerm;
     //')'
@@ -15,54 +15,66 @@ public class TermItem implements LanguageItem {
     private DistinctTItem myDistinctT;
     private FunCallItem myFunCall;
 
+    private LanguageItemType itemType;
+
     public TermItem(TermItem myTerm, TermRItem myTermR) {
         this.setMyTerm(myTerm);
         this.setMyTermR(myTermR);
+        this.itemType = LanguageItemType.TERM_BRACKET;
     }
 
     public TermItem(TermRItem myTermR, IdentifierItem myIdentifier) {
         this.setMyTermR(myTermR);
         this.setMyIdentifier(myIdentifier);
+        this.itemType = LanguageItemType.TERM_IDENTIFIER;
     }
 
     public TermItem(TermRItem myTermR, LoopItem myLoop) {
         this.setMyTermR(myTermR);
         this.setMyLoop(myLoop);
+        this.itemType = LanguageItemType.TERM_LOOP;
     }
 
     public TermItem(TermRItem myTermR, FlipTItem myFlipT) {
         this.setMyTermR(myTermR);
         this.setMyFlipT(myFlipT);
+        this.itemType = LanguageItemType.TERM_FLIP;
     }
 
     public TermItem(TermRItem myTermR, OrdinalItem myOrdinal) {
         this.setMyTermR(myTermR);
         this.setMyOrdinal(myOrdinal);
+        this.itemType = LanguageItemType.TERM_ORDINAL;
     }
 
     public TermItem(TermRItem myTermR, DirectionalTermItem myDirectionalTerm) {
         this.setMyTermR(myTermR);
         this.setMyDirectionalTerm(myDirectionalTerm);
+        this.itemType = LanguageItemType.TERM_DIRECTIONAL;
     }
 
     public TermItem(TermRItem myTermR, FunDefItem myFunDef) {
         this.setMyTermR(myTermR);
         this.setMyFunDef(myFunDef);
+        this.itemType = LanguageItemType.TERM_FUNDEF;
     }
 
     public TermItem(TermRItem myTermR, AggregationTItem myAggregationT) {
         this.setMyTermR(myTermR);
         this.setMyAggregationT(myAggregationT);
+        this.itemType = LanguageItemType.TERM_AGGREGATION;
     }
 
     public TermItem(TermRItem myTermR, DistinctTItem myDistinctT) {
         this.setMyTermR(myTermR);
         this.setMyDistinctT(myDistinctT);
+        this.itemType = LanguageItemType.TERM_DISTINCT;
     }
 
-    public TermItem(TermRItem myTermR, FunCallItem myFunCall){
+    public TermItem(TermRItem myTermR, FunCallItem myFunCall) {
         this.setMyTermR(myTermR);
         this.setMyFunCall(myFunCall);
+        this.itemType = LanguageItemType.TERM_FUNCALL;
     }
 
     public TermItem getMyTerm() {
@@ -151,5 +163,10 @@ public class TermItem implements LanguageItem {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

@@ -48,6 +48,7 @@ public class FuncBodyType implements Parser {
                         myStatements.add(StatementType.instance.parse(l));
                     }
                 }
+                l.getNextTokenAndExpect(TokenType.BRACKET);
             }
             case "keyword" -> {
                 myReturnStmnt = ReturnStmntType.instance.parse(l);

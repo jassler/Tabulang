@@ -4,12 +4,16 @@ public class AggregationTItem implements LanguageItem {
     private CountTItem myCountT;
     private AverageTItem myAverageT;
 
+    private LanguageItemType itemType;
+
     public AggregationTItem(CountTItem myCountT) {
         this.setMyCountT(myCountT);
+        this.itemType = LanguageItemType.AGGREGATION_COUNT;
     }
 
     public AggregationTItem(AverageTItem myAverageT) {
         this.setMyAverageT(myAverageT);
+        this.itemType = LanguageItemType.AGGREGATION_AVERAGE;
     }
 
     public CountTItem getMyCountT() {
@@ -26,5 +30,10 @@ public class AggregationTItem implements LanguageItem {
 
     public void setMyAverageT(AverageTItem myAverageT) {
         this.myAverageT = myAverageT;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return itemType;
     }
 }

@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import java.util.ArrayList;
+
 public class FunCallItem implements LanguageItem {
     /*
     private TermItem myTerm;
@@ -30,9 +32,33 @@ public class FunCallItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TupelItem myTupel;
 
+    private TermItem termIdentifier;
+    private ArrayList<TermItem> terms;
+
+    public FunCallItem(IdentifierItem myIdentifier, ArrayList<TermItem> myTerms) {
+        this.setMyIdentifier(myIdentifier);
+        this.setTerms(myTerms);
+    }
+
     public FunCallItem(IdentifierItem myIdentifier, TupelItem myTupel) {
         this.setMyIdentifier(myIdentifier);
         this.setMyTupel(myTupel);
+    }
+
+    public TermItem getTermIdentifier() {
+        return termIdentifier;
+    }
+
+    public void setTermIdentifier(TermItem termIdentifier) {
+        this.termIdentifier = termIdentifier;
+    }
+
+    public ArrayList<TermItem> getTerms() {
+        return terms;
+    }
+
+    public void setTerms(ArrayList<TermItem> terms) {
+        this.terms = terms;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -49,5 +75,10 @@ public class FunCallItem implements LanguageItem {
 
     public void setMyTupel(TupelItem myTupel) {
         this.myTupel = myTupel;
+    }
+
+    @Override
+    public LanguageItemType getLanguageItemType() {
+        return LanguageItemType.TERM_FUNCALL;
     }
 }

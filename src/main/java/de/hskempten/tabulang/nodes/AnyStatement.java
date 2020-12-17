@@ -31,8 +31,8 @@ public class AnyStatement extends Node {
                     default -> this.n = new Statement(l);
                 }
             }
-            //case "variable" -> this.n = new Assignment(l);
-            //case "number" -> this.e = new Number(l);
+            //case "variable" -> this.n = new AssignmentAST(l);
+            //case "number" -> this.e = new NumberAST(l);
             default -> this.n = new Statement(l);  //l.expectedException("number or variable", l.lookahead());
         }
     }

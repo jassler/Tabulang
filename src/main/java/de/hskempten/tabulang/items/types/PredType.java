@@ -56,6 +56,7 @@ public class PredType implements LanguageType {
                         myPred = PredType.instance.parse(l);
                         myPredR = PredRType.instance.parse(l);
                         item = new PredItem(myPredR, myPred);
+                        item.setLanguageItemType(LanguageItemType.PRED_NOT);
                     }
                     case "exists", "forAll" -> {
                         myPQuantified = PQuantifiedType.instance.parse(l);
