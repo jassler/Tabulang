@@ -6,7 +6,6 @@ public class StringNode extends Node{
     private String string;
 
     public StringNode(String string) {
-        super(NodeType.STRING);
         this.string = string;
     }
 

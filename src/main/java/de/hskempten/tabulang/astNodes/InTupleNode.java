@@ -10,10 +10,15 @@ public class InTupleNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        if(((Tuple) getRightNode().evaluateNode(interpretation)).getElements().contains(getLeftNode().evaluateNode(interpretation))){
-            return true;
+        Object o = getRightNode().evaluateNode(interpretation);
+        if(o instanceof Tuple) {
+            if (((Tuple) o).getElements().contains(getLeftNode().evaluateNode(interpretation))) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            throw new IllegalArgumentException("Expected Tuple but got: " + o.getClass().getSimpleName());
         }
     }
 

@@ -6,7 +6,6 @@ public abstract class TernaryNode extends Node{
     private Node right;
 
     public TernaryNode(Node left, Node middle, Node right) {
-        super(NodeType.TERNARY);
         this.left = left;
         this.middle = middle;
         this.right = right;

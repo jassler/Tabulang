@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class SetNode extends Node{
@@ -7,7 +8,6 @@ public class SetNode extends Node{
     private int mapVal;
 
     public SetNode(Node node, int mapVal) {
-        super(NodeType.NODE);
         this.node = node;
         this.mapVal = mapVal;
     }
@@ -31,6 +31,9 @@ public class SetNode extends Node{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = getNode().evaluateNode(interpretation);
+        if(o instanceof Identifier){
+            o = ((Identifier) o).getIdentifierName();
+        }
         interpretation.getEnvironment().put("mapValue" + mapVal, o);
         return o;
     }

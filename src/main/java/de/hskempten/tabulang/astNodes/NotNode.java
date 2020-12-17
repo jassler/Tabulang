@@ -19,6 +19,11 @@ public class NotNode extends PredicateNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return ! (Boolean) node.evaluateNode(interpretation);
+        Object pred = node.evaluateNode(interpretation);
+        if(pred instanceof Boolean){
+            return !((Boolean)pred);
+        } else {
+            throw new IllegalArgumentException("Expected Boolean but got " + pred.getClass().getSimpleName());
+        }
     }
 }

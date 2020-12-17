@@ -8,11 +8,6 @@ import java.math.BigDecimal;
 
 public abstract class PredicateNode extends Node{
 
-
-    public PredicateNode() {
-        super(NodeType.NODE);
-    }
-
     public BigDecimal getNumericValue(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         if (o instanceof Identifier) {
@@ -26,5 +21,14 @@ public abstract class PredicateNode extends Node{
             return (BigDecimal) o;
         }
         throw new IllegalArgumentException("Expected Identifier or BigDecimal but got: " + o.getClass().getSimpleName());
+    }
+
+    public Boolean getBooleanValue(Node node, Interpretation interpretation){
+        Object pred = node.evaluateNode(interpretation);
+        if(pred instanceof Boolean){
+            return (Boolean) pred;
+        } else {
+            throw new IllegalArgumentException("Expected Boolean but got " + pred.getClass().getSimpleName());
+        }
     }
 }

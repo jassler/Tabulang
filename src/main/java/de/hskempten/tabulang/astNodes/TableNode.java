@@ -10,7 +10,6 @@ public class TableNode<E> extends Node{
     private Table<E> table;
 
     public TableNode(Table table) {
-        super(NodeType.TABLE);
         this.table = table;
     }
 

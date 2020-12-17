@@ -22,21 +22,22 @@ public class ForAllSuchThatNode extends BinaryNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Tuple t = (Tuple) getLeftNode().evaluateNode(interpretation);
+        Object tuple = getLeftNode().evaluateNode(interpretation);
         if(interpretation.getEnvironment().containsKey(variableName)){
             throw new VariableAlreadyDefinedException(variableName);
         }
-        for(Object o : t.getElements()){
+        for(Object o : ((Tuple) tuple).getElements()){
             //TODO evtl umändern so wie bei ExistsSuchThatNode
             interpretation.getEnvironment().put(variableName, o);
-            Boolean result = (Boolean) getRightNode().evaluateNode(interpretation);
-            if(!result){
-                interpretation.getEnvironment().remove(variableName);
-                return false;
+            Object result = getRightNode().evaluateNode(interpretation);
+            if(result instanceof Boolean) {
+                if (!((Boolean)result)) {
+                    interpretation.getEnvironment().remove(variableName);
+                    return false;
+                }
             }
         }
         interpretation.getEnvironment().remove(variableName);
-
         return true;
     }
 }

@@ -8,7 +8,6 @@ public class IdentifierNode extends Node{
     private Identifier identifier;
 
     public IdentifierNode(Identifier identifier) {
-        super(NodeType.VARIABLE);
         this.identifier = identifier;
     }
 

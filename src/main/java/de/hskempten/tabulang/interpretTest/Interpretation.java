@@ -50,5 +50,4 @@ public class Interpretation {
             return parent.findIdentifier(identifier);
         }
     }
-
 }

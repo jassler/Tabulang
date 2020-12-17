@@ -8,7 +8,6 @@ public class CountVerticalNode extends Node{
     private Node node;
 
     public CountVerticalNode(Node node) {
-        super(NodeType.NODE);
         this.node = node;
     }
 

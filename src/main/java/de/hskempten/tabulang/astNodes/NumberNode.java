@@ -9,7 +9,7 @@ public class NumberNode extends Node{
     private BigDecimal number;
 
     public NumberNode(BigDecimal number) {
-        super(NodeType.NUMBER);
+        super();
         this.number = number;
     }
 

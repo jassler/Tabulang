@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class TupleElementNode extends BinaryNode{
@@ -13,12 +14,21 @@ public class TupleElementNode extends BinaryNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        //Falls links etwas Anderes als ein Tuple stehen kann
-        /*if(getLeftNode().getNodeType() == NodeType.TUPLE){
-            return ((TupleNode) getLeftNode()).getTuple().get((String) getRightNode().evaluateNode(i));
+        Object tuple = getLeftNode().evaluateNode(interpretation);
+        if(tuple instanceof Tuple){
+            Object columnIdentifier = getRightNode().evaluateNode(interpretation);
+            if(columnIdentifier instanceof String){
+                if(((Tuple<?>) tuple).getNames().getNames().contains(columnIdentifier)){
+                    return ((Tuple) tuple).get((String) columnIdentifier);
+                } else {
+                    throw new TupleNameNotFoundException((String)columnIdentifier);
+                }
+            } else {
+                throw new IllegalArgumentException("Expected String but got: " + columnIdentifier.getClass().getSimpleName());
+            }
+        } else {
+            throw new IllegalArgumentException("Expected Tuple but got: " + tuple.getClass().getSimpleName());
         }
-        return null;*/
-        return ((Tuple) getLeftNode().evaluateNode(interpretation)).get((String) getRightNode().evaluateNode(interpretation));
     }
 
     @Override

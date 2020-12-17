@@ -10,7 +10,7 @@ public class TupleNode extends Node{
     private Tuple tuple;
 
     public TupleNode(Tuple tuple) {
-        super(NodeType.TUPLE);
+        super();
         this.tuple = tuple;
     }
 

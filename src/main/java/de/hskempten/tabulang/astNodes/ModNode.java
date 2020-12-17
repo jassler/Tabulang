@@ -12,6 +12,6 @@ public class ModNode extends BinaryArithmeticNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return ((BigDecimal) getLeftNode().evaluateNode(interpretation)).remainder((BigDecimal) getRightNode().evaluateNode(interpretation));
+        return getNumericValue(getLeftNode(), interpretation).remainder(getNumericValue(getRightNode(), interpretation));
     }
 }

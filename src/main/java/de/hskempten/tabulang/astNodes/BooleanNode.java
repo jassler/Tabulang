@@ -6,7 +6,6 @@ public class BooleanNode extends Node{
     private Boolean aBoolean;
 
     public BooleanNode(Boolean aBoolean) {
-        super(NodeType.BOOLEAN);
         this.aBoolean = aBoolean;
     }
 

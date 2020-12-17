@@ -6,7 +6,7 @@ public class VerticalTupleNode extends Node{
     private TupleNode tupleNode;
 
     public VerticalTupleNode(TupleNode tupleNode) {
-        super(NodeType.TUPLE);
+        super();
         this.tupleNode = tupleNode;
     }
 

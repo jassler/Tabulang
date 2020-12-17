@@ -8,7 +8,6 @@ public class CountHorizontalNode extends Node{
     private Node node;
 
     public CountHorizontalNode(Node node) {
-        super(NodeType.NODE);
         this.node = node;
     }
 

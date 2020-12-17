@@ -12,6 +12,6 @@ public class PowerNode extends BinaryArithmeticNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return ((BigDecimal) getLeftNode().evaluateNode(interpretation)).pow(((BigDecimal) getRightNode().evaluateNode(interpretation)).intValue());
+        return getNumericValue(getLeftNode(), interpretation).pow((getNumericValue(getRightNode(), interpretation)).intValue());
     }
 }

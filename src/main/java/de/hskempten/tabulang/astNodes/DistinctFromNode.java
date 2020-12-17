@@ -10,7 +10,6 @@ public class DistinctFromNode extends Node{
     private String[] columnNames;
 
     public DistinctFromNode(Node node, String[] columnNames) {
-        super(NodeType.NODE);
         this.node = node;
         this.columnNames = columnNames;
     }
@@ -33,7 +32,11 @@ public class DistinctFromNode extends Node{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object o = node.evaluateNode(interpretation);
-        return ((Table) o).projection(columnNames);
+        Object table = node.evaluateNode(interpretation);
+        if (table instanceof Table) {
+            return ((Table) table).projection(columnNames);
+        } else {
+            throw new IllegalArgumentException("Expected Table but got " + table.getClass().getSimpleName());
+        }
     }
 }

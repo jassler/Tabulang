@@ -7,7 +7,6 @@ public class CountNode extends Node{
     private Node node;
 
     public CountNode(Node node) {
-        super(NodeType.NODE);
         this.node = node;
     }
 

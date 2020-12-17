@@ -6,7 +6,6 @@ public class HorizontalTupleNode extends Node{
     private TupleNode tupleNode;
 
     public HorizontalTupleNode() {
-        super(NodeType.TUPLE);
     }
 
     public TupleNode getTupleNode() {

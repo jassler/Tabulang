@@ -2,12 +2,10 @@ package de.hskempten.tabulang.interpretTest;
 
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.datatypes.Function;
 import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +59,7 @@ public class Main {
         List<Object> objects1 = new ArrayList<>();
         objects1.add(n3);
         objects1.add(n1);
-        objects1.add(n4);
+        objects1.add(n2);
         Tuple t1 = new Tuple(objects1);
         TupleNode tupleNode1 = new TupleNode(t1);
         List<Object> objects2 = new ArrayList<>();
@@ -86,6 +84,7 @@ public class Main {
         //as5.evaluateNode(i);
         //System.out.println(tupleNode2.toString());
         //tupleNode2.evaluateNode(i);
+        StringNode s4 = new StringNode("4");
         TupleElementNode tupleElementNode1 = new TupleElementNode(tupleNode1, s0);
         //System.out.println(tupleElementNode1.evaluateNode(i));
         TupleElementNode tupleElementNode2 = new TupleElementNode(tupleElementNode1, s1);
@@ -119,7 +118,7 @@ public class Main {
         IntersectNode intersectNode1 = new IntersectNode(tableNode1, tableNode2);
         //System.out.println("Intersection: " + intersectNode1.evaluateNode(interpretation));
         SubtractNode subtractNode2 = new SubtractNode(tableNode1, tableNode2);
-        //System.out.println("Subraction: " + subtractNode2.evaluateNode(interpretation));
+        //System.out.println("Subtraction: " + subtractNode2.evaluateNode(interpretation));
         UniteNode uniteNode1 = new UniteNode(tableNode1, tableNode2);
         //System.out.println("Unite: " + uniteNode1.evaluateNode(interpretation));
 
@@ -160,19 +159,27 @@ public class Main {
         ArrayList<Object> statements = new ArrayList<>();
         AddNode fAdd1 = new AddNode(identifierNode1, n11);
         AssignmentNode fAssignment1 = new AssignmentNode(identifierNode1, fAdd1, true);
+        AddNode fAdd2 = new AddNode(identifierNode1, n3);
+        AssignmentNode fAssignment2 = new AssignmentNode(identifierNode1, fAdd2, false);
+        ReturnNode returnNode1 = new ReturnNode(identifierNode1);
+        ReturnNode returnNode2 = new ReturnNode(identifierNode1);
         statements.add(fAssignment1);
-        FunctionNode functionNode1 = new FunctionNode(parameters, statements);
-        //System.out.println(functionNode1.evaluateNode(interpretation));
-        Identifier id1 = new Identifier("myFirstFunction");
-        IdentifierNode idNode1 = new IdentifierNode(id1);
-        AssignmentNode fAssignment2 = new AssignmentNode(idNode1, functionNode1, true);
-        //System.out.println(fAssignment2.evaluateNode(interpretation));
+        statements.add(returnNode1);
+        statements.add(fAssignment2);
+        //statements.add(returnNode1);
+
+        FunctionDeclarationNode functionDeclarationNode1 = new FunctionDeclarationNode(parameters, statements);
+        //System.out.println(functionDeclarationNode1.evaluateNode(interpretation));
+        Identifier idFunction1 = new Identifier("myFirstFunction");
+        IdentifierNode idNode1 = new IdentifierNode(idFunction1);
+        AssignmentNode fAssignment3 = new AssignmentNode(idNode1, functionDeclarationNode1, true);
+        fAssignment3.evaluateNode(interpretation);
 
         /*System.out.println(tupleNode2.toString());
         tupleNode2.evaluateNode(i);
         System.out.println(tupleNode2.toString());*/
 
-        SetNode setNode1 = new SetNode(m1, 1);
+        SetNode setNode1 = new SetNode(v1, 1);
         setNode1.evaluateNode(interpretation);
 
         GreaterThanNode greaterThanNode2 = new GreaterThanNode(v1, n3);
@@ -181,6 +188,19 @@ public class Main {
         //System.out.println(filterNode1.evaluateNode(interpretation));
         AssignmentNode a10 = new AssignmentNode(v6, v1 , false);
         //a10.evaluateNode(interpretation);
+
+        ArrayList<Node> funcParameter = new ArrayList<>();
+        funcParameter.add(n11);
+        FunctionCallNode functionCallNode1 = new FunctionCallNode(idNode1, funcParameter);
+        //functionCallNode1.evaluateNode(interpretation);
+        AssignmentNode assignmentNodeFunction = new AssignmentNode(v6, functionCallNode1, true);
+        assignmentNodeFunction.evaluateNode(interpretation);
+
+        System.out.println("-.-.-.-.-.-.-.-");
+        ArrayList<Node> funcParameter2 = new ArrayList<>();
+        funcParameter2.add(n1);
+        FunctionCallNode functionCallNode2 = new FunctionCallNode(idNode1, funcParameter2);
+        //functionCallNode2.evaluateNode(interpretation);
 
 
 
@@ -192,7 +212,15 @@ public class Main {
         blockArray.add(assignmentNode3);
         blockArray.add(assignmentNode4);
         BlockNode blockNode1 = new BlockNode(blockArray);
-        blockNode1.evaluateNode(interpretation);
+        //blockNode1.evaluateNode(interpretation);
+
+        System.out.println(tupleElementNode1);
+        System.out.println(tupleElementNode1.evaluateNode(interpretation));
+
+        System.out.println(sp1.evaluateNode(interpretation));
+
+        //System.out.println(averageNode1.evaluateNode(interpretation));
+        System.out.println(countVerticalNode1.evaluateNode(interpretation));
 
 
 
@@ -204,7 +232,7 @@ public class Main {
 
         System.out.println();
         System.out.println(".......................");
-        System.out.println("Environment: ");
+        System.out.println("Outer Environment: ");
         Iterator it = interpretation.getEnvironment().entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();

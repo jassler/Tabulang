@@ -10,7 +10,6 @@ public class BlockNode extends Node{
     private ArrayList<Object> statements;
 
     public BlockNode(ArrayList<Object> statements) {
-        super(NodeType.BLOCK);
         this.statements = statements;
     }
 

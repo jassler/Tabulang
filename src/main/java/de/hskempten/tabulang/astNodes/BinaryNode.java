@@ -10,7 +10,6 @@ public abstract class BinaryNode extends Node{
     private Node rightNode;
 
     public BinaryNode(Node leftNode, Node rightNode) {
-        super(NodeType.BINARY);
         this.leftNode = leftNode;
         this.rightNode = rightNode;
     }

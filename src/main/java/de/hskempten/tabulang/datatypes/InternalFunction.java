@@ -2,11 +2,11 @@ package de.hskempten.tabulang.datatypes;
 
 import java.util.ArrayList;
 
-public class Function {
+public class InternalFunction {
     private ArrayList<Object> parameters;
     private ArrayList<Object> statements;
 
-    public Function(ArrayList<Object> parameters, ArrayList<Object> statements) {
+    public InternalFunction(ArrayList<Object> parameters, ArrayList<Object> statements) {
         this.parameters = parameters;
         this.statements = statements;
     }
@@ -29,7 +29,7 @@ public class Function {
 
     @Override
     public String toString() {
-        return "Function{" +
+        return "InternalFunction{" +
                 "parameters=" + parameters +
                 ", statements=" + statements +
                 '}';
