@@ -1,16 +1,18 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.items.ast.ASTStatementSorter;
+import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 import java.util.ArrayList;
 
-public class FunDefTermAST implements TermAST {
+public class FunDefAST implements TermAST {
     private ArrayList<IdentifierAST> identifiers;
-    private TermAST term;
+    private ArrayList<StatementAST> statements;
 
-    public FunDefTermAST(ArrayList<IdentifierAST> identifiers, TermAST term) {
+    public FunDefAST(ArrayList<IdentifierAST> identifiers, ArrayList<StatementAST> statements) {
         this.setIdentifiers(identifiers);
-        this.setTerm(term);
+        this.setStatements(statements);
     }
 
     public ArrayList<IdentifierAST> getIdentifiers() {
@@ -21,12 +23,12 @@ public class FunDefTermAST implements TermAST {
         this.identifiers = identifiers;
     }
 
-    public TermAST getTerm() {
-        return term;
+    public ArrayList<StatementAST> getStatements() {
+        return statements;
     }
 
-    public void setTerm(TermAST term) {
-        this.term = term;
+    public void setStatements(ArrayList<StatementAST> statements) {
+        this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     public void print(int offset) {
@@ -36,6 +38,8 @@ public class FunDefTermAST implements TermAST {
             this.getIdentifiers().get(i).print((gOffset + " ".repeat((this.getClass().getSimpleName()).length())).length());
         }
         System.out.println(" ".repeat(offset + this.getClass().getSimpleName().length() + 1) + "->");
-        this.getTerm().print((gOffset + " ".repeat((this.getClass().getSimpleName()).length())).length());
+        for (int i = 0; i < this.getStatements().size(); i++) {
+            this.getStatements().get(i).print((gOffset + " ".repeat((this.getClass().getSimpleName()).length())).length());
+        }
     }
 }
