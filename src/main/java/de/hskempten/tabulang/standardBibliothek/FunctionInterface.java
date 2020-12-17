@@ -9,14 +9,12 @@ public class FunctionInterface {
         _argTypes = classes;
     }
 
-
-// EXCEPTION NEU BAUEN - eigene klasse
     // VERERBUNG
 
     public Object execute(Object... objs) {
         for(int i = 0; i < objs.length; i++) {
             if(!(objs[i].getClass().isAssignableFrom(_argTypes[i]))){
-                throw new ClassCastException("Classtype not equals");
+                throw new ClassNotEqual("Classtype not equals");
             }
         }
         return _internalFunction.compute(objs);
