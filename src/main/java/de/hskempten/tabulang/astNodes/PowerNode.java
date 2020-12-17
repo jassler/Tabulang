@@ -3,13 +3,15 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class PowerNode extends ArithmeticNode{
+import java.math.BigDecimal;
+
+public class PowerNode extends BinaryArithmeticNode{
     public PowerNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        return convertLeftNodeToBigDecimal(i).pow(convertRightNodeToBigDecimal(i).intValue());
+    public Object evaluateNode(Interpretation interpretation) {
+        return getNumericValue(getLeftNode(), interpretation).pow((getNumericValue(getRightNode(), interpretation)).intValue());
     }
 }

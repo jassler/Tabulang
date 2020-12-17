@@ -3,14 +3,22 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class GreaterThanNode extends AtomicPredicateNode {
+import java.math.BigDecimal;
+
+public class GreaterThanNode extends BinaryPredicateNode {
     public GreaterThanNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        return convertLeftNodeToBigDecimal(i).compareTo(convertRightNodeToBigDecimal(i)) == 1;
+    public Object evaluateNode(Interpretation interpretation) {
+            BigDecimal valueLeft = getNumericValue(getLeftNode(), interpretation);
+            BigDecimal valueRight = getNumericValue(getRightNode(), interpretation);
+            return valueLeft.compareTo(valueRight) == 1;
+    }
 
+    @Override
+    public String toString() {
+        return "GreaterThanNode{} " + super.toString();
     }
 }

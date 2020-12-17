@@ -173,4 +173,12 @@ public class HeaderNames implements Iterable<String> {
     public int hashCode() {
         return Objects.hash(names);
     }
+
+    @Override
+    public String toString() {
+        return "HeaderNames{" +
+                "names=" + names +
+                ", nameLookup=" + nameLookup +
+                '}';
+    }
 }

@@ -1,26 +1,27 @@
 package de.hskempten.tabulang.astNodes;
 
 
+import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.exceptions.TypeMismatchException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
 
-public class SubtractNode extends ArithmeticNode{
+public class SubtractNode extends BinaryArithmeticNode{
     public SubtractNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
-    public Object evaluateNode(Interpretation i) {
-        Object left = getLeftNode().evaluateNode(i);
-        Object right = getRightNode().evaluateNode(i);
+    public Object evaluateNode(Interpretation interpretation) {
+        Object left = getTableOrNumericValue(getLeftNode(), interpretation);
+        Object right = getTableOrNumericValue(getRightNode(), interpretation);
         if(left instanceof BigDecimal && right instanceof BigDecimal){
-            BigDecimal l = (BigDecimal) left;
-            BigDecimal r = (BigDecimal) right;
-            return l.subtract(r);
+            return ((BigDecimal) left).subtract((BigDecimal) right);
+        } else if(left instanceof Table && right instanceof Table){
+            return ((Table) left).difference((Table) right);
         } else {
-            //TODO Tabellen
-            return null;
+            throw new TypeMismatchException(left.getClass().getSimpleName(), right.getClass().getSimpleName());
         }
     }
 }
