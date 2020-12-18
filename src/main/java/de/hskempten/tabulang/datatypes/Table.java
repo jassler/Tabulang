@@ -7,6 +7,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
 
@@ -413,123 +415,97 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
         }
 
         newColNames.addAll(colNames.getNames());
-        if(colNames.size() < other.colNames.size()) {
-            for(int i = colNames.size(); i < other.colNames.size(); i++)
+        if (colNames.size() < other.colNames.size()) {
+            for (int i = colNames.size(); i < other.colNames.size(); i++)
                 newColNames.add(other.colNames.get(i));
         }
 
         return new Table<>(newColNames, newRows, false, getParent());
     }
 
+    private int[] calculateColumnWidths() {
+        int[] strLengths;
+
+        if (transposed) {
+            strLengths = new int[tuples.size() + 1];
+
+            // colHeader is index 0
+            strLengths[0] = colNames.getNames().stream()
+                    .mapToInt(String::length)
+                    .max().getAsInt();
+
+            // each tuple represents a column, so we can simply check the longest value in each tuple
+            for (int i = 0; i < tuples.size(); i++) {
+                strLengths[i + 1] = tuples.get(i).stream()
+                        .mapToInt(o -> o.toString().length())
+                        .max().getAsInt();
+            }
+        } else {
+            strLengths = IntStream.range(0, colNames.size())
+                    .map(i -> Math.max(
+                            colNames.get(i).length(),
+                            tuples.stream()
+                                    .mapToInt(row -> row.get(i).toString().length())
+                                    .max().getAsInt()))
+                    .toArray();
+        }
+
+        return strLengths;
+    }
+
     @Override
     public String toString() {
-        if(colNames.size() == 0)
+        if (colNames.size() == 0)
             return "";
 
         StringBuilder sb;
 
-        if(transposed) {
+        int[] strLengths = calculateColumnWidths();
+        var formattedStream = Arrays.stream(strLengths).mapToObj(i -> "%-" + i + "s");
 
-            // +1 for colNames, which is in the first column
-            int[] strLengths = new int[tuples.size() + 1];
+        if (transposed) {
+            String[] formatted = formattedStream.toArray(String[]::new);
+            formatted[0] = formatted[0] + " |";
 
-            for(String colName : colNames) {
-                if(strLengths[0] < colName.length())
-                    strLengths[0] = colName.length();
+            // Calculating the capacity
+            // Width of all columns added together (probably a little less for most rows)
+            // +strLength.length for whitespace between each column (and newline at the end)
+            // +2 for the " |" delimiter after the first column
+            // This row length times number of rows
+            sb = new StringBuilder((Arrays.stream(strLengths).sum() + strLengths.length + 2) * colNames.size());
+
+            for (int row = 0; row < colNames.size(); row++) {
+                var it = Arrays.stream(formatted).iterator();
+                sb.append(String.format(it.next(), colNames.get(row)));
+
+                // variable used in lambda expression must be final
+                int finalRow = row;
+                tuples.stream().forEach(
+                        t -> sb.append(' ').append(String.format(it.next(), t.get(finalRow)))
+                );
+
+                sb.append('\n');
             }
 
-            for (int i = 0; i < tuples.size(); i++) {
-                int max = 0;
-                for(var element : tuples.get(i)) {
-                    int length = element.toString().length();
-                    if(max < length)
-                        max = length;
-                }
-                strLengths[i + 1] = max;
-            }
-
-            // generate string
-            sb = new StringBuilder((Arrays.stream(strLengths).sum() + 2) * colNames.size());
-            var colIt = colNames.iterator();
-
-            for (int i = 0; i < colNames.size(); i++) {
-                if(i > 0)
-                    sb.append('\n');
-
-                String curr = colIt.next();
-                sb.append(curr);
-
-                int whitespaceIndex = 0;
-
-                for(var row : tuples) {
-                    for(int w = strLengths[whitespaceIndex] + 1 - curr.length(); w > 0; w--)
-                        sb.append(' ');
-                    if(whitespaceIndex == 0)
-                        sb.append("| ");
-
-                    curr = row.get(i).toString();
-                    sb.append(curr);
-                    whitespaceIndex++;
-                }
-            }
+            // remove last newline
+            sb.deleteCharAt(sb.length() - 1);
 
         } else {
+            String delimiter = " | ";
+            String formatted = formattedStream.collect(Collectors.joining(delimiter));
 
-            // determine column width for each column name
-            int[] strLengths = new int[colNames.size()];
+            // rowLength is sum of column widths
+            // + amount of whitespace between columns
+            // (-1 because there's no delimiter after the last column)
+            int rowLength = Arrays.stream(strLengths).sum() + (strLengths.length - 1) * delimiter.length();
+            sb = new StringBuilder(rowLength * (tuples.size() + 1));
 
-            var colIt = colNames.iterator();
-            for (int i = 0; i < strLengths.length; i++)
-                strLengths[i] = colIt.next().length();
-
-            for(var row : this) {
-                var rowIt = row.iterator();
-                for (int i = 0; i < strLengths.length; i++) {
-                    int length = rowIt.next().getData().toString().length();
-                    if(strLengths[i] < length)
-                        strLengths[i] = length;
-                }
-            }
-
-            // generate string
-            sb = new StringBuilder((Arrays.stream(strLengths).sum() + 2 * strLengths.length) * (tuples.size() + 1));
-
-            // column header names
-            colIt = colNames.iterator();
-
-            int i = 0;
-            String current = colIt.next();
-            sb.append(current);
-
-            while(colIt.hasNext()) {
-                // add whitespace padding
-                for(int w = strLengths[i] + 1 - current.length(); w > 0; w--)
-                    sb.append(' ');
-                sb.append("| ");
-
-                // next word
-                i++;
-                current = colIt.next();
-                sb.append(current);
-            }
-            sb.append('\n').append("-".repeat(sb.length() - 1 + Math.max(0, strLengths[strLengths.length - 1] - current.length())));
-
-            // rows
-            for(var row : this) {
-                var rowIt = row.iterator();
-                current = rowIt.next().getData().toString();
-                sb.append('\n').append(current);
-
-                for (i = 0; i < strLengths.length - 1; i++) {
-                    // add whitespace padding
-                    for(int w = strLengths[i] + 1 + 2 - current.length(); w > 0; w--)
-                        sb.append(' ');
-
-                    // next word
-                    current = rowIt.next().getData().toString();
-                    sb.append(current);
-                }
-            }
+            // column header
+            // -----separator-----
+            // tuple rows
+            sb.append(String.format(formatted, colNames.getNames().toArray())).append('\n');
+            sb.append("-".repeat(rowLength));
+            tuples.stream().forEach(t -> sb.append('\n').append(String.format(formatted, t.toArray())));
         }
 
         return sb.toString();
