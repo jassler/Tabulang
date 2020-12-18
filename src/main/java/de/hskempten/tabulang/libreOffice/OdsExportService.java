@@ -23,13 +23,32 @@ public class OdsExportService {
     private Table _initTable;
     private ArrayList<MStyle> _styles;
 
+
+
+    /* PUBLIC METHODS */
+
+    /**
+     * Constructor: Create a new instance of a table to be exported
+     */
+
+    public OdsExportService(){
+        try {
+            _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
+            _odfOfficeAutomaticStyles = _spreadsheetDocument.getContentDom().getOrCreateAutomaticStyles();
+            _initTable = _spreadsheetDocument.getSheetByIndex(0);
+            _initTable.setTableName("Table1");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Constructor: Create a new instance of a table to be exported
      *
      * @param tableName Specific name of the table in the *.ods-File
      */
 
-    /* PUBLIC METHODS */
     public OdsExportService(String tableName){
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
