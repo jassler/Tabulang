@@ -95,12 +95,38 @@ public class DatabaseConnection {
     }
 
     /**
+     * Insert into a table in the MySQL database from a table of the language
+     *
+     * @param table         Instance of {@link Table} with all headlines and contents
+     * @param sqlTableName  MySQL table name where the record should be added
+     */
+
+    public static void ImportFromTable(Table table, String sqlTableName) {
+        try {
+            var content = new ArrayList<ArrayList<String>>();
+            for(var item : table){
+                var contentRows = new ArrayList<String>();
+                for(var cell : (Tuple<String>) item){
+                    contentRows.add(cell.getData());
+                }
+                content.add(contentRows);
+            }
+            ImportCore(new MSqlTableContent(sqlTableName, ReplaceHeadline(table), content));
+        } catch(Exception e){
+          e.printStackTrace();
+        }
+
+    }
+
+    /* PRIVATE METHODS */
+
+    /**
      * Insert into a table in the MySQL database
      *
      * @param sqlTableContent Contains all headlines content-rows
      */
 
-    public static void Import(MSqlTableContent sqlTableContent){
+    private static void ImportCore(MSqlTableContent sqlTableContent){
         try {
             if(!DatabaseExists(sqlTableContent)) throw new SQLException("Database not exist");
             var selectQuery = String.format("SELECT * FROM %s", sqlTableContent.get_dbName());
@@ -119,32 +145,6 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Insert into a table in the MySQL database from a table of the language
-     *
-     * @param table         Instance of {@link Table} with all headlines and contents
-     * @param sqlTableName  MySQL table name where the record should be added
-     */
-
-    public static void ImportFromTable(Table table, String sqlTableName) {
-        try {
-            var content = new ArrayList<ArrayList<String>>();
-            for(var item : table){
-                var contentRows = new ArrayList<String>();
-                for(var cell : (Tuple<String>) item){
-                    contentRows.add(cell.getData());
-                }
-                content.add(contentRows);
-            }
-            Import(new MSqlTableContent(sqlTableName, ReplaceHeadline(table), content));
-        } catch(Exception e){
-          e.printStackTrace();
-        }
-
-    }
-
-    /* PRIVATE METHODS */
 
     /**
      * Helper function for {@link DatabaseConnection#ExportToFile(String, OdsExportService, String, String)}

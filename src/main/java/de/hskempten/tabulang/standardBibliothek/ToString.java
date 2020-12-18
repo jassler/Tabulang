@@ -2,7 +2,6 @@ package de.hskempten.tabulang.standardBibliothek;
 
 // Standarddatentypen der Tabellensprache (Zahlen, String, Tuple, Tabellen und Bool) --> System.out.print()
 
-
 public class ToString implements InternalFunction{
     @Override
     public Object compute(Object... args) {

@@ -15,7 +15,4 @@ public class MainClass {
         var fInterface = new FunctionInterface(new ToLowerCase(), ArrayList.class);
         System.out.println(fInterface.execute(t.getColNames().getNames()));
     }
-    public static boolean isString(Object item){
-        return item.getClass().equals(String.class);
-    }
 }
