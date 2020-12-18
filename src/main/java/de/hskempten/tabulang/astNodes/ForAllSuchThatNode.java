@@ -4,7 +4,7 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class ForAllSuchThatNode extends BinaryNode{
+public class ForAllSuchThatNode extends BinaryPredicateNode{
     private String variableName;
 
     public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName) {

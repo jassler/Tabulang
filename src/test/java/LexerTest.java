@@ -1,5 +1,6 @@
 import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.TokenType;
+import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
@@ -23,9 +24,9 @@ public class LexerTest {
         l.addOneLineCommentMarker("//");
 
 
-        Interpreter i = new Interpreter();
+        Interpretation interpretation = new Interpretation();
 
-        parser = new TabulangParser(l, i);
+        parser = new TabulangParser(l, interpretation);
     }
 
     @AfterEach

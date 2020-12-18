@@ -7,7 +7,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class AddNode extends BinaryArithmeticNode{
-    public AddNode(Node leftNode, Node rightNode) {
+    public AddNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 
@@ -18,7 +18,7 @@ public class AddNode extends BinaryArithmeticNode{
         if((left instanceof String) || (right instanceof String)){
             return left.toString() + right.toString();
         } else {
-            return ((BigDecimal) left).add((BigDecimal) right);
+            return (Float) left + (Float) right;
         }
     }
 

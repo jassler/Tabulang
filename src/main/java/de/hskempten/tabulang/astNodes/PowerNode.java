@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class PowerNode extends BinaryArithmeticNode{
-    public PowerNode(Node leftNode, Node rightNode) {
+    public PowerNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

@@ -1,10 +1,14 @@
 package de.hskempten.tabulang;
 
+import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.Lexer;
+
+import java.util.Iterator;
+import java.util.Map;
 
 public class Tabulang {
 
@@ -113,7 +117,7 @@ public class Tabulang {
                     "}" +
                     "");
         }
-        if (true) {
+        if (false) {
             l.setText("\n" +
                     "v3 := '3';\n" +
                     "v4 := f2(4);\n" +
@@ -124,9 +128,14 @@ public class Tabulang {
                     "\n" +
                     "");
         }
-        Interpreter i = new Interpreter();
 
-        TabulangParser parser = new TabulangParser(l, i);
+        if (true) {
+            l.setText("\n" +
+                    "a := 5 + 6;\n");
+        }
+        Interpretation interpretation = new Interpretation();
+
+        TabulangParser parser = new TabulangParser(l, interpretation);
         //parser.parse();
         l.reset();
         ProgramItem prg = parser.parseN();
@@ -141,11 +150,17 @@ public class Tabulang {
          */
 
         ProgramAST prgAST = ASTProgramParser.instance.parse(prg);
-        System.out.println(prgAST);
-        prgAST.print(0);
+        prgAST.executeProgram(interpretation);
 
         System.out.println("Evaluated \"" + l.getText() + "\" and got:\n");
-        System.out.println(i);
+        System.out.println(".......................");
+        System.out.println("Outer Environment: ");
+        Iterator it = interpretation.getEnvironment().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
     }
 
 }

@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class SetNode extends Node{
+public class SetNode extends StatementNode{
     private Node node;
     private int mapVal;
 

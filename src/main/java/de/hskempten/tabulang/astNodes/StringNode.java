@@ -2,7 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class StringNode extends Node{
+public class StringNode extends TermNode{
     private String string;
 
     public StringNode(String string) {

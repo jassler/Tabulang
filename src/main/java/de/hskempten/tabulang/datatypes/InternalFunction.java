@@ -1,29 +1,32 @@
 package de.hskempten.tabulang.datatypes;
 
+import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.StatementNode;
+
 import java.util.ArrayList;
 
 public class InternalFunction {
-    private ArrayList<Object> parameters;
-    private ArrayList<Object> statements;
+    private ArrayList<IdentifierNode> parameters;
+    private ArrayList<StatementNode> statements;
 
-    public InternalFunction(ArrayList<Object> parameters, ArrayList<Object> statements) {
+    public InternalFunction(ArrayList<IdentifierNode> parameters, ArrayList<StatementNode> statements) {
         this.parameters = parameters;
         this.statements = statements;
     }
 
-    public ArrayList<Object> getParameters() {
+    public ArrayList<IdentifierNode> getParameters() {
         return parameters;
     }
 
-    public void setParameters(ArrayList<Object> parameters) {
+    public void setParameters(ArrayList<IdentifierNode> parameters) {
         this.parameters = parameters;
     }
 
-    public ArrayList<Object> getStatements() {
+    public ArrayList<StatementNode> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<Object> statements) {
+    public void setStatements(ArrayList<StatementNode> statements) {
         this.statements = statements;
     }
 

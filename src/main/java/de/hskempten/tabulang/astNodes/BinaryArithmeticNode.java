@@ -1,27 +1,27 @@
 package de.hskempten.tabulang.astNodes;
 
 public abstract class BinaryArithmeticNode extends ArithmeticNode{
-    private Node leftNode;
-    private Node rightNode;
+    private TermNode leftNode;
+    private TermNode rightNode;
 
-    public BinaryArithmeticNode(Node leftNode, Node rightNod) {
+    public BinaryArithmeticNode(TermNode leftNode, TermNode rightNod) {
         this.leftNode = leftNode;
         this.rightNode = rightNod;
     }
 
-    public Node getLeftNode() {
+    public TermNode getLeftNode() {
         return leftNode;
     }
 
-    public void setLeftNode(Node leftNode) {
+    public void setLeftNode(TermNode leftNode) {
         this.leftNode = leftNode;
     }
 
-    public Node getRightNode() {
+    public TermNode getRightNode() {
         return rightNode;
     }
 
-    public void setRightNode(Node rightNode) {
+    public void setRightNode(TermNode rightNode) {
         this.rightNode = rightNode;
     }
 

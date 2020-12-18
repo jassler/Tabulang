@@ -4,7 +4,7 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class CountVerticalNode extends Node{
+public class CountVerticalNode extends TermNode{
     private Node node;
 
     public CountVerticalNode(Node node) {

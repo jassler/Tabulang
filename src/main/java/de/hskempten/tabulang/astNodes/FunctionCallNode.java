@@ -10,28 +10,28 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class FunctionCallNode extends Node{
-    private Node node;
-    private ArrayList<Node> parameters;
+public class FunctionCallNode extends TermNode{
+    private IdentifierNode node;
+    private ArrayList<TermNode> parameters;
 
-    public FunctionCallNode(Node node, ArrayList<Node> parameters) {
+    public FunctionCallNode(IdentifierNode node, ArrayList<TermNode> parameters) {
         this.node = node;
         this.parameters = parameters;
     }
 
-    public Node getNode() {
+    public IdentifierNode getNode() {
         return node;
     }
 
-    public void setNode(Node node) {
+    public void setNode(IdentifierNode node) {
         this.node = node;
     }
 
-    public ArrayList<Node> getParameters() {
+    public ArrayList<TermNode> getParameters() {
         return parameters;
     }
 
-    public void setParameters(ArrayList<Node> parameters) {
+    public void setParameters(ArrayList<TermNode> parameters) {
         this.parameters = parameters;
     }
 
@@ -56,7 +56,7 @@ public class FunctionCallNode extends Node{
                     throw new IllegalArgumentException("Expected " + ((InternalFunction) value).getParameters().size() + " parameter(s) but got " + parameters.size());
                 } else {
                     for(int i = 0; i < ((InternalFunction) value).getParameters().size(); i++){
-                        nestedInterpretation.getEnvironment().put(((Identifier) ((InternalFunction) value).getParameters().get(i)).getIdentifierName(), parameters.get(i).evaluateNode(nestedInterpretation));
+                        nestedInterpretation.getEnvironment().put((((InternalFunction) value).getParameters().get(i)).getIdentifier(), parameters.get(i).evaluateNode(nestedInterpretation));
                     }
                     for(Object statement : ((InternalFunction) value).getStatements()){
                         if(nestedInterpretation.getEnvironment().containsKey("return")) {

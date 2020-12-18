@@ -5,7 +5,7 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class TupleElementNode extends BinaryNode{
+public class TupleElementNode extends BinaryTermNode{
 
 
     public TupleElementNode(Node leftNode, Node rightNode) {

@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class CountNode extends Node{
+public class CountNode extends TermNode{
     private Node node;
 
     public CountNode(Node node) {
