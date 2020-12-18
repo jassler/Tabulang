@@ -318,4 +318,26 @@ class TableTest {
         s.reset().setColor("#123456").setFont("Arial").setAttribute(Style.COLUMN_WIDTH, Double.toString(123));
         assertEquals(s, t.getRow(0).getDataCell("Last name").getStyle());
     }
+
+    @Test
+    public void tableToString() {
+        var t = new Table<>(
+                new Tuple<>(new String[]{"Fegex", "Fritz", "Dadrid", "Oh what"}, new String[]{"First name", "Last name", "Location", "Unexpected"}),
+                new Tuple<>(new String[]{"Haana", "Meher", "Berlqn", "What is"}),
+                new Tuple<>(new String[]{"HaAsa", "Tahar", "DSslqn", "This"}),
+                new Tuple<>(new String[]{"Felix", "Fritz", "Madrid", "daefbua"}),
+                new Tuple<>(new String[]{"Jonas", "Lärch", "Kempten", "dasbdawd"}),
+                new Tuple<>(new String[]{"Hanna", "Meher", "Berlin", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Willi", "Wonky", "Madrid", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Bierb", "Ierbi", "Madrid", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Fegex", "Fritz", "Dadrid", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Haana", "Meher", "Berlqn", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Vasrb", "IerbA", "Madrid", "ohboybabubex"}),
+                new Tuple<>(new String[]{"Nocwa", "Ashsa", "Rzudsh", "ohboybabubex"})
+        );
+
+        //t.transpose();
+
+        System.out.println(t.toString());
+    }
 }
