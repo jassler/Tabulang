@@ -301,7 +301,9 @@ public class ASTTermParser {
                 switch (actItem.getLanguageItemType()) {
                     case FUNDEF_IDENTIFIER_TERM, FUNDEF_VLIST_TERM -> {
                         TermAST term = new ASTTermParser().parse(fundef.getMyTerm());
-                        return new FunDefTermAST(identifiers, term);
+                        ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
+                        statements.add(new StatementReturnAST(term));
+                        return new FunDefAST(identifiers, statements);
                     }
                     case FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_FUNCBODY -> {
                         ArrayList<StatementAST> statements = new ArrayList<StatementAST>();
@@ -311,20 +313,20 @@ public class ASTTermParser {
                                 for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
                                     statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
                                 }
-                                return new FunDefStatementsAST(identifiers, statements);
+                                return new FunDefAST(identifiers, statements);
                             }
                             case FUNCBODY_RETURNS -> {
                                 for (int i = 0; i < fundef.getMyFuncBody().getMyReturnStmnts().size(); i++) {
                                     statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnts().get(i)));
                                 }
-                                return new FunDefStatementsAST(identifiers, statements);
+                                return new FunDefAST(identifiers, statements);
                             }
                             case FUNCBODY_RETURN -> {
                                 statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnt()));
-                                return new FunDefStatementsAST(identifiers, statements);
+                                return new FunDefAST(identifiers, statements);
                             }
                         }
-                        return new FunDefStatementsAST(identifiers, statements);
+                        return new FunDefAST(identifiers, statements);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }

@@ -108,7 +108,7 @@ public class HeaderNames implements Iterable<String> {
     }
 
     public void addAll(Collection<? extends String> c) {
-        c.stream().forEach(s -> add(s));
+        c.forEach(this::add);
     }
 
     public boolean remove(String o) {
@@ -134,6 +134,16 @@ public class HeaderNames implements Iterable<String> {
 
     public int size() {
         return names.size();
+    }
+
+    /**
+     * Returns {@code true} if HeaderNames contains specified name.
+     *
+     * @param   name   Name to check if it's in HeaderNames
+     * @return {@code true} if this list or header names contains specified name.
+     */
+    public boolean contains(String name) {
+        return nameLookup.containsKey(name);
     }
 
     private void updateLookupValues(Function<Integer, Integer> updatedValue) {
