@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class ModNode extends BinaryArithmeticNode{
-    public ModNode(Node leftNode, Node rightNode) {
+    public ModNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

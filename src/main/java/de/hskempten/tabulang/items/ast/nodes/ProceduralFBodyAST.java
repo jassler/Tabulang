@@ -37,7 +37,7 @@ public class ProceduralFBodyAST implements StatementAST {
     }
 
     public void setStatements(ArrayList<StatementAST> statements) {
-        this.statements = ASTStatementSorter.sortStatements(statements);
+       // this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     public void print(int offset) {

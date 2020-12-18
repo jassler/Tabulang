@@ -4,24 +4,24 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class IdentifierNode extends Node{
-    private Identifier identifier;
+public class IdentifierNode extends TermNode{
+    private String identifier;
 
-    public IdentifierNode(Identifier identifier) {
+    public IdentifierNode(String identifier) {
         this.identifier = identifier;
     }
 
-    public Identifier getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(Identifier identifier) {
+    public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-            return identifier;
+            return new Identifier(identifier);
     }
 
     @Override

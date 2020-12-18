@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.parser;
 
 import de.hskempten.tabulang.Interpreter;
+import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.types.ProgramType;
 import de.hskempten.tabulang.nodes.AnyStatement;
@@ -13,22 +14,19 @@ import java.util.List;
 
 public class TabulangParser {
 
-    private final Interpreter interpreter;
+    private final Interpretation interpretation;
     private Lexer l;
     List<AnyStatement> lines = new ArrayList<AnyStatement>();
 
 
-    public TabulangParser(Lexer lexer, Interpreter interpreter) {
+    public TabulangParser(Lexer lexer, Interpretation interpretation) {
         this.l = lexer;
-        this.interpreter = interpreter;
+        this.interpretation = interpretation;
     }
 
     public void parse() throws ParseTimeException {
         while (!l.isDone()) {
             lines.add(new AnyStatement(l));
-        }
-        for (Node node : lines) {
-            node.evaluate(interpreter);
         }
     }
 

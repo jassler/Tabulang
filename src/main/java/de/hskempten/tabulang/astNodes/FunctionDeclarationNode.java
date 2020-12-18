@@ -5,11 +5,11 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
-public class FunctionDeclarationNode extends Node{
-    private ArrayList<Object> parameters;
-    private ArrayList<Object> statements;
+public class FunctionDeclarationNode extends TermNode{
+    private ArrayList<IdentifierNode> parameters;
+    private ArrayList<StatementNode> statements;
 
-    public FunctionDeclarationNode(ArrayList<Object> parameters, ArrayList<Object> statements) {
+    public FunctionDeclarationNode(ArrayList<IdentifierNode> parameters, ArrayList<StatementNode> statements) {
         this.parameters = parameters;
         this.statements = statements;
     }

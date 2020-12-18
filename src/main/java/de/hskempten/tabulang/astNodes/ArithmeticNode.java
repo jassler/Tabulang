@@ -8,11 +8,11 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
 
-public abstract class ArithmeticNode extends Node {
+public abstract class ArithmeticNode extends TermNode {
 
     public Object getStringOrNumericValue(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if (o instanceof String || o instanceof BigDecimal) {
+        if (o instanceof String || o instanceof Float) {
             return o;
         } else if (o instanceof Identifier) {
             Interpretation found = interpretation.findIdentifier((Identifier) o);
@@ -22,13 +22,13 @@ public abstract class ArithmeticNode extends Node {
             Object value = found.getEnvironment().get(((Identifier) o).getIdentifierName());
             if (value == null) {
                 throw new VariableNotInitializedException(((Identifier) o).getIdentifierName());
-            } else if ((value instanceof String) || (value instanceof BigDecimal)) {
+            } else if ((value instanceof String) || (value instanceof Float)) {
                 return value;
             } else {
-                throw new IllegalArgumentException("Expected String or BigDecimal but got: " + value.getClass());
+                throw new IllegalArgumentException("Expected String or Number but got: " + value.getClass());
             }
         } else {
-            throw new IllegalArgumentException("Expected String, BigDecimal or Identifier but got: " + o.getClass());
+            throw new IllegalArgumentException("Expected String, Number or Identifier but got: " + o.getClass());
         }
     }
 
@@ -74,6 +74,11 @@ public abstract class ArithmeticNode extends Node {
         } else {
             throw new IllegalArgumentException("Expected BigDecimal or Identifier but got: " + o.getClass());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ArithmeticNode{} " + super.toString();
     }
 }
 

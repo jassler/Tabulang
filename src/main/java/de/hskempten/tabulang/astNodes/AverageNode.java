@@ -8,7 +8,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class AverageNode<E> extends BinaryNode{
+public class AverageNode<E> extends BinaryTermNode{
     public AverageNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }

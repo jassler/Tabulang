@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FilterNode<E> extends BinaryNode{
+public class FilterNode<E> extends BinaryTermNode{
     public FilterNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }

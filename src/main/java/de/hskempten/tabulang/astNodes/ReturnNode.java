@@ -4,7 +4,7 @@ import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class ReturnNode extends Node{
+public class ReturnNode extends StatementNode{
     private Node node;
 
     public ReturnNode(Node node) {

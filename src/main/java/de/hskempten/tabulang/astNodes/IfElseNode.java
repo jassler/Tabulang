@@ -4,7 +4,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.HashMap;
 
-public class IfElseNode extends TernaryNode{
+public class IfElseNode extends TernaryStatementNode{
     public IfElseNode(Node left, Node middle, Node right) {
         super(left, middle, right);
     }

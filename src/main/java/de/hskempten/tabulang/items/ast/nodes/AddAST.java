@@ -27,4 +27,5 @@ public class AddAST implements OperatorAST {
     public void setRight(TermAST right) {
         this.right = right;
     }
+
 }

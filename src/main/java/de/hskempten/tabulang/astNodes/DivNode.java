@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class DivNode extends BinaryArithmeticNode{
-    public DivNode(Node leftNode, Node rightNode) {
+    public DivNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

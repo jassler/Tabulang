@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class SpreadNode extends BinaryNode{
+public class SpreadNode extends BinaryTermNode{
     public SpreadNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }

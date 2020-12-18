@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.StatementNode;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
@@ -7,31 +9,31 @@ import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import java.util.ArrayList;
 
 public class FunDefAST implements TermAST {
-    private ArrayList<IdentifierAST> identifiers;
-    private ArrayList<StatementAST> statements;
+    private ArrayList<IdentifierNode> identifiers;
+    private ArrayList<StatementNode> statements;
 
-    public FunDefAST(ArrayList<IdentifierAST> identifiers, ArrayList<StatementAST> statements) {
+    public FunDefAST(ArrayList<IdentifierNode> identifiers, ArrayList<StatementNode> statements) {
         this.setIdentifiers(identifiers);
         this.setStatements(statements);
     }
 
-    public ArrayList<IdentifierAST> getIdentifiers() {
+    public ArrayList<IdentifierNode> getIdentifiers() {
         return identifiers;
     }
 
-    public void setIdentifiers(ArrayList<IdentifierAST> identifiers) {
+    public void setIdentifiers(ArrayList<IdentifierNode> identifiers) {
         this.identifiers = identifiers;
     }
 
-    public ArrayList<StatementAST> getStatements() {
+    public ArrayList<StatementNode> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementAST> statements) {
+    public void setStatements(ArrayList<StatementNode> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
-    public void print(int offset) {
+    /*public void print(int offset) {
         String gOffset = " ".repeat(offset);
         System.out.println(gOffset + this.getClass().getSimpleName());
         for (int i = 0; i < this.getIdentifiers().size(); i++) {
@@ -41,5 +43,5 @@ public class FunDefAST implements TermAST {
         for (int i = 0; i < this.getStatements().size(); i++) {
             this.getStatements().get(i).print((gOffset + " ".repeat((this.getClass().getSimpleName()).length())).length());
         }
-    }
+    }*/
 }

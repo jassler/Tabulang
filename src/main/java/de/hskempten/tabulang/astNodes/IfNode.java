@@ -4,7 +4,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.HashMap;
 
-public class IfNode extends BinaryNode{
+public class IfNode extends BinaryStatementNode{
     public IfNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }

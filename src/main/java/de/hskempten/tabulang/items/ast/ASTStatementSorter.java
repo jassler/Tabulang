@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items.ast;
 
-import de.hskempten.tabulang.items.ast.interfaces.AST;
-import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
-import de.hskempten.tabulang.items.ast.nodes.FunCallAST;
+import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFBodyNodeTest;
+import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFTermNodeTest;
 import de.hskempten.tabulang.items.ast.nodes.ProceduralFBodyAST;
 import de.hskempten.tabulang.items.ast.nodes.ProceduralFTermAST;
 
@@ -11,7 +11,7 @@ import java.util.Collections;
 
 public class ASTStatementSorter {
 
-    public static ArrayList<StatementAST> sortStatements(ArrayList<StatementAST> statements) {
+    public static ArrayList<StatementNode> sortStatements(ArrayList<StatementNode> statements) {
 
         for (int n = statements.size() - 1; n > 0; n--) {
             for (int i = 0; i < n; i++) {
@@ -25,21 +25,21 @@ public class ASTStatementSorter {
         return statements;
     }
 
-    private static boolean containsFunCallToNext(StatementAST actual, StatementAST next) {
+    private static boolean containsFunCallToNext(StatementNode actual, StatementNode next) {
         String nextName = "";
         if (ProceduralFTermAST.class.equals(next.getClass())) {
-            nextName = ((ProceduralFTermAST) next).getIdentifier().getString();
+            nextName = ((ProceduralFTermNodeTest) next).getIdentifier().getIdentifier();
         } else if (ProceduralFBodyAST.class.equals(next.getClass())) {
-            nextName = ((ProceduralFBodyAST) next).getIdentifier().getString();
+            nextName = ((ProceduralFBodyNodeTest) next).getIdentifier().getIdentifier();
         } else return false;
 
 
         {
             if (ProceduralFTermAST.class.equals(actual.getClass())) {
-                return getFunCallMethodNames(((ProceduralFTermAST) actual).getTerm()).contains(nextName);
+                return getFunCallMethodNames(((ProceduralFTermNodeTest) actual).getTerm()).contains(nextName);
             } else if (ProceduralFBodyAST.class.equals(actual.getClass())) {
-                for (int i = 0; i < ((ProceduralFBodyAST) actual).getStatements().size(); i++) {
-                    if (getFunCallMethodNames(((ProceduralFBodyAST) actual).getStatements().get(i)).contains(nextName))
+                for (int i = 0; i < ((ProceduralFBodyNodeTest) actual).getStatements().size(); i++) {
+                    if (getFunCallMethodNames(((ProceduralFBodyNodeTest) actual).getStatements().get(i)).contains(nextName))
                         return true;
                 }
                 return false;
@@ -48,14 +48,14 @@ public class ASTStatementSorter {
         return false;
     }
 
-    private static boolean isProceduralF(StatementAST statement) {
+    private static boolean isProceduralF(StatementNode statement) {
         return ProceduralFTermAST.class.equals(statement.getClass()) || ProceduralFBodyAST.class.equals(statement.getClass());
     }
 
-    private static ArrayList<String> getFunCallMethodNames(AST statement) {
-        if (FunCallAST.class.equals(statement.getClass())) {
+    private static ArrayList<String> getFunCallMethodNames(Node statement) {
+        if (FunctionCallNode.class.equals(statement.getClass())) {
             ArrayList<String> list = new ArrayList<String>();
-            list.add(((FunCallAST) statement).getIdentifier().getString());
+            list.add(((FunctionCallNode) statement).getNode().getIdentifier());
             return list;
         }
         return new ArrayList<String>();

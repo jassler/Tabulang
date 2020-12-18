@@ -1,26 +1,31 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class VerticalTupleNode extends Node{
-    private TupleNode tupleNode;
+public class VerticalTupleNode extends TermNode{
+    private TermNode node;
 
-    public VerticalTupleNode(TupleNode tupleNode) {
-        super();
-        this.tupleNode = tupleNode;
+    public VerticalTupleNode(TermNode tupleNode) {
+        this.node = tupleNode;
     }
 
-    public TupleNode getTupleNode() {
-        return tupleNode;
+    public TermNode getTupleNode() {
+        return node;
     }
 
-    public void setTupleNode(TupleNode tupleNode) {
-        this.tupleNode = tupleNode;
+    public void setTupleNode(TermNode tupleNode) {
+        this.node = tupleNode;
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        tupleNode.getTuple().setHorizontal(false);
-        return tupleNode.evaluateNode(interpretation);
+        Object tuple = node.evaluateNode(interpretation);
+        if(tuple instanceof Tuple){
+            ((Tuple<?>) tuple).setHorizontal(false);
+            return tuple;
+        } else {
+            throw new IllegalArgumentException("Expected Tuple but got " + tuple.getClass().getSimpleName());
+        }
     }
 }

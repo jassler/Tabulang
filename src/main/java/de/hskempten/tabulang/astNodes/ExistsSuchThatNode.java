@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.HashMap;
 
-public class ExistsSuchThatNode extends BinaryNode{
+public class ExistsSuchThatNode extends BinaryPredicateNode{
     private String variableName;
 
     public ExistsSuchThatNode(Node leftNode, Node rightNode, String variableName) {

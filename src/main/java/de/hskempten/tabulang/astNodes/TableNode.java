@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
-public class TableNode<E> extends Node{
+public class TableNode<E> extends TermNode{
     private Table<E> table;
 
     public TableNode(Table table) {
