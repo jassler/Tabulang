@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
@@ -12,20 +13,14 @@ public abstract class ArithmeticNode extends TermNode {
 
     public Object getStringOrNumericValue(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if (o instanceof String || o instanceof Float) {
+        if (o instanceof String || o instanceof InternalNumber) {
             return o;
         } else if (o instanceof Identifier) {
-            Interpretation found = interpretation.findIdentifier((Identifier) o);
-            if(found == null){
-                throw new VariableNotDeclaredException(((Identifier) o).getIdentifierName());
-            }
-            Object value = found.getEnvironment().get(((Identifier) o).getIdentifierName());
-            if (value == null) {
-                throw new VariableNotInitializedException(((Identifier) o).getIdentifierName());
-            } else if ((value instanceof String) || (value instanceof Float)) {
-                return value;
+            o = getIdentifierValue((Identifier) o, interpretation);
+            if ((o instanceof String) || (o instanceof InternalNumber)) {
+                return o;
             } else {
-                throw new IllegalArgumentException("Expected String or Number but got: " + value.getClass());
+                throw new IllegalArgumentException("Expected String or Number but got: " + o.getClass());
             }
         } else {
             throw new IllegalArgumentException("Expected String, Number or Identifier but got: " + o.getClass());
@@ -37,42 +32,30 @@ public abstract class ArithmeticNode extends TermNode {
         if(o instanceof Table || o instanceof BigDecimal){
             return o;
         } else if(o instanceof Identifier){
-            Interpretation found = interpretation.findIdentifier((Identifier) o);
-            if(found == null){
-                throw new VariableNotDeclaredException(((Identifier) o).getIdentifierName());
-            }
-            Object value = found.getEnvironment().get(((Identifier) o).getIdentifierName());
-            if(value == null){
-                throw new VariableNotInitializedException(((Identifier) o).getIdentifierName());
-            } else if(value instanceof Table || value instanceof BigDecimal){
-                return value;
+            o = getIdentifierValue((Identifier) o, interpretation);
+            if(o instanceof Table || o instanceof BigDecimal){
+                return o;
             } else {
-                throw new IllegalArgumentException("Expected Table or BigDecimal but got: " + value.getClass());
+                throw new IllegalArgumentException("Expected Table or BigDecimal but got: " + o.getClass());
             }
         } else {
             throw new IllegalArgumentException("Expected Table, BigDecimal or Identifier but got: " + o.getClass());
         }
     }
 
-    public BigDecimal getNumericValue(Node node, Interpretation interpretation){
+    public InternalNumber getNumericValue(Node node, Interpretation interpretation){
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof BigDecimal){
-            return (BigDecimal) o;
+        if(o instanceof InternalNumber){
+            return (InternalNumber) o;
         } else if(o instanceof Identifier){
-            Interpretation found = interpretation.findIdentifier((Identifier) o);
-            if(found == null){
-                throw new VariableNotDeclaredException(((Identifier) o).getIdentifierName());
-            }
-            Object value = found.getEnvironment().get(((Identifier) o).getIdentifierName());
-            if(value == null){
-                throw new VariableNotInitializedException(((Identifier) o).getIdentifierName());
-            } else if(value instanceof BigDecimal){
-                return (BigDecimal) value;
+            o = getIdentifierValue((Identifier) o, interpretation);
+            if(o instanceof InternalNumber){
+                return (InternalNumber) o;
             } else {
-                throw new IllegalArgumentException("Expected BigDecimal but got: " + value.getClass());
+                throw new IllegalArgumentException("Expected Number but got: " + o.getClass());
             }
         } else {
-            throw new IllegalArgumentException("Expected BigDecimal or Identifier but got: " + o.getClass());
+            throw new IllegalArgumentException("Expected Number or Identifier but got: " + o.getClass());
         }
     }
 

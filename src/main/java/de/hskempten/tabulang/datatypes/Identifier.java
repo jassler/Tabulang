@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.datatypes;
 
+import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
+import de.hskempten.tabulang.interpretTest.Interpretation;
+
 public class Identifier {
     private String identifierName;
 

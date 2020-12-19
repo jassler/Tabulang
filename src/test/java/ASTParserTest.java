@@ -11,6 +11,7 @@ import de.hskempten.tabulang.tokenizer.Lexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,9 +20,9 @@ public class ASTParserTest {
     private Lexer l;
     private TabulangParser parser;
 
-    private final NumberNode number1 = new NumberNode(1);
-    private final NumberNode number2 = new NumberNode(2);
-    private final NumberNode number3 = new NumberNode(3);
+    private final NumberNode number1 = new NumberNode(new BigInteger("1"), new BigInteger("1"));
+    private final NumberNode number2 = new NumberNode(new BigInteger("2"), new BigInteger("1"));
+    private final NumberNode number3 = new NumberNode(new BigInteger("3"), new BigInteger("1"));
 
     @BeforeEach
     void setUp() {

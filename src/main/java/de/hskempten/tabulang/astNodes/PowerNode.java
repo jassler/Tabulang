@@ -12,6 +12,7 @@ public class PowerNode extends BinaryArithmeticNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return getNumericValue(getLeftNode(), interpretation).pow((getNumericValue(getRightNode(), interpretation)).intValue());
+        return "Pow Operation not yet implemented";
+        //return getNumericValue(getLeftNode(), interpretation).pow((getNumericValue(getRightNode(), interpretation)).intValue());
     }
 }

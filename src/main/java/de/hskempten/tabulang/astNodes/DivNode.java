@@ -12,6 +12,7 @@ public class DivNode extends BinaryArithmeticNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return getNumericValue(getLeftNode(), interpretation).divideToIntegralValue(getNumericValue(getRightNode(), interpretation));
+        return "Div Operation not yet implemented";
+        //return getNumericValue(getLeftNode(), interpretation).divideToIntegralValue(getNumericValue(getRightNode(), interpretation));
     }
 }

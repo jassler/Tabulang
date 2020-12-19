@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -15,6 +16,9 @@ public class AssignmentNode extends BinaryStatementNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
+        if(right instanceof InternalNumber){
+            right = ((InternalNumber) right).getFloatValue();
+        }
         if(right instanceof Identifier){
             Interpretation found = interpretation.findIdentifier((Identifier) right);
             if(found == null){

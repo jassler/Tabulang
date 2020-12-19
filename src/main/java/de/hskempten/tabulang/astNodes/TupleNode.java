@@ -1,6 +1,9 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
@@ -32,8 +35,15 @@ public class TupleNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         ArrayList<Object> tupleElements = new ArrayList<>();
+        Object o;
         for(int j = 0; j < tList.size(); j++){
-            tupleElements.add(tList.get(j).evaluateNode(interpretation));
+            o = tList.get(j).evaluateNode(interpretation);
+            if(o instanceof Identifier){
+                o = ((Identifier) o).getIdentifierName();
+            } else if(o instanceof InternalNumber){
+                o = ((InternalNumber) o).getFloatValue();
+            }
+            tupleElements.add(o);
         }
         Tuple tuple = new Tuple(tupleElements);
         return tuple;

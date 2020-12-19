@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class AddNode extends BinaryArithmeticNode{
         if((left instanceof String) || (right instanceof String)){
             return left.toString() + right.toString();
         } else {
-            return (Float) left + (Float) right;
+            return ((InternalNumber) left).add((InternalNumber) right);
         }
     }
 
