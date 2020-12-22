@@ -1,9 +1,12 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+
+import java.math.BigInteger;
 
 public class CountVerticalNode extends TermNode{
     private Node node;
@@ -23,13 +26,10 @@ public class CountVerticalNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Identifier){
-            o = getIdentifierValue((Identifier) o, interpretation);
-        }
         if(o instanceof Table){
-            return ((Table<?>) o).getRows().size();
+            return new InternalNumber(new BigInteger(Integer.toString(((Table<?>) o).getRows().size())), new BigInteger("1"));
         } else {
-            return 1;
+            return new InternalNumber(new BigInteger("1"), new BigInteger("1"));
         }
     }
 }

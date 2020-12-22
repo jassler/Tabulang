@@ -14,4 +14,9 @@ public class MultiplyNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         return getNumericValue(getLeftNode(), interpretation).multiply(getNumericValue(getRightNode(), interpretation));
     }
+
+    @Override
+    public String toString() {
+        return "MultiplyNode{} " + super.toString();
+    }
 }

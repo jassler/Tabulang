@@ -2,6 +2,8 @@ package de.hskempten.tabulang.astNodes.PlaceholderNodes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.astNodes.StatementNode;
+import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
@@ -9,6 +11,7 @@ import de.hskempten.tabulang.items.ast.nodes.IdentifierAST;
 
 import java.util.ArrayList;
 
+//function f(x1,x2) {s1,....,si}
 public class ProceduralFBodyNodeTest extends StatementNode {
     private IdentifierNode identifier;
     private ArrayList<IdentifierNode> identifierList;
@@ -46,6 +49,9 @@ public class ProceduralFBodyNodeTest extends StatementNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return null;
+        String o = identifier.getIdentifier();
+            InternalFunction newFunc = new InternalFunction(identifierList, statements);
+            interpretation.getEnvironment().put(o, newFunc);
+            return newFunc;
     }
 }

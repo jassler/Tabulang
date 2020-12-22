@@ -22,7 +22,13 @@ public class IdentifierNode extends TermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-            return new Identifier(identifier);
+        Interpretation found = interpretation.findIdentifierTest(identifier);
+        if(found == null){
+            //TODO Fehlermeldung oder Identifier -> Null setzen                                                                                                  111111                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ee
+            throw new VariableNotDeclaredException(identifier);
+        } else {
+            return found.getEnvironment().get(identifier);
+        }
     }
 
     @Override

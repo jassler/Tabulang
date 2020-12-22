@@ -46,6 +46,6 @@ public class NumberNode extends TermNode{
         return "NumberNode{" +
                 "numerator=" + numerator +
                 ", denominator=" + denominator +
-                "} " + super.toString();
+                "} ";
     }
 }

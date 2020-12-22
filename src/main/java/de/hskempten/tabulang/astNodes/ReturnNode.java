@@ -38,4 +38,11 @@ public class ReturnNode extends StatementNode{
         //interpretation.getParent().getEnvironment().put("return", o);
         return o;
     }
+
+    @Override
+    public String toString() {
+        return "ReturnNode{" +
+                "node=" + node +
+                "}";
+    }
 }

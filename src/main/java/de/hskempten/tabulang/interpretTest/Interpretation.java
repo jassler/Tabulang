@@ -50,4 +50,26 @@ public class Interpretation {
             return parent.findIdentifier(identifier);
         }
     }
+
+    public Interpretation findIdentifierTest2(String identifier){
+        if(parent == null){
+            if(environment.containsKey(identifier)) {
+                return this;
+            } else {
+                return null;
+            }
+        } else {
+            return parent.findIdentifierTest2(identifier);
+        }
+    }
+
+    public Interpretation findIdentifierTest(String identifier){
+        if(environment.containsKey(identifier)){
+            return this;
+        } else if(parent == null){
+            return null;
+        } else {
+            return parent.findIdentifierTest(identifier);
+        }
+    }
 }

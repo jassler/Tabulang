@@ -30,6 +30,6 @@ public abstract class BinaryArithmeticNode extends ArithmeticNode{
         return "BinaryArithmeticNode{" +
                 "leftNode=" + leftNode +
                 ", rightNode=" + rightNode +
-                "} " + super.toString();
+                "} ";
     }
 }

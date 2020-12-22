@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.TypeMismatchException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -16,8 +17,8 @@ public class SubtractNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getTableOrNumericValue(getLeftNode(), interpretation);
         Object right = getTableOrNumericValue(getRightNode(), interpretation);
-        if(left instanceof BigDecimal && right instanceof BigDecimal){
-            return ((BigDecimal) left).subtract((BigDecimal) right);
+        if(left instanceof InternalNumber && right instanceof InternalNumber){
+            return ((InternalNumber) left).subtract((InternalNumber) right);
         } else if(left instanceof Table && right instanceof Table){
             return ((Table) left).difference((Table) right);
         } else {

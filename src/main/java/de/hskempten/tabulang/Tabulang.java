@@ -131,12 +131,16 @@ public class Tabulang {
 
         if (true) {
             l.setText("\n" +
-                    "z := [1, '3', 5, 6*8, '2' + 6];\n" +
-                    "b := [5];\n" +
-                    "c := 3.01924 / 100.0000000000000001;\n" +
-                    "a := 'hi' + 'hi';\n" +
-                    "d := count z;\n" +
-                    "e := 6 > 5;\n");
+                    "z := [1, '3', 5, 6*8, 'b' + 6];\n" +
+                    "a := 4;\n" +
+                    "c := 6;\n" +
+                    "b := 3;\n" +
+                    "d := 9;\n" +
+                   // "var a := 'hi' + 'hi';\n" +
+                    "d := count vertical z;\n" +
+                    "function hi(a, b) {return a / b;}}\n" +
+                    "e := hi(d, a);" +
+                    "\n");
         }
         Interpretation interpretation = new Interpretation();
 
@@ -144,12 +148,12 @@ public class Tabulang {
         l.reset();
         ProgramItem prg = parser.parseN();
         System.out.println("NumberAST of statements: " + prg.getMyStatements().size());
-
+        //System.out.println("Evaluating \"" + l.getText());
         ProgramAST prgAST = ASTProgramParser.instance.parse(prg);
         prgAST.executeProgram(interpretation);
 
-        System.out.println("Evaluated \"" + l.getText() + "\" and got:");
-        System.out.println(".......................");
+        //System.out.println("Evaluated \"" + l.getText() + "\" and got:");
+        //System.out.println(".......................");
         System.out.println("Outer Environment: ");
         Iterator it = interpretation.getEnvironment().entrySet().iterator();
         while (it.hasNext()) {

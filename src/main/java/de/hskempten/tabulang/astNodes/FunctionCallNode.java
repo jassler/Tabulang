@@ -38,43 +38,35 @@ public class FunctionCallNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(!(o instanceof Identifier)){
+        if(!(o instanceof InternalFunction)){
             throw new IllegalArgumentException("Expected (InternalFunction)Identifier but got: " + o.getClass().getSimpleName());
         } else {
-            Interpretation found = interpretation.findIdentifier((Identifier) o);
-            if(found == null){
-                throw new VariableNotDeclaredException(((Identifier) o).getIdentifierName());
-            }
-            Object value = found.getEnvironment().get(((Identifier) o).getIdentifierName());
-            //System.out.println(value + " " + value.getClass().getSimpleName());
-            if(!(value instanceof InternalFunction)){
-                throw new IllegalArgumentException("Expected Identifier to be a InternalFunction but got: " + value.getClass().getSimpleName());
-            } else {
-                HashMap<String, Object> nestedHashmap = new HashMap<>();
-                Interpretation nestedInterpretation = new Interpretation(interpretation, nestedHashmap);
-                if(((InternalFunction) value).getParameters().size() != parameters.size()){
-                    throw new IllegalArgumentException("Expected " + ((InternalFunction) value).getParameters().size() + " parameter(s) but got " + parameters.size());
+                Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
+                if(((InternalFunction) o).getParameters().size() != parameters.size()){
+                    throw new IllegalArgumentException("Expected " + ((InternalFunction) o).getParameters().size() + " parameter(s) but got " + parameters.size());
                 } else {
-                    for(int i = 0; i < ((InternalFunction) value).getParameters().size(); i++){
-                        nestedInterpretation.getEnvironment().put((((InternalFunction) value).getParameters().get(i)).getIdentifier(), parameters.get(i).evaluateNode(nestedInterpretation));
+                    for(int i = 0; i < ((InternalFunction) o).getParameters().size(); i++){
+                        nestedInterpretation.getEnvironment().put((((InternalFunction) o).getParameters().get(i)).getIdentifier(), parameters.get(i).evaluateNode(interpretation));
                     }
-                    for(Object statement : ((InternalFunction) value).getStatements()){
+                    for(Object statement : ((InternalFunction) o).getStatements()){
                         if(nestedInterpretation.getEnvironment().containsKey("return")) {
                             break;
                         }
                             ((Node) statement).evaluateNode(nestedInterpretation);
                     }
+                    System.out.println("Function Call Nested Interpretation: ");
                     Iterator it = nestedInterpretation.getEnvironment().entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry)it.next();
                         System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
                     }
+                    System.out.println("");
                 }
                 if(nestedInterpretation.getEnvironment().containsKey("return")){
                     return nestedInterpretation.getEnvironment().get("return");
                 }
                 return null;
-            }
+
         }
     }
 }

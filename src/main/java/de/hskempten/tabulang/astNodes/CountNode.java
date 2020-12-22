@@ -1,9 +1,12 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+
+import java.math.BigInteger;
 
 public class CountNode extends TermNode{
     private Node node;
@@ -27,9 +30,9 @@ public class CountNode extends TermNode{
             o = getIdentifierValue((Identifier) o, interpretation);
         }
         if(o instanceof Tuple){
-            return ((Tuple) o).size();
+            return  new InternalNumber(new BigInteger(Integer.toString(((Tuple) o).size())), new BigInteger("1"));
         } else {
-            return 1;
+            return new InternalNumber(new BigInteger("1"), new BigInteger("1"));
         }
     }
 }

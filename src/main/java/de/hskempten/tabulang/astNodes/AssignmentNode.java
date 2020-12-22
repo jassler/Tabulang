@@ -14,29 +14,29 @@ public class AssignmentNode extends BinaryStatementNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        if(right instanceof InternalNumber){
-            right = ((InternalNumber) right).getFloatValue();
-        }
-        if(right instanceof Identifier){
-            Interpretation found = interpretation.findIdentifier((Identifier) right);
-            if(found == null){
-                throw new VariableNotInitializedException((((Identifier) right).getIdentifierName()));
+        if(getLeftNode() instanceof IdentifierNode) {
+            String left = ((IdentifierNode) getLeftNode()).getIdentifier();
+            Object right = getRightNode().evaluateNode(interpretation);
+            if (right instanceof InternalNumber) {
+                right = ((InternalNumber) right);
             }
-            right = found.getEnvironment().get(((Identifier) right).getIdentifierName());
-        }
-        if(left instanceof Identifier){
-            Interpretation found = interpretation.findIdentifier((Identifier) left);
-            if(found == null){
-                interpretation.getEnvironment().put(((Identifier) left).getIdentifierName(), right);
+            if (right instanceof Identifier) {
+                Interpretation found = interpretation.findIdentifier((Identifier) right);
+                if (found == null) {
+                    throw new VariableNotInitializedException((((Identifier) right).getIdentifierName()));
+                }
+                right = found.getEnvironment().get(((Identifier) right).getIdentifierName());
+            }
+            Interpretation foundIdentifier = interpretation.findIdentifierTest(left);
+            if(foundIdentifier == null){
+                interpretation.getEnvironment().put(left, right);
             } else {
-                found.getEnvironment().put(((Identifier) left).getIdentifierName(), right);
+                foundIdentifier.getEnvironment().put(left, right);
             }
+            return right;
         } else {
-            throw new IllegalArgumentException("Expected Identifier but got: " + left.getClass().getSimpleName());
+            throw new IllegalArgumentException("Left side no identifier");
         }
-        return right;
     }
 
     @Override

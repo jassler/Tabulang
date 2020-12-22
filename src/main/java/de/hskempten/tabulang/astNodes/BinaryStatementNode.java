@@ -24,4 +24,12 @@ public abstract class BinaryStatementNode extends StatementNode{
     public void setRightNode(Node rightNode) {
         this.rightNode = rightNode;
     }
+
+    @Override
+    public String toString() {
+        return "BinaryStatementNode{" +
+                "leftNode=" + leftNode +
+                ", rightNode=" + rightNode +
+                "} ";
+    }
 }
