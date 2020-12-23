@@ -11,6 +11,10 @@ public class InternalNumber {
         this.denominator = denominator;
     }
 
+    public InternalNumber(float value){
+        this.setFloatValue(value);
+    }
+
     public BigInteger getNumerator() {
         return numerator;
     }
@@ -103,6 +107,30 @@ public class InternalNumber {
                 new InternalNumber(other.numerator.compareTo(BigInteger.ZERO) < 0 ? other.getDenominator().negate() : other.getDenominator(),
                         other.numerator.abs()
                 ));
+    }
+
+    public InternalNumber diff(InternalNumber other){
+        BigInteger kgv = kgv(denominator, other.getDenominator());
+        BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).divideAndRemainder(other.numerator.multiply((kgv.divide(other.getDenominator()))))[0];
+        BigInteger newDenominator = kgv;
+
+        BigInteger divider = euclid(newNumerator, newDenominator);
+        newNumerator = newNumerator.divide(divider);
+        newDenominator = newDenominator.divide(divider);
+
+        return new InternalNumber(newNumerator, newDenominator);
+    }
+
+    public InternalNumber mod(InternalNumber other){
+        BigInteger kgv = kgv(denominator, other.getDenominator());
+        BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).divideAndRemainder(other.numerator.multiply((kgv.divide(other.getDenominator()))))[1];
+        BigInteger newDenominator = kgv;
+
+        BigInteger divider = euclid(newNumerator, newDenominator);
+        newNumerator = newNumerator.divide(divider);
+        newDenominator = newDenominator.divide(divider);
+
+        return new InternalNumber(newNumerator, newDenominator);
     }
 
     @Override
