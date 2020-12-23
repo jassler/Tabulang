@@ -31,7 +31,6 @@ public class ProceduralFType implements Parser {
                     case "{" -> {
                         FuncBodyItem myFuncBody = FuncBodyType.instance.parse(l);
                         proceduralF = new ProceduralFItem(myIdentifier, myVList, myFuncBody);
-                        l.getNextTokenAndExpect(TokenType.BRACKET);
                     }
                     default -> throw new ParseTimeException(l, "Illegal bracket: Expected '{' but got " + l.lookahead().getContent());
                 }

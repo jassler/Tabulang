@@ -185,7 +185,7 @@ public class ASTTermParser {
                 return item;
             }
             case TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
-               TermNode item;
+                TermNode item;
                 TermNode term = new ASTTermParser().parse(((DirectionalTermItem) actItem).getMyTerm());
                 switch (actItem.getLanguageItemType()) {
                     case TERM_DIRECTIONAL_H -> item = new HorizontalTupleNode(term);
@@ -307,24 +307,9 @@ public class ASTTermParser {
                     }
                     case FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_FUNCBODY -> {
                         ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
-                        switch (fundef.getMyFuncBody().getLanguageItemType()) {
-                            // TODO change FuncBodyType and FuncBodyItem to one case
-                            case FUNCBODY_STATEMENTS -> {
-                                for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
-                                    statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
-                                }
-                                return new FunctionDeclarationNode(identifiers, statements);
-                            }
-                            case FUNCBODY_RETURNS -> {
-                                for (int i = 0; i < fundef.getMyFuncBody().getMyReturnStmnts().size(); i++) {
-                                    statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnts().get(i)));
-                                }
-                                return new FunctionDeclarationNode(identifiers, statements);
-                            }
-                            case FUNCBODY_RETURN -> {
-                                statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyReturnStmnt()));
-                                return new FunctionDeclarationNode(identifiers, statements);
-                            }
+
+                        for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
+                            statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
                         }
                         return new FunctionDeclarationNode(identifiers, statements);
                     }

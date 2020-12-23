@@ -4,11 +4,7 @@ import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupFunctionCallNodeTest;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupNodeTest;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFBodyNodeTest;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFTermNodeTest;
 import de.hskempten.tabulang.items.*;
-import de.hskempten.tabulang.items.ast.interfaces.PredAST;
-import de.hskempten.tabulang.items.ast.interfaces.TermAST;
-import de.hskempten.tabulang.items.ast.nodes.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -97,7 +93,7 @@ public class ASTStatementParser {
                 IdentifierNode identifier = new IdentifierNode(((VarDefItem) actItem).getMyIdentifier().getMyString());
                 TermNode term = new ASTTermParser().parse(((VarDefItem) actItem).getMyTerm());
                 boolean isNewAssignment = ((VarDefItem) actItem).isNewAssignment();
-                if(isNewAssignment){
+                if (isNewAssignment) {
                     return new NewAssignmentNode(identifier, term);
                 } else {
                     return new AssignmentNode(identifier, term);
@@ -115,40 +111,21 @@ public class ASTStatementParser {
                         }
                     }
                 }
-
+                ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
                 switch (actItem.getLanguageItemType()) {
                     case PROCEDURALF_TERM -> {
-                        TermNode term = new ASTTermParser().parse(((ProceduralFItem) actItem).getMyTerm());
-                        return new ProceduralFTermNodeTest(identifier, identifierList, term);
+                        statements.add(new ASTStatementParser().parse(new ReturnStmntItem(((ProceduralFItem) actItem).getMyTerm())));
                     }
                     case PROCEDURALF_FUNCBODY -> {
                         FuncBodyItem bodyStatements = ((ProceduralFItem) actItem).getMyFuncBody();
-                        ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
-                        // TODO refactor funcBodyItem
-                        switch (bodyStatements.getLanguageItemType()) {
-                            case FUNCBODY_RETURN -> {
-                                statements.add(new ASTStatementParser().parse(bodyStatements.getMyReturnStmnt()));
-                                return new ProceduralFBodyNodeTest(identifier, identifierList, statements);
-                            }
-                            case FUNCBODY_RETURNS -> {
-                                ArrayList<ReturnStmntItem> returnStatements = bodyStatements.getMyReturnStmnts();
-                                for (int i = 0; i < returnStatements.size(); i++) {
-                                    statements.add(new ASTStatementParser().parse(returnStatements.get(i)));
-                                }
-                                return new ProceduralFBodyNodeTest(identifier, identifierList, statements);
-                            }
-                            case FUNCBODY_STATEMENTS -> {
-                                LinkedList<StatementItem> myStatements = bodyStatements.getMyStatements();
-                                for (int i = 0; i < myStatements.size(); i++) {
-                                    statements.add(new ASTStatementParser().parse(myStatements.get(i)));
-                                }
-                                return new ProceduralFBodyNodeTest(identifier, identifierList, statements);
-                            }
-                            default -> throw new IllegalStateException("Unexpected value: " + bodyStatements.getLanguageItemType());
+                        LinkedList<StatementAnyItem> myStatements = bodyStatements.getMyStatements();
+                        for (StatementAnyItem myStatement : myStatements) {
+                            statements.add(new ASTStatementParser().parse(myStatement));
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
+                return new ProceduralFBodyNodeTest(identifier, identifierList, statements);
             }
             case ANYSTATEMENT_RETURN -> {
                 TermNode term = new ASTTermParser().parse(((ReturnStmntItem) actItem).getMyTerm());

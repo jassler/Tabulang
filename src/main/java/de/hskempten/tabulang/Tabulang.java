@@ -136,9 +136,9 @@ public class Tabulang {
                     "c := 6;\n" +
                     "b := 3;\n" +
                     "d := 9;\n" +
-                   // "var a := 'hi' + 'hi';\n" +
+                    // "var a := 'hi' + 'hi';\n" +
                     "d := count vertical z;\n" +
-                    "function hi(a, b) {return a / b;}}\n" +
+                    "function hi(a, b) {b := b + 1; return a / b;}\n" +
                     "e := hi(d, a);" +
                     "\n");
         }
@@ -157,7 +157,7 @@ public class Tabulang {
         System.out.println("Outer Environment: ");
         Iterator it = interpretation.getEnvironment().entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry pair = (Map.Entry) it.next();
             System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
