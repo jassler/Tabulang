@@ -8,7 +8,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class AssignmentNode extends BinaryStatementNode {
 
-    public AssignmentNode(Node leftNode, Node rightNode) {
+    public AssignmentNode(IdentifierNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 
@@ -17,9 +17,6 @@ public class AssignmentNode extends BinaryStatementNode {
         if(getLeftNode() instanceof IdentifierNode) {
             String left = ((IdentifierNode) getLeftNode()).getIdentifier();
             Object right = getRightNode().evaluateNode(interpretation);
-            if (right instanceof InternalNumber) {
-                right = ((InternalNumber) right);
-            }
             if (right instanceof Identifier) {
                 Interpretation found = interpretation.findIdentifier((Identifier) right);
                 if (found == null) {

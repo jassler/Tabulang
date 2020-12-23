@@ -22,6 +22,6 @@ public class PredTermNode extends PredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return "PredTermNode needs to be implemented (if its even needed??)";
+        return "PredTermNode needs to be implemented";
     }
 }

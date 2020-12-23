@@ -99,10 +99,6 @@ public class InternalNumber {
     }
 
     public InternalNumber divide(InternalNumber other) {
-
-        BigInteger newNumerator = other.numerator.compareTo(BigInteger.ZERO) < 0 ? other.getDenominator().negate() : other.getDenominator();
-        BigInteger newDenominator = other.numerator.abs();
-
         return multiply(
                 new InternalNumber(other.numerator.compareTo(BigInteger.ZERO) < 0 ? other.getDenominator().negate() : other.getDenominator(),
                         other.numerator.abs()

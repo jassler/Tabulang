@@ -226,11 +226,11 @@ public class Main {
 
         AddNode addNode3 = new AddNode(v1, n1);
         NewAssignmentNode assignmentNode3 = new NewAssignmentNode(v2, addNode3);
-        AssignmentNode assignmentNode4 = new AssignmentNode(v1, assignmentNode3);
+        //AssignmentNode assignmentNode4 = new AssignmentNode(v1, assignmentNode3);
         //assignmentNode3.evaluateNode(interpretation);
         ArrayList<Object> blockArray = new ArrayList<>();
         blockArray.add(assignmentNode3);
-        blockArray.add(assignmentNode4);
+        //blockArray.add(assignmentNode4);
         BlockNode blockNode1 = new BlockNode(blockArray);
         //blockNode1.evaluateNode(interpretation);
 

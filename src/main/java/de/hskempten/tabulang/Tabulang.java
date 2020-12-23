@@ -131,14 +131,15 @@ public class Tabulang {
 
         if (true) {
             l.setText("\n" +
-                    "z := [1, '3', 5, 6*8, 'b' + 6];\n" +
+                    "z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
                     "a := 4;\n" +
                     "c := 6;\n" +
                     "b := 3;\n" +
                     "d := 9;\n" +
-                    // "var a := 'hi' + 'hi';\n" +
-                    "d := count vertical z;\n" +
-                    "function hi(a, b) {b := b + 1; return a / b;}\n" +
+                   // "var a := 'hi' + 'hi';\n" +
+                    //"if(true) d := 10;\n" +
+                    "function f1(x) return x;\n" +
+                    "function hi(a, b) {a := 5;}\n" +
                     "e := hi(d, a);" +
                     "\n");
         }
