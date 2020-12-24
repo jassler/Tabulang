@@ -7,7 +7,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class GreaterThanNode extends BinaryPredicateNode {
-    public GreaterThanNode(Node leftNode, Node rightNode) {
+    public GreaterThanNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

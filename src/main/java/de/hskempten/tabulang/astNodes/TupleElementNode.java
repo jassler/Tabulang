@@ -9,7 +9,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 public class TupleElementNode extends BinaryTermNode{
 
 
-    public TupleElementNode(Node leftNode, Node rightNode) {
+    public TupleElementNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

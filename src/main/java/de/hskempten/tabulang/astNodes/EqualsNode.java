@@ -7,7 +7,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class EqualsNode extends BinaryPredicateNode {
-    public EqualsNode(Node leftNode, Node rightNode) {
+    public EqualsNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

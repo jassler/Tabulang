@@ -9,17 +9,17 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigInteger;
 
 public class CountVerticalNode extends TermNode{
-    private Node node;
+    private TermNode node;
 
-    public CountVerticalNode(Node node) {
+    public CountVerticalNode(TermNode node) {
         this.node = node;
     }
 
-    public Node getNode() {
+    public TermNode getNode() {
         return node;
     }
 
-    public void setNode(Node node) {
+    public void setNode(TermNode node) {
         this.node = node;
     }
 

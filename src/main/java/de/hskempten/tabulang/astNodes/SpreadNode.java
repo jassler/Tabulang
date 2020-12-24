@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class SpreadNode extends BinaryTermNode{
-    public SpreadNode(Node leftNode, Node rightNode) {
+    public SpreadNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

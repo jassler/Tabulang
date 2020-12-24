@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class NotEqualNode extends BinaryPredicateNode {
-    public NotEqualNode(Node leftNode, Node rightNode) {
+    public NotEqualNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 

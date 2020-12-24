@@ -5,7 +5,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.math.BigDecimal;
 
 public class LessThanNode extends BinaryPredicateNode {
-    public LessThanNode(Node leftNode, Node rightNode) {
+    public LessThanNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 
