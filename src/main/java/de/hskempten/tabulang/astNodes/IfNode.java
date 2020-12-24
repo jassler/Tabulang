@@ -14,9 +14,7 @@ public class IfNode extends BinaryStatementNode{
         Object left = getLeftNode().evaluateNode(interpretation);
         if(left instanceof Boolean){
             if((Boolean) left) {
-                HashMap<String, Object> nestedHashmap = new HashMap<>(interpretation.getEnvironment());
-                Interpretation nestedInterpretation = new Interpretation(interpretation, nestedHashmap);
-                return getRightNode().evaluateNode(nestedInterpretation);
+                return getRightNode().evaluateNode(interpretation);
             } else {
                 return false;
             }

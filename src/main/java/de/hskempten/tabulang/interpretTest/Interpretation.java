@@ -41,6 +41,7 @@ public class Interpretation {
         this.environment = environment;
     }
 
+    //TODO remove if not needed
     public Interpretation findIdentifier(Identifier identifier){
         if(environment.containsKey(identifier.getIdentifierName())){
             return this;
@@ -63,13 +64,13 @@ public class Interpretation {
         }
     }
 
-    public Interpretation findIdentifierTest(String identifier){
+    public Interpretation findIdentifier(String identifier){
         if(environment.containsKey(identifier)){
             return this;
         } else if(parent == null){
             return null;
         } else {
-            return parent.findIdentifierTest(identifier);
+            return parent.findIdentifier(identifier);
         }
     }
 }

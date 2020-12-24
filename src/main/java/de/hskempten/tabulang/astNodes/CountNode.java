@@ -26,9 +26,6 @@ public class CountNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Identifier){
-            o = getIdentifierValue((Identifier) o, interpretation);
-        }
         if(o instanceof Tuple){
             return  new InternalNumber(new BigInteger(Integer.toString(((Tuple) o).size())), new BigInteger("1"));
         } else {

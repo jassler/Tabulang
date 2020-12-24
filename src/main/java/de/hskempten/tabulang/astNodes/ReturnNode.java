@@ -23,19 +23,7 @@ public class ReturnNode extends StatementNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Identifier){
-           Interpretation found = interpretation.findIdentifier((Identifier) o);
-           if(found == null){
-               throw new VariableNotDeclaredException(((Identifier) o).getIdentifierName());
-           } else {
-               o = found.getEnvironment().get(((Identifier) o).getIdentifierName());
-           }
-        }
-        //TODO Zeile 36 um eine Abbruchbedingung zu haben falls nach einem Return Statement weitere Statements kommen würden
-        //siehe FunctionCallNode Zeile 63
-        //EDIT 13.12: getParent in Zeile 38 wshl nichtmehr nötig
         interpretation.getEnvironment().put("return", o);
-        //interpretation.getParent().getEnvironment().put("return", o);
         return o;
     }
 

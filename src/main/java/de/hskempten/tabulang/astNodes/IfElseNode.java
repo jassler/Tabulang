@@ -12,13 +12,11 @@ public class IfElseNode extends TernaryStatementNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeft().evaluateNode(interpretation);
-        HashMap<String, Object> nestedHashmap = new HashMap<>(interpretation.getEnvironment());
-        Interpretation nestedInterpretation = new Interpretation(interpretation, nestedHashmap);
         if (left instanceof Boolean) {
             if ((Boolean) left) {
-                return getMiddle().evaluateNode(nestedInterpretation);
+                return getMiddle().evaluateNode(interpretation);
             } else {
-                return getRight().evaluateNode(nestedInterpretation);
+                return getRight().evaluateNode(interpretation);
             }
         } else {
             throw new IllegalArgumentException("Expected Boolean but got: " + left.getClass().getSimpleName());

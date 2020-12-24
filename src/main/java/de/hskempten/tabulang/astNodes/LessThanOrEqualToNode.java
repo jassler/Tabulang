@@ -12,7 +12,8 @@ public class LessThanOrEqualToNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        BigDecimal valueLeft = getNumericValue(getLeftNode(), interpretation);
-        BigDecimal valueRight = getNumericValue(getRightNode(), interpretation);
-        return valueLeft.compareTo(valueRight) <= 0;    }
+        //TODO remove placeholder return once InternalNumber has compareMethod
+        return getNumericValue(getLeftNode(), interpretation).getFloatValue() <= getNumericValue(getRightNode(), interpretation).getFloatValue();
+        //return valueLeft.compareTo(valueRight) <= 0;
+    }
 }

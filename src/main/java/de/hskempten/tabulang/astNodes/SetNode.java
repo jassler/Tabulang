@@ -31,9 +31,6 @@ public class SetNode extends StatementNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = getNode().evaluateNode(interpretation);
-        if(o instanceof Identifier){
-            o = ((Identifier) o).getIdentifierName();
-        }
         interpretation.getEnvironment().put("mapValue" + mapVal, o);
         return o;
     }

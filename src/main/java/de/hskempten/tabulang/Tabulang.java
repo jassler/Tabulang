@@ -133,14 +133,15 @@ public class Tabulang {
             l.setText("\n" +
                     "z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
                     "a := 4;\n" +
-                    "c := 6;\n" +
-                    "b := 3;\n" +
+                    "b := 6;\n" +
+                    "c := 3;\n" +
                     "d := 9;\n" +
+                    //"spr := (1...3);\n" + Geht nicht
                    // "var a := 'hi' + 'hi';\n" +
-                    //"if(true) d := 10;\n" +
-                    "function f1(x) return x;\n" +
-                    "function hi(a, b) {a := 5;}\n" +
-                    "e := hi(d, a);" +
+                    "if(5 > 4) d := 10;\n" +
+                    //"function f1(x) return x;\n" +
+                    "function hi(a, b) {var c := 1; return a + b;}\n" +
+                    "e := hi(c, d);" +
                     "\n");
         }
         Interpretation interpretation = new Interpretation();
