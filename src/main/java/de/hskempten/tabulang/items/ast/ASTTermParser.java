@@ -1,7 +1,6 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.LoopNode;
 import de.hskempten.tabulang.items.*;
 
 import java.util.ArrayList;
@@ -253,7 +252,9 @@ public class ASTTermParser {
                         statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
                     }
                 }
-                return new LoopNode(identifier, term, statements, nestingLevel + 1);
+                //todo remove placeholder
+                return identifier; //Placeholder
+                //return new LoopNode(identifier, term, statements, nestingLevel + 1);
             }
             case MARK_WITHIF, MARK_WITHOUTIF -> {
                 MarkStmntItem mark = (MarkStmntItem) actItem;

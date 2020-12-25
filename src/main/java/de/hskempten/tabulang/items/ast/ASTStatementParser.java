@@ -3,6 +3,7 @@ package de.hskempten.tabulang.items.ast;
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupFunctionCallNodeTest;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupNodeTest;
+import de.hskempten.tabulang.astNodes.LoopNode;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFBodyNodeTest;
 import de.hskempten.tabulang.items.*;
 
@@ -146,9 +147,7 @@ public class ASTStatementParser {
                         }
                     }
                 }
-                //TODO remove once LoopNode heritage Line 171 works
-                return new ReturnNode(term);//Placeholder
-                //return new LoopNode(identifier, term, statements, nestingLevel + 1);
+                return new LoopNode(identifier, term, statements, nestingLevel + 1);
             }
             case ANYSTATEMENT_SET -> {
                 TermNode term = new ASTTermParser().parse(((SetStmntItem) actItem).getMyTerm());

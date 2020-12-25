@@ -231,7 +231,7 @@ public class Main {
         ArrayList<Object> blockArray = new ArrayList<>();
         blockArray.add(assignmentNode3);
         //blockArray.add(assignmentNode4);
-        BlockNode blockNode1 = new BlockNode(blockArray);
+        //BlockNode blockNode1 = new BlockNode(blockArray);
         //blockNode1.evaluateNode(interpretation);
 
         System.out.println(tupleElementNode1);

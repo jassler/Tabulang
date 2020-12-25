@@ -4,19 +4,19 @@ import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class SetNode extends StatementNode{
-    private Node node;
+    private TermNode node;
     private int mapVal;
 
-    public SetNode(Node node, int mapVal) {
+    public SetNode(TermNode node, int mapVal) {
         this.node = node;
         this.mapVal = mapVal;
     }
 
-    public Node getNode() {
+    public TermNode getNode() {
         return node;
     }
 
-    public void setNode(Node node) {
+    public void setNode(TermNode node) {
         this.node = node;
     }
 

@@ -131,17 +131,19 @@ public class Tabulang {
 
         if (true) {
             l.setText("\n" +
-                    "z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
-                    "a := 4;\n" +
-                    "b := 6;\n" +
+                    //"z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
+                    "y := [10,9,8];\n" +
+                    //"a := 4;\n" +
+                    //"b := 6;\n" +
                     "c := 3;\n" +
-                    "d := 9;\n" +
+                    //"d := 9;\n" +
                     //"spr := (1...3);\n" + Geht nicht
                    // "var a := 'hi' + 'hi';\n" +
-                    "if(5 > 4) d := 10;\n" +
+                    //"if(5 > 4) d := 10;\n" +
                     //"function f1(x) return x;\n" +
-                    "function hi(a, b) {var c := 1; return a + b;}\n" +
-                    "e := hi(c, d);" +
+                    //"function hi(a, b) {var c := 1; return a + b;}\n" +
+                    "for x in y {set x; c := c + 1;}\n" +
+                    //"e := hi(c, d);" +
                     "\n");
         }
         Interpretation interpretation = new Interpretation();
@@ -156,7 +158,7 @@ public class Tabulang {
 
         //System.out.println("Evaluated \"" + l.getText() + "\" and got:");
         //System.out.println(".......................");
-        System.out.println("Outer Environment: ");
+        System.out.println("Environment nach Programmende: ");
         Iterator it = interpretation.getEnvironment().entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
