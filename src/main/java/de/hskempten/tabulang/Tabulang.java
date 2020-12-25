@@ -136,14 +136,14 @@ public class Tabulang {
                     //"a := 4;\n" +
                     //"b := 6;\n" +
                     "c := 3;\n" +
-                    //"d := 9;\n" +
+                    "d := 9;\n" +
                     //"spr := (1...3);\n" + Geht nicht
                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 > 4) d := 10;\n" +
                     //"function f1(x) return x;\n" +
-                    //"function hi(a, b) {var c := 1; return a + b;}\n" +
-                    "for x in y {set x; c := c + 1;}\n" +
-                    //"e := hi(c, d);" +
+                    "function hi(a, b) { c := 1; return a + b;}\n" +
+                    //"for x in y {set x; c := c + 1;}\n" +
+                    "e := hi(c, d);" +
                     "\n");
         }
         Interpretation interpretation = new Interpretation();

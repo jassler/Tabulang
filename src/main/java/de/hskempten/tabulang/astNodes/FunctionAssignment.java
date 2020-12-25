@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.astNodes.PlaceholderNodes;
+package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.astNodes.StatementNode;
@@ -12,12 +12,12 @@ import de.hskempten.tabulang.items.ast.nodes.IdentifierAST;
 import java.util.ArrayList;
 
 //function f(x1,x2) {s1,....,si}
-public class ProceduralFBodyNodeTest extends StatementNode {
+public class FunctionAssignment extends StatementNode {
     private IdentifierNode identifier;
     private ArrayList<IdentifierNode> identifierList;
     private ArrayList<StatementNode> statements;
 
-    public ProceduralFBodyNodeTest(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<StatementNode> statements) {
+    public FunctionAssignment(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<StatementNode> statements) {
         this.setIdentifier(identifier);
         this.setIdentifierList(identifierList);
         this.setStatements(statements);

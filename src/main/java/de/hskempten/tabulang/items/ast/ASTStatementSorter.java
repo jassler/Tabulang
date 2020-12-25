@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFBodyNodeTest;
+import de.hskempten.tabulang.astNodes.FunctionAssignment;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFTermNodeTest;
 import de.hskempten.tabulang.items.ast.nodes.ProceduralFBodyAST;
 import de.hskempten.tabulang.items.ast.nodes.ProceduralFTermAST;
@@ -30,7 +30,7 @@ public class ASTStatementSorter {
         if (ProceduralFTermAST.class.equals(next.getClass())) {
             nextName = ((ProceduralFTermNodeTest) next).getIdentifier().getIdentifier();
         } else if (ProceduralFBodyAST.class.equals(next.getClass())) {
-            nextName = ((ProceduralFBodyNodeTest) next).getIdentifier().getIdentifier();
+            nextName = ((FunctionAssignment) next).getIdentifier().getIdentifier();
         } else return false;
 
 
@@ -38,8 +38,8 @@ public class ASTStatementSorter {
             if (ProceduralFTermAST.class.equals(actual.getClass())) {
                 return getFunCallMethodNames(((ProceduralFTermNodeTest) actual).getTerm()).contains(nextName);
             } else if (ProceduralFBodyAST.class.equals(actual.getClass())) {
-                for (int i = 0; i < ((ProceduralFBodyNodeTest) actual).getStatements().size(); i++) {
-                    if (getFunCallMethodNames(((ProceduralFBodyNodeTest) actual).getStatements().get(i)).contains(nextName))
+                for (int i = 0; i < ((FunctionAssignment) actual).getStatements().size(); i++) {
+                    if (getFunCallMethodNames(((FunctionAssignment) actual).getStatements().get(i)).contains(nextName))
                         return true;
                 }
                 return false;

@@ -4,7 +4,7 @@ import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupFunctionCallNodeTest;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupNodeTest;
 import de.hskempten.tabulang.astNodes.LoopNode;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.ProceduralFBodyNodeTest;
+import de.hskempten.tabulang.astNodes.FunctionAssignment;
 import de.hskempten.tabulang.items.*;
 
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class ASTStatementParser {
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
-                return new ProceduralFBodyNodeTest(identifier, identifierList, statements);
+                return new FunctionAssignment(identifier, identifierList, statements);
             }
             case ANYSTATEMENT_RETURN -> {
                 TermNode term = new ASTTermParser().parse(((ReturnStmntItem) actItem).getMyTerm());
