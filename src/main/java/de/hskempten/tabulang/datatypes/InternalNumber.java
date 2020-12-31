@@ -11,7 +11,7 @@ public class InternalNumber {
         this.denominator = denominator;
     }
 
-    public InternalNumber(float value){
+    public InternalNumber(float value) {
         this.setFloatValue(value);
     }
 
@@ -109,7 +109,7 @@ public class InternalNumber {
                 ));
     }
 
-    public InternalNumber diff(InternalNumber other){
+    public InternalNumber diff(InternalNumber other) {
         BigInteger kgv = kgv(denominator, other.getDenominator());
         BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).divideAndRemainder(other.numerator.multiply((kgv.divide(other.getDenominator()))))[0];
         BigInteger newDenominator = kgv;
@@ -121,7 +121,7 @@ public class InternalNumber {
         return new InternalNumber(newNumerator, newDenominator);
     }
 
-    public InternalNumber mod(InternalNumber other){
+    public InternalNumber mod(InternalNumber other) {
         BigInteger kgv = kgv(denominator, other.getDenominator());
         BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).divideAndRemainder(other.numerator.multiply((kgv.divide(other.getDenominator()))))[1];
         BigInteger newDenominator = kgv;
@@ -131,6 +131,18 @@ public class InternalNumber {
         newDenominator = newDenominator.divide(divider);
 
         return new InternalNumber(newNumerator, newDenominator);
+    }
+
+    public int compareTo(InternalNumber other) {
+        if (denominator.equals(other.getDenominator())) {
+            return numerator.compareTo(other.numerator);
+        }
+        BigInteger kgv = kgv(denominator, other.getDenominator());
+        return (numerator.multiply(kgv.divide(denominator))).compareTo(other.getNumerator().multiply(kgv.divide(other.getDenominator())));
+    }
+
+    public boolean equals(InternalNumber other) {
+        return this.compareTo(other) == 0;
     }
 
     @Override

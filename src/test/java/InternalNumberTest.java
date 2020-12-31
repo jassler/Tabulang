@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class InternalNumberTest {
 
@@ -11,6 +11,7 @@ class InternalNumberTest {
     private final InternalNumber n1 = new InternalNumber(f1);
     private final float f2 = 13.983f;
     private final InternalNumber n2 = new InternalNumber(f2);
+    private final InternalNumber n3 = new InternalNumber(f2);
 
     @Test
     public void testCreateNumber() {
@@ -47,4 +48,21 @@ class InternalNumberTest {
     public void testMod() {
         assertEquals(f1, n1.mod(n2).getFloatValue());
     }
+
+    @Test
+    public void testCompareTo() {
+        assertEquals(-1, n1.compareTo(n2));
+        assertEquals(1, n2.compareTo(n1));
+        assertEquals(0, n2.compareTo(n2));
+        assertEquals(0, n2.compareTo(n3));
+    }
+
+    @Test
+    public void testEquals() {
+        assertFalse(n1.equals(n2));
+        assertFalse(n2.equals(n1));
+        assertTrue(n2.equals(n2));
+        assertTrue(n2.equals(n3));
+    }
+
 }
