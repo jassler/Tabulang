@@ -5,7 +5,7 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class InTupleNode extends BinaryPredicateNode {
-    public InTupleNode(Node leftNode, Node rightNode) {
+    public InTupleNode(IdentifierNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);
     }
 
@@ -14,14 +14,10 @@ public class InTupleNode extends BinaryPredicateNode {
         Object o = getRightNode().evaluateNode(interpretation);
         if(o instanceof Tuple) {
             Object identifier = getLeftNode().evaluateNode(interpretation);
-            if(identifier instanceof Identifier) {
-                if (((Tuple) o).getElements().contains(((Identifier) identifier).getIdentifierName())) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if (((Tuple) o).getElements().contains(identifier)) {
+                return true;
             } else {
-                throw new IllegalArgumentException("Expected Identifier but got: " + identifier.getClass().getSimpleName());
+                return false;
             }
         } else {
             throw new IllegalArgumentException("Expected Tuple but got: " + o.getClass().getSimpleName());

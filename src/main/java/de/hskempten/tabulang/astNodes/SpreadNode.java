@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
@@ -31,10 +32,12 @@ public class SpreadNode extends BinaryTermNode{
                 a.toArray(array);
                 return new Tuple(array, names, true);
             } else {
-                throw new IllegalArgumentException("Left value has to be less than or equal to right value: Left: " + left + " Right: " + right);
+                throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ... " + right + " (" + right.getClass() + ") can not be executed. " +
+                        "Left value has to be less than or equal to right value.");
             }
         } else {
-            throw new IllegalArgumentException("Expected both values to be Numbers but got: " + left.getClass().getSimpleName() + " and " + right.getClass().getSimpleName());
+            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ... " + right + " (" + right.getClass() + ") can not be executed. " +
+                    "Allowed operands: Numbers.");
         }
     }
 }

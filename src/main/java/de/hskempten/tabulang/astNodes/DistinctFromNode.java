@@ -6,10 +6,10 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.util.ArrayList;
 
 public class DistinctFromNode extends TermNode{
-    private Node node;
+    private TermNode node;
     private IdentifierNode[] names;
 
-    public DistinctFromNode(Node node, ArrayList<IdentifierNode> names) {
+    public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names) {
         this.node = node;
         this.names = (IdentifierNode[]) names.toArray();
     }
@@ -18,7 +18,7 @@ public class DistinctFromNode extends TermNode{
         return node;
     }
 
-    public void setNode(Node node) {
+    public void setNode(TermNode node) {
         this.node = node;
     }
 
