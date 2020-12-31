@@ -65,6 +65,7 @@ public class PredType implements LanguageType {
                     }
                     case "true", "false" -> {
                         myBoolean = Boolean.parseBoolean(l.lookahead().getContent());
+                        l.getNextTokenAndExpect(TokenType.KEYWORD);
                         myPredR = PredRType.instance.parse(l);
                         item = new PredItem(myPredR, myBoolean);
                     }

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class BooleanNode extends Node{
+public class BooleanNode extends PredicateNode {
     private Boolean aBoolean;
 
     public BooleanNode(Boolean aBoolean) {

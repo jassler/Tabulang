@@ -36,7 +36,7 @@ public class LexerTest {
     @Test
     void keywordLexer() throws ParseTimeException {
         //Keywords which start with an other keyword must be placed before the shorter one
-        l.setText("after as average background before count direction distinct else exists filter forAll font " +
+        l.setText("after as average background before count direction distinct else exists false filter forAll font " +
                 "fontStyle " +
                 "for " +
                 "foreground " +
@@ -45,7 +45,7 @@ public class LexerTest {
                 "if in " +
                 "intersect " +
                 "mark " +
-                "not null return set size suchThat unite using vertical " +
+                "not null return set size suchThat true unite using vertical " +
                 "verticalflip" +
                 "");
         l.lookahead();
