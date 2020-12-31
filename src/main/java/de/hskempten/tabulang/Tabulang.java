@@ -132,14 +132,14 @@ public class Tabulang {
         if (true) {
             l.setText("\n" +
                     //"z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
-                    "y := [10,9,8];\n" +
+                    "y := [10.6,9,8];\n" +
                     //"a := 4;\n" +
                     //"b := 6;\n" +
-                    "c := 3;\n" +
-                    "d := 9;\n" +
-                    "f := c - 'a';\n" +
+                    "c := 2;\n" +
+                    "d := 11;\n" +
+                    "f := d mod c;\n" +
                     //"inTuple := d in y;\n" +
-                    //"spr := (1...3);\n" + Geht nicht
+                    //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 > 4) d := 10;\n" +
                     //"function f1(x) return x;\n" +

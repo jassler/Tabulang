@@ -35,6 +35,14 @@ public class InternalNumber {
         return numerator.floatValue() / denominator.floatValue();
     }
 
+    public Object getValue(){
+        if(getFloatValue() % 1 == 0){
+            return (int) getFloatValue();
+        } else {
+            return getFloatValue();
+        }
+    }
+
     private void setFloatValue(float value) {
         String v = Float.toString(value);
 
@@ -147,6 +155,6 @@ public class InternalNumber {
 
     @Override
     public String toString() {
-        return "" + getFloatValue() + "";
+            return "" + getValue() + "";
     }
 }

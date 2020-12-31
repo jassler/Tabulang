@@ -38,10 +38,8 @@ public class TupleNode extends TermNode{
         Object o;
         for(int j = 0; j < tList.size(); j++){
             o = tList.get(j).evaluateNode(interpretation);
-            if(o instanceof Identifier){
-                o = ((Identifier) o).getIdentifierName();
-            } else if(o instanceof InternalNumber){
-                o = ((InternalNumber) o).getFloatValue();
+            if(o instanceof InternalNumber){
+                o = ((InternalNumber) o).getValue();
             }
             tupleElements.add(o);
         }
