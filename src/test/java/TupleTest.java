@@ -1,12 +1,37 @@
+import de.hskempten.tabulang.datatypes.HeaderNames;
+import de.hskempten.tabulang.datatypes.TableObject;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TupleTest {
+
+    @Test
+    public void testConstructors() {
+        /*
+        Tuple#Tuple(Object[])
+        Tuple#Tuple(Object[], String[])
+        Tuple#Tuple(Object[], String[], boolean)
+        Tuple#Tuple(List)
+        Tuple#Tuple(List, List)
+        Tuple#Tuple(List, List, boolean)
+        Tuple#Tuple(List, HeaderNames, boolean, TableObject)
+
+        protected Tuple#Tuple(List, List, boolean, TableObject)
+         */
+        // TODO
+    }
+
+    @Test
+    public void testThrowsArrayLengthMismatch() {
+        assertThrows(ArrayLengthMismatchException.class, () -> new Tuple<>(new String[]{""}, new String[]{}));
+    }
 
     @Test
     public void testTupleDefaultValues() {
@@ -98,5 +123,28 @@ class TupleTest {
                 new String[]{"do", "re", "mi", "fa"},
                 true
         ), t2);
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("", new Tuple<>(new String[0]).toString());
+        assertEquals("0\n4", new Tuple<>(new Integer[]{4}).toString());
+        assertEquals("0 | 1\n4 | 1", new Tuple<>(new Integer[]{4, 1}).toString());
+        assertEquals("0 | 1 | 2\n4 | 1 | 4", new Tuple<>(new Integer[]{4, 1, 4}).toString());
+
+        Tuple<String> t = new Tuple<>(new String[]{"Alpha", "Beta", "Gamma"});
+        String expected = "" +
+                "0     | 1    | 2\n" +
+                "Alpha | Beta | Gamma";
+
+        assertEquals(expected, t.toString());
+
+        t.setHorizontal(false);
+        expected = "" +
+                "0 | Alpha\n" +
+                "1 | Beta\n" +
+                "2 | Gamma";
+
+        assertEquals(expected, t.toString());
     }
 }

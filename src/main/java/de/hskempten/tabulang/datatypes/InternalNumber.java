@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.datatypes;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 public class InternalNumber {
     private BigInteger numerator;
@@ -33,6 +34,14 @@ public class InternalNumber {
 
     public float getFloatValue() {
         return numerator.floatValue() / denominator.floatValue();
+    }
+
+    public Object getValue(){
+        if(getFloatValue() % 1 == 0){
+            return (int) getFloatValue();
+        } else {
+            return getFloatValue();
+        }
     }
 
     private void setFloatValue(float value) {
@@ -193,6 +202,19 @@ public class InternalNumber {
 
     @Override
     public String toString() {
-        return "" + getFloatValue() + "";
+            return "" + getValue() + "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InternalNumber)) return false;
+        InternalNumber that = (InternalNumber) o;
+        return numerator.equals(that.numerator) && denominator.equals(that.denominator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
     }
 }

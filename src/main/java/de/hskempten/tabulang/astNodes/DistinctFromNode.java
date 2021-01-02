@@ -35,13 +35,8 @@ public class DistinctFromNode extends TermNode{
         Object table = node.evaluateNode(interpretation);
         if (table instanceof Table) {
             ArrayList<String> columnNames = new ArrayList<>();
-            for (TermNode t: names) {
-                Object o = t.evaluateNode(interpretation);
-                if(o instanceof String){
-                    columnNames.add((String) o);
-                } else {
-                    throw new IllegalArgumentException("Expected String but got " + o.getClass().getSimpleName());
-                }
+            for (TermNode t : names) {
+                columnNames.add((String) t.evaluateNode(interpretation));
             }
             return ((Table) table).projection((String[]) columnNames.toArray());
         } else {
