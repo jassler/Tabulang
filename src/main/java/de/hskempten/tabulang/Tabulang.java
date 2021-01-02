@@ -1,5 +1,6 @@
 package de.hskempten.tabulang;
 
+import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
@@ -131,20 +132,25 @@ public class Tabulang {
 
         if (true) {
             l.setText("\n" +
-                    //"z := [[1], [1, '3', 5, 6*8, 'b' + 6]];\n" +
-                    "y := [10.6,9,8];\n" +
+                    //"z := [[1], [1, '3.00', 5.0, 6*8, 'b' + 6]];\n" +
+                    //"y := [[1, 2],[2, 3],[3, 4]];\n" +
+                    "y := [6, 7, 8, 7];\n" +
                     //"a := 4;\n" +
                     //"b := 6;\n" +
-                    "c := 2;\n" +
-                    "d := 11;\n" +
-                    "f := d mod c;\n" +
-                    //"inTuple := d in y;\n" +
+                    "c := 0;\n" +
+                    "d := 6.0;\n" +
+                    //"f := d mod c;\n" +
+                    //"g := y.'1'.'1';\n" +
+                    //"if(d in y) c := 2;\n" +
                     //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +
-                    //"if(5 > 4) d := 10;\n" +
-                    //"function f1(x) return x;\n" +
-                   // "function hi(a, b) { c := 1; return a + b;}\n" +
-                    //"for x in y {set x; c := c + 1;}\n" +
+                    //"if(5 < 4 iff 6 > 7) d := 10;\n" +
+                    "function f1(x, z) return 5;\n" +
+                    //"res := f1(d);\n" +
+                    //"for x in y {set x; c := x + c;}\n" +
+                    "for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1;group d using f1(c, e);}\n" +
+                   // "function hi(a, b) {c := 1; return a + b;}\n" +
+                    //"S := for x in y {set x; c := c + 1;};\n" +
                    // "e := hi(c, d);" +
                     "\n");
         }
@@ -156,10 +162,12 @@ public class Tabulang {
         System.out.println("NumberAST of statements: " + prg.getMyStatements().size());
         //System.out.println("Evaluating \"" + l.getText());
         ProgramAST prgAST = ASTProgramParser.instance.parse(prg);
+
         prgAST.executeProgram(interpretation);
 
         //System.out.println("Evaluated \"" + l.getText() + "\" and got:");
         //System.out.println(".......................");
+        System.out.println();
         System.out.println("Environment nach Programmende: ");
         Iterator it = interpretation.getEnvironment().entrySet().iterator();
         while (it.hasNext()) {

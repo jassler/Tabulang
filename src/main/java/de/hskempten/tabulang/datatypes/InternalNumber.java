@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.datatypes;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 public class InternalNumber {
     private BigInteger numerator;
@@ -156,5 +157,18 @@ public class InternalNumber {
     @Override
     public String toString() {
             return "" + getValue() + "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InternalNumber)) return false;
+        InternalNumber that = (InternalNumber) o;
+        return numerator.equals(that.numerator) && denominator.equals(that.denominator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
     }
 }
