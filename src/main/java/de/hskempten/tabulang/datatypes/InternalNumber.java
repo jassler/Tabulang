@@ -38,22 +38,13 @@ public class InternalNumber {
     private void setFloatValue(float value) {
         String v = Float.toString(value);
 
-        if (v.contains(".")) {
-            Boolean isNegative = v.charAt(0) == '-';
-            String[] parts = v.split("\\.");
-            BigInteger whole = new BigInteger(parts[0]);
-            BigInteger decimals = new BigInteger(parts[1]);
-            BigInteger numberOfDecimals = BigInteger.valueOf((long) Math.pow(10, parts[1].length()));
-            BigInteger divider = euclid(decimals, numberOfDecimals);
-            denominator = numberOfDecimals.divide(divider);
-            numerator = decimals.divide(divider).add(whole.abs().multiply(denominator));
-            if (isNegative) {
-                numerator = numerator.negate();
-            }
-        } else {
-            numerator = new BigInteger(v);
-            denominator = BigInteger.valueOf(1);
-        }
+        BigInteger[] newNumeratorAndDenominator = stringToNumeratorDenominator(v);
+        numerator = newNumeratorAndDenominator[0];
+        denominator = newNumeratorAndDenominator[1];
+    }
+
+    public double getDoubleValue() {
+        return numerator.doubleValue() / denominator.doubleValue();
     }
 
     private BigInteger euclid(BigInteger a, BigInteger b) {
@@ -133,6 +124,22 @@ public class InternalNumber {
         return new InternalNumber(newNumerator, newDenominator);
     }
 
+    public InternalNumber pow(InternalNumber other) {
+        double doubleValue = Math.pow(this.getDoubleValue(), other.getDoubleValue());
+        BigInteger newNumerator;
+        BigInteger newDenominator;
+
+        String v = Double.toString(doubleValue);
+        if (v.equals("NaN")) {
+            return new InternalNumber(0);
+        }
+        BigInteger[] newNumeratorAndDenominator = stringToNumeratorDenominator(v);
+        newNumerator = newNumeratorAndDenominator[0];
+        newDenominator = newNumeratorAndDenominator[1];
+
+        return new InternalNumber(newNumerator, newDenominator);
+    }
+
     public int compareTo(InternalNumber other) {
         if (denominator.equals(other.getDenominator())) {
             return numerator.compareTo(other.numerator);
@@ -143,6 +150,45 @@ public class InternalNumber {
 
     public boolean equals(InternalNumber other) {
         return this.compareTo(other) == 0;
+    }
+
+    private BigInteger[] stringToNumeratorDenominator(String v) {
+        BigInteger newNumerator;
+        BigInteger newDenominator;
+        if (v.contains(".")) {
+            Boolean isNegative = v.charAt(0) == '-';
+            if (isNegative) {
+                v = v.substring(1);
+            }
+            String z = v;
+            if (v.contains("E")) {
+                String[] eParts = v.split("E");
+                int exp = Integer.parseInt(eParts[1]);
+                z = eParts[0];
+                if (exp < 0) {
+                    exp = Math.abs(exp);
+                    z = "0" + "." + "0".repeat(exp - 1) + z.charAt(0) + z.substring(2);
+                }
+            }
+            String[] parts = z.split("\\.");
+            BigInteger whole = new BigInteger(parts[0]);
+            BigInteger decimals = new BigInteger(parts[1]);
+            BigInteger numberOfDecimals = BigInteger.valueOf((long) Math.pow(10, parts[1].length()));
+            BigInteger divider = euclid(decimals, numberOfDecimals);
+            newDenominator = numberOfDecimals.divide(divider);
+            newNumerator = decimals.divide(divider).add(whole.abs().multiply(newDenominator));
+            if (isNegative) {
+                newNumerator = newNumerator.negate();
+            }
+        } else {
+            newNumerator = new BigInteger(v);
+            newDenominator = BigInteger.valueOf(1);
+        }
+
+        BigInteger[] newNumeratorAndDenominator = new BigInteger[2];
+        newNumeratorAndDenominator[0] = newNumerator;
+        newNumeratorAndDenominator[1] = newDenominator;
+        return newNumeratorAndDenominator;
     }
 
     @Override
