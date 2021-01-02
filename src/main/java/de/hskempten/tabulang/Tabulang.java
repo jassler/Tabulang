@@ -148,7 +148,7 @@ public class Tabulang {
                     "function f1(x, z) return 5;\n" +
                     //"res := f1(d);\n" +
                     //"for x in y {set x; c := x + c;}\n" +
-                    "for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1;group d using f1(c, e);}\n" +
+                    //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1;};\n" +
                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +
                    // "e := hi(c, d);" +

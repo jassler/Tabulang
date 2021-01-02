@@ -1,4 +1,4 @@
 package de.hskempten.tabulang.astNodes.PlaceholderNodes;
 
-public class GroupBeforeLoopNode {
+public class HidingGroupFunctionCallNode {
 }
