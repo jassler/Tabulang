@@ -329,17 +329,17 @@ class TableTest {
         String expected = "" +
                 "First name | Last name        | Location  | Age\n" +
                 "-----------------------------------------------\n" +
-                "Andreas    | Bittner          | Madrid    | 24 \n" +
-                "Kilian     | Manfred-Anderson | Sao Paulo | 8  ";
+                "Andreas    | Bittner          | Madrid    | 24\n" +
+                "Kilian     | Manfred-Anderson | Sao Paulo | 8";
         assertEquals(expected, t.toString());
 
         t.transpose();
 
         expected = "" +
-                "First name | Andreas Kilian          \n" +
+                "First name | Andreas Kilian\n" +
                 "Last name  | Bittner Manfred-Anderson\n" +
-                "Location   | Madrid  Sao Paulo       \n" +
-                "Age        | 24      8               ";
+                "Location   | Madrid  Sao Paulo\n" +
+                "Age        | 24      8";
         assertEquals(expected, t.toString());
     }
 }
