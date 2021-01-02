@@ -128,6 +128,8 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
 
     protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, TableObject parent) {
         super(parent);
+        if(elements.size() != names.size())
+            throw new ArrayLengthMismatchException(elements.size(), names.size());
         this.elements = new ArrayList<>(elements);
         this.names = new HeaderNames(names);
         this.elementStyles = new HashMap<>();
@@ -347,11 +349,42 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
 
     @Override
     public String toString() {
-        return "Tuple{" +
-                "objects=" + elements +
-                ", names=" + names +
-                ", isHorizontal=" + isHorizontal +
-                '}';
+        if(size() == 0)
+            return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        if(isHorizontal) {
+            // ignore length of last element because there'll be a new line anyway
+            String formatted = IntStream.range(0, names.size() - 1)
+                    .map(i -> Math.max(
+                            names.get(i).length(),
+                            elements.get(i).toString().length()
+                    ))
+                    .mapToObj(colSize -> "%-" + colSize + "s | ")
+                    .collect(Collectors.joining());
+            formatted += "%s";
+
+            sb
+                    .append(String.format(formatted, names.getNames().toArray()))
+                    .append('\n')
+                    .append(String.format(formatted, elements.toArray()));
+
+        } else {
+            int namesColSize = names.getNames().stream().max(Comparator.comparing(String::length)).get().length();
+            String formatted = "%-" + namesColSize + "s | %s";
+
+            var nameIt = names.iterator();
+            var elementIt = elements.iterator();
+
+            while(nameIt.hasNext()) {
+                sb.append(String.format(formatted, nameIt.next(), elementIt.next())).append('\n');
+            }
+
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        return sb.toString();
     }
 
     /**

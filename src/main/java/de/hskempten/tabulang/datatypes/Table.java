@@ -466,6 +466,7 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
         if (transposed) {
             String[] formatted = formattedStream.toArray(String[]::new);
             formatted[0] = formatted[0] + " |";
+            formatted[formatted.length - 1] = "%s";
 
             // Calculating the capacity
             // Width of all columns added together (probably a little less for most rows)
@@ -476,6 +477,9 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
 
             for (int row = 0; row < colNames.size(); row++) {
                 var it = Arrays.stream(formatted).iterator();
+
+                if(row > 0)
+                    sb.append('\n');
                 sb.append(String.format(it.next(), colNames.get(row)));
 
                 // variable used in lambda expression must be final
@@ -483,16 +487,11 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
                 tuples.stream().forEach(
                         t -> sb.append(' ').append(String.format(it.next(), t.get(finalRow)))
                 );
-
-                sb.append('\n');
             }
-
-            // remove last newline
-            sb.deleteCharAt(sb.length() - 1);
 
         } else {
             String delimiter = " | ";
-            String formatted = formattedStream.collect(Collectors.joining(delimiter));
+            String formatted = formattedStream.collect(Collectors.joining(delimiter)).replaceAll("%-\\d+s$", "%s");
 
             // rowLength is sum of column widths
             // + amount of whitespace between columns
