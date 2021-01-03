@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
-public abstract class BinaryTermNode extends TermNode{
+import de.hskempten.tabulang.datatypes.Table;
+
+public abstract class BinaryTermNode extends TermNode {
     private Node leftNode;
     private Node rightNode;
 
@@ -24,4 +26,5 @@ public abstract class BinaryTermNode extends TermNode{
     public void setRightNode(Node rightNode) {
         this.rightNode = rightNode;
     }
+
 }

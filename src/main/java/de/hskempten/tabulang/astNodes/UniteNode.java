@@ -1,25 +1,26 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class UniteNode extends BinaryNode{
+public class UniteNode extends BinaryTermNode{
     public UniteNode(Node leftNode, Node rightNode) {
         super(leftNode, rightNode);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left =  getLeftNode().evaluateNode(interpretation);
-        if(left instanceof Table) {
-            Object right = getRightNode().evaluateNode(interpretation);
-            if(right instanceof Table) {
-                return ((Table) left).union((Table) right);
-            } else {
-                throw new IllegalArgumentException("Expected Table on right side of 'unite' but got " + right.getClass().getSimpleName());
-            }
-        } else {
-            throw new IllegalArgumentException("Expected Table on left side of 'unite' but got " + left.getClass().getSimpleName());
+        Object left = getLeftNode().evaluateNode(interpretation);
+        Object right = getRightNode().evaluateNode(interpretation);
+        try {
+            left = checkIfTable(left);
+            right = checkIfTable(right);
+        } catch (TupleCannotBeTransformedException | IllegalArgumentException runtimeException){
+            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") unite " + right + " (" + right.getClass() + ")' can not be executed. " +
+                    "Allowed operands: Tables.");
         }
+        return ((Table) left).union((Table) right);
     }
 }
