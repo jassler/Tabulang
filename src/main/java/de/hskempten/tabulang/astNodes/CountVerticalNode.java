@@ -1,9 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigInteger;

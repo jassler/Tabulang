@@ -6,8 +6,6 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-import java.math.BigDecimal;
-
 public class SubtractNode extends BinaryArithmeticNode{
     public SubtractNode(TermNode leftNode, TermNode rightNode) {
         super(leftNode, rightNode);

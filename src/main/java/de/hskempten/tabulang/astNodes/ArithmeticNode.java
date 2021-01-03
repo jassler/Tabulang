@@ -1,13 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.math.BigDecimal;
 
 public abstract class ArithmeticNode extends TermNode {
 

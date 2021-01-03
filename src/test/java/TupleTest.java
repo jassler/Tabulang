@@ -1,12 +1,9 @@
-import de.hskempten.tabulang.datatypes.HeaderNames;
-import de.hskempten.tabulang.datatypes.TableObject;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

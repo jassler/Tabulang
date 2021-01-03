@@ -2,11 +2,9 @@ package de.hskempten.tabulang.interpretTest;
 
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
