@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.astNodes.PlaceholderNodes;
+package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.astNodes.FunctionCallNode;
 import de.hskempten.tabulang.astNodes.GroupNode;
@@ -9,14 +9,15 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
-public class HidingGroupFunctionCallNode extends GroupNode {
+public class GroupAfterFunctionCallNode extends GroupNode {
     private boolean hiding;
     private boolean area;
     private FunctionCallNode funCall;
     private LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX = new LinkedHashMap<>();
 
-    public HidingGroupFunctionCallNode(boolean hiding, boolean area, TermNode term, FunctionCallNode funCall) {
+    public GroupAfterFunctionCallNode(boolean hiding, boolean area, TermNode term, FunctionCallNode funCall) {
         super(term);
         this.setHiding(hiding);
         this.setArea(area);
@@ -67,11 +68,12 @@ public class HidingGroupFunctionCallNode extends GroupNode {
         if(isLastIteration()){
             System.out.println();
             Iterator iterator = variableValueInLoopX.values().iterator();
-            for(Object ignored : getMapValueInLoopX().entrySet()) {
+            for(Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
                 for (TermNode parameter : funCall.getParameters()) {
                     Object value = iterator.next();
                     interpretation.getEnvironment().put(((IdentifierNode) parameter).getIdentifier(), value);
                 }
+                getResultList().addAll(group.getValue());
                 getResultList().add(funCall.evaluateNode(interpretation));
             }
         }

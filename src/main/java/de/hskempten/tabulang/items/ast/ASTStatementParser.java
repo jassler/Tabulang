@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupBeforeFunctionCallNode;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupWithoutFunctionCallNode;
+import de.hskempten.tabulang.astNodes.GroupBeforeFunctionCallNode;
+import de.hskempten.tabulang.astNodes.GroupWithoutFunctionCallNode;
 import de.hskempten.tabulang.astNodes.LoopNode;
 import de.hskempten.tabulang.astNodes.FunctionAssignment;
 import de.hskempten.tabulang.items.*;
