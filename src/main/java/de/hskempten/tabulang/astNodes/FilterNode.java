@@ -22,13 +22,11 @@ public class FilterNode<E> extends BinaryTermNode{
             throw new IllegalOperandArgumentException("Got " + object + " (" + object.getClass() + ") on the left side of the 'filter' keyword." +
                     "Allowed operand on the left side: Table.");
         }
-        //TODO gute tests finden
         if (object instanceof Table) {
             ArrayList<ArrayList<E>> newRows = new ArrayList<>();
             ArrayList<String> colNames = new ArrayList<String>(((Table) object).getColNames().getNames());
             for (Object tuple : ((Table) object).getRows()) {
-                HashMap<String, Object> nestedHashmap = new HashMap<>(interpretation.getEnvironment());
-                Interpretation nestedInterpretation = new Interpretation(nestedHashmap);
+                Interpretation nestedInterpretation = interpretation.deepCopy();
                 for (int j = 0; j < ((ArrayList) tuple).size(); j++) {
                     Object element = ((ArrayList) tuple).get(j);
                     Object name = colNames.get(j);

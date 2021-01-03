@@ -17,9 +17,7 @@ public class PowerNode extends BinaryArithmeticNode{
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
         if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            //TODO
-            return "Pow Operation not yet implemented";
-            //return getNumericValue(getLeftNode(), interpretation).pow(getNumericValue(getRightNode(), interpretation));
+            return ((InternalNumber) left).pow((InternalNumber) right);
         } else {
             throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ^ " + right + " (" + right.getClass() + ") can not be executed. " +
                     "Allowed operands: Numbers.");

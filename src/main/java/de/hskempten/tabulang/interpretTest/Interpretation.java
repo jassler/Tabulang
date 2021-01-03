@@ -1,52 +1,17 @@
 package de.hskempten.tabulang.interpretTest;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.Tuple;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class Interpretation {
+public class Interpretation implements Cloneable{
 
     private Interpretation parent;
     private HashMap<String, Object> environment;
-    private LinkedHashMap<Object, LinkedList<Object>> group = new LinkedHashMap<>();
-    private LinkedHashMap<Object, LinkedList<Object>> variableValue = new LinkedHashMap<>();
-    private int internalLoopCounter = 0;
-    private int countdown = 0;
 
-
-    public int getCountdown() {
-        return countdown;
-    }
-
-    public void setCountdown(int countdown) {
-        this.countdown = countdown;
-    }
-
-    public LinkedHashMap<Object, LinkedList<Object>> getVariableValue() {
-        return variableValue;
-    }
-
-    public void setVariableValue(LinkedHashMap<Object, LinkedList<Object>> variableValue) {
-        this.variableValue = variableValue;
-    }
-
-    public int getInternalLoopCounter() {
-        return internalLoopCounter;
-    }
-
-    public void setInternalLoopCounter(int internalLoopCounter) {
-        this.internalLoopCounter = internalLoopCounter;
-    }
-
-    public LinkedHashMap<Object, LinkedList<Object>> getGroup() {
-        return group;
-    }
-
-    public void setGroup(LinkedHashMap<Object, LinkedList<Object>> group) {
-        this.group = group;
-    }
 
     public Interpretation() {
         this.parent = null;
@@ -109,6 +74,20 @@ public class Interpretation {
             return null;
         } else {
             return parent.findIdentifier(identifier);
+        }
+    }
+
+    public Interpretation deepCopy() {
+        Interpretation deepCopy = new Interpretation(new HashMap<>(this.getEnvironment()));
+        deepCopyParents(deepCopy, this.parent);
+        return deepCopy;
+    }
+
+    public void deepCopyParents(Interpretation current, Interpretation parent){
+        if(parent != null){
+            Interpretation copyParent = new Interpretation(new HashMap<>(parent.getEnvironment()));
+            current.setParent(copyParent);
+            deepCopyParents(copyParent, parent.getParent());
         }
     }
 }

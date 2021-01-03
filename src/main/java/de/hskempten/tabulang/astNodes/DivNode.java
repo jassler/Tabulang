@@ -17,7 +17,7 @@ public class DivNode extends BinaryArithmeticNode{
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
         if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            return getNumericValue(getLeftNode(), interpretation).diff(getNumericValue(getRightNode(), interpretation));
+            return ((InternalNumber)left).diff((InternalNumber)right);
         } else {
             throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") div " + right + " (" + right.getClass() + ") can not be executed. " +
                     "Allowed operands: Numbers.");

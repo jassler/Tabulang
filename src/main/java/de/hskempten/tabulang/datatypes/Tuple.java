@@ -433,9 +433,10 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
                     throw new TupleCannotBeTransformedException("The tuple ´\n" + this + "\n can not be transformed into a table");
                 }
             }
+            return new Table(elements.toArray(Tuple[]::new));
         } else {
             throw new TupleCannotBeTransformedException("The tuple \n" + this + "\n can not be transformed into a table");
         }
-        return new Table(this);
+
     }
 }
