@@ -12,11 +12,11 @@ public class FunctionInterface {
     // VERERBUNG
 
     public Object execute(Object... objs) {
-        for(int i = 0; i < objs.length; i++) {
-            if(!(objs[i].getClass().isAssignableFrom(_argTypes[i]))){
+        /*for(int i = 0; i < objs.length; i++) {
+            if(!(objs[i].getClass().isInstance(_argTypes[i]))){
                 throw new ClassNotEqual("Classtype not equals");
             }
-        }
+        }*/
         return _internalFunction.compute(objs);
     }
 }
