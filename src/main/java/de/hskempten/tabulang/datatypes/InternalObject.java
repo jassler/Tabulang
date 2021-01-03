@@ -10,6 +10,10 @@ public abstract class InternalObject implements Styleable {
         this.style = new Style();
     }
 
+    public InternalObject() {
+        this.style = new Style();
+    }
+
     public InternalObject getParent() {
         return parent;
     }

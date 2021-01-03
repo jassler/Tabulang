@@ -8,7 +8,7 @@ public class InternalNumber extends InternalObject {
     private BigInteger denominator;
 
     public InternalNumber(BigInteger numerator, BigInteger denominator) {
-        super(null);
+        super();
         this.numerator = numerator;
         this.denominator = denominator;
     }

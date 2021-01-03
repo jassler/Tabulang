@@ -112,6 +112,22 @@ public class Interpretation {
         }
     }
 
+    public Interpretation deepCopy(){
+        Interpretation deepCopy = new Interpretation(new HashMap<>(this.getEnvironment()));
+        if(this.parent != null) {
+            deepCopyParents(deepCopy, this.parent);
+        }
+        return deepCopy;
+    }
+
+    public void deepCopyParents(Interpretation current, Interpretation parent){
+        Interpretation deepCopyParent = new Interpretation(new HashMap<>(parent.getEnvironment()));
+        current.setParent(deepCopyParent);
+        if(parent.getParent() != null) {
+            deepCopyParents(deepCopyParent, parent.getParent());
+        }
+    }
+
     public Interpretation putValue(String key, Object value) {
         environment.put(key, value);
         return this;

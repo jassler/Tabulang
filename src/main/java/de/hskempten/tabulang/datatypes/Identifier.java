@@ -7,7 +7,6 @@ public class Identifier extends InternalObject {
     private String identifierName;
 
     public Identifier(String identifierName) {
-        super(null);
         this.identifierName = identifierName;
     }
 
@@ -21,8 +20,6 @@ public class Identifier extends InternalObject {
 
     @Override
     public String toString() {
-        return "Identifier{" +
-                "identifierName='" + identifierName + '\'' +
-                '}';
+        return identifierName;
     }
 }
