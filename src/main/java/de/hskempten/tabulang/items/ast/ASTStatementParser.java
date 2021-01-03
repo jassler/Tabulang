@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupFunctionCallNodeTest;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupNodeTest;
+import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupBeforeFunctionCallNode;
+import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupWithoutFunctionCallNode;
 import de.hskempten.tabulang.astNodes.LoopNode;
 import de.hskempten.tabulang.astNodes.FunctionAssignment;
 import de.hskempten.tabulang.items.*;
@@ -173,10 +173,10 @@ public class ASTStatementParser {
                 GroupStmntItem grp = (GroupStmntItem) actItem;
                 TermNode term = new ASTTermParser().parse(grp.getMyTerm());
                 return switch (actItem.getLanguageItemType()) {
-                    case GROUP_EMPTY -> new GroupNodeTest(false, false, term);
-                    case GROUP_AREA -> new GroupNodeTest(false, true, term);
-                    case GROUP_HIDING_AREA -> new GroupNodeTest(true, true, term);
-                    case GROUP_HIDING -> new GroupNodeTest(true, false, term);
+                    case GROUP_EMPTY -> new GroupWithoutFunctionCallNode(false, false, term);
+                    case GROUP_AREA -> new GroupWithoutFunctionCallNode(false, true, term);
+                    case GROUP_HIDING_AREA -> new GroupWithoutFunctionCallNode(true, true, term);
+                    case GROUP_HIDING -> new GroupWithoutFunctionCallNode(true, false, term);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
             }
@@ -190,10 +190,10 @@ public class ASTStatementParser {
                 }
                 FunctionCallNode funCall = new FunctionCallNode(fcIdentifier, fcTerms);
                 return switch (actItem.getLanguageItemType()) {
-                    case GROUP_FUNCALL -> new GroupFunctionCallNodeTest(false, false, term, funCall);
-                    case GROUP_AREA_FUNCALL -> new GroupFunctionCallNodeTest(false, true, term, funCall);
-                    case GROUP_HIDING_AREA_FUNCALL -> new GroupFunctionCallNodeTest(true, true, term, funCall);
-                    case GROUP_HIDING_FUNCALL -> new GroupFunctionCallNodeTest(true, false, term, funCall);
+                    case GROUP_FUNCALL -> new GroupBeforeFunctionCallNode(false, false, term, funCall);
+                    case GROUP_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(false, true, term, funCall);
+                    case GROUP_HIDING_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(true, true, term, funCall);
+                    case GROUP_HIDING_FUNCALL -> new GroupBeforeFunctionCallNode(true, false, term, funCall);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
             }

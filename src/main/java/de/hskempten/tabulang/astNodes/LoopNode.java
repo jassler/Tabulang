@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupFunctionCallNodeTest;
+import de.hskempten.tabulang.astNodes.PlaceholderNodes.GroupBeforeFunctionCallNode;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
@@ -79,13 +79,13 @@ public class LoopNode extends StatementNode {
                     }
                 }
                 for(StatementNode statementNode : statements){
-                    if(statementNode instanceof GroupFunctionCallNodeTest && !groupStatementFound){
-                        ((GroupFunctionCallNodeTest) statementNode).setNestingLevel(nestingLevel);
-                        ((GroupFunctionCallNodeTest) statementNode).setLastIteration(false);
+                    if(statementNode instanceof GroupBeforeFunctionCallNode && !groupStatementFound){
+                        ((GroupBeforeFunctionCallNode) statementNode).setNestingLevel(nestingLevel);
+                        ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(false);
                         groupStatementFound = true;
                     }
-                    if(statementNode instanceof GroupFunctionCallNodeTest && i+1 == ((Tuple) term).getElements().size()){
-                        ((GroupFunctionCallNodeTest) statementNode).setLastIteration(true);
+                    if(statementNode instanceof GroupBeforeFunctionCallNode && i+1 == ((Tuple) term).getElements().size()){
+                        ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(true);
                         resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
                     } else {
                         statementNode.evaluateNode(nestedInterpretation);
