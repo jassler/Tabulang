@@ -27,17 +27,13 @@ public class ASTStatementSorter {
 
     private static boolean containsFunCallToNext(StatementNode actual, StatementNode next) {
         String nextName = "";
-        if (ProceduralFTermAST.class.equals(next.getClass())) {
-            nextName = ((ProceduralFTermNodeTest) next).getIdentifier().getIdentifier();
-        } else if (ProceduralFBodyAST.class.equals(next.getClass())) {
+        if (FunctionAssignment.class.equals(next.getClass())) {
             nextName = ((FunctionAssignment) next).getIdentifier().getIdentifier();
         } else return false;
 
 
         {
-            if (ProceduralFTermAST.class.equals(actual.getClass())) {
-                return getFunCallMethodNames(((ProceduralFTermNodeTest) actual).getTerm()).contains(nextName);
-            } else if (ProceduralFBodyAST.class.equals(actual.getClass())) {
+            if (FunctionAssignment.class.equals(actual.getClass())) {
                 for (int i = 0; i < ((FunctionAssignment) actual).getStatements().size(); i++) {
                     if (getFunCallMethodNames(((FunctionAssignment) actual).getStatements().get(i)).contains(nextName))
                         return true;
@@ -49,7 +45,7 @@ public class ASTStatementSorter {
     }
 
     private static boolean isProceduralF(StatementNode statement) {
-        return ProceduralFTermAST.class.equals(statement.getClass()) || ProceduralFBodyAST.class.equals(statement.getClass());
+        return FunctionAssignment.class.equals(statement.getClass());
     }
 
     private static ArrayList<String> getFunCallMethodNames(Node statement) {
