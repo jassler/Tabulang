@@ -273,7 +273,7 @@ public class ASTTermParser {
             }
             case TERMR_FILTER -> {
                 ArrayList<PredicateNode> preds = new ArrayList<PredicateNode>();
-                //TODO remove once filter constructor is correct
+                //TODO remove
                 return new FilterNode(null, null);
                 //return new FilterNode(preds);
             }

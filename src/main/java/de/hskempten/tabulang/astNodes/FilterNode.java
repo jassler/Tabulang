@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
@@ -14,6 +16,12 @@ public class FilterNode<E> extends BinaryTermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object object = getLeftNode().evaluateNode(interpretation);
+        try {
+            object = ifTupleTransform(object);
+        } catch (TupleCannotBeTransformedException transformedException){
+            throw new IllegalOperandArgumentException("Got " + object + " (" + object.getClass() + ") on the left side of the 'filter' keyword." +
+                    "Allowed operand on the left side: Table.");
+        }
         //TODO gute tests finden
         if (object instanceof Table) {
             ArrayList<ArrayList<E>> newRows = new ArrayList<>();

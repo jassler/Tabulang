@@ -38,9 +38,9 @@ public class FunctionCallNode extends TermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object o = node.evaluateNode(interpretation);
+        Object identifier = node.evaluateNode(interpretation);
 
-        if(o instanceof InternalLibraryFunction f) {
+        if(identifier instanceof InternalLibraryFunction f) {
             if (f.getParameters().size() != parameters.size())
                 throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size());
 
@@ -52,7 +52,7 @@ public class FunctionCallNode extends TermNode{
             var libFunc = f.getFunction();
             return libFunc.execute(objectParameters);
 
-        } else if(o instanceof InternalFunction f) {
+        } else if(identifier instanceof InternalFunction f) {
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
             if(f.getParameters().size() != parameters.size())
                 throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size());
@@ -79,10 +79,8 @@ public class FunctionCallNode extends TermNode{
                 return nestedInterpretation.getEnvironment().get("return");
             }
             return null;
-
-
         } else
-            throw new IllegalArgumentException("Expected (InternalFunction) or (InternalLibraryFunction) Identifier but got: " + o.getClass().getSimpleName());
+            throw new IllegalArgumentException("Expected (InternalFunction) or (InternalLibraryFunction) Identifier but got: " + identifier.getClass().getSimpleName());
 
     }
 }
