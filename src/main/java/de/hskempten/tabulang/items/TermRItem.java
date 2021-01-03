@@ -1,11 +1,10 @@
 package de.hskempten.tabulang.items;
 
-import java.util.ArrayList;
-
 public class TermRItem implements TermOrRItem {
     //myPreds darf nicht null sein; pred+
-    private ArrayList<PredItem> myPreds;
+    private PredItem myPred;
     private TermRItem myTermR;
+    private TermItem myPreviousTerm;
     private TermItem myTerm;
     private OperatorItem myOperator;
     private MarkStmntItem myMarkStmnt;
@@ -15,8 +14,8 @@ public class TermRItem implements TermOrRItem {
 
     private LanguageItemType itemType;
 
-    public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR, String myString) {
-        this.myPreds = myPreds;
+    public TermRItem(PredItem myPred, TermRItem myTermR, String myString) {
+        this.myPred = myPred;
         this.myTermR = myTermR;
         this.myString = myString;
         this.itemType = LanguageItemType.TERMR_FILTER;
@@ -32,8 +31,8 @@ public class TermRItem implements TermOrRItem {
         }
     }
 
-    public TermRItem(ArrayList<PredItem> myPreds, TermRItem myTermR) {
-        this.setMyPreds(myPreds);
+    public TermRItem(PredItem myPred, TermRItem myTermR) {
+        this.setMyPred(myPred);
         this.myTermR = myTermR;
         this.itemType = LanguageItemType.TERMR_FILTER;
     }
@@ -76,6 +75,14 @@ public class TermRItem implements TermOrRItem {
         this.myTermR = myTermR;
     }
 
+    public TermItem getMyPreviousTerm() {
+        return myPreviousTerm;
+    }
+
+    public void setMyPreviousTerm(TermItem myPreviousTerm) {
+        this.myPreviousTerm = myPreviousTerm;
+    }
+
     public TermItem getMyTerm() {
         return myTerm;
     }
@@ -108,12 +115,12 @@ public class TermRItem implements TermOrRItem {
         this.myTupel = myTupel;
     }
 
-    public ArrayList<PredItem> getMyPreds() {
-        return myPreds;
+    public PredItem getMyPred() {
+        return myPred;
     }
 
-    public void setMyPreds(ArrayList<PredItem> myPreds) {
-        this.myPreds = myPreds;
+    public void setMyPred(PredItem myPred) {
+        this.myPred = myPred;
     }
 
     @Override

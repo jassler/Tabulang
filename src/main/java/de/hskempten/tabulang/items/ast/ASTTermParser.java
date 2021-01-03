@@ -4,7 +4,10 @@ import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.items.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
+
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
 public class ASTTermParser {
 
@@ -28,70 +31,84 @@ public class ASTTermParser {
         TermOrRItem actTerm = originalTerm;
         int i = 20;
         while (i > 0) {
-            switch (actTerm.getLanguageItemType()) {
-                case TERM_IDENTIFIER -> syBuilder.add(((TermItem) actTerm).getMyIdentifier());
-                case TERM_ORDINAL -> {
-                    switch (((TermItem) actTerm).getMyOrdinal().getLanguageItemType()) {
-                        case ORDINAL_NUMBER -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyNumber());
-                        case ORDINAL_TUPEL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyTupel());
-                        case ORDINAL_QUOTEDSTRING -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyQuotedString());
-                        case ORDINAL_NULL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal());
-                        default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actTerm).getMyOrdinal().getLanguageItemType());
+            if (Arrays.asList(TERM_IDENTIFIER, TERM_ORDINAL).contains(actTerm.getLanguageItemType())
+                    && Arrays.asList(TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE).contains(((TermItem) actTerm).getMyTermR().getLanguageItemType())) {
+
+                TermRItem termR = actTerm.getMyTermR();
+                termR.setMyPreviousTerm((TermItem) actTerm);
+                syBuilder.add(termR);
+
+                actTerm = termR.getMyTermR();
+
+            } else {
+                switch (actTerm.getLanguageItemType()) {
+                    case TERM_IDENTIFIER -> {
+                        syBuilder.add(((TermItem) actTerm).getMyIdentifier());
+                    }
+                    case TERM_ORDINAL -> {
+                        switch (((TermItem) actTerm).getMyOrdinal().getLanguageItemType()) {
+                            case ORDINAL_NUMBER -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyNumber());
+                            case ORDINAL_TUPEL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyTupel());
+                            case ORDINAL_QUOTEDSTRING -> syBuilder.add(((TermItem) actTerm).getMyOrdinal().getMyQuotedString());
+                            case ORDINAL_NULL -> syBuilder.add(((TermItem) actTerm).getMyOrdinal());
+                            default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actTerm).getMyOrdinal().getLanguageItemType());
+                        }
+                    }
+                    case TERMR_OPERATOR -> syBuilder.add(((TermRItem) actTerm).getMyOperator());
+                    case TERM_BRACKET -> {
+                        syBuilder.add(actTerm);
+                        traverseTerm(((TermItem) actTerm).getMyTerm());
+                    }
+                    case TERMR_BRACKET -> {
+                        syBuilder.add(actTerm);
+                        return;
+                    }
+                    case TERMR_NULL -> {
+                        return;
+                    }
+                    case TERM_DIRECTIONAL -> {
+                        syBuilder.add(((TermItem) actTerm).getMyDirectionalTerm());
+                    }
+                    case TERM_FUNCALL -> {
+                        syBuilder.add(((TermItem) actTerm).getMyFunCall());
+                    }
+                    case TERM_AGGREGATION -> {
+                        syBuilder.add(((TermItem) actTerm).getMyAggregationT());
+                    }
+                    case TERM_DISTINCT -> {
+                        syBuilder.add(((TermItem) actTerm).getMyDistinctT());
+                    }
+                    case TERM_LOOP -> {
+                        syBuilder.add(((TermItem) actTerm).getMyLoop());
+                    }
+                    case TERMR_MARK -> {
+                        syBuilder.add(((TermRItem) actTerm).getMyMarkStmnt());
+                    }
+                    case TERMR_FILTER -> {
+                        syBuilder.add(actTerm);
+                    }
+                    case TERM_FUNDEF -> {
+                        syBuilder.add(((TermItem) actTerm).getMyFunDef());
+                    }
+                    case TERMR_DOT -> {
+                        syBuilder.add(actTerm);
+                        traverseTerm(((TermRItem) actTerm).getMyTerm());
+                    }
+                    default -> {
+                        throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
                     }
                 }
-                case TERMR_OPERATOR -> syBuilder.add(((TermRItem) actTerm).getMyOperator());
-                case TERM_BRACKET -> {
-                    syBuilder.add(actTerm);
-                    traverseTerm(((TermItem) actTerm).getMyTerm());
-                }
-                case TERMR_BRACKET -> {
-                    syBuilder.add(actTerm);
-                    return;
-                }
-                case TERMR_NULL -> {
-                    return;
-                }
-                case TERM_DIRECTIONAL -> {
-                    syBuilder.add(((TermItem) actTerm).getMyDirectionalTerm());
-                }
-                case TERM_FUNCALL -> {
-                    syBuilder.add(((TermItem) actTerm).getMyFunCall());
-                }
-                case TERM_AGGREGATION -> {
-                    syBuilder.add(((TermItem) actTerm).getMyAggregationT());
-                }
-                case TERM_DISTINCT -> {
-                    syBuilder.add(((TermItem) actTerm).getMyDistinctT());
-                }
-                case TERM_LOOP -> {
-                    syBuilder.add(((TermItem) actTerm).getMyLoop());
-                }
-                case TERMR_MARK -> {
-                    syBuilder.add(((TermRItem) actTerm).getMyMarkStmnt());
-                }
-                case TERMR_FILTER -> {
-                    syBuilder.add(actTerm);
-                }
-                case TERM_FUNDEF -> {
-                    syBuilder.add(((TermItem) actTerm).getMyFunDef());
-                }
-                case TERMR_DOT -> {
-                    syBuilder.add(actTerm);
-                    traverseTerm(((TermRItem) actTerm).getMyTerm());
-                }
-                default -> {
-                    throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
+                switch (actTerm.getLanguageItemType()) {
+                    case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
+                            TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF, TERMR_DOT -> actTerm = actTerm.getMyTermR();
+                    case TERMR_OPERATOR -> actTerm = ((TermRItem) actTerm).getMyTerm();
+                    case TERM_BRACKET -> actTerm = actTerm.getMyTermR();
+                    default -> {
+                        throw new IllegalStateException("Unexpected value: " + actTerm.getLanguageItemType());
+                    }
                 }
             }
-            actTerm = switch (actTerm.getLanguageItemType()) {
-                case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
-                        TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF, TERMR_DOT -> actTerm.getMyTermR();
-                case TERMR_OPERATOR -> ((TermRItem) actTerm).getMyTerm();
-                case TERM_BRACKET -> actTerm.getMyTermR();
-                default -> {
-                    throw new IllegalStateException("Unexpected value: " + actTerm.getLanguageItemType());
-                }
-            };
+            ;
             i--;
         }
     }
@@ -272,10 +289,25 @@ public class ASTTermParser {
                 }
             }
             case TERMR_FILTER -> {
-                ArrayList<PredicateNode> preds = new ArrayList<PredicateNode>();
-                //TODO remove
-                return new FilterNode(null, null);
-                //return new FilterNode(preds);
+                TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
+                previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
+                TermNode prevTerm = new ASTTermParser().parse(previousTerm);
+                PredicateNode pred = new ASTPredParser().parse(((TermRItem) actItem).getMyPred());
+                return new FilterNode(prevTerm, pred);
+            }
+            case TERMR_INTERSECT -> {
+                TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
+                previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
+                TermNode prevTerm = new ASTTermParser().parse(previousTerm);
+                TermNode term = new ASTTermParser().parse(((TermRItem) actItem).getMyTerm());
+                return new IntersectNode(prevTerm, term);
+            }
+            case TERMR_UNITE -> {
+                TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
+                previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
+                TermNode prevTerm = new ASTTermParser().parse(previousTerm);
+                TermNode term = new ASTTermParser().parse(((TermRItem) actItem).getMyTerm());
+                return new UniteNode(prevTerm, term);
             }
             case FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                 FunDefItem fundef = (FunDefItem) actItem;
@@ -342,7 +374,7 @@ public class ASTTermParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, TUPEL_INTERVAL,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
-                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER,
+                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE,
                         FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                     output.add(item);
                 }

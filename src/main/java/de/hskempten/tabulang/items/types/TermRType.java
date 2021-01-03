@@ -5,8 +5,6 @@ import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 
-import java.util.ArrayList;
-
 public class TermRType implements Parser {
 
     public static TermRType instance = new TermRType();
@@ -16,7 +14,7 @@ public class TermRType implements Parser {
         TermRItem item;
 
         //myPreds darf nicht null sein; pred+
-        ArrayList<PredItem> myPreds = new ArrayList<>();
+        PredItem myPred;
         TermRItem myTermR;
         TermItem myTerm;
         OperatorItem myOperator;
@@ -43,11 +41,10 @@ public class TermRType implements Parser {
                     case "filter" -> {
                         myString = l.lookahead().getContent();
                         l.getNextTokenAndExpect(TokenType.KEYWORD);
-                        if (true) { //TODO find break condition for while loop
-                            myPreds.add(PredType.instance.parse(l));
-                        }
+                        //TODO there should be only one pred in Syntax
+                        myPred = PredType.instance.parse(l);
                         myTermR = TermRType.instance.parse(l);
-                        item = new TermRItem(myPreds, myTermR, myString);
+                        item = new TermRItem(myPred, myTermR, myString);
                     }
                     case "intersect", "unite" -> {
                         myString = l.lookahead().getContent();
@@ -75,7 +72,7 @@ public class TermRType implements Parser {
                     item = new TermRItem(myTermR, myTupel);
                 } else {
                     item = new TermRItem();
-                    if (")".equals(l.lookahead().getContent())){
+                    if (")".equals(l.lookahead().getContent())) {
                         item.setLanguageItemType(LanguageItemType.TERMR_BRACKET);
                     }
                 }
