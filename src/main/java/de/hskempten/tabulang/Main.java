@@ -1,16 +1,11 @@
 package de.hskempten.tabulang;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
-import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
-import de.hskempten.tabulang.standardBibliothek.FunctionInterface;
-import de.hskempten.tabulang.standardBibliothek.PowFunc;
-import de.hskempten.tabulang.standardBibliothek.ToUpperCase;
+import de.hskempten.tabulang.standardBibliothek.MainClass;
 import de.hskempten.tabulang.tokenizer.Lexer;
 
 import java.nio.file.Files;
@@ -36,10 +31,7 @@ public class Main {
         l.addOneLineCommentMarker("//");
 
         // Setup interpreter library functions
-        interpreter.getEnvironment().put("toUpper", new InternalLibraryFunction(new ArrayList<>(Arrays.asList(new IdentifierNode("x"))),
-                new FunctionInterface(new ToUpperCase(), String.class)));
-        interpreter.getEnvironment().put("pow", new InternalLibraryFunction(new ArrayList<>(Arrays.asList(new IdentifierNode("x"), new IdentifierNode("y"))),
-                new FunctionInterface(new PowFunc(), InternalNumber.class, InternalNumber.class)));
+        MainClass.addStandardLibrary(interpreter);
 
         // Parse command line arguments
         CommandLineArguments cli;

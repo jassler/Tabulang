@@ -5,9 +5,10 @@ import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.mySql.DatabaseConnection;
+import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainClass {
     public static void main(String[] args){
@@ -16,16 +17,34 @@ public class MainClass {
                 new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}),
                 new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"})
         );
-        var fInterface = new FunctionInterface(new ToLowerCase(), ArrayList.class);
-        System.out.println(fInterface.execute(t.getColNames().getNames()));
+    }
+
+    private static ArrayList<IdentifierNode> generateIdentifiers(String... names) {
+        var result = new ArrayList<IdentifierNode>(names.length);
+
+        for(String n : names) {
+            result.add(new IdentifierNode(n));
+        }
+
+        return result;
     }
 
 
 
     public static void addStandardLibrary(Interpretation interpreter) {
 
-        interpreter.getEnvironment().put("print", new InternalLibraryFunction(new ArrayList<>(Arrays.asList(new IdentifierNode("x"))), new FunctionInterface(new print(), Object.class)));
-        // usw usw
+        interpreter.putValue("print", new InternalLibraryFunction(
+                generateIdentifiers("x"), new Print()
+
+        )).putValue("openDbConnection", new InternalLibraryFunction(
+                generateIdentifiers("ip", "port", "dbName", "userName", "password"), new OpenDbConnection()
+
+        )).putValue("closeDbConnection", new InternalLibraryFunction(
+                generateIdentifiers(), new CloseDbConnection()
+
+        )).putValue("queryDatabase", new InternalLibraryFunction(
+                generateIdentifiers("query"), new DatabaseToTable()
+        ));
 
     }
 

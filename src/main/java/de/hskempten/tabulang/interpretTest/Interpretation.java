@@ -111,4 +111,9 @@ public class Interpretation {
             return parent.findIdentifier(identifier);
         }
     }
+
+    public Interpretation putValue(String key, Object value) {
+        environment.put(key, value);
+        return this;
+    }
 }

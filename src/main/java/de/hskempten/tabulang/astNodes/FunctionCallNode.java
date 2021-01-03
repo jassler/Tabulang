@@ -50,7 +50,7 @@ public class FunctionCallNode extends TermNode{
             }
 
             var libFunc = f.getFunction();
-            return libFunc.execute(objectParameters);
+            return libFunc.compute(objectParameters);
 
         } else if(identifier instanceof InternalFunction f) {
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
