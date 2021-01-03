@@ -31,7 +31,8 @@ public class DatabaseConnection {
             _connection = DriverManager.getConnection(CreateConnectionString(_parameters));
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
     }
 
@@ -52,7 +53,8 @@ public class DatabaseConnection {
                 _instance = new DatabaseConnection(_parameters);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
     }
 
@@ -172,7 +174,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     * Helper function for {@link DatabaseConnection#ImportCore(MSqlTableContent)}
      *
      * Check, if a database exists or not
      *
@@ -199,7 +201,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     * Helper function for {@link DatabaseConnection#ImportCore(MSqlTableContent)}
      *
      * Remove every blank from each headlines
      *
@@ -218,7 +220,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     * Helper function for {@link DatabaseConnection#ImportCore(MSqlTableContent)}
      *
      * @param arr           Values as String (e. g. headlines)
      * @param columnTypes   Types of each value
@@ -316,7 +318,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Helper function for {@link DatabaseConnection#Import(MSqlTableContent)}
+     * Helper function for {@link DatabaseConnection#ImportCore(MSqlTableContent)}
      *
      * Get all column types of each column
      *

@@ -23,4 +23,8 @@ public class Helper {
         }
         return null;
     }
+
+    public static boolean hasExpectedObjectType(Class classes, Object item) {
+        return item.getClass().equals(classes);
+    }
 }

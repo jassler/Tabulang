@@ -1,13 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
-import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
-import de.hskempten.tabulang.items.ast.nodes.IdentifierAST;
 
 import java.util.ArrayList;
 
@@ -15,9 +10,9 @@ import java.util.ArrayList;
 public class FunctionAssignment extends StatementNode {
     private IdentifierNode identifier;
     private ArrayList<IdentifierNode> identifierList;
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
 
-    public FunctionAssignment(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<StatementNode> statements) {
+    public FunctionAssignment(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<Node> statements) {
         this.setIdentifier(identifier);
         this.setIdentifierList(identifierList);
         this.setStatements(statements);
@@ -39,19 +34,19 @@ public class FunctionAssignment extends StatementNode {
         this.identifierList = identifierList;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         String o = identifier.getIdentifier();
-            InternalFunction newFunc = new InternalFunction(identifierList, statements);
-            interpretation.getEnvironment().put(o, newFunc);
-            return newFunc;
+        InternalFunction newFunc = new InternalFunction(identifierList, statements);
+        interpretation.getEnvironment().put(o, newFunc);
+        return newFunc;
     }
 }

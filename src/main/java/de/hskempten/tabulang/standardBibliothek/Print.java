@@ -5,7 +5,7 @@ import de.hskempten.tabulang.astNodes.StatementNode;
 
 import java.util.ArrayList;
 
-public class print implements InternalFunction {
+public class Print implements InternalFunction {
 
     @Override
     public Object compute(Object... args) {

@@ -245,11 +245,11 @@ public class ASTTermParser {
                 switch (actItem.getLanguageItemType()) {
                     case LOOP_LOOPBODY -> {
                         for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                            statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
+                            statements.add((StatementNode) new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
                         }
                     }
                     case LOOP_STATEMENT -> {
-                        statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
+                        statements.add((StatementNode) new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
                     }
                 }
                 //todo remove placeholder
@@ -310,7 +310,7 @@ public class ASTTermParser {
                         ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
 
                         for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
-                            statements.add(new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
+                            statements.add((StatementNode) new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
                         }
                         return new FunctionDeclarationNode(identifiers, statements);
                     }

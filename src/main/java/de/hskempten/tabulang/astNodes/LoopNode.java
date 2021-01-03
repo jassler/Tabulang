@@ -9,11 +9,11 @@ import java.util.*;
 public class LoopNode extends StatementNode {
     private IdentifierNode identifier;
     private TermNode term;
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
     private int nestingLevel;
     private boolean groupStatementFound = false;
 
-    public LoopNode(IdentifierNode identifier, TermNode term, ArrayList<StatementNode> statements, int nestingLevel) {
+    public LoopNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
@@ -36,11 +36,11 @@ public class LoopNode extends StatementNode {
         this.term = term;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
@@ -56,7 +56,7 @@ public class LoopNode extends StatementNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object term = getTerm().evaluateNode(interpretation);
-        if(term instanceof Tuple){
+        if (term instanceof Tuple) {
             String identifier = getIdentifier().getIdentifier();
             LinkedList<Object> resultList = new LinkedList<>();
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
@@ -67,31 +67,31 @@ public class LoopNode extends StatementNode {
                 System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
             }
             System.out.println();
-            for(int i = 0; i < ((Tuple) term).getElements().size(); ++i){
+            for (int i = 0; i < ((Tuple) term).getElements().size(); ++i) {
                 Object tupleElement = ((Tuple<?>) term).getElements().get(i);
                 nestedInterpretation.getEnvironment().put(identifier, tupleElement);
-                if(tupleElement instanceof Tuple){
-                    for(int j = 0; j < ((Tuple<?>) tupleElement).getElements().size(); j++){
+                if (tupleElement instanceof Tuple) {
+                    for (int j = 0; j < ((Tuple<?>) tupleElement).getElements().size(); j++) {
                         String type = ((Tuple<?>) tupleElement).getNames().getNames().get(j);
                         Object element = ((Tuple<?>) tupleElement).getElements().get(j);
                         nestedInterpretation.getEnvironment().put(type, element);
                     }
                 }
-                for(StatementNode statementNode : statements){
-                    if(statementNode instanceof GroupBeforeFunctionCallNode && !groupStatementFound){
+                for (Node statementNode : statements) {
+                    if (statementNode instanceof GroupBeforeFunctionCallNode && !groupStatementFound) {
                         ((GroupBeforeFunctionCallNode) statementNode).setNestingLevel(nestingLevel);
                         ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(false);
                         groupStatementFound = true;
                     }
-                    if(statementNode instanceof GroupBeforeFunctionCallNode && i+1 == ((Tuple) term).getElements().size()){
+                    if (statementNode instanceof GroupBeforeFunctionCallNode && i + 1 == ((Tuple) term).getElements().size()) {
                         ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(true);
                         resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
                     } else {
                         statementNode.evaluateNode(nestedInterpretation);
                     }
                 }
-                if(!groupStatementFound){
-                    if(nestedInterpretation.getEnvironment().containsKey("mapValue" + nestingLevel)){
+                if (!groupStatementFound) {
+                    if (nestedInterpretation.getEnvironment().containsKey("mapValue" + nestingLevel)) {
                         resultList.add(nestedInterpretation.getEnvironment().get("mapValue" + nestingLevel));
                     }
                 }
