@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
+public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
 
     private final HashMap<Integer, Style> rowStyles = new HashMap<>();
     private final HashMap<Integer, Style> columnStyles = new HashMap<>();
@@ -49,7 +49,7 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
      * @param tuples Rows of tuples
      */
     @SafeVarargs
-    public Table(TableObject parent, Tuple<E>... tuples) {
+    public Table(InternalObject parent, Tuple<E>... tuples) {
         super(parent);
         this.tuples = new ArrayList<>(tuples.length);
 
@@ -87,7 +87,7 @@ public class Table<E> extends TableObject implements Iterable<Tuple<E>> {
      * @param tuples   Rows of tuples, each row having the same amount of elements as {@code colNames}
      * @param deepCopy If false, simply point the lists to the parameters given. Else create new {@code ArrayList} for each tuple
      */
-    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy, TableObject parent) {
+    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy, InternalObject parent) {
         super(parent);
         this.colNames = new HeaderNames(colNames);
         if (deepCopy) {

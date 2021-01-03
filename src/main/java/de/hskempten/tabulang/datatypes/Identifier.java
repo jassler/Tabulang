@@ -3,10 +3,11 @@ package de.hskempten.tabulang.datatypes;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class Identifier {
+public class Identifier extends InternalObject {
     private String identifierName;
 
     public Identifier(String identifierName) {
+        super(null);
         this.identifierName = identifierName;
     }
 

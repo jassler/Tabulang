@@ -5,11 +5,12 @@ import de.hskempten.tabulang.astNodes.StatementNode;
 
 import java.util.ArrayList;
 
-public class InternalFunction {
+public class InternalFunction extends InternalObject {
     private ArrayList<IdentifierNode> parameters;
     private ArrayList<StatementNode> statements;
 
     public InternalFunction(ArrayList<IdentifierNode> parameters, ArrayList<StatementNode> statements) {
+        super(null);
         this.parameters = parameters;
         this.statements = statements;
     }

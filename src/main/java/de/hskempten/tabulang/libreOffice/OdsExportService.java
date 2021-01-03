@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.libreOffice;
 
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
@@ -9,7 +10,6 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.table.Table;
 
 import java.awt.Point;
 import java.io.File;
@@ -20,7 +20,7 @@ public class OdsExportService {
     /* PROPERTIES */
     private SpreadsheetDocument _spreadsheetDocument;
     private OdfOfficeAutomaticStyles _odfOfficeAutomaticStyles;
-    private Table _initTable;
+    private org.odftoolkit.simple.table.Table _initTable;
     private ArrayList<MStyle> _styles;
 
 
@@ -69,7 +69,7 @@ public class OdsExportService {
      * @param fileName  File name of the table to be exported (without specifying ods)
      */
 
-    public void Export(de.hskempten.tabulang.datatypes.Table table, String path, String fileName){
+    public void Export(Table table, String path, String fileName){
         var content = new ArrayList<ArrayList<String>>();
         for(var item : table){
             var contentRows = new ArrayList<String>();
@@ -315,7 +315,7 @@ public class OdsExportService {
     /* PRIVATE METHODS */
 
     /**
-     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Modify the content to the correct form
      *
      * @param content   Contains all associated contents
@@ -343,7 +343,7 @@ public class OdsExportService {
     }
 
     /**
-     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the row styles of the table of the language and modify it to the correct form
      *
      * @param styles Specific style for a row
@@ -358,7 +358,7 @@ public class OdsExportService {
     }
 
     /**
-     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the column styles of the table of the language and modify it to the correct form
      *
      * @param styles Specific style for a column
@@ -373,7 +373,7 @@ public class OdsExportService {
     }
 
     /**
-     * Helper function for {@link OdsExportService#Export(de.hskempten.tabulang.datatypes.Table, String, String)}.
+     * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the cell styles of the table of the language and modify it to the correct form
      *
      * @param styles Specific style for a cell

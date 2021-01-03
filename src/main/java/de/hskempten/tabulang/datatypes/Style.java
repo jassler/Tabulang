@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
-public class Style implements Iterable<Map.Entry<String, String>> {
+public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
 
     public static final String FONT_COLOR = "font-color";
     public static final String FONT_FAMILY = "font-family";
@@ -25,6 +25,10 @@ public class Style implements Iterable<Map.Entry<String, String>> {
 
     public Style() {
         this.annotations = new HashMap<>();
+    }
+
+    public Style(HashMap<String, String> annotations) {
+        this.annotations = annotations;
     }
 
     public HashMap<String, String> getAnnotations() {
@@ -92,10 +96,20 @@ public class Style implements Iterable<Map.Entry<String, String>> {
     }
 
     public Style importStyle(Style s) {
+        annotations.putAll(s.annotations);
+        return this;
+    }
+
+    public Style importStyleIfAbsent(Style s) {
         for (var a : s) {
-            annotations.put(a.getKey(), a.getValue());
+            annotations.putIfAbsent(a.getKey(), a.getValue());
         }
         return this;
+    }
+
+    @Override
+    public Style clone() {
+        return new Style((HashMap<String, String>) this.annotations.clone());
     }
 
     @Override

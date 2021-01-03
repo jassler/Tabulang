@@ -3,16 +3,18 @@ package de.hskempten.tabulang.datatypes;
 import java.math.BigInteger;
 import java.util.Objects;
 
-public class InternalNumber {
+public class InternalNumber extends InternalObject {
     private BigInteger numerator;
     private BigInteger denominator;
 
     public InternalNumber(BigInteger numerator, BigInteger denominator) {
+        super(null);
         this.numerator = numerator;
         this.denominator = denominator;
     }
 
     public InternalNumber(float value) {
+        super(null);
         this.setFloatValue(value);
     }
 

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.datatypes;
 
 import java.util.function.Predicate;
 
-public class DataCell<E> extends TableObject {
+public class DataCell<E> extends InternalObject {
 
     private final E data;
     private final String name;
@@ -13,11 +13,11 @@ public class DataCell<E> extends TableObject {
 //        this(data, name, style, null);
 //    }
 
-    public DataCell(E data, String name, Style style, TableObject parent) {
+    public DataCell(E data, String name, Style style, InternalObject parent) {
         this(data, name, style, parent, null);
     }
 
-    public DataCell(E data, String name, Style style, TableObject parent, Predicate<E> conditionForStyleToApply) {
+    public DataCell(E data, String name, Style style, InternalObject parent, Predicate<E> conditionForStyleToApply) {
         super(parent);
         this.data = data;
         this.name = name;

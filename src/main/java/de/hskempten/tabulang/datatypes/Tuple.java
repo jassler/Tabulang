@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCell<E>> {
+public class Tuple<E> extends InternalObject implements Cloneable, Iterable<DataCell<E>> {
 
     private final ArrayList<E> elements;
     private final HeaderNames names;
@@ -122,11 +122,11 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
-    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, TableObject parent) {
+    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, InternalObject parent) {
         this(elements, new HeaderNames(names), isHorizontal, parent);
     }
 
-    protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, TableObject parent) {
+    protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, InternalObject parent) {
         super(parent);
         if(elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
@@ -399,10 +399,10 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
     }
 
     private class Itr implements Iterator<DataCell<E>> {
-        private final TableObject parent;
+        private final InternalObject parent;
         private int cursor = 0;
 
-        private Itr(TableObject parent) {
+        private Itr(InternalObject parent) {
             this.parent = parent;
         }
 

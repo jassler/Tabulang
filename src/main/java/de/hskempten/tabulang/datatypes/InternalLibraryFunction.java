@@ -7,12 +7,19 @@ import de.hskempten.tabulang.standardBibliothek.InternalFunction;
 
 import java.util.ArrayList;
 
-public class InternalLibraryFunction {
+/**
+ * Node for function calls that are directly implemented in Java, most likely in the standardLibrary package.
+ * 
+ * When the {@link de.hskempten.tabulang.astNodes.FunctionCallNode} interprets this function,
+ * it calls {@link FunctionInterface#execute(Object...)}.
+ */
+public class InternalLibraryFunction extends InternalObject {
 
     private ArrayList<IdentifierNode> parameters;
     private de.hskempten.tabulang.standardBibliothek.FunctionInterface f;
 
     public InternalLibraryFunction(ArrayList<IdentifierNode> parameters, de.hskempten.tabulang.standardBibliothek.FunctionInterface f) {
+        super(null);
         this.parameters = parameters;
         this.f = f;
     }
