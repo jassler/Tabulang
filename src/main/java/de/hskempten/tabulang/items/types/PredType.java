@@ -94,6 +94,17 @@ public class PredType implements LanguageType {
                     } else {
                         throw new ParseTimeException(l, "Illegal end of PredItem: " + l.lookahead().getContent());
                     }
+                } else if ("[".equals(l.lookahead().getContent())) {
+                    myTerm = TermType.instance.parse(l);
+                    if ("binRelSym".equals(l.lookahead().getType())) {
+                        myBinRelSym = BinRelSymType.instance.parse(l);
+                        mySecondTerm = TermType.instance.parse(l);
+                        myPredR = PredRType.instance.parse(l);
+                        item = new PredItem(myTerm, myPredR, myBinRelSym, mySecondTerm);
+                    } else {
+                        myPredR = PredRType.instance.parse(l);
+                        item = new PredItem(myTerm, myPredR);
+                    }
                 } else {
                     throw new ParseTimeException(l, "Illegal bracket: " + l.lookahead().getContent());
                 }
