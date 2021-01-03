@@ -2,6 +2,7 @@ package de.hskempten.tabulang.datatypes;
 
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -421,5 +422,20 @@ public class Tuple<E> extends TableObject implements Cloneable, Iterable<DataCel
             cursor++;
             return result;
         }
+    }
+
+    public Table transformIntoTable(){
+        Object firstObject = elements.get(0);
+        if(firstObject instanceof Tuple){
+            int sizeRequirement = ((Tuple<?>) firstObject).size();
+            for(Object o : elements){
+                if(!(o instanceof Tuple) || ((Tuple<?>) o).size() != sizeRequirement){
+                    throw new TupleCannotBeTransformedException("The tuple ´\n" + this + "\n can not be transformed into a table");
+                }
+            }
+        } else {
+            throw new TupleCannotBeTransformedException("The tuple \n" + this + "\n can not be transformed into a table");
+        }
+        return new Table(this);
     }
 }
