@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
+import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.TermNode;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public class LoopAST implements StatementAST, TermAST {
     private IdentifierNode identifier;
     private TermNode term;
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
     private int nestingLevel;
 
-    public LoopAST(IdentifierNode identifier, TermNode term, ArrayList<StatementNode> statements, int nestingLevel) {
+    public LoopAST(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
@@ -40,11 +40,11 @@ public class LoopAST implements StatementAST, TermAST {
         this.term = term;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
