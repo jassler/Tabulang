@@ -23,13 +23,13 @@ public class AddNode extends BinaryArithmeticNode{
             } else if (left instanceof InternalNumber && right instanceof InternalNumber) {
                 return ((InternalNumber) left).add((InternalNumber) right);
             } else {
-                throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") + " + right + " (" + right.getClass() + ") can not be executed. " +
+                throw new IllegalOperandArgumentException("Operation '" + toString() + "' can not be executed. " +
                         "Allowed operands: Strings and/or Numbers.");
             }
     }
 
     @Override
     public String toString() {
-        return "AddNode{} " + super.toString();
+        return getLeftNode() + " + " + getRightNode();
     }
 }

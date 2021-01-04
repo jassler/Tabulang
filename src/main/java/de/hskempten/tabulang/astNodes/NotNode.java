@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class NotNode extends PredicateNode{
@@ -20,10 +22,11 @@ public class NotNode extends PredicateNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object pred = node.evaluateNode(interpretation);
-        if(pred instanceof Boolean){
-            return !((Boolean)pred);
+        if(pred instanceof InternalBoolean bool){
+            return !(bool.getaBoolean());
         } else {
-            throw new IllegalArgumentException("Expected Boolean but got " + pred.getClass().getSimpleName());
+            throw new IllegalOperandArgumentException("Operation 'not " + pred + " (" + pred.getClass() + ") can not be executed. " +
+                    "Allowed operand: Boolean.");
         }
     }
 }

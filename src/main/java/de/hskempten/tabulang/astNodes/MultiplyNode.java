@@ -16,12 +16,11 @@ public class MultiplyNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            return ((InternalNumber)left).multiply((InternalNumber)right);
-        } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") * " + right + " (" + right.getClass() + ") can not be executed. " +
+        if (!(left instanceof InternalNumber leftValue) || !(right instanceof InternalNumber rightValue)) {
+            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") mod " + right + " (" + right.getClass() + ") can not be executed. " +
                     "Allowed operands: Numbers.");
         }
+        return leftValue.multiply(rightValue);
     }
 
     @Override

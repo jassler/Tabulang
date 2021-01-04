@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class BooleanNode extends PredicateNode {
@@ -19,6 +20,6 @@ public class BooleanNode extends PredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return aBoolean;
+        return new InternalBoolean(aBoolean);
     }
 }

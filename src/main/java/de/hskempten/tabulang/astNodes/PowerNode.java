@@ -16,11 +16,10 @@ public class PowerNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            return ((InternalNumber) left).pow((InternalNumber) right);
-        } else {
+        if (!(left instanceof InternalNumber) || !(right instanceof InternalNumber)) {
             throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ^ " + right + " (" + right.getClass() + ") can not be executed. " +
                     "Allowed operands: Numbers.");
         }
+        return ((InternalNumber) left).pow((InternalNumber) right);
     }
 }

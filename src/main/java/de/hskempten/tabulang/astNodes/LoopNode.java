@@ -78,13 +78,13 @@ public class LoopNode extends StatementNode {
                     }
                 }
                 for (Node statementNode : statements) {
-                    if (statementNode instanceof GroupBeforeFunctionCallNode && !groupStatementFound) {
-                        ((GroupBeforeFunctionCallNode) statementNode).setNestingLevel(nestingLevel);
-                        ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(false);
+                    if (statementNode instanceof GroupNode && !groupStatementFound) {
+                        ((GroupNode) statementNode).setNestingLevel(nestingLevel);
+                        ((GroupNode) statementNode).setLastIteration(false);
                         groupStatementFound = true;
                     }
-                    if (statementNode instanceof GroupBeforeFunctionCallNode && i + 1 == ((Tuple) term).getElements().size()) {
-                        ((GroupBeforeFunctionCallNode) statementNode).setLastIteration(true);
+                    if (statementNode instanceof GroupNode && i + 1 == ((Tuple) term).getElements().size()) {
+                        ((GroupNode) statementNode).setLastIteration(true);
                         resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
                     } else {
                         statementNode.evaluateNode(nestedInterpretation);

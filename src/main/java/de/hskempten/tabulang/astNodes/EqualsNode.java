@@ -1,7 +1,9 @@
 package de.hskempten.tabulang.astNodes;
 
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
@@ -12,10 +14,14 @@ public class EqualsNode extends BinaryPredicateNode {
     }
 
     @Override
-    public Boolean evaluateNode(Interpretation interpretation) {
-        //TODO remove placeholder return once InternalNumber has compareMethod
-        return getNumericValue(getLeftNode(), interpretation).getFloatValue() == getNumericValue(getRightNode(), interpretation).getFloatValue();
-        //return valueLeft.compareTo(valueRight) == 0;
+    public Object evaluateNode(Interpretation interpretation) {
+        Object left = getLeftNode().evaluateNode(interpretation);
+        Object right = getRightNode().evaluateNode(interpretation);
+        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
+            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") && " + right + " (" + right.getClass() + ") can not be executed. " +
+                    "Allowed operands: Boolean.");
+        }
+        return new InternalBoolean(leftNumber.compareTo(rightNumber) == 0);
     }
 
     @Override
