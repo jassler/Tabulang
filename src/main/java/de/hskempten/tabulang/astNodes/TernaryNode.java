@@ -1,11 +1,14 @@
 package de.hskempten.tabulang.astNodes;
 
-public abstract class TernaryNode extends Node{
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
+public abstract class TernaryNode extends Node {
     private Node left;
     private Node middle;
     private Node right;
 
-    public TernaryNode(Node left, Node middle, Node right) {
+    public TernaryNode(Node left, Node middle, Node right, TextPosition textPosition) {
+        super(textPosition);
         this.left = left;
         this.middle = middle;
         this.right = right;

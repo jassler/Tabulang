@@ -3,15 +3,16 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class NumberNode extends TermNode{
+public class NumberNode extends TermNode {
     private BigInteger numerator;
     private BigInteger denominator;
 
-    public NumberNode(BigInteger numerator, BigInteger denominator) {
+    public NumberNode(BigInteger numerator, BigInteger denominator, TextPosition textPosition) {
+        super(textPosition);
         this.setNumerator(numerator);
         this.setDenominator(denominator);
     }
@@ -36,8 +37,8 @@ public class NumberNode extends TermNode{
         return numerator.floatValue() / denominator.floatValue();
     }
 
-    public Object getValue(){
-        if(getFloatValue() % 1 == 0){
+    public Object getValue() {
+        if (getFloatValue() % 1 == 0) {
             return (int) getFloatValue();
         } else {
             return getFloatValue();

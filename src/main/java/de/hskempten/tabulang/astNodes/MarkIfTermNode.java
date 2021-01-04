@@ -4,12 +4,13 @@ import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkIfTermNode extends MarkTermNode {
     private Node pred;
 
-    public MarkIfTermNode(Node left, Node middle, Node right, Node pred) {
-        super(left, middle, right);
+    public MarkIfTermNode(Node left, Node middle, Node right, Node pred, TextPosition textPosition) {
+        super(left, middle, right, textPosition);
         this.pred = pred;
 
     }

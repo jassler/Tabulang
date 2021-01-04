@@ -6,10 +6,11 @@ import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkTermNode extends TernaryTermNode {
-    public MarkTermNode(Node left, Node middle, Node right) {
-        super(left, middle, right);
+    public MarkTermNode(Node left, Node middle, Node right, TextPosition textPosition) {
+        super(left, middle, right, textPosition);
     }
 
     @Override

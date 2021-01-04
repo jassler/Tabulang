@@ -4,15 +4,17 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DistinctFromNode extends TermNode{
+public class DistinctFromNode extends TermNode {
     private TermNode node;
     private IdentifierNode[] names;
 
-    public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names) {
+    public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
         this.names = (IdentifierNode[]) names.toArray();
     }
@@ -38,7 +40,7 @@ public class DistinctFromNode extends TermNode{
         Object object = node.evaluateNode(interpretation);
         try {
             object = ifTupleTransform(object);
-        } catch (TupleCannotBeTransformedException ignored){
+        } catch (TupleCannotBeTransformedException ignored) {
             //TODO testen 4.01.
         }
         if (object instanceof Table) {
@@ -49,7 +51,8 @@ public class DistinctFromNode extends TermNode{
             return ((Table) object).projection((String[]) columnNames.toArray());
         } else {
             throw new IllegalOperandArgumentException("Got " + object + " on the right side of'" + toString()
-                    + "'. Allowed operand on the right side: Table.");        }
+                    + "'. Allowed operand on the right side: Table.");
+        }
     }
 
     @Override

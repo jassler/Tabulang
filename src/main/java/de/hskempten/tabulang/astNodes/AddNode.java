@@ -1,17 +1,15 @@
 package de.hskempten.tabulang.astNodes;
 
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.math.BigDecimal;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class AddNode extends BinaryArithmeticNode {
-    public AddNode(TermNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+    public AddNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override

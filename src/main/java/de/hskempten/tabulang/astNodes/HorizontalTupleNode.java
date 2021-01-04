@@ -3,11 +3,13 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class HorizontalTupleNode extends TermNode{
+public class HorizontalTupleNode extends TermNode {
     private TermNode node;
 
-    public HorizontalTupleNode(TermNode tupleNode) {
+    public HorizontalTupleNode(TermNode tupleNode, TextPosition textPosition) {
+        super(textPosition);
         this.node = tupleNode;
     }
 

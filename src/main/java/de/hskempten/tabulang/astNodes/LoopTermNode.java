@@ -5,6 +5,7 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.*;
 
@@ -15,7 +16,8 @@ public class LoopTermNode extends TermNode {
     private int nestingLevel;
     private boolean groupStatementFound = false;
 
-    public LoopTermNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
+    public LoopTermNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel, TextPosition textPosition) {
+        super(textPosition);
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
@@ -59,7 +61,7 @@ public class LoopTermNode extends TermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object termObject = getTerm().evaluateNode(interpretation);
 
-        if(!(termObject instanceof Tuple term))
+        if (!(termObject instanceof Tuple term))
             throw new IllegalTupleOperandArgumentException("Expected Tuple but got " + term.getClass().getSimpleName());
 
         String identifier = getIdentifier().getIdentifier();
@@ -106,7 +108,7 @@ public class LoopTermNode extends TermNode {
         }
 
         List<InternalDataObject> converted = new ArrayList<>(resultList.size());
-        for(var obj : resultList)
+        for (var obj : resultList)
             converted.add(new InternalDataObject(obj));
         Tuple<InternalDataObject> result = new Tuple<>(converted);
         System.out.println("Loop Result: " + result);

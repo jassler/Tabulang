@@ -4,12 +4,13 @@ import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class ForAllSuchThatNode extends BinaryPredicateNode{
     private String variableName;
 
-    public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName) {
-        super(leftNode, rightNode);
+    public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
         this.variableName = variableName;
     }
 

@@ -4,11 +4,12 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkInLoopNode extends MarkStatementNode {
 
-    public MarkInLoopNode(Node left, Node right){
-        super(null, left, right);
+    public MarkInLoopNode(Node left, Node right, TextPosition textPosition) {
+        super(null, left, right, textPosition);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class MarkInLoopNode extends MarkStatementNode {
                 markNonTupleObject(date, interpretation);
             }
             return null;
-        } catch (IllegalOperandArgumentException illegalOperandArgumentException){
+        } catch (IllegalOperandArgumentException illegalOperandArgumentException) {
             illegalOperandArgumentException.printStackTrace();
         }
         return null;

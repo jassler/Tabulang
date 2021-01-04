@@ -4,14 +4,13 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.util.HashMap;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class ExistsSuchThatNode extends BinaryPredicateNode {
     private String variableName;
 
-    public ExistsSuchThatNode(Node leftNode, Node rightNode, String variableName) {
-        super(leftNode, rightNode);
+    public ExistsSuchThatNode(Node leftNode, Node rightNode, String variableName, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
         this.variableName = variableName;
     }
 

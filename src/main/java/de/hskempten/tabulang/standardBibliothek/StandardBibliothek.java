@@ -2,9 +2,6 @@ package de.hskempten.tabulang.standardBibliothek;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
-import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;

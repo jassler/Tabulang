@@ -3,6 +3,7 @@ package de.hskempten.tabulang.items.ast;
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.PredTermNode;
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -81,45 +82,47 @@ public class ASTPredParser {
 
         LanguageItem actItem = items.get(items.size() - 1);
         items.remove(items.size() - 1);
-
+        TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
             case PRED_BINRELSYM -> {
                 TermNode leftTerm = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
                 TermNode rightTerm = new ASTTermParser().parse(((PredItem) actItem).getMySecondTerm());
+                textPosition = new TextPosition(leftTerm.getTextPosition(), rightTerm.getTextPosition());
                 return switch (((PredItem) actItem).getMyBinResSym().getMyString()) {
-                    case "=" -> new EqualsNode(leftTerm, rightTerm);
-                    case "<" -> new LessThanNode(leftTerm, rightTerm);
-                    case ">" -> new GreaterThanNode(leftTerm, rightTerm);
-                    case "<=" -> new LessThanOrEqualToNode(leftTerm, rightTerm);
-                    case ">=" -> new GreaterThanOrEqualToNode(leftTerm, rightTerm);
-                    case "!=" -> new NotEqualNode(leftTerm, rightTerm);
+                    case "=" -> new EqualsNode(leftTerm, rightTerm, textPosition);
+                    case "<" -> new LessThanNode(leftTerm, rightTerm, textPosition);
+                    case ">" -> new GreaterThanNode(leftTerm, rightTerm, textPosition);
+                    case "<=" -> new LessThanOrEqualToNode(leftTerm, rightTerm, textPosition);
+                    case ">=" -> new GreaterThanOrEqualToNode(leftTerm, rightTerm, textPosition);
+                    case "!=" -> new NotEqualNode(leftTerm, rightTerm, textPosition);
                     default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinResSym().getMyString());
                 };
             }
             case PRED_TERM -> {
                 TermNode term = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
-                return new PredTermNode(term);
+                return new PredTermNode(term, textPosition);
             }
             case PREDR_BOOL -> {
                 PredicateNode right = predParser(items);
                 PredicateNode left = predParser(items);
+                textPosition = new TextPosition(right.getTextPosition(), left.getTextPosition());
                 return switch (((PredRItem) actItem).getMyBinBool().getMyString()) {
-                    case "and" -> new AndNode(left, right);
-                    case "or" -> new OrNode(left, right);
-                    case "xor" -> new XorNode(left, right);
-                    case "iff" -> new IffNode(left, right);
-                    case "impl" -> new ImplNode(left, right);
+                    case "and" -> new AndNode(left, right, textPosition);
+                    case "or" -> new OrNode(left, right, textPosition);
+                    case "xor" -> new XorNode(left, right, textPosition);
+                    case "iff" -> new IffNode(left, right, textPosition);
+                    case "impl" -> new ImplNode(left, right, textPosition);
                     default -> throw new IllegalStateException("Unexpected value: " + ((PredRItem) actItem).getMyBinBool().getMyString());
                 };
             }
             case PRED_NOT -> {
                 PredicateNode pred = new ASTPredParser().parse(((PredItem) actItem).getMyPred());
-                return new NotNode(pred);
+                return new NotNode(pred, textPosition);
             }
             case PRED_IN -> {
-                IdentifierNode identifier = new IdentifierNode(((PredItem) actItem).getMyIdentifier().getMyString());
+                IdentifierNode identifier = new IdentifierNode(((PredItem) actItem).getMyIdentifier().getMyString(), textPosition);
                 TermNode term = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
-                return new InTupleNode(identifier, term);
+                return new InTupleNode(identifier, term, textPosition);
             }
             case QUANTIFIED_EXISTS -> {
                 ExistsPredItem exi = ((ExistsPredItem) actItem);
@@ -127,7 +130,7 @@ public class ASTPredParser {
                 String string = exi.getMyIdentifier().getMyString();
                 TermNode term = new ASTTermParser().parse(exi.getMyTerm());
                 PredicateNode pred = new ASTPredParser().parse(exi.getMyPred());
-                return new ExistsSuchThatNode(term, pred, string);
+                return new ExistsSuchThatNode(term, pred, string, textPosition);
             }
             case QUANTIFIED_FORALL -> {
                 ForallPredItem fora = ((ForallPredItem) actItem);
@@ -136,20 +139,20 @@ public class ASTPredParser {
                 String string = fora.getMyIdentifier().getMyString();
                 TermNode term = new ASTTermParser().parse(fora.getMyTerm());
                 PredicateNode pred = new ASTPredParser().parse(fora.getMyPred());
-                return new ForAllSuchThatNode(term, pred, string);
+                return new ForAllSuchThatNode(term, pred, string, textPosition);
             }
             case TERM_FUNCALL -> {
-                IdentifierNode identifier = new IdentifierNode(((FunCallItem) actItem).getMyIdentifier().getMyString());
+                IdentifierNode identifier = new IdentifierNode(((FunCallItem) actItem).getMyIdentifier().getMyString(), textPosition);
                 ArrayList<TermNode> terms = new ArrayList<TermNode>();
                 for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
                 }
                 //TODO remove once line 151 works
-                return new PredTermNode(identifier); //Placeholder
+                return new PredTermNode(identifier, textPosition); //Placeholder
                 //return new FunctionCallNode(identifier, terms);
             }
             case PRED_BOOLEAN -> {
-                return new BooleanNode(((PredItem) actItem).getMyBoolean());
+                return new BooleanNode(((PredItem) actItem).getMyBoolean(), textPosition);
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }

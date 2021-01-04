@@ -2,6 +2,7 @@ package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,61 +120,46 @@ public class ASTTermParser {
         LanguageItem actItem = items.get(items.size() - 1);
         items.remove(items.size() - 1);
 
+        TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
-            case OPERATOR_ADD -> {
+            case OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_MOD,
+                    OPERATOR_DIV, OPERATOR_DIVIDE, OPERATOR_POWER -> {
                 TermNode right = termParser(items);
                 TermNode left = termParser(items);
-                return new AddNode(left, right);
-            }
-            case OPERATOR_SUBTRACT -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new SubtractNode(left, right);
-            }
-            case OPERATOR_MULTIPLY -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new MultiplyNode(left, right);
-            }
-            case OPERATOR_MOD -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new ModNode(left, right);
-            }
-            case OPERATOR_DIV -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new DivNode(left, right);
-            }
-            case OPERATOR_DIVIDE -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new DivisionNode(left, right);
-            }
-            case OPERATOR_POWER -> {
-                TermNode right = termParser(items);
-                TermNode left = termParser(items);
-                return new PowerNode(left, right);
+                textPosition = new TextPosition(right.getTextPosition(), left.getTextPosition());
+                switch (actItem.getLanguageItemType()) {
+                    case OPERATOR_ADD:
+                        return new AddNode(left, right, textPosition);
+                    case OPERATOR_SUBTRACT:
+                        return new SubtractNode(left, right, textPosition);
+                    case OPERATOR_MULTIPLY:
+                        return new MultiplyNode(left, right, textPosition);
+                    case OPERATOR_MOD:
+                        return new ModNode(left, right, textPosition);
+                    case OPERATOR_DIV:
+                        return new DivNode(left, right, textPosition);
+                    case OPERATOR_DIVIDE:
+                        return new DivisionNode(left, right, textPosition);
+                    case OPERATOR_POWER:
+                        return new PowerNode(left, right, textPosition);
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                }
             }
             case ORDINAL_NUMBER -> {
                 NumberItem nItem = (NumberItem) actItem;
-                NumberNode item = new NumberNode(nItem.getNumerator(), nItem.getDenominator());
-
-                return item;
+                return new NumberNode(nItem.getNumerator(), nItem.getDenominator(), textPosition);
             }
             case STATEMENT_IDENTIFIER -> {
-                IdentifierNode item = new IdentifierNode(((IdentifierItem) actItem).getMyString());
-                return item;
+                return new IdentifierNode(((IdentifierItem) actItem).getMyString(), textPosition);
             }
             case TUPEL_EMPTY -> {
-                TupleNode item = new TupleNode();
-                return item;
+                return new TupleNode(textPosition);
             }
             case TUPEL_ONE -> {
                 TupelItem tupel = (TupelItem) actItem;
                 TermNode term = new ASTTermParser().parse(tupel.getMyTerm());
-                TupleNode item = new TupleNode(term);
-                return item;
+                return new TupleNode(term, textPosition);
             }
             case TUPEL_MULTI -> {
                 TupelItem tupel = (TupelItem) actItem;
@@ -182,47 +168,44 @@ public class ASTTermParser {
                 for (int i = 0; i < tupel.getMyTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(tupel.getMyTerms().get(i)));
                 }
-                TupleNode item = new TupleNode(terms);
-                return item;
+                return new TupleNode(terms, textPosition);
             }
             case TUPEL_INTERVAL -> {
                 TupelItem tupel = (TupelItem) actItem;
                 TermNode firstTerm = new ASTTermParser().parse(tupel.getMyIntervall().getMyTerm());
                 TermNode secondTerm = new ASTTermParser().parse(tupel.getMyIntervall().getMySecondTerm());
-                return new SpreadNode(firstTerm, secondTerm);
+                return new SpreadNode(firstTerm, secondTerm, textPosition);
             }
             case ORDINAL_QUOTEDSTRING -> {
                 String string = ((QuotedStringItem) actItem).getMyString();
-                StringNode item = new StringNode(string);
-                return item;
+                return new StringNode(string, textPosition);
             }
             case ORDINAL_NULL -> {
-                NullNode item = new NullNode();
-                return item;
+                return new NullNode(textPosition);
             }
             case TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V -> {
                 TermNode item;
                 TermNode term = new ASTTermParser().parse(((DirectionalTermItem) actItem).getMyTerm());
                 switch (actItem.getLanguageItemType()) {
-                    case TERM_DIRECTIONAL_H -> item = new HorizontalTupleNode(term);
-                    case TERM_DIRECTIONAL_V -> item = new VerticalTupleNode(term);
+                    case TERM_DIRECTIONAL_H -> item = new HorizontalTupleNode(term, textPosition);
+                    case TERM_DIRECTIONAL_V -> item = new VerticalTupleNode(term, textPosition);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
                 return item;
             }
             case TERM_FUNCALL -> {
-                IdentifierNode identifier = new IdentifierNode(((FunCallItem) actItem).getMyIdentifier().getMyString());
+                IdentifierNode identifier = new IdentifierNode(((FunCallItem) actItem).getMyIdentifier().getMyString(), textPosition);
                 ArrayList<TermNode> terms = new ArrayList<TermNode>();
                 for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
                 }
-                return new FunctionCallNode(identifier, terms);
+                return new FunctionCallNode(identifier, terms, textPosition);
             }
             case AGGREGATION_AVERAGE -> {
                 AverageTItem ave = ((AggregationTItem) actItem).getMyAverageT();
-                IdentifierNode identifier = new IdentifierNode(ave.getMyIdentifier().getMyString());
+                IdentifierNode identifier = new IdentifierNode(ave.getMyIdentifier().getMyString(), textPosition);
                 TermNode term = new ASTTermParser().parse(ave.getMyTerm());
-                return new AverageNode(identifier, term);
+                return new AverageNode(identifier, term, textPosition);
 
             }
             case AGGREGATION_COUNT -> {
@@ -230,14 +213,14 @@ public class ASTTermParser {
                 TermNode term = new ASTTermParser().parse(cnt.getMyTerm());
                 switch (cnt.getLanguageItemType()) {
                     case COUNT_EMPTY -> {
-                        return new CountNode(term);
+                        return new CountNode(term, textPosition);
                     }
                     case COUNT_DIRECTIONAL -> {
                         switch (cnt.getMyString()) {
                             case "horizontal":
-                                return new CountHorizontalNode(term);
+                                return new CountHorizontalNode(term, textPosition);
                             case "vertical":
-                                return new CountVerticalNode(term);
+                                return new CountVerticalNode(term, textPosition);
                             default:
                                 throw new IllegalStateException("Unexpected value: " + cnt.getMyString());
                         }
@@ -249,14 +232,14 @@ public class ASTTermParser {
                 DistinctTItem dis = (DistinctTItem) actItem;
                 ArrayList<IdentifierNode> identifiers = new ArrayList<IdentifierNode>();
                 for (int i = 0; i < dis.getMyIdentifiers().size(); i++) {
-                    identifiers.add(new IdentifierNode(dis.getMyIdentifiers().get(i).getMyString()));
+                    identifiers.add(new IdentifierNode(dis.getMyIdentifiers().get(i).getMyString(), textPosition));
                 }
                 TermNode term = new ASTTermParser().parse(dis.getMyTerm());
-                return new DistinctFromNode(term, identifiers);
+                return new DistinctFromNode(term, identifiers, textPosition);
             }
             case LOOP_LOOPBODY, LOOP_STATEMENT -> {
                 LoopItem loop = (LoopItem) actItem;
-                IdentifierNode identifier = new IdentifierNode(loop.getMyIdentifier().getMyString());
+                IdentifierNode identifier = new IdentifierNode(loop.getMyIdentifier().getMyString(), textPosition);
                 TermNode term = new ASTTermParser().parse(loop.getMyTerm());
                 ArrayList<Node> statements = new ArrayList<Node>();
                 switch (actItem.getLanguageItemType()) {
@@ -269,9 +252,7 @@ public class ASTTermParser {
                         statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
                     }
                 }
-                //todo remove placeholder
-                //return identifier; //Placeholder
-                return new LoopTermNode(identifier, term, statements, nestingLevel + 1);
+                return new LoopTermNode(identifier, term, statements, nestingLevel + 1, textPosition);
             }
             case TERMR_MARK -> {
                 TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
@@ -282,13 +263,13 @@ public class ASTTermParser {
                     case MARK_WITHOUTIF -> {
                         previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                         TermNode prevTerm = new ASTTermParser().parse(previousTerm);
-                        return new MarkTermNode(prevTerm, markTerm, asTerm);
+                        return new MarkTermNode(prevTerm, markTerm, asTerm, textPosition);
                     }
                     case MARK_WITHIF -> {
                         previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                         TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                         PredicateNode pred = new ASTPredParser().parse(mark.getMyPred());
-                        return new MarkIfTermNode(prevTerm, markTerm, asTerm, pred);
+                        return new MarkIfTermNode(prevTerm, markTerm, asTerm, pred, textPosition);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
@@ -298,36 +279,36 @@ public class ASTTermParser {
                 previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                 TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                 PredicateNode pred = new ASTPredParser().parse(((TermRItem) actItem).getMyPred());
-                return new FilterNode(prevTerm, pred);
+                return new FilterNode(prevTerm, pred, textPosition);
             }
             case TERMR_INTERSECT -> {
                 TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
                 previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                 TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                 TermNode term = new ASTTermParser().parse(((TermRItem) actItem).getMyTerm());
-                return new IntersectNode(prevTerm, term);
+                return new IntersectNode(prevTerm, term, textPosition);
             }
             case TERMR_UNITE -> {
                 TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
                 previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                 TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                 TermNode term = new ASTTermParser().parse(((TermRItem) actItem).getMyTerm());
-                return new UniteNode(prevTerm, term);
+                return new UniteNode(prevTerm, term, textPosition);
             }
             case FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                 FunDefItem fundef = (FunDefItem) actItem;
                 ArrayList<IdentifierNode> identifiers = new ArrayList<IdentifierNode>();
                 switch (actItem.getLanguageItemType()) {
                     case FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY -> {
-                        identifiers.add(new IdentifierNode(fundef.getMyIdentifier().getMyString()));
+                        identifiers.add(new IdentifierNode(fundef.getMyIdentifier().getMyString(), textPosition));
                     }
                     case FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                         switch (fundef.getMyVList().getLanguageItemType()) {
                             case VLIST_ONE, VLIST_MULTI -> {
-                                identifiers.add(new IdentifierNode(fundef.getMyVList().getMyIdentifier().getMyString()));
+                                identifiers.add(new IdentifierNode(fundef.getMyVList().getMyIdentifier().getMyString(), textPosition));
                                 if (LanguageItemType.VLIST_MULTI.equals(fundef.getMyVList().getLanguageItemType())) {
                                     for (int i = 0; i < fundef.getMyVList().getMyOtherIdentifiers().size(); i++) {
-                                        identifiers.add(new IdentifierNode(fundef.getMyVList().getMyOtherIdentifiers().get(i).getMyString()));
+                                        identifiers.add(new IdentifierNode(fundef.getMyVList().getMyOtherIdentifiers().get(i).getMyString(), textPosition));
                                     }
                                 }
                             }
@@ -340,8 +321,8 @@ public class ASTTermParser {
                     case FUNDEF_IDENTIFIER_TERM, FUNDEF_VLIST_TERM -> {
                         TermNode term = new ASTTermParser().parse(fundef.getMyTerm());
                         ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
-                        statements.add(new ReturnNode(term));
-                        return new FunctionDeclarationNode(identifiers, statements);
+                        statements.add(new ReturnNode(term, textPosition));
+                        return new FunctionDeclarationNode(identifiers, statements, textPosition);
                     }
                     case FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_FUNCBODY -> {
                         ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
@@ -349,20 +330,18 @@ public class ASTTermParser {
                         for (int i = 0; i < fundef.getMyFuncBody().getMyStatements().size(); i++) {
                             statements.add((StatementNode) new ASTStatementParser().parse(fundef.getMyFuncBody().getMyStatements().get(i)));
                         }
-                        return new FunctionDeclarationNode(identifiers, statements);
+                        return new FunctionDeclarationNode(identifiers, statements, textPosition);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
-
             }
             case TERMR_DOT -> {
                 TermNode right = termParser(items);
                 TermNode left = termParser(items);
-                return new TupleElementNode(left, right);
+                return new TupleElementNode(left, right, textPosition);
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }
-
     }
 
 

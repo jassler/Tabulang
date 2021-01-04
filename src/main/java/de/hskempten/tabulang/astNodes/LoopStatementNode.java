@@ -5,8 +5,11 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class LoopStatementNode extends StatementNode {
     private IdentifierNode identifier;
@@ -15,7 +18,8 @@ public class LoopStatementNode extends StatementNode {
     private int nestingLevel;
     private boolean groupStatementFound = false;
 
-    public LoopStatementNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
+    public LoopStatementNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel, TextPosition textPosition) {
+        super(textPosition);
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);

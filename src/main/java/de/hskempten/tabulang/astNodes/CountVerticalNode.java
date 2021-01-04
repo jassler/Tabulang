@@ -3,13 +3,15 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.math.BigInteger;
 
-public class CountVerticalNode extends TermNode{
+public class CountVerticalNode extends TermNode {
     private TermNode node;
 
-    public CountVerticalNode(TermNode node) {
+    public CountVerticalNode(TermNode node, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
     }
 
@@ -24,7 +26,7 @@ public class CountVerticalNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Table<?> t){
+        if (o instanceof Table<?> t) {
             return new InternalNumber(new BigInteger(Integer.toString(t.getNumberOfRows())), new BigInteger("1"));
         } else {
             return new InternalNumber(new BigInteger("1"), new BigInteger("1"));

@@ -4,13 +4,15 @@ import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.math.BigInteger;
 
-public class CountHorizontalNode extends TermNode{
+public class CountHorizontalNode extends TermNode {
     private TermNode node;
 
-    public CountHorizontalNode(TermNode node) {
+    public CountHorizontalNode(TermNode node, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
     }
 
@@ -27,11 +29,11 @@ public class CountHorizontalNode extends TermNode{
         Object o = node.evaluateNode(interpretation);
         int width;
 
-        if(o instanceof Table<?> t)
+        if (o instanceof Table<?> t)
             width = t.getNumberOfColumns();
 
-        else if(o instanceof Tuple<?> t)
-           width = t.size();
+        else if (o instanceof Tuple<?> t)
+            width = t.size();
 
         else
             width = 1;

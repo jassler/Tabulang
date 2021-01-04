@@ -6,10 +6,11 @@ import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkStatementNode extends TernaryStatementNode{
-    public MarkStatementNode(Node left, Node middle, Node right) {
-        super(left, middle, right);
+    public MarkStatementNode(Node left, Node middle, Node right, TextPosition textPosition) {
+        super(left, middle, right, textPosition);
     }
 
     @Override

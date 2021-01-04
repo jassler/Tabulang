@@ -1,12 +1,17 @@
 package de.hskempten.tabulang.astNodes;
 
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class IdentifierNode extends TermNode{
+public class IdentifierNode extends TermNode {
     private String identifier;
+
+    public IdentifierNode(String identifier, TextPosition textPosition) {
+        super(textPosition);
+        this.identifier = identifier;
+    }
 
     public IdentifierNode(String identifier) {
         this.identifier = identifier;
@@ -23,7 +28,7 @@ public class IdentifierNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Interpretation found = interpretation.findIdentifier(identifier);
-        if(found == null){
+        if (found == null) {
             //TODO Fehlermeldung oder Identifier -> Null setzen                                                                                                  111111                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ee
             throw new VariableNotDeclaredException(identifier);
         } else {

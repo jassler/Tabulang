@@ -5,12 +5,13 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkIfInLoopNode extends MarkStatementNode {
     private Node pred;
 
-    public MarkIfInLoopNode(Node middle, Node right, Node pred) {
-        super(null, middle, right);
+    public MarkIfInLoopNode(Node middle, Node right, Node pred, TextPosition textPosition) {
+        super(null, middle, right, textPosition);
         this.pred = pred;
     }
 

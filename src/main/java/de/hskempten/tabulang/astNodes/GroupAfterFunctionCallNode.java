@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -11,8 +12,8 @@ public class GroupAfterFunctionCallNode extends GroupNode {
     private FunctionCallNode funCall;
     private LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX = new LinkedHashMap<>();
 
-    public GroupAfterFunctionCallNode(TermNode term, FunctionCallNode funCall) {
-        super(term);
+    public GroupAfterFunctionCallNode(TermNode term, FunctionCallNode funCall, TextPosition textPosition) {
+        super(term, textPosition);
         this.setFunCall(funCall);
     }
 

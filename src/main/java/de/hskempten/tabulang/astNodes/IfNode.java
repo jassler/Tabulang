@@ -2,14 +2,12 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.util.HashMap;
-
-public class IfNode extends BinaryStatementNode{
-    public IfNode(Node leftNode, Node rightNode) {
-        super(leftNode, rightNode);
+public class IfNode extends BinaryStatementNode {
+    public IfNode(Node leftNode, Node rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
@@ -18,7 +16,7 @@ public class IfNode extends BinaryStatementNode{
         if (!(left instanceof InternalBoolean bool)) {
             throw new IllegalBooleanOperandArgumentException(toString());
         }
-        if(bool.getaBoolean()) {
+        if (bool.getaBoolean()) {
             return getRightNode().evaluateNode(interpretation);
         } else {
             return null;
