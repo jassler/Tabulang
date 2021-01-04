@@ -36,6 +36,14 @@ public class NumberNode extends TermNode{
         return numerator.floatValue() / denominator.floatValue();
     }
 
+    public Object getValue(){
+        if(getFloatValue() % 1 == 0){
+            return (int) getFloatValue();
+        } else {
+            return getFloatValue();
+        }
+    }
+
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         return new InternalNumber(numerator, denominator);
@@ -43,9 +51,6 @@ public class NumberNode extends TermNode{
 
     @Override
     public String toString() {
-        return "NumberNode{" +
-                "numerator=" + numerator +
-                ", denominator=" + denominator +
-                "} ";
+        return getValue().toString();
     }
 }

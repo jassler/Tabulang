@@ -5,7 +5,7 @@ import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
 import java.util.*;
 import java.util.function.Function;
 
-public class HeaderNames implements Iterable<String> {
+public class HeaderNames implements Iterable<String>, Cloneable {
 
     private ArrayList<String> names;
     private HashMap<String, Integer> nameLookup;
@@ -164,6 +164,12 @@ public class HeaderNames implements Iterable<String> {
                 return arr.get(i);
         }
         return null;
+    }
+
+    @SuppressWarnings({"MethodDoesntCallSuperMethod"})
+    @Override
+    public HeaderNames clone() throws CloneNotSupportedException {
+        return new HeaderNames(names);
     }
 
     @Override

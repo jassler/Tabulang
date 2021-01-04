@@ -1,26 +1,25 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
+import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.RootNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
-import de.hskempten.tabulang.items.ast.interfaces.AST;
-import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProgramAST extends RootNode {
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
 
-    public ProgramAST(ArrayList<StatementNode> statements) {
+    public ProgramAST(ArrayList<Node> statements) {
         this.setStatements(statements);
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
@@ -37,9 +36,15 @@ public class ProgramAST extends RootNode {
     }*/
 
     @Override
-    public void executeProgram(Interpretation interpretation) {
-        for(StatementNode statementNode : statements){
-            statementNode.evaluateNode(interpretation);
+    public Object executeProgram(Interpretation interpretation) {
+        Object finalResult = null;
+
+        for (Node statementNode : statements) {
+            Object result = statementNode.evaluateNode(interpretation);
+            if(result != null)
+                finalResult = result;
         }
+
+        return finalResult;
     }
 }

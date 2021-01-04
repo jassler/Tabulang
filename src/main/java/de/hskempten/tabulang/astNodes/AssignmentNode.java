@@ -27,6 +27,6 @@ public class AssignmentNode extends BinaryStatementNode {
 
     @Override
     public String toString() {
-        return "AssignmentNode{} " + super.toString();
+        return getLeftNode() + " := " + getRightNode();
     }
 }

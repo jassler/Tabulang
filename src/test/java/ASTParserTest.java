@@ -43,8 +43,8 @@ public class ASTParserTest {
     void assignSimple() throws Exception {
         l.setText("a := 1;");
 
-        ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
-        statements.add(new NewAssignmentNode(new IdentifierNode("a"), number1));
+        ArrayList<Node> statements = new ArrayList<Node>();
+        statements.add(new AssignmentNode(new IdentifierNode("a"), number1));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();
@@ -55,8 +55,8 @@ public class ASTParserTest {
 
         assertEquals(exp.getStatements().size(), act.getStatements().size());
         assertEquals(
-                ((IdentifierNode)((AssignmentNode) exp.getStatements().get(0)).getLeftNode()).getIdentifier(),
-                ((IdentifierNode)((AssignmentNode) act.getStatements().get(0)).getLeftNode()).getIdentifier()
+                ((IdentifierNode) ((AssignmentNode) exp.getStatements().get(0)).getLeftNode()).getIdentifier(),
+                ((IdentifierNode) ((AssignmentNode) act.getStatements().get(0)).getLeftNode()).getIdentifier()
         );
         assertEquals(
                 ((NumberNode) ((AssignmentNode) exp.getStatements().get(0)).getRightNode()).getFloatValue(),

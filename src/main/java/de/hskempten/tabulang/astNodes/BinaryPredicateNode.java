@@ -28,17 +28,6 @@ public abstract class BinaryPredicateNode extends PredicateNode{
         this.rightNode = rightNode;
     }
 
-    public Boolean nodesAreBoolean(Interpretation interpretation){
-        Object left = leftNode.evaluateNode(interpretation);
-        Object right = rightNode.evaluateNode(interpretation);
-        if (left instanceof Boolean && right instanceof Boolean) {
-            return true;
-        } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") || " + right + " (" + right.getClass() + ") can not be executed. " +
-                    "Allowed operands: Boolean.");
-        }
-    }
-
     @Override
     public String toString() {
         return "BinaryPredicateNode{" +

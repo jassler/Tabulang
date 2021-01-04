@@ -1,13 +1,16 @@
 package de.hskempten.tabulang.items.ast;
 
-import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.astNodes.FunctionAssignment;
+import de.hskempten.tabulang.astNodes.FunctionCallNode;
+import de.hskempten.tabulang.astNodes.GroupNode;
+import de.hskempten.tabulang.astNodes.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class ASTStatementSorter {
 
-    public static ArrayList<StatementNode> sortStatements(ArrayList<StatementNode> statements) {
+    public static ArrayList<Node> sortStatements(ArrayList<Node> statements) {
 
         for (int n = statements.size() - 1; n > 0; n--) {
             for (int i = 0; i < n; i++) {
@@ -27,11 +30,11 @@ public class ASTStatementSorter {
         return statements;
     }
 
-    private static boolean isGroupNode(StatementNode statementNode) {
+    private static boolean isGroupNode(Node statementNode) {
         return statementNode instanceof GroupNode;
     }
 
-    private static boolean containsFunCallToNext(StatementNode actual, StatementNode next) {
+    private static boolean containsFunCallToNext(Node actual, Node next) {
         String nextName = "";
         if (FunctionAssignment.class.equals(next.getClass())) {
             nextName = ((FunctionAssignment) next).getIdentifier().getIdentifier();
@@ -50,7 +53,7 @@ public class ASTStatementSorter {
         return false;
     }
 
-    private static boolean isProceduralF(StatementNode statement) {
+    private static boolean isProceduralF(Node statement) {
         return FunctionAssignment.class.equals(statement.getClass());
     }
 

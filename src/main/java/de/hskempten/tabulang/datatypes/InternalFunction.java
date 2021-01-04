@@ -1,15 +1,16 @@
 package de.hskempten.tabulang.datatypes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
+import de.hskempten.tabulang.astNodes.Node;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class InternalFunction extends InternalObject {
     private ArrayList<IdentifierNode> parameters;
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
 
-    public InternalFunction(ArrayList<IdentifierNode> parameters, ArrayList<StatementNode> statements) {
+    public InternalFunction(ArrayList<IdentifierNode> parameters, ArrayList<Node> statements) {
         super(null);
         this.parameters = parameters;
         this.statements = statements;
@@ -23,11 +24,11 @@ public class InternalFunction extends InternalObject {
         this.parameters = parameters;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = statements;
     }
 
@@ -37,5 +38,11 @@ public class InternalFunction extends InternalObject {
                 "parameters=" + parameters +
                 ", statements=" + statements +
                 '}';
+    }
+
+    public String formattedString(String functionName) {
+        return functionName + "("
+                + parameters.stream().map(IdentifierNode::getIdentifier).collect(Collectors.joining(", "))
+                + ")";
     }
 }

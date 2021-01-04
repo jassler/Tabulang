@@ -4,6 +4,7 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.mySql.DatabaseConnection;
 
 public class TableToDatabase implements InternalFunction{
+
     @Override
     public Object compute(Object... args) {
         if(Helper.LengthReviewer(2, args)){

@@ -10,43 +10,7 @@ public class Interpretation {
 
     private Interpretation parent;
     private HashMap<String, Object> environment;
-    private LinkedHashMap<Object, LinkedList<Object>> group = new LinkedHashMap<>();
-    private LinkedHashMap<Object, LinkedList<Object>> variableValue = new LinkedHashMap<>();
-    private int internalLoopCounter = 0;
-    private int countdown = 0;
-
-
-    public int getCountdown() {
-        return countdown;
-    }
-
-    public void setCountdown(int countdown) {
-        this.countdown = countdown;
-    }
-
-    public LinkedHashMap<Object, LinkedList<Object>> getVariableValue() {
-        return variableValue;
-    }
-
-    public void setVariableValue(LinkedHashMap<Object, LinkedList<Object>> variableValue) {
-        this.variableValue = variableValue;
-    }
-
-    public int getInternalLoopCounter() {
-        return internalLoopCounter;
-    }
-
-    public void setInternalLoopCounter(int internalLoopCounter) {
-        this.internalLoopCounter = internalLoopCounter;
-    }
-
-    public LinkedHashMap<Object, LinkedList<Object>> getGroup() {
-        return group;
-    }
-
-    public void setGroup(LinkedHashMap<Object, LinkedList<Object>> group) {
-        this.group = group;
-    }
+    private int nestingLevel = 0;
 
     public Interpretation() {
         this.parent = null;
@@ -79,6 +43,14 @@ public class Interpretation {
         this.environment = environment;
     }
 
+    public int getNestingLevel() {
+        return nestingLevel;
+    }
+
+    public void setNestingLevel(int nestingLevel) {
+        this.nestingLevel = nestingLevel;
+    }
+
     //TODO remove if not needed
     public Interpretation findIdentifier(Identifier identifier){
         if(environment.containsKey(identifier.getIdentifierName())){
@@ -109,6 +81,22 @@ public class Interpretation {
             return null;
         } else {
             return parent.findIdentifier(identifier);
+        }
+    }
+
+    public Interpretation deepCopy(){
+        Interpretation deepCopy = new Interpretation(new HashMap<>(this.getEnvironment()));
+        if(this.parent != null) {
+            deepCopyParents(deepCopy, this.parent);
+        }
+        return deepCopy;
+    }
+
+    public void deepCopyParents(Interpretation current, Interpretation parent){
+        Interpretation deepCopyParent = new Interpretation(new HashMap<>(parent.getEnvironment()));
+        current.setParent(deepCopyParent);
+        if(parent.getParent() != null) {
+            deepCopyParents(deepCopyParent, parent.getParent());
         }
     }
 

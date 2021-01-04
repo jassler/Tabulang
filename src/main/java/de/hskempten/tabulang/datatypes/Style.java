@@ -35,6 +35,10 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
         return annotations;
     }
 
+    public boolean isEmpty() {
+        return annotations.isEmpty();
+    }
+
     public Style setFontSize(double size) {
         annotations.put(FONT_SIZE, Double.toString(size));
         return this;

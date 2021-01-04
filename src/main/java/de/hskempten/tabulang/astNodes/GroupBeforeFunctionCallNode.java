@@ -10,34 +10,14 @@ import de.hskempten.tabulang.items.ast.nodes.FunCallAST;
 import java.util.*;
 
 public class GroupBeforeFunctionCallNode extends GroupNode {
-    private boolean hiding;
-    private boolean area;
     private FunctionCallNode funCall;
     private LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX = new LinkedHashMap<>();
 
-    public GroupBeforeFunctionCallNode(boolean hiding, boolean area, TermNode term, FunctionCallNode funCall) {
+    public GroupBeforeFunctionCallNode(TermNode term, FunctionCallNode funCall) {
         super(term);
-        this.setHiding(hiding);
-        this.setArea(area);
         this.setFunCall(funCall);
     }
 
-
-    public boolean isHiding() {
-        return hiding;
-    }
-
-    public void setHiding(boolean hiding) {
-        this.hiding = hiding;
-    }
-
-    public boolean isArea() {
-        return area;
-    }
-
-    public void setArea(boolean area) {
-        this.area = area;
-    }
 
     public FunctionCallNode getFunCall() {
         return funCall;

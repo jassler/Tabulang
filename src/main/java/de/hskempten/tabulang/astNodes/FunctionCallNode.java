@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FunctionCallNode extends TermNode{
     private IdentifierNode node;
@@ -41,8 +42,10 @@ public class FunctionCallNode extends TermNode{
         Object identifier = node.evaluateNode(interpretation);
 
         if(identifier instanceof InternalLibraryFunction f) {
-            if (f.getParameters().size() != parameters.size())
-                throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size());
+            if (f.getParameters().size() != parameters.size()) {
+                throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
+                + f.formattedString(node.getIdentifier()));
+            }
 
             Object[] objectParameters = new Object[parameters.size()];
             for(int i = 0; i < objectParameters.length; i++) {
@@ -55,7 +58,8 @@ public class FunctionCallNode extends TermNode{
         } else if(identifier instanceof InternalFunction f) {
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
             if(f.getParameters().size() != parameters.size())
-                throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size());
+                throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
+                        + f.formattedString(node.getIdentifier()));
 
             for(int i = 0; i < f.getParameters().size(); i++){
                 nestedInterpretation.getEnvironment().put(f.getParameters().get(i).getIdentifier(), parameters.get(i).evaluateNode(interpretation));
@@ -67,13 +71,13 @@ public class FunctionCallNode extends TermNode{
                 }
                 ((Node) statement).evaluateNode(nestedInterpretation);
             }
-            System.out.println("Function Call Nested Interpretation: ");
+            /*System.out.println("Function Call Nested Interpretation: ");
             Iterator it = nestedInterpretation.getEnvironment().entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
             }
-            System.out.println("");
+            System.out.println("");*/
 
             if(nestedInterpretation.getEnvironment().containsKey("return")){
                 return nestedInterpretation.getEnvironment().get("return");

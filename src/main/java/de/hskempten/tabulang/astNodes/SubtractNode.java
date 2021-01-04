@@ -24,13 +24,15 @@ public class SubtractNode extends BinaryArithmeticNode{
             throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
                     "Allowed operands: Numbers or Tables.");
         }
-        if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            return ((InternalNumber) left).subtract((InternalNumber) right);
-        } else if (left instanceof Table && right instanceof Table) {
-            return ((Table) left).difference((Table) right);
-        } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
-                    "Allowed operands: Numbers or Tables.");
+        if (!(left instanceof InternalNumber) || !(right instanceof InternalNumber)) {
+            if (left instanceof Table && right instanceof Table) {
+                return ((Table) left).difference((Table) right);
+            } else {
+                throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
+                        "Allowed operands: Numbers or Tables.");
+            }
         }
+        return ((InternalNumber) left).subtract((InternalNumber) right);
+
     }
 }

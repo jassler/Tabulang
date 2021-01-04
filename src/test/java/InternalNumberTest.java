@@ -46,7 +46,7 @@ class InternalNumberTest {
 
     @Test
     public void testDiff() {
-        assertEquals(0.0f, n1.diff(n2).getFloatValue());
+        assertEquals(0.0f, n1.div(n2).getFloatValue());
     }
 
     @Test

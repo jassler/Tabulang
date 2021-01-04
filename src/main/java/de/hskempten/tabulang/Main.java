@@ -1,5 +1,7 @@
 package de.hskempten.tabulang;
 
+import de.hskempten.tabulang.datatypes.InternalFunction;
+import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
@@ -14,15 +16,12 @@ import java.util.*;
 
 public class Main {
 
-    private static final String REPL_PREFIX = "[%2d] > ";
+    private static final String REPL_PREFIX = "[%2d] < ";
+    private static final String REPL_POSTFIX = "[%2d] > %s";
 
     public static void main(String[] args) {
         Lexer l = new Lexer();
         Interpretation interpreter = new Interpretation();
-
-        //interpreter.getEnvironment().put("print", new InternalFunction(
-        //        new ArrayList<>(new IdentifierNode[]{new IdentifierNode("x")})
-        //));
 
         // Setup Lexer
         for(var t : TokenType.TOKEN_EXPRESSIONS) {
@@ -42,11 +41,16 @@ public class Main {
             return;
         }
 
+        boolean hasDoneSomething = false;
+
         // parse file?
         if(cli.inputFile != null) {
+            hasDoneSomething = true;
             try {
-                executeFile(l, interpreter, cli.inputFile);
+                Object result = executeFile(l, interpreter, cli.inputFile);
                 listInterpreterEnvironment(interpreter);
+                
+                System.out.println("\nProgram exited with the following non-null result: " + result.toString());
 
             } catch(Exception e) {
                 System.err.println(e.getLocalizedMessage());
@@ -56,11 +60,17 @@ public class Main {
 
         // repl?
         if(cli.repl) {
+            hasDoneSomething = true;
             startRepl(l, interpreter);
+        }
+
+        // nothing?
+        if(!hasDoneSomething) {
+            System.out.println("Usage:\n\t-r\tStart repl\n\t<string>\tInterpret filename\n");
         }
     }
 
-    private static void executeFile(Lexer l, Interpretation interpreter, String filename) throws Exception {
+    private static Object executeFile(Lexer l, Interpretation interpreter, String filename) throws Exception {
         TabulangParser parser;
         ProgramItem prg;
         ProgramAST ast;
@@ -73,7 +83,7 @@ public class Main {
         // build the abstract syntax tree
         ast = ASTProgramParser.instance.parse(prg);
 
-        ast.executeProgram(interpreter);
+        return ast.executeProgram(interpreter);
     }
 
     private static void startRepl(Lexer l, Interpretation interpreter) {
@@ -115,7 +125,9 @@ public class Main {
                     // build the abstract syntax tree
                     ast = ASTProgramParser.instance.parse(prg);
 
-                    ast.executeProgram(interpreter);
+                    var resultObject = ast.executeProgram(interpreter);
+                    if(resultObject != null)
+                        System.out.println(String.format(REPL_POSTFIX, count, resultObject.toString()));
                 } catch(Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
@@ -126,9 +138,25 @@ public class Main {
     }
 
     private static void listInterpreterEnvironment(Interpretation interpreter) {
+        System.out.println("--- Internal functions ---");
         for(var entry : interpreter.getEnvironment().entrySet()) {
-            System.out.println("Key: " + entry.getKey() + " Value: " + entry.getValue());
+            if(entry.getValue() instanceof InternalLibraryFunction f)
+                System.out.println(f.formattedString(entry.getKey()));
         }
+
+        System.out.println("\n--- Functions ---");
+        for(var entry : interpreter.getEnvironment().entrySet()) {
+            if(entry.getValue() instanceof InternalFunction f)
+                System.out.println(f.formattedString(entry.getKey()));
+        }
+
+        System.out.println("\n--- Variables ---");
+        for(var entry : interpreter.getEnvironment().entrySet()) {
+            if(!(entry.getValue() instanceof InternalLibraryFunction || entry.getValue() instanceof InternalFunction))
+                System.out.println(entry.getKey() + " := " + entry.getValue().toString());
+        }
+
+        System.out.println();
     }
 
     private static class CommandLineArguments {

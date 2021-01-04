@@ -31,6 +31,7 @@ public class SetNode extends StatementNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = getNode().evaluateNode(interpretation);
+        interpretation.setNestingLevel(mapVal);
         interpretation.getEnvironment().put("mapValue" + mapVal, o);
         return o;
     }

@@ -1,18 +1,17 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
+import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
-import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
 import java.util.ArrayList;
 
 public class FunDefAST implements TermAST {
     private ArrayList<IdentifierNode> identifiers;
-    private ArrayList<StatementNode> statements;
+    private ArrayList<Node> statements;
 
-    public FunDefAST(ArrayList<IdentifierNode> identifiers, ArrayList<StatementNode> statements) {
+    public FunDefAST(ArrayList<IdentifierNode> identifiers, ArrayList<Node> statements) {
         this.setIdentifiers(identifiers);
         this.setStatements(statements);
     }
@@ -25,11 +24,11 @@ public class FunDefAST implements TermAST {
         this.identifiers = identifiers;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public ArrayList<Node> getStatements() {
         return statements;
     }
 
-    public void setStatements(ArrayList<StatementNode> statements) {
+    public void setStatements(ArrayList<Node> statements) {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 

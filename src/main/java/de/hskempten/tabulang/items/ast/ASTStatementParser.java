@@ -1,10 +1,6 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.GroupBeforeFunctionCallNode;
-import de.hskempten.tabulang.astNodes.GroupWithoutFunctionCallNode;
-import de.hskempten.tabulang.astNodes.LoopNode;
-import de.hskempten.tabulang.astNodes.FunctionAssignment;
 import de.hskempten.tabulang.items.*;
 
 import java.util.ArrayList;
@@ -15,12 +11,12 @@ public class ASTStatementParser {
 
     private int nestingLevel = 0;
 
-    public StatementNode parse(StatementAnyItem originalStatement, int nestingLevel) throws Exception {
+    public Node parse(StatementAnyItem originalStatement, int nestingLevel) throws Exception {
         this.nestingLevel = nestingLevel;
         return parse(originalStatement);
     }
 
-    public StatementNode parse(StatementAnyItem originalStatement) throws Exception {
+    public Node parse(StatementAnyItem originalStatement) throws Exception {
 
         return statementParser(traverseStatement(originalStatement));
     }
@@ -66,6 +62,11 @@ public class ASTStatementParser {
                 return ((LoopStmntItem) actStatement).getMyGroupStmnt();
             }
             case LOOP_STMT_MARK -> {
+                ((LoopStmntItem) actStatement).getMyMarkStmnt().setLanguageItemType(switch (((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType()) {
+                    case MARK_WITHOUTIF -> LanguageItemType.LOOP_MARK_WITHOUTIF;
+                    case MARK_WITHIF -> LanguageItemType.LOOP_MARK_WITHIF;
+                    default -> throw new IllegalStateException("Unexpected value: " + ((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType());
+                });
                 return ((LoopStmntItem) actStatement).getMyMarkStmnt();
             }
             case LOOP_STMT_STATEMENT -> {
@@ -81,13 +82,16 @@ public class ASTStatementParser {
             case STATEMENT_IF -> {
                 return ((StatementItem) actStatement).getMyIfStmnt();
             }
+            case STATEMENT_FUNCALL -> {
+                return ((StatementItem) actStatement).getMyFunCall();
+            }
             // TODO implement case STATEMENT_BODY
             default -> throw new IllegalStateException("Unexpected value: " +
                     actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
         }
     }
 
-    private StatementNode statementParser(LanguageItem actItem) throws Exception {
+    private Node statementParser(LanguageItem actItem) throws Exception {
 
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
@@ -112,16 +116,16 @@ public class ASTStatementParser {
                         }
                     }
                 }
-                ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
+                ArrayList<Node> statements = new ArrayList<Node>();
                 switch (actItem.getLanguageItemType()) {
                     case PROCEDURALF_TERM -> {
-                        statements.add(new ASTStatementParser().parse(new ReturnStmntItem(((ProceduralFItem) actItem).getMyTerm())));
+                        statements.add((StatementNode) new ASTStatementParser().parse(new ReturnStmntItem(((ProceduralFItem) actItem).getMyTerm())));
                     }
                     case PROCEDURALF_FUNCBODY -> {
                         FuncBodyItem bodyStatements = ((ProceduralFItem) actItem).getMyFuncBody();
                         LinkedList<StatementAnyItem> myStatements = bodyStatements.getMyStatements();
                         for (StatementAnyItem myStatement : myStatements) {
-                            statements.add(new ASTStatementParser().parse(myStatement));
+                            statements.add((StatementNode) new ASTStatementParser().parse(myStatement));
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
@@ -136,14 +140,14 @@ public class ASTStatementParser {
                 LoopItem loopItem = (LoopItem) actItem;
                 IdentifierNode identifier = new IdentifierNode(loopItem.getMyIdentifier().getMyString());
                 TermNode term = new ASTTermParser().parse(loopItem.getMyTerm());
-                ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
+                ArrayList<Node> statements = new ArrayList<Node>();
                 switch (actItem.getLanguageItemType()) {
                     case LOOP_STATEMENT -> {
-                        statements.add(new ASTStatementParser().parse(loopItem.getMyLoopStmnt(), nestingLevel + 1));
+                        statements.add((StatementNode) new ASTStatementParser().parse(loopItem.getMyLoopStmnt(), nestingLevel + 1));
                     }
                     case LOOP_LOOPBODY -> {
                         for (int i = 0; i < loopItem.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                            statements.add(new ASTStatementParser().parse(loopItem.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
+                            statements.add((StatementNode) new ASTStatementParser().parse(loopItem.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
                         }
                     }
                 }
@@ -156,14 +160,14 @@ public class ASTStatementParser {
             case IF_WITHELSE, IF_WITHOUTELSE -> {
                 IfStmntItem ifStmnt = (IfStmntItem) actItem;
                 PredicateNode pred = new ASTPredParser().parse(ifStmnt.getMyPred());
-                StatementNode ifStatement = new ASTStatementParser().parse(ifStmnt.getMyAnyStatement());
+                StatementNode ifStatement = (StatementNode) new ASTStatementParser().parse(ifStmnt.getMyAnyStatement());
 
                 switch (actItem.getLanguageItemType()) {
                     case IF_WITHOUTELSE -> {
                         return new IfNode(pred, ifStatement);
                     }
                     case IF_WITHELSE -> {
-                        StatementNode elseStatement = new ASTStatementParser().parse(ifStmnt.getMyOptionalAnyStatement());
+                        StatementNode elseStatement = (StatementNode) new ASTStatementParser().parse(ifStmnt.getMyOptionalAnyStatement());
                         return new IfElseNode(pred, ifStatement, elseStatement);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
@@ -172,13 +176,7 @@ public class ASTStatementParser {
             case GROUP_EMPTY, GROUP_AREA, GROUP_HIDING_AREA, GROUP_HIDING -> {
                 GroupStmntItem grp = (GroupStmntItem) actItem;
                 TermNode term = new ASTTermParser().parse(grp.getMyTerm());
-                return switch (actItem.getLanguageItemType()) {
-                    case GROUP_EMPTY -> new GroupWithoutFunctionCallNode(false, false, term);
-                    case GROUP_AREA -> new GroupWithoutFunctionCallNode(false, true, term);
-                    case GROUP_HIDING_AREA -> new GroupWithoutFunctionCallNode(true, true, term);
-                    case GROUP_HIDING -> new GroupWithoutFunctionCallNode(true, false, term);
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
-                };
+                return new GroupWithoutFunctionCallNode(term);
             }
             case GROUP_FUNCALL, GROUP_AREA_FUNCALL, GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> {
                 GroupStmntItem grp = (GroupStmntItem) actItem;
@@ -190,31 +188,39 @@ public class ASTStatementParser {
                 }
                 FunctionCallNode funCall = new FunctionCallNode(fcIdentifier, fcTerms);
                 return switch (actItem.getLanguageItemType()) {
-                    case GROUP_FUNCALL -> new GroupBeforeFunctionCallNode(false, false, term, funCall);
-                    case GROUP_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(false, true, term, funCall);
-                    case GROUP_HIDING_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(true, true, term, funCall);
-                    case GROUP_HIDING_FUNCALL -> new GroupBeforeFunctionCallNode(true, false, term, funCall);
+                    case GROUP_FUNCALL -> new GroupBeforeFunctionCallNode(term, funCall);
+                    case GROUP_AREA_FUNCALL -> switch (grp.getMyGroupArea().getMyString()) {
+                        case "before" -> new GroupBeforeFunctionCallNode(term, funCall);
+                        case "after" -> new GroupAfterFunctionCallNode(term, funCall);
+                        default -> throw new IllegalStateException("Unexpected area value: " + grp.getMyGroupArea().getMyString());
+                    };
+                    case GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> new HidingGroupFunctionCallNode(term, funCall);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
             }
-            case MARK_WITHIF, MARK_WITHOUTIF -> {
+            case LOOP_MARK_WITHIF, LOOP_MARK_WITHOUTIF -> {
                 MarkStmntItem mrk = (MarkStmntItem) actItem;
                 TermNode markTerm = new ASTTermParser().parse(mrk.getMyTerm());
                 TermNode asTerm = new ASTTermParser().parse(mrk.getMySecondTerm());
                 switch (actItem.getLanguageItemType()) {
-                    case MARK_WITHOUTIF -> {
-                        //TODO remove placeholder
-                        return new IfNode(markTerm, asTerm);//Placeholder
-                        //return new MarkNode(markTerm, asTerm);
+                    case LOOP_MARK_WITHOUTIF -> {
+                        return new MarkInLoopNode(markTerm, asTerm);
                     }
-                    case MARK_WITHIF -> {
+                    case LOOP_MARK_WITHIF -> {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
-                        //TODO remove placeholder
-                        return new IfNode(markTerm, asTerm);//Placeholder
-                        //return new MarkIfNode(markTerm, asTerm, ifPred);
+                        return new MarkIfInLoopTermNode(markTerm, asTerm, ifPred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
+            }
+            case TERM_FUNCALL -> {
+                FunCallItem fc = (FunCallItem) actItem;
+                IdentifierNode identifier = new IdentifierNode(fc.getMyIdentifier().getMyString());
+                ArrayList<TermNode> terms = new ArrayList<>();
+                for (int i = 0; i < fc.getTerms().size(); i++) {
+                    terms.add(new ASTTermParser().parse(fc.getTerms().get(i)));
+                }
+                return new FunctionCallNode(identifier, terms);
             }
             default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
         }

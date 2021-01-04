@@ -5,6 +5,8 @@ import de.hskempten.tabulang.astNodes.TermNode;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 
+//zB if(5) oder if('hallo')
+//TODO
 public class PredTermNode extends PredicateNode {
     private TermNode term;
 
@@ -22,6 +24,7 @@ public class PredTermNode extends PredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return "PredTermNode needs to be implemented";
+        throw new IllegalArgumentException("PredTerm");
+
     }
 }

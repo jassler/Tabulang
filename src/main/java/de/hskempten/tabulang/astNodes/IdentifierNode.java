@@ -33,8 +33,6 @@ public class IdentifierNode extends TermNode{
 
     @Override
     public String toString() {
-        return "IdentifierNode{" +
-                "identifier='" + identifier + '\'' +
-                "} ";
+        return identifier;
     }
 }
