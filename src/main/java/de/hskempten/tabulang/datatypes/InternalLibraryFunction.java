@@ -4,6 +4,7 @@ import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.standardBibliothek.InternalFunction;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Node for function calls that are directly implemented in Java, most likely in the standardLibrary package.
@@ -36,5 +37,11 @@ public class InternalLibraryFunction extends InternalObject {
                 "parameters=" + parameters +
                 ", f=" + f +
                 '}';
+    }
+
+    public String formattedString(String functionName) {
+        return functionName + "("
+                + parameters.stream().map(IdentifierNode::getIdentifier).collect(Collectors.joining(", "))
+                + ")";
     }
 }

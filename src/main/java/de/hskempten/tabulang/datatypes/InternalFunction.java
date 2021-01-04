@@ -4,6 +4,7 @@ import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.astNodes.Node;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class InternalFunction extends InternalObject {
     private ArrayList<IdentifierNode> parameters;
@@ -37,5 +38,11 @@ public class InternalFunction extends InternalObject {
                 "parameters=" + parameters +
                 ", statements=" + statements +
                 '}';
+    }
+
+    public String formattedString(String functionName) {
+        return functionName + "("
+                + parameters.stream().map(IdentifierNode::getIdentifier).collect(Collectors.joining(", "))
+                + ")";
     }
 }

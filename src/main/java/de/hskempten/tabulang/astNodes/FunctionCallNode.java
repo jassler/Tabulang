@@ -44,7 +44,7 @@ public class FunctionCallNode extends TermNode{
         if(identifier instanceof InternalLibraryFunction f) {
             if (f.getParameters().size() != parameters.size()) {
                 throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
-                + node.getIdentifier() + "(" + f.getParameters().stream().map(IdentifierNode::getIdentifier).collect(Collectors.joining(", ")) + ")");
+                + f.formattedString(node.getIdentifier()));
             }
 
             Object[] objectParameters = new Object[parameters.size()];
@@ -59,7 +59,7 @@ public class FunctionCallNode extends TermNode{
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
             if(f.getParameters().size() != parameters.size())
                 throw new IllegalArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
-                        + node.getIdentifier() + "(" + f.getParameters().stream().map(IdentifierNode::getIdentifier).collect(Collectors.joining(", ")) + ")");
+                        + f.formattedString(node.getIdentifier()));
 
             for(int i = 0; i < f.getParameters().size(); i++){
                 nestedInterpretation.getEnvironment().put(f.getParameters().get(i).getIdentifier(), parameters.get(i).evaluateNode(interpretation));
