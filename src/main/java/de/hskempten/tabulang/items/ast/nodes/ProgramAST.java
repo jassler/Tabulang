@@ -6,6 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProgramAST extends RootNode {
     private ArrayList<Node> statements;
@@ -35,9 +36,15 @@ public class ProgramAST extends RootNode {
     }*/
 
     @Override
-    public void executeProgram(Interpretation interpretation) {
+    public Object executeProgram(Interpretation interpretation) {
+        Object finalResult = null;
+
         for (Node statementNode : statements) {
-            statementNode.evaluateNode(interpretation);
+            Object result = statementNode.evaluateNode(interpretation);
+            if(result != null)
+                finalResult = result;
         }
+
+        return finalResult;
     }
 }
