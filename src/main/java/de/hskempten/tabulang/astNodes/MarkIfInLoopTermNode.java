@@ -4,12 +4,12 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class MarkIfInLoopNode extends MarkNode{
+public class MarkIfInLoopTermNode extends MarkTermNode {
     private Node pred;
 
 
     //TODO placeholder; remove once parser uses 4 parameters
-    public MarkIfInLoopNode(Node middle, Node right, Node pred) {
+    public MarkIfInLoopTermNode(Node middle, Node right, Node pred) {
         super(null, middle, right);
         this.pred = pred;
     }
@@ -24,7 +24,7 @@ public class MarkIfInLoopNode extends MarkNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object date = getLeft().evaluateNode(interpretation);
+        Object date = getLeftNode().evaluateNode(interpretation);
         try {
             if (date instanceof Tuple) {
                 Interpretation nestedInterpretation = interpretation.deepCopy();

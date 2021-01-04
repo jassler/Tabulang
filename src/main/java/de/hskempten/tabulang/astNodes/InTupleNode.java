@@ -1,7 +1,9 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public class InTupleNode extends BinaryPredicateNode {
@@ -11,16 +13,16 @@ public class InTupleNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object o = getRightNode().evaluateNode(interpretation);
-        if(o instanceof Tuple) {
-            Object identifier = getLeftNode().evaluateNode(interpretation);
-            if (((Tuple) o).getElements().contains(identifier)) {
-                return true;
-            } else {
-                return false;
-            }
+        Object tupleObject = getRightNode().evaluateNode(interpretation);
+        Object identifier = getLeftNode().evaluateNode(interpretation);
+        if (!(tupleObject instanceof Tuple tuple)) {
+            throw new IllegalOperandArgumentException("Operation '" + tupleObject + " (" + tupleObject.getClass() + ") in " + identifier + " (" + identifier.getClass() + ") can not be executed. " +
+                    "Allowed operands: Boolean.");
+        }
+        if (tuple.getElements().contains(identifier)) {
+            return new InternalBoolean(true);
         } else {
-            throw new IllegalArgumentException("Expected Tuple but got: " + o.getClass().getSimpleName());
+            return new InternalBoolean(false);
         }
     }
 

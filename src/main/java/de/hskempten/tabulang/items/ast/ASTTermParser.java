@@ -32,7 +32,7 @@ public class ASTTermParser {
         int i = 20;
         while (i > 0) {
             if (Arrays.asList(TERM_IDENTIFIER, TERM_ORDINAL).contains(actTerm.getLanguageItemType())
-                    && Arrays.asList(TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE).contains(((TermItem) actTerm).getMyTermR().getLanguageItemType())) {
+                    && Arrays.asList(TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE, TERMR_MARK).contains(((TermItem) actTerm).getMyTermR().getLanguageItemType())) {
 
                 TermRItem termR = actTerm.getMyTermR();
                 termR.setMyPreviousTerm((TermItem) actTerm);
@@ -258,32 +258,37 @@ public class ASTTermParser {
                 LoopItem loop = (LoopItem) actItem;
                 IdentifierNode identifier = new IdentifierNode(loop.getMyIdentifier().getMyString());
                 TermNode term = new ASTTermParser().parse(loop.getMyTerm());
-                ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
+                ArrayList<Node> statements = new ArrayList<Node>();
                 switch (actItem.getLanguageItemType()) {
                     case LOOP_LOOPBODY -> {
                         for (int i = 0; i < loop.getMyLoopBody().getMyLoopStmnts().size(); i++) {
-                            statements.add((StatementNode) new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
+                            statements.add(new ASTStatementParser().parse(loop.getMyLoopBody().getMyLoopStmnts().get(i), nestingLevel + 1));
                         }
                     }
                     case LOOP_STATEMENT -> {
-                        statements.add((StatementNode) new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
+                        statements.add(new ASTStatementParser().parse(loop.getMyLoopStmnt(), nestingLevel + 1));
                     }
                 }
                 //todo remove placeholder
-                return identifier; //Placeholder
-                //return new LoopNode(identifier, term, statements, nestingLevel + 1);
+                //return identifier; //Placeholder
+                return new LoopTermNode(identifier, term, statements, nestingLevel + 1);
             }
-            case MARK_WITHIF, MARK_WITHOUTIF -> {
-                MarkStmntItem mark = (MarkStmntItem) actItem;
+            case TERMR_MARK -> {
+                TermItem previousTerm = ((TermRItem) actItem).getMyPreviousTerm();
+                MarkStmntItem mark = ((TermRItem) actItem).getMyMarkStmnt();
                 TermNode markTerm = new ASTTermParser().parse(mark.getMyTerm());
                 TermNode asTerm = new ASTTermParser().parse(mark.getMySecondTerm());
-                switch (actItem.getLanguageItemType()) {
+                switch (mark.getLanguageItemType()) {
                     case MARK_WITHOUTIF -> {
-                        return new MarkNode(markTerm, asTerm);
+                        previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
+                        TermNode prevTerm = new ASTTermParser().parse(previousTerm);
+                        return new MarkTermNode(prevTerm, markTerm, asTerm);
                     }
                     case MARK_WITHIF -> {
+                        previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
+                        TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                         PredicateNode pred = new ASTPredParser().parse(mark.getMyPred());
-                        return new MarkIfNode(markTerm, asTerm, pred);
+                        return new MarkIfTermNode(prevTerm, markTerm, asTerm, pred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
@@ -374,8 +379,9 @@ public class ASTTermParser {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, TUPEL_INTERVAL,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
-                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE,
-                        FUNDEF_IDENTIFIER_TERM, FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
+                        DISTINCT_ITEM, LOOP_LOOPBODY, LOOP_STATEMENT, MARK_WITHIF, MARK_WITHOUTIF, TERMR_FILTER,
+                        TERMR_INTERSECT, TERMR_UNITE, TERMR_MARK, FUNDEF_IDENTIFIER_TERM,
+                        FUNDEF_IDENTIFIER_FUNCBODY, FUNDEF_VLIST_TERM, FUNDEF_VLIST_FUNCBODY -> {
                     output.add(item);
                 }
                 case TERM_BRACKET -> {

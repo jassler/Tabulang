@@ -1,22 +1,22 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.InternalObject;
-import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class MarkInLoopNode extends TernaryTermNode{
+public class MarkInLoopNode extends MarkStatementNode {
 
-    //TODO Placeholder; remove once parser uses 3 parameters
     public MarkInLoopNode(Node left, Node right){
         super(null, left, right);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object date = getLeft().evaluateNode(interpretation);
+        if (!interpretation.getEnvironment().containsKey("mapValue" + interpretation.getNestingLevel())) {
+            throw new VariableNotDeclaredException("mapValue" + interpretation.getNestingLevel());
+        }
+        Object date = interpretation.getEnvironment().get("mapValue" + interpretation.getNestingLevel());
         try {
             if (date instanceof Tuple) {
                 markTupleObject((Tuple) date, interpretation);
@@ -28,45 +28,5 @@ public class MarkInLoopNode extends TernaryTermNode{
             illegalOperandArgumentException.printStackTrace();
         }
         return null;
-    }
-
-    public void markNonTupleObject(Object date, Interpretation interpretation){
-        Object annotationKey = getMiddle().evaluateNode(interpretation);
-        Object annotationValue = getRight().evaluateNode(interpretation);
-        setMark(date, annotationKey, annotationValue);
-    }
-
-    public void markTupleObject(Tuple date, Interpretation interpretation) {
-        Interpretation nestedInterpretation1 = interpretation.deepCopy();
-        Interpretation nestedInterpretation2 = interpretation.deepCopy();
-        for (int j = 0; j < ((Tuple<?>) date).size(); j++) {
-            Object element = ((Tuple<?>) date).getElements().get(j);
-            Object name = ((Tuple<?>) date).getNames().get(j);
-            nestedInterpretation1.getEnvironment().put(name.toString(), element);
-            nestedInterpretation2.getEnvironment().put(name.toString(), element);
-        }
-        Object annotationKey = getMiddle().evaluateNode(nestedInterpretation1);
-        Object annotationValue = getRight().evaluateNode(nestedInterpretation2);
-        setMark(date, annotationKey, annotationValue);
-    }
-
-    public void setMark(Object date, Object annotationKey, Object annotationValue){
-        if (annotationKey instanceof InternalString) {
-            if (annotationValue == null) {
-                ((InternalObject) date).getStyle().getAnnotations().put(((InternalString) annotationKey).getString(), null);
-            } else if (annotationValue instanceof InternalString || annotationValue instanceof InternalNumber) {
-                ((InternalObject) date).getStyle().getAnnotations().put(((InternalString) annotationKey).getString(), annotationValue.toString());
-            } else {
-                throw new IllegalOperandArgumentException("'" + date + " (" + date.getClass() + ") mark "
-                        + annotationKey + " (" + annotationKey.getClass() + ") as "
-                        + annotationValue + " (" + annotationValue.getClass() + ") can not be executed."
-                        + "Allowed Operands: '[Tuple] mark [String] as [String/Number/null]'.");
-            }
-        } else {
-            throw new IllegalOperandArgumentException("'" + date + " (" + date.getClass() + ") mark "
-                    + annotationKey + " (" + annotationKey.getClass() + ") as "
-                    + annotationValue + " (" + annotationValue.getClass() + ") can not be executed."
-                    + "Allowed Operands: '[Tuple] mark [String] as [String/Number/null]'.");
-        }
     }
 }

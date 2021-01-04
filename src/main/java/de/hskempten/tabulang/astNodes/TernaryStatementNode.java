@@ -1,37 +1,37 @@
 package de.hskempten.tabulang.astNodes;
 
 public abstract class TernaryStatementNode extends StatementNode{
-    private Node left;
-    private Node middle;
-    private Node right;
+    private Node leftNode;
+    private Node middleNode;
+    private Node rightNode;
 
-    public TernaryStatementNode(Node left, Node middle, Node right) {
-        this.left = left;
-        this.middle = middle;
-        this.right = right;
+    public TernaryStatementNode(Node leftNode, Node middleNode, Node rightNode) {
+        this.leftNode = leftNode;
+        this.middleNode = middleNode;
+        this.rightNode = rightNode;
     }
 
-    public Node getLeft() {
-        return left;
+    public Node getLeftNode() {
+        return leftNode;
     }
 
-    public void setLeft(Node left) {
-        this.left = left;
+    public void setLeftNode(Node leftNode) {
+        this.leftNode = leftNode;
     }
 
-    public Node getMiddle() {
-        return middle;
+    public Node getMiddleNode() {
+        return middleNode;
     }
 
-    public void setMiddle(Node middle) {
-        this.middle = middle;
+    public void setMiddleNode(Node middleNode) {
+        this.middleNode = middleNode;
     }
 
-    public Node getRight() {
-        return right;
+    public Node getRightNode() {
+        return rightNode;
     }
 
-    public void setRight(Node right) {
-        this.right = right;
+    public void setRightNode(Node rightNode) {
+        this.rightNode = rightNode;
     }
 }

@@ -111,7 +111,7 @@ public class InternalNumber extends InternalObject {
                 ));
     }
 
-    public InternalNumber diff(InternalNumber other) {
+    public InternalNumber div(InternalNumber other) {
         BigInteger kgv = kgv(denominator, other.getDenominator());
         BigInteger newNumerator = (numerator.multiply((kgv.divide(denominator)))).divideAndRemainder(other.numerator.multiply((kgv.divide(other.getDenominator()))))[0];
         BigInteger newDenominator = kgv;

@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -18,9 +19,13 @@ public class IntersectNode extends BinaryTermNode{
             left = checkIfTable(left);
             right = checkIfTable(right);
         } catch (TupleCannotBeTransformedException | IllegalArgumentException runtimeException){
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") intersect " + right + " (" + right.getClass() + ")' can not be executed. " +
-                    "Allowed operands: Tables.");
+            throw new IllegalTableOperandArgumentException(toString());
         }
         return ((Table) left).intersection((Table) right);
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " intersect " + getRightNode();
     }
 }

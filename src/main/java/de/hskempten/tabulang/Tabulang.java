@@ -133,25 +133,25 @@ public class Tabulang {
         if (true) {
             l.setText("\n" +
                     //"z := [[1], [1, '3.00', 5.0, 6*8, 'b' + 6]];\n" +
-                    "y := [[1, 2],[2, 3],[3, 4]];\n" +
-                    "z := [[1, 2],[2, 3],[3, 6]];\n" +
-                    "tableSub := y - z;\n" +
-                    //"y := [6, 7, 8, 7];\n" +
-                    //"a := 4;\n" +
-                    "b := '1';\n" +
-                    //"c := average b y;\n" +
+                    //"y := [[1, 2],[2, 3],[3, 4]];\n" +
+                    //"z := [[1, 2],[2, 3],[3, 6]];\n" +
+                    //"tableSub := y - z;\n" +
+                    "y := [6, 7, 8, 7];\n" +
+                    //"a := y + 6;\n" +
+                    "b := '0';\n" +
+                    //"c := average '0' y;\n" +
                     //"s := (c) -> {c := 2; return c;};\n" +
-                    "d := y.'0';\n" +
-                    //"f := d mod c;\n" +
+                    //"d := y.'0';\n" +
+                    //"f := 6 * b;\n" +
                     //"g := y.'1'.'1';\n" +
-                    //"if(d in y) c := 2;\n" +
+                    //"if(true) c := 2;\n" +
                     //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 < 4 iff 6 > 7) d := 10;\n" +
                     "function f1(x, z) return 5;\n" +
                     //"res := f1(d);\n" +
-                    //"for x in y {set x; c := x + c;}\n" +
-                    //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; group d using f1(c, e);}\n" +
+                    "for x in y {set x; c := x + 1; mark '0' as 'grey';}\n" +
+                    //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; hiding group after d using f1(c, e);}\n" +
                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +
                    // "e := hi(c, d);" +

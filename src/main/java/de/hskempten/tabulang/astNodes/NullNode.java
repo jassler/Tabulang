@@ -11,4 +11,9 @@ public class NullNode extends TermNode{
     public Object evaluateNode(Interpretation interpretation) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "null";
+    }
 }
