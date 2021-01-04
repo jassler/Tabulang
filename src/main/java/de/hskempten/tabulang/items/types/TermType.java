@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class TermType implements Parser {
 
@@ -19,7 +20,6 @@ public class TermType implements Parser {
         TermRItem myTermR;
         IdentifierItem myIdentifier;
         LoopItem myLoop;
-        FlipTItem myFlipT;
         OrdinalItem myOrdinal;
         DirectionalTermItem myDirectionalTerm;
         FunDefItem myFunDef;
@@ -30,6 +30,7 @@ public class TermType implements Parser {
 
         //TODO find break conditions for term (loop, markStmnt, groupStmnt)
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "variable" -> {
                 if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
@@ -67,11 +68,6 @@ public class TermType implements Parser {
                         myAggregationT = AggregationTType.instance.parse(l);
                         myTermR = TermRType.instance.parse(l);
                         item = new TermItem(myTermR, myAggregationT);
-                    }
-                    case "horizontalflip", "verticalflip" -> {
-                        myFlipT = FlipTType.instance.parse(l);
-                        myTermR = TermRType.instance.parse(l);
-                        item = new TermItem(myTermR, myFlipT);
                     }
                     case "null" -> {
                         myOrdinal = OrdinalType.instance.parse(l);
@@ -114,6 +110,8 @@ public class TermType implements Parser {
             default -> throw new ParseTimeException(l, "Not yet implemented case in term: " + l.lookahead().getContent());
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

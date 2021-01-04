@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class LoopItem implements LanguageItem {
     //'for'
     private IdentifierItem myIdentifier;
@@ -11,6 +13,7 @@ public class LoopItem implements LanguageItem {
     //')'
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public LoopItem(IdentifierItem myIdentifier, TermItem myTerm, LoopStmntItem myLoopStmnt) {
         this.setMyIdentifier(myIdentifier);
@@ -56,6 +59,16 @@ public class LoopItem implements LanguageItem {
 
     public void setMyLoopBody(LoopBodyItem myLoopBody) {
         this.myLoopBody = myLoopBody;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class DirectionalTermItem implements LanguageItem {
     private String myString;
     private TermItem myTerm;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public DirectionalTermItem(String myString, TermItem myTerm) {
         this.setMyString(myString);
@@ -38,6 +41,16 @@ public class DirectionalTermItem implements LanguageItem {
 
     public void setLanguageItemType(LanguageItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

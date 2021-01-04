@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.CountTItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class CountTType implements LanguageType {
@@ -19,6 +20,7 @@ public class CountTType implements LanguageType {
         String myString;
         TermItem myTerm;
 
+        TextPosition startP = l.lookahead().getPosition();
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         if ("keyword".equals(l.lookahead().getType()) && ("horizontal".equals(l.lookahead().getContent()) || "vertical".equals(l.lookahead().getContent()))) {
             myString = l.lookahead().getContent();
@@ -30,6 +32,8 @@ public class CountTType implements LanguageType {
             item = new CountTItem(myTerm);
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

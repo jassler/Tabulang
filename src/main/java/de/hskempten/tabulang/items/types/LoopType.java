@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class LoopType implements Parser {
 
@@ -21,6 +22,7 @@ public class LoopType implements Parser {
         LoopBodyItem myLoopBody;
         //')'
 
+        TextPosition startP = l.lookahead().getPosition();
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         myIdentifier = IdentifierType.instance.parse(l);
         l.getNextTokenAndExpect(TokenType.KEYWORD);
@@ -36,6 +38,8 @@ public class LoopType implements Parser {
         }
 
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.StatementItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class StatementType implements Parser {
 
@@ -12,7 +13,7 @@ public class StatementType implements Parser {
     public StatementItem parse(Lexer l) throws ParseTimeException {
 
         StatementItem statement;
-
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "keyword" -> {
                 switch (l.lookahead().getContent()) {
@@ -39,6 +40,9 @@ public class StatementType implements Parser {
             }
             default -> throw new ParseTimeException(l, "Illegal Type: " + l.lookahead().getType() + " at " + l.lookahead().getContent());
         }
+
+        TextPosition endP = l.lookbehind().getPosition();
+        statement.setTextPosition(new TextPosition(startP, endP));
         return statement;
     }
 }

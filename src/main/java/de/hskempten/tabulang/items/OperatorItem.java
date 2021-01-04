@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class OperatorItem implements LanguageItem {
     //+ - * / div mod ^
     private String myString;
 
     LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public OperatorItem(String myString) {
         this.setMyString(myString);
@@ -26,6 +29,16 @@ public class OperatorItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class OrdinalItem implements LanguageItem {
     //"null"
     private String myString;
@@ -8,6 +10,7 @@ public class OrdinalItem implements LanguageItem {
     private TupelItem myTupel;
 
     LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public OrdinalItem(String myString) {
         this.setMyString(myString);
@@ -60,6 +63,16 @@ public class OrdinalItem implements LanguageItem {
 
     public void setMyTupel(TupelItem myTupel) {
         this.myTupel = myTupel;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

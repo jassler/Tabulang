@@ -4,8 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.NumberItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
-
-import java.math.BigInteger;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class NumberType implements Parser {
 
@@ -17,10 +16,13 @@ public class NumberType implements Parser {
 
         String myNumber;
 
+        TextPosition startP = l.lookahead().getPosition();
         myNumber = l.lookahead().getContent();
         l.getNextTokenAndExpect(TokenType.NUMBER);
         item = new NumberItem(myNumber);
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.AverageTItem;
 import de.hskempten.tabulang.items.CountTItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class AggregationTType implements LanguageType {
@@ -18,6 +19,7 @@ public class AggregationTType implements LanguageType {
         CountTItem myCountT;
         AverageTItem myAverageT;
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getContent()) {
             case "count" -> {
                 myCountT = CountTType.instance.parse(l);
@@ -32,7 +34,8 @@ public class AggregationTType implements LanguageType {
             }
         }
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

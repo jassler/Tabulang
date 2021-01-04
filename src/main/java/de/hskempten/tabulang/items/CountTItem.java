@@ -1,11 +1,14 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class CountTItem implements LanguageItem {
     //"horizontal"/"vertical"
     private String myString;
     private TermItem myTerm;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public CountTItem(TermItem myTerm) {
         this.setMyTerm(myTerm);
@@ -32,6 +35,16 @@ public class CountTItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

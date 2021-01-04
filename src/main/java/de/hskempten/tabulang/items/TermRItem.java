@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class TermRItem implements TermOrRItem {
     //myPreds darf nicht null sein; pred+
     private PredItem myPred;
@@ -13,6 +15,7 @@ public class TermRItem implements TermOrRItem {
     private String myString;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public TermRItem(PredItem myPred, TermRItem myTermR, String myString) {
         this.myPred = myPred;
@@ -121,6 +124,16 @@ public class TermRItem implements TermOrRItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

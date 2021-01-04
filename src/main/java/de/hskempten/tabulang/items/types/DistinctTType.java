@@ -6,6 +6,7 @@ import de.hskempten.tabulang.items.IdentifierItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class DistinctTType implements LanguageType {
         ArrayList<IdentifierItem> myIdentifiers = new ArrayList<>();
         TermItem myTerm;
 
+        TextPosition startP = l.lookahead().getPosition();
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         while (!("keyword".equals(l.lookahead().getType()) && "from".equals(l.lookahead().getContent()))) {
             myIdentifiers.add(IdentifierType.instance.parse(l));
@@ -30,6 +32,8 @@ public class DistinctTType implements LanguageType {
 
         item = new DistinctTItem(myIdentifiers, myTerm);
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

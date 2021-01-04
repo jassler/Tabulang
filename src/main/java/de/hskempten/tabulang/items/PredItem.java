@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class PredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
@@ -12,6 +14,7 @@ public class PredItem implements LanguageItem {
     private FunCallItem myFunCallItem; //TODO add funCall to pred?
 
     LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public PredItem(IdentifierItem myIdentifier, TermItem myTerm, PredRItem myPredR) {
         this.setMyIdentifier(myIdentifier);
@@ -133,6 +136,16 @@ public class PredItem implements LanguageItem {
 
     public void setLanguageItemType(LanguageItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

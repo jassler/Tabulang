@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class IfStmntItem implements LanguageItem {
     //'if'
     private PredItem myPred;
@@ -8,6 +10,7 @@ public class IfStmntItem implements LanguageItem {
     private AnyStatementItem myOptionalAnyStatement;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement) {
         this.setMyPred(myPred);
@@ -44,6 +47,16 @@ public class IfStmntItem implements LanguageItem {
 
     public void setMyOptionalAnyStatement(AnyStatementItem myOptionalAnyStatement) {
         this.myOptionalAnyStatement = myOptionalAnyStatement;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class StatementItem implements StatementAnyItem {
     private LoopItem myLoop;
     private IfStmntItem myIfStmnt;
@@ -8,6 +10,7 @@ public class StatementItem implements StatementAnyItem {
     private FunCallItem myFunCall;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public StatementItem(LoopItem myLoop) {
         this.setMyLoop(myLoop);
@@ -77,5 +80,15 @@ public class StatementItem implements StatementAnyItem {
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 }

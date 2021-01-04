@@ -1,39 +1,17 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 import java.util.ArrayList;
 
 public class FunCallItem implements LanguageItem {
-    /*
-    private TermItem myTerm;
-    private TupelItem myTupel;
-
-    public FunCallItem(TermItem myTerm, TupelItem myTupel) {
-        this.setMyTerm(myTerm);
-        this.setMyTupel(myTupel);
-    }
-
-    public TermItem getMyTerm() {
-        return myTerm;
-    }
-
-    public void setMyTerm(TermItem myTerm) {
-        this.myTerm = myTerm;
-    }
-
-    public TupelItem getMyTupel() {
-        return myTupel;
-    }
-
-    public void setMyTupel(TupelItem myTupel) {
-        this.myTupel = myTupel;
-    }
-    */
 
     private IdentifierItem myIdentifier;
     private TupelItem myTupel;
 
     private TermItem termIdentifier;
     private ArrayList<TermItem> terms;
+    private TextPosition myTextPositon;
 
     public FunCallItem(IdentifierItem myIdentifier, ArrayList<TermItem> myTerms) {
         this.setMyIdentifier(myIdentifier);
@@ -75,6 +53,16 @@ public class FunCallItem implements LanguageItem {
 
     public void setMyTupel(TupelItem myTupel) {
         this.myTupel = myTupel;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

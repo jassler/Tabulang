@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class PredType implements LanguageType {
@@ -24,6 +25,7 @@ public class PredType implements LanguageType {
         Boolean myBoolean;
         FunCallItem myFunCallItem;
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "variable" -> {
                 if ("keyword".equals(l.lookahead(2).getType()) && "in".equals(l.lookahead(2).getContent())) {
@@ -123,7 +125,8 @@ public class PredType implements LanguageType {
             }
         }
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 import java.util.ArrayList;
 
 public class VListItem implements LanguageItem {
@@ -7,6 +9,7 @@ public class VListItem implements LanguageItem {
     private ArrayList<IdentifierItem> myOtherIdentifiers;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPositon;
 
     public VListItem() {
         this.itemType = LanguageItemType.VLIST_EMPTY;
@@ -14,7 +17,7 @@ public class VListItem implements LanguageItem {
 
     public VListItem(IdentifierItem myIdentifier) {
         this.setMyIdentifier(myIdentifier);
-        this.itemType= LanguageItemType.VLIST_ONE;
+        this.itemType = LanguageItemType.VLIST_ONE;
     }
 
     public VListItem(IdentifierItem myIdentifier, ArrayList<IdentifierItem> myOtherIdentifiers) {
@@ -37,6 +40,16 @@ public class VListItem implements LanguageItem {
 
     public void setMyOtherIdentifiers(ArrayList<IdentifierItem> myOtherIdentifiers) {
         this.myOtherIdentifiers = myOtherIdentifiers;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPositon;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPositon = textPosition;
     }
 
     @Override

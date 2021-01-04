@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.tokenizer.Token;
 
 public class ProceduralFType implements Parser {
@@ -15,6 +16,7 @@ public class ProceduralFType implements Parser {
 
         ProceduralFItem proceduralF;
 
+        TextPosition startP = l.lookahead().getPosition();
         l.getNextToken();
         IdentifierItem myIdentifier = IdentifierType.instance.parse(l);
         Token bracket = l.getNextTokenAndExpect(TokenType.BRACKET);
@@ -47,6 +49,8 @@ public class ProceduralFType implements Parser {
             }
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        proceduralF.setTextPosition(new TextPosition(startP, endP));
         return proceduralF;
     }
 }
