@@ -40,8 +40,6 @@ public class StringNode extends TermNode{
 
     @Override
     public String toString() {
-        return "StringNode{" +
-                "string='" + string + '\'' +
-                "} ";
+        return string;
     }
 }

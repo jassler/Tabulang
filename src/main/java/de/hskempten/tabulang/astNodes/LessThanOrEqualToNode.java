@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -19,8 +20,12 @@ public class LessThanOrEqualToNode extends BinaryPredicateNode {
         if(left instanceof InternalNumber l && right instanceof InternalNumber r){
             return l.compareTo(r) <= 0;
         } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") <= " + right + " (" + right.getClass() + ") can not be executed. " +
-                    "Allowed operands: Boolean.");
+            throw new IllegalBooleanOperandArgumentException(toString());
         }
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " <= " + getRightNode();
     }
 }

@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -14,9 +15,13 @@ public class XorNode extends BinaryPredicateNode{
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
         if (!(left instanceof InternalBoolean leftBool) || !(right instanceof InternalBoolean rightBool)) {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ^ " + right + " (" + right.getClass() + ") can not be executed. " +
-                    "Allowed operands: Boolean.");
+            throw new IllegalBooleanOperandArgumentException(toString());
         }
         return leftBool.getaBoolean() ^ rightBool.getaBoolean();
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " ^ " + getRightNode();
     }
 }

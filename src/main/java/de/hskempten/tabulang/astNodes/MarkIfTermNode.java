@@ -4,10 +4,10 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class MarkIfNode extends MarkNode {
+public class MarkIfTermNode extends MarkTermNode {
     private Node pred;
 
-    public MarkIfNode(Node left, Node middle, Node right, Node pred) {
+    public MarkIfTermNode(Node left, Node middle, Node right, Node pred) {
         super(left, middle, right);
         this.pred = pred;
 
@@ -23,7 +23,7 @@ public class MarkIfNode extends MarkNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object date = getLeft().evaluateNode(interpretation);
+        Object date = getLeftNode().evaluateNode(interpretation);
         try {
             if (date instanceof Tuple) {
                 Interpretation nestedInterpretation = interpretation.deepCopy();

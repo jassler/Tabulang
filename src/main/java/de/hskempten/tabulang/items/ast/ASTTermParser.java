@@ -282,13 +282,13 @@ public class ASTTermParser {
                     case MARK_WITHOUTIF -> {
                         previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                         TermNode prevTerm = new ASTTermParser().parse(previousTerm);
-                        return new MarkNode(prevTerm, markTerm, asTerm);
+                        return new MarkTermNode(prevTerm, markTerm, asTerm);
                     }
                     case MARK_WITHIF -> {
                         previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                         TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                         PredicateNode pred = new ASTPredParser().parse(mark.getMyPred());
-                        return new MarkIfNode(prevTerm, markTerm, asTerm, pred);
+                        return new MarkIfTermNode(prevTerm, markTerm, asTerm, pred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }

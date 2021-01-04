@@ -22,4 +22,9 @@ public class BooleanNode extends PredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         return new InternalBoolean(aBoolean);
     }
+
+    @Override
+    public String toString() {
+        return aBoolean.toString();
+    }
 }

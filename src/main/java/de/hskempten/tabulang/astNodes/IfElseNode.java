@@ -1,25 +1,29 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-import java.util.HashMap;
-
-public class IfElseNode extends TernaryStatementNode{
-    public IfElseNode(Node left, Node middle, Node right) {
-        super(left, middle, right);
+public class IfElseNode extends TernaryStatementNode {
+    public IfElseNode(Node leftNode, Node middleNode, Node rightNode) {
+        super(leftNode, middleNode, rightNode);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeft().evaluateNode(interpretation);
-        if (left instanceof Boolean) {
-            if ((Boolean) left) {
-                return getMiddle().evaluateNode(interpretation);
-            } else {
-                return getRight().evaluateNode(interpretation);
-            }
-        } else {
-            throw new IllegalArgumentException("Expected Boolean but got: " + left.getClass().getSimpleName());
+        Object left = getLeftNode().evaluateNode(interpretation);
+        if (!(left instanceof InternalBoolean leftBool)) {
+            throw new IllegalBooleanOperandArgumentException(toString());
         }
+        if (leftBool.getaBoolean()) {
+            return getMiddleNode().evaluateNode(interpretation);
+        } else {
+            return getRightNode().evaluateNode(interpretation);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "if(" +  getLeftNode() + ") " + getMiddleNode() + " else " + getRightNode();
     }
 }

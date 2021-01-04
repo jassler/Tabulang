@@ -208,7 +208,7 @@ public class ASTStatementParser {
                     }
                     case LOOP_MARK_WITHIF -> {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
-                        return new MarkIfInLoopNode(markTerm, asTerm, ifPred);
+                        return new MarkIfInLoopTermNode(markTerm, asTerm, ifPred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }

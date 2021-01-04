@@ -7,14 +7,14 @@ import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-public class MarkNode extends TernaryTermNode {
-    public MarkNode(Node left, Node middle, Node right) {
+public class MarkTermNode extends TernaryTermNode {
+    public MarkTermNode(Node left, Node middle, Node right) {
         super(left, middle, right);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object date = getLeft().evaluateNode(interpretation);
+        Object date = getLeftNode().evaluateNode(interpretation);
         try {
             if (date instanceof Tuple) {
                 markTupleObject((Tuple) date, interpretation);
@@ -29,8 +29,8 @@ public class MarkNode extends TernaryTermNode {
     }
 
     public void markNonTupleObject(Object date, Interpretation interpretation) {
-        Object annotationKey = getMiddle().evaluateNode(interpretation);
-        Object annotationValue = getRight().evaluateNode(interpretation);
+        Object annotationKey = getMiddleNode().evaluateNode(interpretation);
+        Object annotationValue = getRightNode().evaluateNode(interpretation);
         setMark(date, annotationKey, annotationValue);
     }
 
@@ -43,8 +43,8 @@ public class MarkNode extends TernaryTermNode {
             nestedInterpretation1.getEnvironment().put(name.toString(), element);
             nestedInterpretation2.getEnvironment().put(name.toString(), element);
         }
-        Object annotationKey = getMiddle().evaluateNode(nestedInterpretation1);
-        Object annotationValue = getRight().evaluateNode(nestedInterpretation2);
+        Object annotationKey = getMiddleNode().evaluateNode(nestedInterpretation1);
+        Object annotationValue = getRightNode().evaluateNode(nestedInterpretation2);
         setMark(date, annotationKey, annotationValue);
     }
 

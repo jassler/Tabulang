@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -16,10 +17,14 @@ public class ModNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalNumber leftValue) || !(right instanceof InternalNumber rightValue)) {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") mod " + right + " (" + right.getClass() + ") can not be executed. " +
-                    "Allowed operands: Numbers.");
+        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
+            throw new IllegalNumberOperandArgumentException(toString());
         }
-        return leftValue.mod(rightValue);
+        return leftNumber.mod(rightNumber);
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " mod " + getRightNode();
     }
 }
