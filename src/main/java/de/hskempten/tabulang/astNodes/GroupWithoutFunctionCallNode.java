@@ -12,29 +12,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class GroupWithoutFunctionCallNode extends GroupNode {
-    private boolean hiding;
-    private boolean area;
 
-    public GroupWithoutFunctionCallNode(boolean hiding, boolean area, TermNode term) {
+    public GroupWithoutFunctionCallNode(TermNode term) {
         super(term);
-        this.setHiding(hiding);
-        this.setArea(area);
-    }
-
-    public boolean isHiding() {
-        return hiding;
-    }
-
-    public void setHiding(boolean hiding) {
-        this.hiding = hiding;
-    }
-
-    public boolean isArea() {
-        return area;
-    }
-
-    public void setArea(boolean area) {
-        this.area = area;
     }
 
 

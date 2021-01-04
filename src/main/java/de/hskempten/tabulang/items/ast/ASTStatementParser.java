@@ -171,13 +171,7 @@ public class ASTStatementParser {
             case GROUP_EMPTY, GROUP_AREA, GROUP_HIDING_AREA, GROUP_HIDING -> {
                 GroupStmntItem grp = (GroupStmntItem) actItem;
                 TermNode term = new ASTTermParser().parse(grp.getMyTerm());
-                return switch (actItem.getLanguageItemType()) {
-                    case GROUP_EMPTY -> new GroupWithoutFunctionCallNode(false, false, term);
-                    case GROUP_AREA -> new GroupWithoutFunctionCallNode(false, true, term);
-                    case GROUP_HIDING_AREA -> new GroupWithoutFunctionCallNode(true, true, term);
-                    case GROUP_HIDING -> new GroupWithoutFunctionCallNode(true, false, term);
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
-                };
+                return new GroupWithoutFunctionCallNode(term);
             }
             case GROUP_FUNCALL, GROUP_AREA_FUNCALL, GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> {
                 GroupStmntItem grp = (GroupStmntItem) actItem;
@@ -189,10 +183,13 @@ public class ASTStatementParser {
                 }
                 FunctionCallNode funCall = new FunctionCallNode(fcIdentifier, fcTerms);
                 return switch (actItem.getLanguageItemType()) {
-                    case GROUP_FUNCALL -> new GroupBeforeFunctionCallNode(false, false, term, funCall);
-                    case GROUP_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(false, true, term, funCall);
-                    case GROUP_HIDING_AREA_FUNCALL -> new GroupBeforeFunctionCallNode(true, true, term, funCall);
-                    case GROUP_HIDING_FUNCALL -> new GroupBeforeFunctionCallNode(true, false, term, funCall);
+                    case GROUP_FUNCALL -> new GroupBeforeFunctionCallNode(term, funCall);
+                    case GROUP_AREA_FUNCALL -> switch (grp.getMyGroupArea().getMyString()) {
+                        case "before" -> new GroupBeforeFunctionCallNode(term, funCall);
+                        case "after" -> new GroupAfterFunctionCallNode(term, funCall);
+                        default -> throw new IllegalStateException("Unexpected area value: " + grp.getMyGroupArea().getMyString());
+                    };
+                    case GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> new HidingGroupFunctionCallNode(term, funCall);
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
             }
