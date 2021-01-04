@@ -1,20 +1,15 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.*;
+import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.InternalObject;
+import de.hskempten.tabulang.datatypes.InternalString;
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class MarkNode extends TernaryTermNode{
+public class MarkNode extends TernaryTermNode {
     public MarkNode(Node left, Node middle, Node right) {
         super(left, middle, right);
-    }
-
-    //TODO Placeholder; remove once parser uses 3 parameters
-    public MarkNode(Node left, Node right){
-        super(null, left, right);
     }
 
     @Override
@@ -27,13 +22,13 @@ public class MarkNode extends TernaryTermNode{
                 markNonTupleObject(date, interpretation);
             }
             return null;
-        } catch (IllegalOperandArgumentException illegalOperandArgumentException){
+        } catch (IllegalOperandArgumentException illegalOperandArgumentException) {
             illegalOperandArgumentException.printStackTrace();
         }
         return null;
     }
 
-    public void markNonTupleObject(Object date, Interpretation interpretation){
+    public void markNonTupleObject(Object date, Interpretation interpretation) {
         Object annotationKey = getMiddle().evaluateNode(interpretation);
         Object annotationValue = getRight().evaluateNode(interpretation);
         setMark(date, annotationKey, annotationValue);
@@ -53,7 +48,7 @@ public class MarkNode extends TernaryTermNode{
         setMark(date, annotationKey, annotationValue);
     }
 
-    public void setMark(Object date, Object annotationKey, Object annotationValue){
+    public void setMark(Object date, Object annotationKey, Object annotationValue) {
         if (annotationKey instanceof InternalString) {
             if (annotationValue == null) {
                 ((InternalObject) date).getStyle().getAnnotations().put(((InternalString) annotationKey).getString(), null);

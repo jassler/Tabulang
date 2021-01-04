@@ -62,6 +62,11 @@ public class ASTStatementParser {
                 return ((LoopStmntItem) actStatement).getMyGroupStmnt();
             }
             case LOOP_STMT_MARK -> {
+                ((LoopStmntItem) actStatement).getMyMarkStmnt().setLanguageItemType(switch (((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType()) {
+                    case MARK_WITHOUTIF -> LanguageItemType.LOOP_MARK_WITHOUTIF;
+                    case MARK_WITHIF -> LanguageItemType.LOOP_MARK_WITHIF;
+                    default -> throw new IllegalStateException("Unexpected value: " + ((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType());
+                });
                 return ((LoopStmntItem) actStatement).getMyMarkStmnt();
             }
             case LOOP_STMT_STATEMENT -> {
@@ -193,21 +198,17 @@ public class ASTStatementParser {
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 };
             }
-            case MARK_WITHIF, MARK_WITHOUTIF -> {
+            case LOOP_MARK_WITHIF, LOOP_MARK_WITHOUTIF -> {
                 MarkStmntItem mrk = (MarkStmntItem) actItem;
                 TermNode markTerm = new ASTTermParser().parse(mrk.getMyTerm());
                 TermNode asTerm = new ASTTermParser().parse(mrk.getMySecondTerm());
                 switch (actItem.getLanguageItemType()) {
-                    case MARK_WITHOUTIF -> {
-                        //TODO remove placeholder
-                        return new IfNode(markTerm, asTerm);//Placeholder
-                        //return new MarkNode(markTerm, asTerm);
+                    case LOOP_MARK_WITHOUTIF -> {
+                        return new MarkInLoopNode(markTerm, asTerm);
                     }
-                    case MARK_WITHIF -> {
+                    case LOOP_MARK_WITHIF -> {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
-                        //TODO remove placeholder
-                        return new IfNode(markTerm, asTerm);//Placeholder
-                        //return new MarkIfNode(markTerm, asTerm, ifPred);
+                        return new MarkIfInLoopNode(markTerm, asTerm, ifPred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }
