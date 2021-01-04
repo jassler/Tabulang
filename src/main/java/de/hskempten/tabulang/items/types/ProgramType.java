@@ -28,7 +28,7 @@ public class ProgramType implements Parser {
         //if (!fm.hasMainMethod()) throw new ParseTimeException("No main method defined.");
         TextPosition endP = l.lookbehind().getPosition();
         ProgramItem prg = new ProgramItem(statements);
-        prg.setTextPosition(new TextPosition(startP, endP));
+        if (!statements.isEmpty()) prg.setTextPosition(new TextPosition(startP, endP));
         return prg;
     }
 }
