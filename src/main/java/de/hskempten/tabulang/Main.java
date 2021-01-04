@@ -5,7 +5,7 @@ import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
-import de.hskempten.tabulang.standardBibliothek.MainClass;
+import de.hskempten.tabulang.standardBibliothek.StandardBibliothek;
 import de.hskempten.tabulang.tokenizer.Lexer;
 
 import java.nio.file.Files;
@@ -31,7 +31,7 @@ public class Main {
         l.addOneLineCommentMarker("//");
 
         // Setup interpreter library functions
-        MainClass.addStandardLibrary(interpreter);
+        StandardBibliothek.addStandardLibrary(interpreter);
 
         // Parse command line arguments
         CommandLineArguments cli;

@@ -39,12 +39,14 @@ public class OdsImportService {
      * @param path  Specific path
      */
 
-    public void Import(String path) {
+    public MSpreadsheet Import(String path) {
         try {
             _odfDocument = OdfDocument.loadDocument(path);
             FindElementInXml(_odfDocument.getContentDom().toString());
+            return _spreadsheet;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
