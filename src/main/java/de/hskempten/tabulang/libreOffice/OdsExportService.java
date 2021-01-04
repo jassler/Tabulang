@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.libreOffice;
 
+import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
@@ -69,20 +70,21 @@ public class OdsExportService {
      * @param fileName  File name of the table to be exported (without specifying ods)
      */
 
-    public void Export(Table table, String path, String fileName){
+    public void Export(Table<InternalDataObject> table, String path, String fileName){
         var content = new ArrayList<ArrayList<String>>();
-        for(var item : table){
+        for(var row : table){
             var contentRows = new ArrayList<String>();
-            for(var cell : (Tuple<String>) item){
-                contentRows.add(cell.getData());
+            for(var cell : row){
+                contentRows.add(cell.getObject().toString());
             }
             content.add(contentRows);
         }
         AddHeadlines(table.getColNames().getNames());
         AddContentFromTable(content);
-        SetRowStylesFromTable(table.getRowStyles());
-        SetColumnStylesFromTable(table.getColumnStyles());
-        SetCellStylesFromTable(table.getCellStyles());
+        SetRowStylesFromTable(table);
+        // TODO what to do about columns and transposed tables
+        // SetColumnStylesFromTable(table.getColumnStyles());
+        SetCellStylesFromTable(table);
         SaveFile(path, fileName);
     }
 
@@ -346,29 +348,35 @@ public class OdsExportService {
      * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the row styles of the table of the language and modify it to the correct form
      *
-     * @param styles Specific style for a row
+     * @param table Table with styled tuples
      */
 
-    private void SetRowStylesFromTable(HashMap styles){
-        styles.forEach((key, value) -> {
+    private void SetRowStylesFromTable(Table<InternalDataObject> table){
+        int rowNum = -1;
+        for(var tuple : table) {
+            rowNum++;
+            if(tuple.getStyle().isEmpty())
+                continue;
+
             CreateStyle();
-            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, (Integer) key, -1);
-            SetStyleToRow((Integer) key);
-        });
+            WrapperSetStyleToTable(tuple.getStyle(), rowNum, -1);
+            SetStyleToRow(rowNum);
+        }
     }
 
     /**
      * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the column styles of the table of the language and modify it to the correct form
      *
+     * TODO not currently called, table might be transposed or not
+     *
      * @param styles Specific style for a column
      */
-
-    private void SetColumnStylesFromTable(HashMap styles){
+    private void SetColumnStylesFromTable(HashMap<Integer, de.hskempten.tabulang.datatypes.Style> styles){
         styles.forEach((key, value) -> {
             CreateStyle();
-            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, -1, (Integer) key);
-            SetStyleToColumn((Integer) key);
+            WrapperSetStyleToTable(value, -1, key);
+            SetStyleToColumn(key);
         });
     }
 
@@ -376,22 +384,33 @@ public class OdsExportService {
      * Helper function for {@link OdsExportService#Export(Table, String, String)}.
      * Filter the cell styles of the table of the language and modify it to the correct form
      *
-     * @param styles Specific style for a cell
+     * @param table Table with cells that have styles applied to them
      */
+    private void SetCellStylesFromTable(Table<?> table){
+        int x, y;
 
-    private void SetCellStylesFromTable(HashMap styles){
-        styles.forEach((key, value) -> {
-            CreateStyle();
-            WrapperSetStyleToTable((de.hskempten.tabulang.datatypes.Style) value, ((Point)key).x, ((Point)key).y);
-            SetStyleToCell(((Point)key).x, ((Point)key).y);
-        });
+        y = -1;
+        for(var tuple : table) {
+            y++;
+            x = -1;
+
+            for(var cell : tuple) {
+                x++;
+                if(cell.getStyle().isEmpty())
+                    continue;
+
+                CreateStyle();
+                WrapperSetStyleToTable(cell.getStyle(), y, x);
+                SetStyleToCell(y, x);
+            }
+        }
     }
 
     /**
      * Helper function for:
-     * {@link OdsExportService#SetRowStylesFromTable(HashMap)}
+     * {@link OdsExportService#SetRowStylesFromTable(Table)}
      * {@link OdsExportService#SetColumnStylesFromTable(HashMap)} (HashMap)}
-     * {@link OdsExportService#SetCellStylesFromTable(HashMap)} (HashMap)}
+     * {@link OdsExportService#SetCellStylesFromTable(Table)} (HashMap)}
      *
      * Find the correct style methods with the help of keywords
      *
@@ -404,37 +423,17 @@ public class OdsExportService {
         styles.forEach(item -> {
             var key = item.getKey();
             var value = item.getValue();
-            switch(key){
-                case "font-color":
-                    SetFontColor(value);
-                    break;
-                case "font-family":
-                    SetFontFamliy(value);
-                    break;
-                case "font-size":
-                    SetFontSize(Double.parseDouble(value));
-                    break;
-                case "text-align":
-                    SetTextAlign(value);
-                    break;
-                case "background-color":
-                    SetBackgroundColor(value);
-                    break;
-                case "bold":
-                    SetBold();
-                    break;
-                case "italics":
-                    SetItalic();
-                    break;
-                case "underlined":
-                    SetUnderline();
-                    break;
-                case "rowheight":
-                    SetRowHeight(rowIndex, Double.parseDouble(value));
-                    break;
-                case "colwidth":
-                    SetColumnWidth(columnIndex, Double.parseDouble(value));
-                    break;
+             switch (key) {
+                case "font-color" -> SetFontColor(value);
+                case "font-family" -> SetFontFamliy(value);
+                case "font-size" -> SetFontSize(Double.parseDouble(value));
+                case "text-align" -> SetTextAlign(value);
+                case "background-color" -> SetBackgroundColor(value);
+                case "bold" -> SetBold();
+                case "italics" -> SetItalic();
+                case "underlined" -> SetUnderline();
+                case "rowheight" -> SetRowHeight(rowIndex, Double.parseDouble(value));
+                case "colwidth" -> SetColumnWidth(columnIndex, Double.parseDouble(value));
             }
         });
     }

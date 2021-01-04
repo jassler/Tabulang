@@ -1,4 +1,5 @@
 package de.hskempten.tabulang.mySql;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.OdsExportService;
@@ -8,6 +9,7 @@ import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DatabaseConnection {
     /* PROPERTIES */
@@ -90,10 +92,18 @@ public class DatabaseConnection {
      * @return {@link Table} of strings
      */
 
-    public static Table<String> ExportAsTable(String query){
+    public static Table<InternalString> ExportAsTable(String query){
         var sqlTableContent = ExportCore(query);
         assert sqlTableContent != null;
-        return new Table<>(sqlTableContent.get_headlines(), sqlTableContent.get_content());
+
+        ArrayList<Tuple<InternalString>> tuples = new ArrayList<>(sqlTableContent.get_content().size());
+        for(var row : sqlTableContent.get_content()) {
+            tuples.add(new Tuple<>(
+                    row.stream().map(InternalString::new).collect(Collectors.toList())
+            ));
+        }
+
+        return new Table<>(sqlTableContent.get_headlines(), tuples);
     }
 
     /**
@@ -103,19 +113,20 @@ public class DatabaseConnection {
      * @param sqlTableName  MySQL table name where the record should be added
      */
 
-    public static void ImportFromTable(Table table, String sqlTableName) {
+    public static void ImportFromTable(Table<InternalString> table, String sqlTableName) {
         try {
             var content = new ArrayList<ArrayList<String>>();
             for(var item : table){
                 var contentRows = new ArrayList<String>();
-                for(var cell : (Tuple<String>) item){
-                    contentRows.add(cell.getData());
+                for(var cell : item){
+                    contentRows.add(cell.getString());
                 }
                 content.add(contentRows);
             }
             ImportCore(new MSqlTableContent(sqlTableName, ReplaceHeadline(table), content));
         } catch(Exception e){
-          e.printStackTrace();
+            // e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
 
     }

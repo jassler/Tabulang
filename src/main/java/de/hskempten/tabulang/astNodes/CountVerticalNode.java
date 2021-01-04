@@ -24,8 +24,8 @@ public class CountVerticalNode extends TermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Table){
-            return new InternalNumber(new BigInteger(Integer.toString(((Table<?>) o).getRows().size())), new BigInteger("1"));
+        if(o instanceof Table<?> t){
+            return new InternalNumber(new BigInteger(Integer.toString(t.getNumberOfRows())), new BigInteger("1"));
         } else {
             return new InternalNumber(new BigInteger("1"), new BigInteger("1"));
         }

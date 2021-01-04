@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.datatypes;
 
-public abstract class InternalObject implements Styleable {
+public class InternalObject implements Styleable {
 
     private InternalObject parent;
     private Style style;
@@ -50,6 +50,6 @@ public abstract class InternalObject implements Styleable {
             s.importStyleIfAbsent(p.getStyle());
             p = p.getParent();
         }
-        return style;
+        return s;
     }
 }

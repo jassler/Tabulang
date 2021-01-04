@@ -10,17 +10,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
+public class Table<E extends Styleable> extends InternalObject implements Iterable<Tuple<E>>, Cloneable {
 
-    private final HashMap<Integer, Style> rowStyles = new HashMap<>();
-    private final HashMap<Integer, Style> columnStyles = new HashMap<>();
-    private final HashMap<Point, Style> cellStyles = new HashMap<>();
-
-    private final ArrayList<ArrayList<E>> tuples;
+    private final ArrayList<Tuple<E>> tuples;
     private boolean transposed = false;
 
     private final HeaderNames colNames;
-    // private final HashMap<String, Integer> colLookup;
 
     /**
      * Create table with rows of tuples.
@@ -63,7 +58,10 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
             if (t.size() != l)
                 throw new ArrayLengthMismatchException(t.size(), l);
 
-            this.tuples.add(new ArrayList<>(t.getElements()));
+            var clone = t.clone();
+            clone.setParent(this);
+            clone.setNames(this.colNames);
+            this.tuples.add(clone);
         }
     }
 
@@ -73,8 +71,8 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
      * @param colNames Column header names
      * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
      */
-    public Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples) {
-        this(colNames, tuples, true, null);
+    public Table(ArrayList<String> colNames, ArrayList<Tuple<E>> tuples) {
+        this(colNames, tuples, null);
     }
 
     /**
@@ -85,57 +83,49 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
      *
      * @param colNames Column header names
      * @param tuples   Rows of tuples, each row having the same amount of elements as {@code colNames}
-     * @param deepCopy If false, simply point the lists to the parameters given. Else create new {@code ArrayList} for each tuple
      */
-    protected Table(ArrayList<String> colNames, ArrayList<ArrayList<E>> tuples, boolean deepCopy, InternalObject parent) {
+    public Table(ArrayList<String> colNames, ArrayList<Tuple<E>> tuples, InternalObject parent) {
         super(parent);
         this.colNames = new HeaderNames(colNames);
-        if (deepCopy) {
-            this.tuples = new ArrayList<>(tuples.size());
-            for (var t : tuples)
-                this.tuples.add(new ArrayList<>(t));
-        } else {
-            this.tuples = tuples;
+        this.tuples = new ArrayList<>(tuples.size());
+        for(Tuple<E> t : tuples) {
+            var clone = t.clone();
+            clone.setParent(this);
+            clone.setNames(this.colNames);
+            this.tuples.add(clone);
         }
     }
 
     public Tuple<E> getRow(int rowNum) {
-        Tuple<E> t = new Tuple<>(tuples.get(rowNum), colNames, !transposed, this);
-
-        if (rowStyles.containsKey(rowNum)) {
-            Style s = rowStyles.get(rowNum);
-            for (int i = 0; i < t.size(); i++)
-                t.setElementStyle(i, s);
-        }
-
-        for (var entry : columnStyles.entrySet()) {
-            if (entry.getKey() >= 0 && entry.getKey() < t.size()) {
-                t.setElementStyle(entry.getKey(), entry.getValue());
-            }
-        }
-
-        for (var entry : cellStyles.entrySet()) {
-            if (entry.getKey().y == rowNum)
-                t.setElementStyle(entry.getKey().x, entry.getValue());
-        }
-
-        return t;
-    }
-
-    public void setRowStyle(int rowNum, Style style) {
-        this.rowStyles.put(rowNum, style);
+        return tuples.get(rowNum);
     }
 
     public void setRowHeight(int rowNum, double height) {
-        Style s = this.rowStyles.getOrDefault(rowNum, new Style());
-        s.setAttribute(Style.ROW_HEIGHT, Double.toString(height));
-        this.rowStyles.put(rowNum, s);
+        this.tuples.get(rowNum).getStyle().setAttribute(Style.ROW_HEIGHT, Double.toString(height));
     }
 
-    public HashMap<Integer, Style> getRowStyles() {
-        return rowStyles;
+    public int getNumberOfRows() {
+        if(!transposed)
+            return tuples.size();
+        else
+            return colNames.size();
     }
 
+    public int getNumberOfColumns() {
+        if(!transposed)
+            return colNames.size();
+        else
+            return tuples.size();
+    }
+
+    public int getTupleSize() {
+        return tuples.size();
+    }
+
+    /*
+
+    // TODO
+    // How to deal with column style, especially if transposed comes into play
     public void setColumnStyle(int colNum, Style style) {
         this.columnStyles.put(colNum, style);
     }
@@ -149,14 +139,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
     public HashMap<Integer, Style> getColumnStyles() {
         return columnStyles;
     }
-
-    public void setCellStyle(int x, int y, Style style) {
-        this.cellStyles.put(new Point(x, y), style);
-    }
-
-    public HashMap<Point, Style> getCellStyles() {
-        return cellStyles;
-    }
+    */
 
     /**
      * Use carefully!
@@ -164,12 +147,15 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
      * @return tuple arraylist
      */
     @Deprecated
-    public ArrayList<ArrayList<E>> getRows() {
+    public ArrayList<Tuple<E>> getRows() {
         return tuples;
     }
 
     public void transpose() {
         transposed = !transposed;
+        // if transposed, tuples are vertical
+        // if not transposed, tuples are horizontal
+        tuples.forEach(t -> t.setHorizontal(!transposed));
     }
 
     public boolean isTransposed() {
@@ -201,15 +187,15 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
      * @param p Predicate by which to determine if a row should be included or not. For example: {@code filter(row -> row.get(0) != null)}
      * @return {@code Table<E>} with filtered rows
      */
-    public Table<E> filter(Predicate<ArrayList<E>> p) {
+    public Table<E> filter(Predicate<Tuple<E>> p) {
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+        ArrayList<Tuple<E>> newRows = new ArrayList<>();
         for (var row : tuples) {
             if (p.test(row))
                 newRows.add(row);
         }
 
-        return new Table<>(colNames.getNames(), newRows, true, getParent());
+        return new Table<>(colNames.getNames(), newRows, getParent());
     }
 
     /**
@@ -224,7 +210,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
     public Table<E> projection(int... indices) {
         // newRows keeps it in order
         // existingRows makes sure each row only appears once
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples.size());
+        ArrayList<Tuple<E>> newRows = new ArrayList<>(tuples.size());
         Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
 
         ArrayList<String> newColNames = new ArrayList<>(indices.length);
@@ -234,16 +220,16 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         for(var t : tuples) {
             ArrayList<E> newRow = new ArrayList<>(indices.length);
             for(int i : indices)
-                newRow.add(t.get(i));
+                newRow.add(t.getFromIndex(i));
 
             if(existingRows.contains(newRow))
                 continue;
 
             existingRows.add(newRow);
-            newRows.add(newRow);
+            newRows.add(new Tuple<>(newRow));
         }
 
-        return new Table<>(newColNames, newRows, false, getParent());
+        return new Table<>(newColNames, newRows, getParent());
     }
 
     /**
@@ -283,15 +269,15 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         if(!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames.getNames(), other.colNames.getNames());
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
+        Set<Tuple<E>> otherTuples = new HashSet<>(other.tuples);
+        ArrayList<Tuple<E>> newRows = new ArrayList<>();
 
-        // TODO solve for O(n^2) complexity
         for(var t : tuples) {
-            if(other.tuples.contains(t))
-                newRows.add(new ArrayList<>(t));
+            if(otherTuples.contains(t))
+                newRows.add(t);
         }
 
-        return new Table<>(colNames.getNames(), newRows, false, getParent());
+        return new Table<>(colNames.getNames(), newRows, getParent());
     }
 
     /**
@@ -305,8 +291,8 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         if(!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames.getNames(), other.colNames.getNames());
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>();
-        Set<ArrayList<E>> lookup = new HashSet<>();
+        ArrayList<Tuple<E>> newRows = new ArrayList<>();
+        Set<Tuple<E>> lookup = new HashSet<>();
 
         for(var t : tuples) {
             if(!lookup.contains(t)) {
@@ -322,7 +308,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
             }
         }
 
-        return new Table<>(colNames.getNames(), newRows, false, getParent());
+        return new Table<>(colNames.getNames(), newRows, getParent());
     }
 
     /**
@@ -336,13 +322,15 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         if(!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames.getNames(), other.colNames.getNames());
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(tuples);
+        ArrayList<Tuple<E>> newRows = new ArrayList<>();
+        Set<Tuple<E>> lookup = new HashSet<>(other.tuples);
 
-        for(var t : other.tuples) {
-            newRows.remove(t);
+        for(var t : tuples) {
+            if(!lookup.contains(t))
+                newRows.add(t);
         }
 
-        return new Table<>(colNames.getNames(), newRows, false, getParent());
+        return new Table<>(colNames.getNames(), newRows, getParent());
     }
 
     /**
@@ -356,28 +344,28 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         int numRows = Math.max(tuples.size(), other.tuples.size());
         int numCols = colNames.size() + other.colNames.size();
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<Tuple<E>> newRows = new ArrayList<>(numRows);
         ArrayList<String> newColNames = new ArrayList<>(numCols);
 
         for(int i = 0; i < numRows; i++) {
             ArrayList<E> row = new ArrayList<>(numCols);
             if(i < tuples.size())
-                row.addAll(tuples.get(i));
+                row.addAll(tuples.get(i).getElements());
             else
                 row.addAll(Collections.nCopies(colNames.size(), null));
 
             if (i < other.tuples.size())
-                row.addAll(other.tuples.get(i));
+                row.addAll(other.tuples.get(i).getElements());
             else
                 row.addAll(Collections.nCopies(other.colNames.size(), null));
 
-            newRows.add(row);
+            newRows.add(new Tuple<>(row));
         }
 
         newColNames.addAll(colNames.getNames());
         newColNames.addAll(other.colNames.getNames());
 
-        return new Table<>(newColNames, newRows, false, getParent());
+        return new Table<>(newColNames, newRows, getParent());
     }
 
     /**
@@ -393,25 +381,25 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         int numRows = tuples.size() + other.tuples.size();
         int numCols = Math.max(colNames.size(), other.colNames.size());
 
-        ArrayList<ArrayList<E>> newRows = new ArrayList<>(numRows);
+        ArrayList<Tuple<E>> newRows = new ArrayList<>(numRows);
         ArrayList<String> newColNames = new ArrayList<>(numCols);
 
         List<E> toAppend = Collections.nCopies(numCols - colNames.size(), null);
         for(var row : tuples) {
             ArrayList<E> newRow = new ArrayList<>(numCols);
-            newRow.addAll(row);
+            newRow.addAll(row.getElements());
             if(toAppend.size() > 0)
                 newRow.addAll(toAppend);
-            newRows.add(newRow);
+            newRows.add(new Tuple<>(newRow));
         }
 
         toAppend = Collections.nCopies(numCols - other.colNames.size(), null);
         for(var row : other.tuples) {
             ArrayList<E> newRow = new ArrayList<>(numCols);
-            newRow.addAll(row);
+            newRow.addAll(row.getElements());
             if(toAppend.size() > 0)
                 newRow.addAll(toAppend);
-            newRows.add(newRow);
+            newRows.add(new Tuple<>(newRow));
         }
 
         newColNames.addAll(colNames.getNames());
@@ -420,7 +408,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
                 newColNames.add(other.colNames.get(i));
         }
 
-        return new Table<>(newColNames, newRows, false, getParent());
+        return new Table<>(newColNames, newRows, getParent());
     }
 
     private int[] calculateColumnWidths() {
@@ -436,7 +424,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
 
             // each tuple represents a column, so we can simply check the longest value in each tuple
             for (int i = 0; i < tuples.size(); i++) {
-                strLengths[i + 1] = tuples.get(i).stream()
+                strLengths[i + 1] = tuples.get(i).getElements().stream()
                         .mapToInt(o -> o.toString().length())
                         .max().getAsInt();
             }
@@ -445,7 +433,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
                     .map(i -> Math.max(
                             colNames.get(i).length(),
                             tuples.stream()
-                                    .mapToInt(row -> row.get(i).toString().length())
+                                    .mapToInt(row -> row.getElements().get(i).toString().length())
                                     .max().getAsInt()))
                     .toArray();
         }
@@ -485,7 +473,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
                 // variable used in lambda expression must be final
                 int finalRow = row;
                 tuples.stream().forEach(
-                        t -> sb.append(' ').append(String.format(it.next(), t.get(finalRow)))
+                        t -> sb.append(' ').append(String.format(it.next(), t.getElements().get(finalRow)))
                 );
             }
 
@@ -504,7 +492,7 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
             // tuple rows
             sb.append(String.format(formatted, colNames.getNames().toArray())).append('\n');
             sb.append("-".repeat(rowLength));
-            tuples.stream().forEach(t -> sb.append('\n').append(String.format(formatted, t.toArray())));
+            tuples.stream().forEach(t -> sb.append('\n').append(String.format(formatted, t.getElements().toArray())));
         }
 
         return sb.toString();
@@ -515,9 +503,15 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Table<?> table = (Table<?>) o;
-        return transposed == table.transposed &&
-                tuples.equals(table.tuples) &&
-                colNames.equals(table.colNames);
+        return transposed == table.transposed && tuples.equals(table.tuples) && colNames.equals(table.colNames);
+    }
+
+    @SuppressWarnings({"MethodDoesntCallSuperMethod"})
+    @Override
+    public Table<E> clone() {
+        var t = new Table<>(colNames.getNames(), tuples, getParent());
+        t.setStyle(getStyle().clone());
+        return t;
     }
 
     @Override
@@ -527,25 +521,6 @@ public class Table<E> extends InternalObject implements Iterable<Tuple<E>> {
 
     @Override
     public Iterator<Tuple<E>> iterator() {
-        return new Itr();
-    }
-
-    private class Itr implements Iterator<Tuple<E>> {
-        private int cursor = 0;
-
-        @Override
-        public boolean hasNext() {
-            return cursor < tuples.size();
-        }
-
-        @Override
-        public Tuple<E> next() {
-            if (!hasNext())
-                return null;
-
-            Tuple<E> result = getRow(cursor);
-            cursor++;
-            return result;
-        }
+        return tuples.iterator();
     }
 }

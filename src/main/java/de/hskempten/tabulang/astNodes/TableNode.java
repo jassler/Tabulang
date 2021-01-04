@@ -1,14 +1,15 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.Styleable;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
-public class TableNode<E> extends TermNode{
+public class TableNode<E extends Styleable> extends TermNode{
     private Table<E> table;
 
-    public TableNode(Table table) {
+    public TableNode(Table<E> table) {
         this.table = table;
     }
 
@@ -22,11 +23,11 @@ public class TableNode<E> extends TermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        for(ArrayList<E> a : table.getRows()){
-            System.out.println(a);
+        for(var tuple : table){
+            System.out.println(tuple);
             int i = 0;
-            for(int j = 0; j < a.size(); j++) {
-                a.set(j, (E) ((Node) a.get(j)).evaluateNode(interpretation));
+            for(int j = 0; j < tuple.size(); j++) {
+                tuple.setToIndex(j, (E) (((Node) tuple.getFromIndex(j)).evaluateNode(interpretation)));
             }
             System.out.println("......");
         }

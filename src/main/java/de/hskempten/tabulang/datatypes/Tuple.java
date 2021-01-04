@@ -8,14 +8,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E> extends InternalObject implements Cloneable, Iterable<DataCell<E>> {
+public class Tuple<E extends Styleable> extends InternalObject implements Cloneable, Iterable<E> {
 
     private final ArrayList<E> elements;
-    private final HeaderNames names;
+    private HeaderNames names;
     private boolean isHorizontal;
-
-    // TODO parent and style
-    private final HashMap<Integer, Style> elementStyles;
 
     /**
      * Create a new Tuple with the elements of the specified array in the order they are in.
@@ -33,7 +30,7 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
     }
 
     /**
-     * See {@link Tuple#Tuple(Object[], String[], boolean)}
+     * See {@link Tuple#Tuple(E[], String[], boolean)}
      * 
      * @param elements Elements inside the Tuple
      * @param names Name for each element, where {@code objects.length == names.length}
@@ -131,9 +128,14 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
         super(parent);
         if(elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
+
         this.elements = new ArrayList<>(elements);
+        for(var el : this.elements) {
+            if (el instanceof InternalObject o)
+                o.setParent(this);
+        }
+
         this.names = new HeaderNames(names);
-        this.elementStyles = new HashMap<>();
         this.isHorizontal = isHorizontal;
     }
 
@@ -163,6 +165,13 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
      */
     public HeaderNames getNames() {
         return names;
+    }
+
+    public void setNames(HeaderNames names) {
+        if(elements.size() != names.size())
+            throw new ArrayLengthMismatchException(elements.size(), names.size());
+
+        this.names = names;
     }
 
     /**
@@ -196,10 +205,12 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
         return elements.get(names.getIndexOf(name));
     }
 
-    public DataCell<E> getDataCell(String name) {
-        int index = names.getIndexOf(name);
-        Style s = elementStyles.getOrDefault(index, new Style());
-        return new DataCell<>(elements.get(index), names.get(index), s, this);
+    public E getFromIndex(int i) {
+        return elements.get(i);
+    }
+
+    public void setToIndex(int index, E value) {
+        elements.set(index, value);
     }
 
     /**
@@ -215,16 +226,9 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
     }
 
 
-    public void setElementStyle(int index, Style s) {
-        elementStyles.put(index, s);
-    }
-
-    public HashMap<Integer, Style> getElementStyles() {
-        return elementStyles;
-    }
-
     /**
      * Concatenate elements of two tuples and return new generated tuple.
+     * Or, get a new Tuple with elements of this tuple with elements of parameter t appended.
      *
      * @param t Tuple with object elements and names to append
      * @return new concatenated tuple
@@ -327,10 +331,12 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
         return this.elements.size();
     }
 
-    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
+    @SuppressWarnings({"MethodDoesntCallSuperMethod"})
     @Override
-    protected Tuple<E> clone() {
-        return new Tuple<>(elements, names.getNames(), isHorizontal);
+    public Tuple<E> clone() {
+        var clone = new Tuple<>(elements, names, isHorizontal, getParent());
+        clone.setStyle(getStyle().clone());
+        return clone;
     }
 
     @Override
@@ -338,9 +344,7 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tuple<?> tuple = (Tuple<?>) o;
-        return isHorizontal == tuple.isHorizontal &&
-                elements.equals(tuple.elements) &&
-                names.equals(tuple.names);
+        return isHorizontal == tuple.isHorizontal && elements.equals(tuple.elements) && names.equals(tuple.names);
     }
 
     @Override
@@ -394,37 +398,11 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
      * @return iterator for elements List
      */
     @Override
-    public Iterator<DataCell<E>> iterator() {
-        return new Itr(this);
-        // return elements.iterator();
+    public Iterator<E> iterator() {
+        return elements.iterator();
     }
 
-    private class Itr implements Iterator<DataCell<E>> {
-        private final InternalObject parent;
-        private int cursor = 0;
-
-        private Itr(InternalObject parent) {
-            this.parent = parent;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return cursor < elements.size();
-        }
-
-        @Override
-        public DataCell<E> next() {
-            if (!hasNext())
-                return null;
-
-            Style s = elementStyles.getOrDefault(cursor, new Style());
-            DataCell<E> result = new DataCell<>(elements.get(cursor), names.get(cursor), s, parent);
-            cursor++;
-            return result;
-        }
-    }
-
-    public Table transformIntoTable(){
+    public Table<E> transformIntoTable(){
         Object firstObject = elements.get(0);
         if(firstObject instanceof Tuple){
             int sizeRequirement = ((Tuple<?>) firstObject).size();
@@ -433,7 +411,7 @@ public class Tuple<E> extends InternalObject implements Cloneable, Iterable<Data
                     throw new TupleCannotBeTransformedException("The tuple ´\n" + this + "\n can not be transformed into a table");
                 }
             }
-            return new Table(elements.toArray(Tuple[]::new));
+            return new Table<>(elements.toArray(Tuple[]::new));
         } else {
             throw new TupleCannotBeTransformedException("The tuple \n" + this + "\n can not be transformed into a table");
         }

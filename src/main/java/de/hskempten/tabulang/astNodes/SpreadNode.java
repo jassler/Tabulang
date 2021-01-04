@@ -6,6 +6,7 @@ import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentExceptio
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class SpreadNode extends BinaryTermNode{
@@ -15,37 +16,31 @@ public class SpreadNode extends BinaryTermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        if(left instanceof InternalNumber && right instanceof InternalNumber) {
-            if(((InternalNumber) left).compareTo((InternalNumber) right) <= 0) {
-                ArrayList<Integer> a = new ArrayList<>();
-                ArrayList<String> s = new ArrayList<>();
-                int name = 0;
-                Object leftValue = ((InternalNumber) left).getValue();
-                Object rightValue = ((InternalNumber) right).getValue();
-                if (leftValue instanceof Integer && rightValue instanceof Integer){
-                    for (int j = (int) leftValue; j <= (int) rightValue; j++) {
-                        a.add(j);
-                        s.add(Integer.toString(name));
-                        name += 1;
-                    }
-                    String[] names = new String[a.size()];
-                    s.toArray(names);
-                    Integer[] array = new Integer[a.size()];
-                    a.toArray(array);
-                    return new Tuple(array, names, true);
-                } else {
-                    throw new IllegalOperandArgumentException("Operation '" + leftValue + " ... " + rightValue + "' can not be executed. " +
-                            "Operands need to be integer.");
-                }
-            } else {
-                throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ... " + right + " (" + right.getClass() + ") can not be executed. " +
-                        "Left value has to be less than or equal to right value.");
-            }
-        } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ... " + right + " (" + right.getClass() + ") can not be executed. " +
+        Object leftObject = getLeftNode().evaluateNode(interpretation);
+        Object rightObject = getRightNode().evaluateNode(interpretation);
+
+        if(!(leftObject instanceof InternalNumber left && rightObject instanceof InternalNumber right))
+            throw new IllegalOperandArgumentException("Operation '" + leftObject + " (" + leftObject.getClass() + ") ... " + rightObject + " (" + rightObject.getClass() + ") can not be executed. " +
                     "Allowed operands: Numbers.");
+
+        if(left.compareTo(right) > 0)
+            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") ... " + right + " (" + right.getClass() + ") can not be executed. " +
+                    "Left value has to be less than or equal to right value.");
+
+
+        ArrayList<InternalNumber> a = new ArrayList<>();
+
+        Object leftValueObject = left.getValue();
+        Object rightValueObject = right.getValue();
+
+        if(!(leftValueObject instanceof Integer leftValue && rightValueObject instanceof Integer rightValue))
+            throw new IllegalOperandArgumentException("Operation '" + leftValueObject + " ... " + rightValueObject + "' can not be executed. " +
+                    "Operands need to be integer.");
+
+        for (int j = leftValue; j <= rightValue; j++) {
+            a.add(new InternalNumber(new BigInteger(Integer.toString(j)), new BigInteger("1")));
         }
+
+        return new Tuple<>(a);
     }
 }

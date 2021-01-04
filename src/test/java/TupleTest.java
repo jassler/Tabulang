@@ -1,9 +1,14 @@
-import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.*;
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,22 +30,31 @@ class TupleTest {
         // TODO
     }
 
+    private <T, U extends Styleable> ArrayList<U> createList(Function<T, U> constructor, T... values) {
+        ArrayList<U> result = new ArrayList<>(values.length);
+        for(var v : values) {
+            result.add(constructor.apply(v));
+        }
+
+        return result;
+    }
+
     @Test
     public void testThrowsArrayLengthMismatch() {
-        assertThrows(ArrayLengthMismatchException.class, () -> new Tuple<>(new String[]{""}, new String[]{}));
+        assertThrows(ArrayLengthMismatchException.class, () -> new Tuple<>(InternalString.objToArray(""), new String[]{}));
     }
 
     @Test
     public void testTupleDefaultValues() {
-        Tuple<Object> t = new Tuple<>(new Object[]{"1", 2});
-        assertEquals(Arrays.asList("1", 2), t.getElements());
-        assertEquals(Arrays.asList("0", "1"), t.getNames().getNames());
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray( "1", 2));
+        assertEquals(Stream.of("1", 2).map(InternalDataObject::new).collect(Collectors.toList()), t.getElements());
+        assertEquals(new HeaderNames(Arrays.asList("0", "1")), t.getNames());
         assertTrue(t.isHorizontal());
     }
 
     @Test
     public void testTupleNameGeneration() {
-        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"));
         assertEquals(Arrays.asList("0", "1", "2", "3"), t.getNames().getNames());
 
         t.getNames().getNames().set(0, "4");
@@ -49,74 +63,80 @@ class TupleTest {
 
     @Test
     public void testTupleAccess() {
-        final Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
-        assertEquals(12, t.get("0"));
-        assertEquals(13, t.get("1"));
-        assertEquals("1", t.get("2"));
-        assertEquals("2", t.get("3"));
+        final Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"));
+        assertEquals(12, t.get("0").getObject());
+        assertEquals(13, t.get("1").getObject());
+        assertEquals("1", t.get("2").getObject());
+        assertEquals("2", t.get("3").getObject());
         assertThrows(IndexOutOfBoundsException.class, () -> t.get("4"));
         assertThrows(IndexOutOfBoundsException.class, () -> t.get("-1"));
         assertThrows(NumberFormatException.class, () -> t.get("a"));
 
-        final Tuple<Integer> u = new Tuple<>(new Integer[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
-        assertEquals(1, u.get("alpha"));
-        assertEquals(4, u.get("beta"));
-        assertEquals(2, u.get("gamma"));
-        assertEquals(1, u.get("0"));
-        assertEquals(4, u.get("1"));
-        assertEquals(2, u.get("2"));
+        final Tuple<InternalNumber> u = new Tuple<InternalNumber>(createList(InternalNumber::new, 1, 4, 2), Arrays.asList("alpha", "beta", "gamma"));
+        // final Tuple<InternalNumber> u = new Tuple<>(new Integer[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
+        assertEquals(1, u.get("alpha").getValue());
+        assertEquals(4, u.get("beta").getValue());
+        assertEquals(2, u.get("gamma").getValue());
+        assertEquals(1, u.get("0").getValue());
+        assertEquals(4, u.get("1").getValue());
+        assertEquals(2, u.get("2").getValue());
     }
 
     @Test
     public void testTupleAppend() {
-        Tuple<Object> t = new Tuple<>(new Object[]{12, 13});
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13));
         t.setHorizontal(false);
 
-        t = t.concatenate(new Tuple<>(new String[]{"a", "b"}, new String[]{"c", "d"}));
-        assertEquals(Arrays.asList(12, 13, "a", "b"), t.getElements());
-        assertEquals(Arrays.asList("0", "1", "c", "d"), t.getNames().getNames());
+        Tuple<InternalDataObject> other = new Tuple<>(InternalDataObject.objToArray("a", "b"));
+        other.getNames().getNames().set(0, "c");
+        other.getNames().getNames().set(1, "d");
+
+        t = t.concatenate(other);
+
+        assertEquals(Stream.of(12, 13, "a", "b").map(InternalDataObject::new).collect(Collectors.toList()), t.getElements());
+        assertEquals(new HeaderNames(Arrays.asList("0", "1", "c", "d")), t.getNames());
         assertFalse(t.isHorizontal());
     }
 
     @Test
     public void testTupleProjection() {
-        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"});
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"));
 
         assertEquals(new Tuple<>(
                 Collections.emptyList()
         ), t.projection());
 
         assertEquals(new Tuple<>(
-                Collections.singletonList("1"),
+                Collections.singletonList(new InternalDataObject("1")),
                 Collections.singletonList("2")
         ), t.projection(2));
 
         assertEquals(new Tuple<>(
-                new Object[]{13, "2", 12, "1"},
+                InternalDataObject.objToArray(13, "2", 12, "1"),
                 new String[]{"1", "3", "0", "2"}
         ), t.projection(1, 3, 0, 2));
 
         assertEquals(new Tuple<>(
-                new Object[]{13, "2", 12, "1"},
+                InternalDataObject.objToArray(13, "2", 12, "1"),
                 new String[]{"1", "3", "0", "2"}
         ), t.projection("1", "3", "0", "2"));
 
         assertEquals(new Tuple<>(
-                new Object[]{13, "2", 12, "1"},
+                InternalDataObject.objToArray(13, "2", 12, "1"),
                 new String[]{"beta", "delta", "alpha", "gamma"}
         ), t.newTupleWithNames(Arrays.asList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
     }
 
     @Test
     public void testTupleNewNames() {
-        Tuple<Object> t = new Tuple<>(new Object[]{12, 13, "1", "2"}, new String[]{"a", "b", "c", "d"});
-        Tuple<Object> t2 = t.newTupleWithNames(Arrays.asList("do", "re", "mi", "fa"));
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"), new String[]{"a", "b", "c", "d"});
+        Tuple<InternalDataObject> t2 = t.newTupleWithNames(Arrays.asList("do", "re", "mi", "fa"));
 
         // make sure it deep-copies
         t.set("a", null);
 
         assertEquals(new Tuple<>(
-                new Object[]{12, 13, "1", "2"},
+                InternalDataObject.objToArray(12, 13, "1", "2"),
                 new String[]{"do", "re", "mi", "fa"},
                 true
         ), t2);
@@ -124,12 +144,12 @@ class TupleTest {
 
     @Test
     public void testToString() {
-        assertEquals("", new Tuple<>(new String[0]).toString());
-        assertEquals("0\n4", new Tuple<>(new Integer[]{4}).toString());
-        assertEquals("0 | 1\n4 | 1", new Tuple<>(new Integer[]{4, 1}).toString());
-        assertEquals("0 | 1 | 2\n4 | 1 | 4", new Tuple<>(new Integer[]{4, 1, 4}).toString());
+        assertEquals("", new Tuple<>(new InternalString[0]).toString());
+        assertEquals("0\n4", new Tuple<>(new InternalNumber[]{new InternalNumber(4)}).toString());
+        assertEquals("0 | 1\n4 | 1", new Tuple<>(Stream.of(4, 1).map(InternalNumber::new).collect(Collectors.toList())).toString());
+        assertEquals("0 | 1 | 2\n4 | 1 | 4", new Tuple<>(Stream.of(4, 1, 4).map(InternalNumber::new).collect(Collectors.toList())).toString());
 
-        Tuple<String> t = new Tuple<>(new String[]{"Alpha", "Beta", "Gamma"});
+        Tuple<InternalString> t = new Tuple<>(InternalString.objToArray("Alpha", "Beta", "Gamma"));
         String expected = "" +
                 "0     | 1    | 2\n" +
                 "Alpha | Beta | Gamma";
