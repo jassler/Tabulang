@@ -2,19 +2,20 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 
 import java.util.*;
 
-public class LoopNode extends StatementNode {
+public class LoopStatementNode extends StatementNode {
     private IdentifierNode identifier;
     private TermNode term;
     private ArrayList<Node> statements;
     private int nestingLevel;
     private boolean groupStatementFound = false;
 
-    public LoopNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
+    public LoopStatementNode(IdentifierNode identifier, TermNode term, ArrayList<Node> statements, int nestingLevel) {
         this.setIdentifier(identifier);
         this.setTerm(term);
         this.setStatements(statements);
@@ -105,7 +106,12 @@ public class LoopNode extends StatementNode {
             //System.out.println("Loop Result: " + result);
             return result;
         } else {
-            throw new IllegalArgumentException("Expected Tuple but got " + term.getClass().getSimpleName());
+            throw new IllegalTupleOperandArgumentException(toString());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "for " + identifier + " in " + term + "{" + statements + "}";
     }
 }

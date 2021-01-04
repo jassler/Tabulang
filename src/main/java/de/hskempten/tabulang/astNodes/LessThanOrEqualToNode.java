@@ -17,8 +17,8 @@ public class LessThanOrEqualToNode extends BinaryPredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if(left instanceof InternalNumber l && right instanceof InternalNumber r){
-            return l.compareTo(r) <= 0;
+        if(left instanceof InternalNumber leftNumber && right instanceof InternalNumber rightNumber){
+            return leftNumber.compareTo(rightNumber) <= 0;
         } else {
             throw new IllegalBooleanOperandArgumentException(toString());
         }

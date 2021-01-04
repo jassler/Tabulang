@@ -6,6 +6,8 @@ import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
+import java.util.Objects;
+
 public class AssignmentNode extends BinaryStatementNode {
 
     public AssignmentNode(IdentifierNode leftNode, TermNode rightNode) {
@@ -17,11 +19,7 @@ public class AssignmentNode extends BinaryStatementNode {
             String left = ((IdentifierNode) getLeftNode()).getIdentifier();
             Object right = getRightNode().evaluateNode(interpretation);
             Interpretation foundIdentifier = interpretation.findIdentifier(left);
-            if(foundIdentifier == null){
-                interpretation.getEnvironment().put(left, right);
-            } else {
-                foundIdentifier.getEnvironment().put(left, right);
-            }
+        Objects.requireNonNullElse(foundIdentifier, interpretation).getEnvironment().put(left, right);
             return right;
         }
 

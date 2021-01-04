@@ -56,4 +56,9 @@ public class GroupAfterFunctionCallNode extends GroupNode {
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
     }
+
+    @Override
+    public String toString() {
+        return "group after " + getTerm() + " using " + funCall;
+    }
 }

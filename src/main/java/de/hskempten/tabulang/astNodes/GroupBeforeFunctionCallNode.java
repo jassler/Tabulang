@@ -58,4 +58,9 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
     }
+
+    @Override
+    public String toString() {
+        return "group before " + getTerm() + " using " + funCall;
+    }
 }

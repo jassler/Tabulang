@@ -6,6 +6,7 @@ import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedExcept
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DistinctFromNode extends TermNode{
     private TermNode node;
@@ -37,9 +38,8 @@ public class DistinctFromNode extends TermNode{
         Object object = node.evaluateNode(interpretation);
         try {
             object = ifTupleTransform(object);
-        } catch (TupleCannotBeTransformedException transformedException){
-            throw new IllegalOperandArgumentException("Got " + object + " (" + object.getClass() + ") on the right side of the 'distinct [....] from' keyword." +
-                    "Allowed operand on the right side: Table.");
+        } catch (TupleCannotBeTransformedException ignored){
+            //TODO testen 4.01.
         }
         if (object instanceof Table) {
             ArrayList<String> columnNames = new ArrayList<>();
@@ -48,7 +48,12 @@ public class DistinctFromNode extends TermNode{
             }
             return ((Table) object).projection((String[]) columnNames.toArray());
         } else {
-            throw new IllegalArgumentException("Expected Table but got " + object.getClass().getSimpleName());
-        }
+            throw new IllegalOperandArgumentException("Got " + object + " on the right side of'" + toString()
+                    + "'. Allowed operand on the right side: Table.");        }
+    }
+
+    @Override
+    public String toString() {
+        return "distinct " + Arrays.toString(names) + " from " + node;
     }
 }

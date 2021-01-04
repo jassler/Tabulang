@@ -22,4 +22,9 @@ public class PowerNode extends BinaryArithmeticNode{
         }
         return leftNumber.pow(rightNumber);
     }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " ^ " + getRightNode();
+    }
 }

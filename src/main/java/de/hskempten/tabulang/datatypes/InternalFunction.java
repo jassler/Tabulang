@@ -34,10 +34,7 @@ public class InternalFunction extends InternalObject {
 
     @Override
     public String toString() {
-        return "InternalFunction{" +
-                "parameters=" + parameters +
-                ", statements=" + statements +
-                '}';
+        return "function(" + parameters + ") {" + statements + "}";
     }
 
     public String formattedString(String functionName) {

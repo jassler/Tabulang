@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
+
 public abstract class BinaryArithmeticNode extends ArithmeticNode{
     private TermNode leftNode;
     private TermNode rightNode;

@@ -25,8 +25,8 @@ public class SubtractNode extends BinaryArithmeticNode{
                     "Allowed operands: Numbers or Tables.");
         }
         if (!(left instanceof InternalNumber) || !(right instanceof InternalNumber)) {
-            if (left instanceof Table && right instanceof Table) {
-                return ((Table) left).difference((Table) right);
+            if (left instanceof Table leftTable && right instanceof Table rightTable) {
+                return leftTable.difference(rightTable);
             } else {
                 throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
                         "Allowed operands: Numbers or Tables.");

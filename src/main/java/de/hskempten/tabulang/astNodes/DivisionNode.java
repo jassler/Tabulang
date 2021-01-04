@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
@@ -19,8 +20,12 @@ public class DivisionNode extends BinaryArithmeticNode {
         if (left instanceof InternalNumber && right instanceof InternalNumber) {
             return ((InternalNumber)left).divide((InternalNumber)right);
         } else {
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") / " + right + " (" + right.getClass() + ") can not be executed. " +
-                    "Allowed operands: Numbers.");
+            throw new IllegalNumberOperandArgumentException(toString());
         }
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " / " + getRightNode();
     }
 }

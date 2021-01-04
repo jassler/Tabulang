@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 
@@ -59,7 +60,7 @@ public class LoopTermNode extends TermNode {
         Object termObject = getTerm().evaluateNode(interpretation);
 
         if(!(termObject instanceof Tuple term))
-            throw new IllegalArgumentException("Expected Tuple but got " + term.getClass().getSimpleName());
+            throw new IllegalTupleOperandArgumentException("Expected Tuple but got " + term.getClass().getSimpleName());
 
         String identifier = getIdentifier().getIdentifier();
         LinkedList<Object> resultList = new LinkedList<>();
@@ -110,5 +111,10 @@ public class LoopTermNode extends TermNode {
         Tuple<InternalDataObject> result = new Tuple<>(converted);
         System.out.println("Loop Result: " + result);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "for " + identifier + " in " + term + "{" + statements + "}";
     }
 }

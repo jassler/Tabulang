@@ -46,8 +46,6 @@ public class TupleNode extends TermNode{
 
     @Override
     public String toString() {
-        return "TupleNode{" +
-                "tList=" + tList +
-                "} " + super.toString();
+        return tList.toString();
     }
 }

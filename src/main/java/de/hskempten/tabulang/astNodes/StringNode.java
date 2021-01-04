@@ -28,9 +28,8 @@ public class StringNode extends TermNode{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StringNode)) return false;
-        StringNode that = (StringNode) o;
-        return Objects.equals(string, that.string);
+        if (!(o instanceof StringNode string)) return false;
+        return Objects.equals(string, string.string);
     }
 
     @Override
@@ -40,6 +39,6 @@ public class StringNode extends TermNode{
 
     @Override
     public String toString() {
-        return string;
+        return "'" + string + "'";
     }
 }

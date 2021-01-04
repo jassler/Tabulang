@@ -17,10 +17,15 @@ public class MultiplyNode extends BinaryArithmeticNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalNumberOperandArgumentException(toString());
+        try {
+            if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
+                throw new IllegalNumberOperandArgumentException(toString());
+            }
+            return leftNumber.multiply(rightNumber);
+        } catch (IllegalNumberOperandArgumentException e){
+            interpretation.exitProgram(e);
         }
-        return leftNumber.multiply(rightNumber);
+        return null;
     }
 
     @Override

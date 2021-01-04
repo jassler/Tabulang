@@ -44,8 +44,8 @@ public class ExistsSuchThatNode extends BinaryPredicateNode {
             Object result = getRightNode().evaluateNode(interpretation);
             interpretation.getEnvironment().remove(variableName);
             if (!(result instanceof Boolean)) {
-                throw new IllegalArgumentException("Operation 'exists" + variableName + " in " + tuple + " (" + tuple.getClass() + ") such that " + getRightNode().toString() + " can not be finished." +
-                        "The condition " + getRightNode().toString() + " returned a non-boolean value.");
+                throw new IllegalArgumentException("Operation '" + toString() + "' can not be finished." +
+                        "The condition " + getRightNode() + " returned a non-boolean value.");
             }
             if ((Boolean) result) {
                 return true;
@@ -53,5 +53,10 @@ public class ExistsSuchThatNode extends BinaryPredicateNode {
         }
         return false;
 
+    }
+
+    @Override
+    public String toString() {
+        return "exists " + variableName + " in " + getLeftNode() + " such that " + getRightNode();
     }
 }

@@ -84,7 +84,11 @@ public class FunctionCallNode extends TermNode{
             }
             return null;
         } else
-            throw new IllegalArgumentException("Expected (InternalFunction) or (InternalLibraryFunction) Identifier but got: " + identifier.getClass().getSimpleName());
+            throw new IllegalArgumentException("Identifier " + identifier + "does not refer to a function.");
+    }
 
+    @Override
+    public String toString() {
+        return node + "(" + parameters +")";
     }
 }

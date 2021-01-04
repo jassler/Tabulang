@@ -49,4 +49,11 @@ public class FunctionAssignment extends StatementNode {
         interpretation.getEnvironment().put(o, newFunc);
         return newFunc;
     }
+
+    @Override
+    public String toString() {
+        return "function" + identifier +
+                "(" + identifierList + ")"
+                + "{" + statements + '}';
+    }
 }

@@ -151,7 +151,7 @@ public class ASTStatementParser {
                         }
                     }
                 }
-                return new LoopNode(identifier, term, statements, nestingLevel + 1);
+                return new LoopStatementNode(identifier, term, statements, nestingLevel + 1);
             }
             case ANYSTATEMENT_SET -> {
                 TermNode term = new ASTTermParser().parse(((SetStmntItem) actItem).getMyTerm());
@@ -208,7 +208,7 @@ public class ASTStatementParser {
                     }
                     case LOOP_MARK_WITHIF -> {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
-                        return new MarkIfInLoopTermNode(markTerm, asTerm, ifPred);
+                        return new MarkIfInLoopNode(markTerm, asTerm, ifPred);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }

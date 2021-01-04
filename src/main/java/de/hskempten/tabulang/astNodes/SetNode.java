@@ -35,4 +35,9 @@ public class SetNode extends StatementNode{
         interpretation.getEnvironment().put("mapValue" + mapVal, o);
         return o;
     }
+
+    @Override
+    public String toString() {
+        return "set " + node;
+    }
 }

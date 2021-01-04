@@ -15,11 +15,16 @@ public class NotEqualNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalNumberOperandArgumentException(toString());
+        try {
+            Object left = getLeftNode().evaluateNode(interpretation);
+            Object right = getRightNode().evaluateNode(interpretation);
+            if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
+                throw new IllegalNumberOperandArgumentException(toString());
+            }
+            return leftNumber.compareTo(rightNumber) != 0;
+        } catch (IllegalNumberOperandArgumentException numberOperandArgumentException){
+            interpretation.exitProgram(numberOperandArgumentException);
         }
-        return leftNumber.compareTo(rightNumber) != 0;
+        return null;
     }
 }

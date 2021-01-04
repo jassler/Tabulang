@@ -33,6 +33,7 @@ public class SpreadNode extends BinaryTermNode{
         Object leftValueObject = left.getValue();
         Object rightValueObject = right.getValue();
 
+        //TODO Integer -> InternalNumber integer so they can be styleable
         if(!(leftValueObject instanceof Integer leftValue && rightValueObject instanceof Integer rightValue))
             throw new IllegalOperandArgumentException("Operation '" + leftValueObject + " ... " + rightValueObject + "' can not be executed. " +
                     "Operands need to be integer.");

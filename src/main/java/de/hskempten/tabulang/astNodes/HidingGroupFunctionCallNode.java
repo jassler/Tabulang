@@ -54,4 +54,9 @@ public class HidingGroupFunctionCallNode extends GroupNode {
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
     }
+
+    @Override
+    public String toString() {
+        return "hiding group " + getTerm();
+    }
 }

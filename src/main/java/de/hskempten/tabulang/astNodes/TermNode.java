@@ -6,6 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 public abstract class TermNode extends Node{
 
+
     public Table checkIfTable(Object o) {
         o = ifTupleTransform(o);
         if(o instanceof Table) {

@@ -35,6 +35,6 @@ public class TupleElementNode extends BinaryTermNode{
 
     @Override
     public String toString() {
-        return "TupleElementNode{} " + super.toString();
+        return getLeftNode() + "." + getRightNode();
     }
 }

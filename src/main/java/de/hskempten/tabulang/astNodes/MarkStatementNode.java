@@ -16,8 +16,8 @@ public class MarkStatementNode extends TernaryStatementNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object date = getLeftNode().evaluateNode(interpretation);
         try {
-            if (date instanceof Tuple) {
-                markTupleObject((Tuple) date, interpretation);
+            if (date instanceof Tuple tuple) {
+                markTupleObject(tuple, interpretation);
             } else {
                 markNonTupleObject(date, interpretation);
             }
