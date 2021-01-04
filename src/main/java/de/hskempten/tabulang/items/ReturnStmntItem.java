@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class ReturnStmntItem implements StatementAnyItem {
     private TermItem myTerm;
     private LanguageItemType itemType = LanguageItemType.ANYSTATEMENT_RETURN;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public ReturnStmntItem(TermItem myTerm) {
         this.setMyTerm(myTerm);
@@ -21,12 +21,12 @@ public class ReturnStmntItem implements StatementAnyItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class AverageTItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public AverageTItem(IdentifierItem myIdentifier, TermItem myTerm) {
         this.setMyIdentifier(myIdentifier);
@@ -30,12 +30,12 @@ public class AverageTItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
 }

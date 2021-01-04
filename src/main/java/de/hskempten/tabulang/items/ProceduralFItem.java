@@ -9,7 +9,7 @@ public class ProceduralFItem implements LanguageItem {
     private TermItem myTerm;
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, FuncBodyItem myFuncBody) {
         this.setMyIdentifier(myIdentifier);
@@ -59,12 +59,12 @@ public class ProceduralFItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
     @Override
     public LanguageItemType getLanguageItemType() {

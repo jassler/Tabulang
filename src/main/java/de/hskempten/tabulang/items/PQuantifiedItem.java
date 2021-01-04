@@ -7,7 +7,7 @@ public class PQuantifiedItem implements LanguageItem {
     private ForallPredItem myForallPred;
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public PQuantifiedItem(ExistsPredItem myExistsPred) {
         this.setMyExistsPred(myExistsPred);
@@ -37,12 +37,12 @@ public class PQuantifiedItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

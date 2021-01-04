@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class QuotedStringItem implements LanguageItem {
     //any char except the quote char
     private String myString;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public QuotedStringItem(String myString) {
         this.setMyString(myString);
@@ -21,12 +21,12 @@ public class QuotedStringItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

@@ -14,7 +14,7 @@ public class PredItem implements LanguageItem {
     private FunCallItem myFunCallItem; //TODO add funCall to pred?
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public PredItem(IdentifierItem myIdentifier, TermItem myTerm, PredRItem myPredR) {
         this.setMyIdentifier(myIdentifier);
@@ -140,12 +140,12 @@ public class PredItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

@@ -11,7 +11,7 @@ public class FunCallItem implements LanguageItem {
 
     private TermItem termIdentifier;
     private ArrayList<TermItem> terms;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public FunCallItem(IdentifierItem myIdentifier, ArrayList<TermItem> myTerms) {
         this.setMyIdentifier(myIdentifier);
@@ -57,12 +57,12 @@ public class FunCallItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

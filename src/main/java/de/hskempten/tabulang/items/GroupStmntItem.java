@@ -9,7 +9,7 @@ public class GroupStmntItem implements LanguageItem {
     private FunCallItem myFunCall;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyString(myString);
@@ -97,12 +97,12 @@ public class GroupStmntItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

@@ -8,7 +8,7 @@ public class DistinctTItem implements LanguageItem {
     private ArrayList<IdentifierItem> myIdentifiers;
     private TermItem myTerm;
     private LanguageItemType itemType = LanguageItemType.DISTINCT_ITEM;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public DistinctTItem(ArrayList<IdentifierItem> myIdentifiers, TermItem myTerm) {
         this.setMyIdentifiers(myIdentifiers);
@@ -33,12 +33,12 @@ public class DistinctTItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

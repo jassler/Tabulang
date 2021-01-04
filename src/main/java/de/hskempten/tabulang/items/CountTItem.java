@@ -8,7 +8,7 @@ public class CountTItem implements LanguageItem {
     private TermItem myTerm;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public CountTItem(TermItem myTerm) {
         this.setMyTerm(myTerm);
@@ -39,12 +39,12 @@ public class CountTItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

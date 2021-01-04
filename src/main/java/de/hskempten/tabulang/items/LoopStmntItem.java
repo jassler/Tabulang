@@ -9,7 +9,7 @@ public class LoopStmntItem implements StatementAnyItem {
     private MarkStmntItem myMarkStmnt; //';'
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public LoopStmntItem(StatementItem myStatement) {
         this.setMyStatement(myStatement);
@@ -65,12 +65,12 @@ public class LoopStmntItem implements StatementAnyItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

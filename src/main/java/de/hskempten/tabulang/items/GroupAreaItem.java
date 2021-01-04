@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class GroupAreaItem implements LanguageItem {
     //"before"/"after"
     private String myString;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public GroupAreaItem(String myString) {
         this.setMyString(myString);
@@ -21,12 +21,12 @@ public class GroupAreaItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
 }

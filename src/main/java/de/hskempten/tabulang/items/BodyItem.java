@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class BodyItem implements LanguageItem {
     //'{'
     private ArrayList<StatementItem> myStatements;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
     //'}'
 
     public BodyItem(ArrayList<StatementItem> myStatements) {
@@ -24,12 +24,12 @@ public class BodyItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
 }

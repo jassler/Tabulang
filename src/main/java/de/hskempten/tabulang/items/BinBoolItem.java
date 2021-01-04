@@ -7,7 +7,7 @@ public class BinBoolItem implements LanguageItem {
     private String myString;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public BinBoolItem(String myString) {
         this.setMyString(myString);
@@ -31,12 +31,12 @@ public class BinBoolItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

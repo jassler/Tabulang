@@ -9,7 +9,7 @@ public class FunDefItem implements LanguageItem {
     private TermItem myTerm;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public FunDefItem(VListItem myVList, FuncBodyItem myFuncBody) {
         this.setMyVList(myVList);
@@ -69,12 +69,12 @@ public class FunDefItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

@@ -8,7 +8,7 @@ public class MarkStmntItem implements LanguageItem {
     private PredItem myPred;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
 
     public MarkStmntItem(TermItem myTerm, TermItem mySecondTerm, PredItem myPred) {
@@ -50,12 +50,12 @@ public class MarkStmntItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

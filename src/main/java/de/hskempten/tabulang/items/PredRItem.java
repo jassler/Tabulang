@@ -7,7 +7,7 @@ public class PredRItem implements LanguageItem {
     private PredItem myPred;
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public PredRItem(BinBoolItem myBinBool, PredItem myPred) {
         this.setMyBinBool(myBinBool);
@@ -37,12 +37,12 @@ public class PredRItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

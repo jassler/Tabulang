@@ -7,7 +7,7 @@ public class ForallPredItem implements LanguageItem {
     private TermItem myTerm;
     private PredItem myPred;
     private LanguageItemType itemType = LanguageItemType.QUANTIFIED_FORALL;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public ForallPredItem(IdentifierItem myIdentifier, TermItem myTerm, PredItem myPred) {
         this.setMyIdentifier(myIdentifier);
@@ -41,12 +41,12 @@ public class ForallPredItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

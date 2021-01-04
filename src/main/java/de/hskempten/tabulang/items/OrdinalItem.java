@@ -10,7 +10,7 @@ public class OrdinalItem implements LanguageItem {
     private TupelItem myTupel;
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public OrdinalItem(String myString) {
         this.setMyString(myString);
@@ -67,12 +67,12 @@ public class OrdinalItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

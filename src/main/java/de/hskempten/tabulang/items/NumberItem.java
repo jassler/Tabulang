@@ -9,7 +9,7 @@ public class NumberItem implements LanguageItem {
     private BigInteger denominator;
 
     private LanguageItemType itemType = LanguageItemType.ORDINAL_NUMBER;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public NumberItem(String myNumber) {
         this.setValueFromString(myNumber);
@@ -59,12 +59,12 @@ public class NumberItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

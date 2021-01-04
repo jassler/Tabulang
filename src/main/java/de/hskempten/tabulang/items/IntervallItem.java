@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class IntervallItem implements LanguageItem {
     private TermItem myTerm;
     private TermItem mySecondTerm;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public IntervallItem(TermItem myTerm, TermItem mySecondTerm) {
         this.setMyTerm(myTerm);
@@ -30,12 +30,12 @@ public class IntervallItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
 }

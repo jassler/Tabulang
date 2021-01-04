@@ -10,7 +10,7 @@ public class TupelItem implements LanguageItem {
     private IntervallItem myIntervall;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public TupelItem() {
         this.itemType = LanguageItemType.TUPEL_EMPTY;
@@ -66,12 +66,12 @@ public class TupelItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

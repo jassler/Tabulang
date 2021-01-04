@@ -7,7 +7,7 @@ public class AggregationTItem implements LanguageItem {
     private AverageTItem myAverageT;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public AggregationTItem(CountTItem myCountT) {
         this.setMyCountT(myCountT);
@@ -37,12 +37,12 @@ public class AggregationTItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

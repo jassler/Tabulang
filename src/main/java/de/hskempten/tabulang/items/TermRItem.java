@@ -15,7 +15,7 @@ public class TermRItem implements TermOrRItem {
     private String myString;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public TermRItem(PredItem myPred, TermRItem myTermR, String myString) {
         this.myPred = myPred;
@@ -128,12 +128,12 @@ public class TermRItem implements TermOrRItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

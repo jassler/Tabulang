@@ -11,7 +11,7 @@ public class VarDefItem implements LanguageItem {
     private ProceduralFItem myProceduralF;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public VarDefItem(IdentifierItem myIdentifier, TermItem myTerm, boolean isNewAssignment) {
         this.setMyIdentifier(myIdentifier);
@@ -59,12 +59,12 @@ public class VarDefItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

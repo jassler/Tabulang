@@ -4,7 +4,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class IdentifierItem implements LanguageItem {
     private String myString; //[a-zA-Z][0-9a-zA-Z]*
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public IdentifierItem(String myString) {
         this.myString = myString;
@@ -20,12 +20,12 @@ public class IdentifierItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

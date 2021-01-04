@@ -7,7 +7,7 @@ public class OperatorItem implements LanguageItem {
     private String myString;
 
     LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public OperatorItem(String myString) {
         this.setMyString(myString);
@@ -33,12 +33,12 @@ public class OperatorItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

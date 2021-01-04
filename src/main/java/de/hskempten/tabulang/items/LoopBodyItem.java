@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class LoopBodyItem implements LanguageItem {
     private ArrayList<LoopStmntItem> myLoopStmnts;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public LoopBodyItem(ArrayList<LoopStmntItem> myLoopStmnts) {
         this.setMyLoopStmnts(myLoopStmnts);
@@ -22,12 +22,12 @@ public class LoopBodyItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
 }

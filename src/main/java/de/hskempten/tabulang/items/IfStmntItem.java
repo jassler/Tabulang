@@ -10,7 +10,7 @@ public class IfStmntItem implements LanguageItem {
     private AnyStatementItem myOptionalAnyStatement;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement) {
         this.setMyPred(myPred);
@@ -51,12 +51,12 @@ public class IfStmntItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

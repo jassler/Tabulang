@@ -7,7 +7,7 @@ public class DirectionalTermItem implements LanguageItem {
     private TermItem myTerm;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public DirectionalTermItem(String myString, TermItem myTerm) {
         this.setMyString(myString);
@@ -45,12 +45,12 @@ public class DirectionalTermItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

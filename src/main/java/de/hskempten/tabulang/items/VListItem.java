@@ -9,7 +9,7 @@ public class VListItem implements LanguageItem {
     private ArrayList<IdentifierItem> myOtherIdentifiers;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public VListItem() {
         this.itemType = LanguageItemType.VLIST_EMPTY;
@@ -44,12 +44,12 @@ public class VListItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

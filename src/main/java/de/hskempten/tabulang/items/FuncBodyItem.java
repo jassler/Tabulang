@@ -8,7 +8,7 @@ public class FuncBodyItem implements LanguageItem {
     private LinkedList<StatementAnyItem> myStatements;
 
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
 
     public FuncBodyItem(LinkedList<StatementAnyItem> myStatements) {
@@ -27,12 +27,12 @@ public class FuncBodyItem implements LanguageItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override

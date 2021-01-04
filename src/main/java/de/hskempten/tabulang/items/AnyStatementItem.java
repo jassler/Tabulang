@@ -8,7 +8,7 @@ public class AnyStatementItem implements StatementAnyItem {
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;
     private LanguageItemType itemType;
-    private TextPosition myTextPositon;
+    private TextPosition myTextPosition;
 
     public AnyStatementItem(StatementItem myStatement) {
         this.setMyStatement(myStatement);
@@ -64,12 +64,12 @@ public class AnyStatementItem implements StatementAnyItem {
 
     @Override
     public TextPosition getTextPosition() {
-        return myTextPositon;
+        return myTextPosition;
     }
 
     @Override
     public void setTextPosition(TextPosition textPosition) {
-        this.myTextPositon = textPosition;
+        this.myTextPosition = textPosition;
     }
 
     @Override
