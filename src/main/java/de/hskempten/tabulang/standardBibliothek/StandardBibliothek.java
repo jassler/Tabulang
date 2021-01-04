@@ -2,6 +2,7 @@ package de.hskempten.tabulang.standardBibliothek;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -12,10 +13,10 @@ public class StandardBibliothek {
     private static Interpretation _interpreter;
 
     public static void main(String[] args){
-        Table<String> t = new Table<>(
-                new Tuple<>(new String[]{"Felix", "Fritz", "Oberstdorf"}, new String[]{"First name", "Last name", "Location"}),
-                new Tuple<>(new String[]{"Tobias", "Teiher", "Kempten"}),
-                new Tuple<>(new String[]{"Manfred", "Meher", "Berlin"})
+        Table<InternalString> t = new Table<>(
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten")),
+                new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
         );
     }
 
@@ -28,12 +29,6 @@ public class StandardBibliothek {
 
         return result;
     }
-
-
-
-//    private static Object ILFCreator(InternalFunction internalFunction, String... strings){
-//        return new InternalLibraryFunction(generateIdentifiers(strings), internalFunction);
-//    }
 
     private static void AddToInterpreter(InternalFunction internalFunction, String... strings){
         var name = internalFunction.getClass().getName().substring(0, 1).toLowerCase() + internalFunction.getClass().getName().substring(1);
@@ -54,27 +49,5 @@ public class StandardBibliothek {
         AddToInterpreter(new TableToStyledOds(), "table", "path", "fileName");
         AddToInterpreter(new ToLowerCase(), "item");
         AddToInterpreter(new ToUpperCase(), "item");
-
-//        interpreter
-//                .putValue("print", ILFCreator(new Print(), "x"))
-//                .putValue("openDbConnection", ILFCreator(new OpenDbConnection(), "ip", "port", "dbName", "userName", "password"))
-//                .putValue("closeDbConnection", ILFCreator(new CloseDbConnection()))
-//                .putValue("queryDatabase", ILFCreator(new DatabaseToTable(), "query"));
-
-//        interpreter.putValue("print", new InternalLibraryFunction(
-//                generateIdentifiers("x"), new Print()
-//
-//        )).putValue("openDbConnection", new InternalLibraryFunction(
-//                generateIdentifiers("ip", "port", "dbName", "userName", "password"), new OpenDbConnection()
-//
-//        )).putValue("closeDbConnection", new InternalLibraryFunction(
-//                generateIdentifiers(), new CloseDbConnection()
-//
-//        )).putValue("queryDatabase", new InternalLibraryFunction(
-//                generateIdentifiers(), new DatabaseToTable()
-//        ));
-
     }
-
-
 }
