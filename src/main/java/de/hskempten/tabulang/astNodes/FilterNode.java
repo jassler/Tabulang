@@ -33,17 +33,20 @@ public class FilterNode extends BinaryTermNode{
 
         return table.filter(tuple -> {
             Interpretation nested = interpretation.deepCopy();
+
             for (int j = 0; j < tuple.size(); j++) {
                 Object element = tuple.getFromIndex(j);
                 InternalString name = colNames.get(j);
                 nested.getEnvironment().put(name.getString(), element);
             }
 
+            nested.putValue("mapvalue", tuple);
+
             Object result = getRightNode().evaluateNode(nested);
             if (!(result instanceof InternalBoolean booleanResult)) {
                 throw new IllegalBooleanOperandArgumentException(toString());
             }
-            return (boolean) result;
+            return booleanResult.getaBoolean();
         });
     }
 

@@ -7,7 +7,7 @@ public class DatabaseToTable implements InternalFunction{
     @Override
     public Object compute(Object... args) {
         if(Helper.LengthReviewer(1, args)){
-            return DatabaseConnection.ExportAsTable((String) args[0]);
+            return DatabaseConnection.ExportAsTable(((InternalString) args[0]).getString());
         }
         return null;
     }

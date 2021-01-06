@@ -8,6 +8,8 @@ import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
+import java.util.stream.Collectors;
+
 public class TupleElementNode extends BinaryTermNode{
 
 
@@ -40,10 +42,16 @@ public class TupleElementNode extends BinaryTermNode{
             if(columnIdentifier instanceof InternalString){
                 if(((Table<?>) tuple).getColNames().contains(((InternalString) columnIdentifier).getString())){
                     int index = ((Table<?>) tuple).getColNames().getIndexOf(((InternalString) columnIdentifier).getString());
-                    return ((Table<?>) tuple).getRow(index);
+                    return ((Table<?>) tuple).projection(index);
                 } else {
                     throw new TupleNameNotFoundException(((InternalString) columnIdentifier).getString());
                 }
+            } else if(columnIdentifier instanceof Tuple<?> t ) {
+                String[] projectTo = new String[t.getElements().size()];
+                for (int i = 0; i < projectTo.length; i++) {
+                    projectTo[i] = t.getElements().get(i).toString();
+                }
+                return ((Table<?>) tuple).projection(projectTo);
             } else {
                 throw new IllegalArgumentException("Expected String but got: " + columnIdentifier.getClass().getSimpleName());
             }

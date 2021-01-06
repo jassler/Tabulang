@@ -96,7 +96,7 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
      * <p>Get name list.</p>
      *
      * <p><b>Do not alter list</b>, otherwise the lookup table is not synced with the ArrayList! Use the
-     * {@link HeaderNames#add(String)} et al to change names.</p>
+     * {@link HeaderNames#add(InternalString)} et al to change names.</p>
      *
      * @return names ArrayList
      */

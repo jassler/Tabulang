@@ -273,18 +273,9 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @return Tuple with selected indexes
      */
     public Tuple<E> projection(String... names) {
-<<<<<<< Updated upstream
         int[] indices = new int[names.length];
         for (int i = 0; i < names.length; i++) {
             indices[i] = this.names.getIndexOf(names[i]);
-=======
-        List<E> newObjects = new ArrayList<>(names.length);
-        List<String> newNames = new ArrayList<>(names.length);
-
-        for (String name : names) {
-            newObjects.add(this.get(name));
-            newNames.add(name);
->>>>>>> Stashed changes
         }
 
         return projection(indices);

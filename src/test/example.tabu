@@ -1,0 +1,38 @@
+queryActor := 'SELECT a.first_name, a.last_name, f.title ' +
+        'FROM sakila.actor as a ' +
+        'JOIN sakila.film_actor as fa ' +
+        'ON a.actor_id = fa.actor_id ' +
+        'JOIN sakila.film as f ' +
+        'ON f.film_id = fa.film_id ' +
+        'WHERE (a.last_name LIKE "A%" OR a.last_name LIKE "S%") ' +
+        'AND f.title LIKE "J%";';
+queryTitle := 'SELECT f.title ' +
+        'FROM sakila.actor as a ' +
+        'JOIN sakila.film_actor as fa ' +
+        'ON a.actor_id = fa.actor_id ' +
+        'JOIN sakila.film as f ' +
+        'ON f.film_id = fa.film_id ' +
+        'WHERE (a.last_name LIKE "A%" OR a.last_name LIKE "S%") ' +
+        'AND f.title LIKE "J%" ' +
+        'GROUP BY f.title';
+
+openDbConnection('85.214.33.119', 3306, 'sakila', 'db_user', 'HsKemptenProjekt2020');
+tActor := databaseToTable(queryActor);
+tTitle := databaseToTable(queryTitle);
+
+allenPlayedIn := tActor filter last_name = 'ALLEN';
+allenMovieAmount := count vertical allenPlayedIn;
+allenTransformedVertical := vertical allenPlayedIn;
+allenTransformedHorizontal := horizontal allenPlayedIn;
+
+print('');
+print(allenPlayedIn);
+print('');
+print('Allen played in ' + allenMovieAmount + ' movies');
+print('');
+print(allenPlayedIn.'title');
+print('');
+print(allenTransformedVertical);
+print('');
+print(allenTransformedHorizontal);
+print('');

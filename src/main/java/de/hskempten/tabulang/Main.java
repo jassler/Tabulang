@@ -49,8 +49,9 @@ public class Main {
             try {
                 Object result = executeFile(l, interpreter, cli.inputFile);
                 //listInterpreterEnvironment(interpreter);
-                
-                System.out.println("\nProgram exited with the following non-null result: " + result.toString());
+
+                if(result != null)
+                    System.out.println("\nProgram exited with the following non-null result: " + result.toString());
 
             } catch(Exception e) {
                 System.err.println(e.getLocalizedMessage());
@@ -82,8 +83,10 @@ public class Main {
 
         // build the abstract syntax tree
         ast = ASTProgramParser.instance.parse(prg);
-
-        return ast.executeProgram(interpreter);
+        ast.executeProgram(interpreter);
+        // MAYBE?
+        //return ast.executeProgram(interpreter);
+        return null;
     }
 
     private static void startRepl(Lexer l, Interpretation interpreter) {
@@ -101,7 +104,13 @@ public class Main {
 
         while(true) {
             System.out.printf(REPL_PREFIX, ++count);
-            String line = scanner.nextLine().trim();
+            String line = "";
+            try {
+                line = scanner.nextLine().trim();
+            } catch(NoSuchElementException a) {
+                System.out.println("\nk bye");
+                System.exit(0);
+            }
 
             if("exit();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
                 break;
