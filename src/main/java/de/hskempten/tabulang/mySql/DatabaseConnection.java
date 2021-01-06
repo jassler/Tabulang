@@ -103,7 +103,10 @@ public class DatabaseConnection {
             ));
         }
 
-        return new Table<>(sqlTableContent.get_headlines(), tuples);
+        return new Table<>(sqlTableContent.get_headlines().stream().map(InternalString::new)
+                .collect(Collectors.toCollection(ArrayList::new)),
+                tuples
+        );
     }
 
     /**
@@ -220,13 +223,12 @@ public class DatabaseConnection {
      * @return The modified ArrayList of headlines (Strings)
      */
 
-    private static ArrayList<String> ReplaceHeadline(Table table){
+    private static ArrayList<String> ReplaceHeadline(Table<?> table){
         var replacedItems = new ArrayList<String>();
         table
                 .getColNames()
                 .getNames()
-                .stream()
-                .forEach(headline -> replacedItems.add(headline.replace(" ", "").toLowerCase()));
+                .forEach(headline -> replacedItems.add(headline.getString().replace(" ", "").toLowerCase()));
         return replacedItems;
     }
 

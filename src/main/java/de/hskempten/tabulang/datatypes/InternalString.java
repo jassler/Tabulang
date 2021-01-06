@@ -1,8 +1,12 @@
 package de.hskempten.tabulang.datatypes;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class InternalString extends InternalObject{
+public class InternalString extends InternalObject implements Comparable<InternalString> {
     private String string;
 
     public InternalString(String string) {
@@ -16,6 +20,37 @@ public class InternalString extends InternalObject{
 
     public void setString(String string) {
         this.string = string;
+    }
+
+    /**
+     * Turn a variable amount of values into an array of InternalString objects.
+     *
+     * @param values Objects to be converted into InternalString objects
+     * @return InternalString array with converted values
+     */
+    public static InternalString[] objToArray(Object... values) {
+        InternalString[] result = new InternalString[values.length];
+
+        for (int i = 0; i < values.length; i++) {
+            if(values[i] == null)
+                result[i] = null;
+            else
+                result[i] = new InternalString(values[i].toString());
+        }
+
+        return result;
+    }
+
+    /**
+     * Turn a variable amount of values into an ArrayList of InternalString objects.
+     *
+     * @param values Objects to be converted into InternalString objects
+     * @return InternalString ArrayList with converted values
+     */
+    public static ArrayList<InternalString> objToList(Object... values) {
+        return Stream.of(values).map(
+                v -> new InternalString(v.toString())
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -36,22 +71,8 @@ public class InternalString extends InternalObject{
         return Objects.hash(string);
     }
 
-    /**
-     * Turn a variable amount of values into an array of InternalString objects.
-     *
-     * @param values Objects to be converted into InternalString objects
-     * @return InternalString array with converted values
-     */
-    public static InternalString[] objToArray(Object... values) {
-        InternalString[] result = new InternalString[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            if(values[i] == null)
-                result[i] = null;
-            else
-                result[i] = new InternalString(values[i].toString());
-        }
-
-        return result;
+    @Override
+    public int compareTo(InternalString o) {
+        return string.compareTo(o.getString());
     }
 }

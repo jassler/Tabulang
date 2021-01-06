@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.standardBibliothek;
 
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.libreOffice.OdsImportService;
 
 public class OdsToTable implements InternalFunction{
@@ -7,7 +8,7 @@ public class OdsToTable implements InternalFunction{
     public Object compute(Object... args) {
         if(Helper.LengthReviewer(1, args)){
             var odsImportService = new OdsImportService();
-            return odsImportService.Import((String) args[0]);
+            return odsImportService.Import(((InternalString) args[0]).getString());
         }
         return null;
     }

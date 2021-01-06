@@ -25,12 +25,12 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     public Tuple(E[] elements) {
         this(
                 elements,
-                IntStream.range(0, elements.length).boxed().map(String::valueOf).toArray(String[]::new)
+                IntStream.range(0, elements.length).boxed().map(String::valueOf).map(InternalString::new).toArray(InternalString[]::new)
         );
     }
 
     /**
-     * See {@link Tuple#Tuple(E[], String[], boolean)}
+     * See {@link Tuple#Tuple(E[], InternalString[], boolean)}
      * 
      * @param elements Elements inside the Tuple
      * @param names Name for each element, where {@code objects.length == names.length}
@@ -38,7 +38,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
-    public Tuple(E[] elements, String[] names) {
+    public Tuple(E[] elements, InternalString[] names) {
         this(elements, names, true);
     }
 
@@ -56,7 +56,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
-    public Tuple(E[] elements, String[] names, boolean isHorizontal) {
+    public Tuple(E[] elements, InternalString[] names, boolean isHorizontal) {
         this(Arrays.asList(elements), Arrays.asList(names), isHorizontal);
     }
 
@@ -71,7 +71,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     public Tuple(List<E> elements) {
         this(
                 elements,
-                IntStream.range(0, elements.size()).mapToObj(String::valueOf).collect(Collectors.toList())
+                IntStream.range(0, elements.size()).mapToObj(String::valueOf).map(InternalString::new).collect(Collectors.toList())
         );
     }
 
@@ -84,7 +84,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws ArrayLengthMismatchException if objects and names List do not have the same length
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
-    public Tuple(List<E> elements, List<String> names) {
+    public Tuple(List<E> elements, List<InternalString> names) {
         this(elements, names, true);
     }
 
@@ -102,7 +102,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException if names has at least one String appearing twice
      */
-    public Tuple(List<E> elements, List<String> names, boolean isHorizontal) {
+    public Tuple(List<E> elements, List<InternalString> names, boolean isHorizontal) {
         this(elements, names, isHorizontal, null);
     }
 
@@ -120,7 +120,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
      * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
-    public Tuple(List<E> elements, List<String> names, boolean isHorizontal, InternalObject parent) {
+    public Tuple(List<E> elements, List<InternalString> names, boolean isHorizontal, InternalObject parent) {
         this(elements, new HeaderNames(names), isHorizontal, parent);
     }
 
@@ -238,7 +238,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         newObjects.addAll(elements);
         newObjects.addAll(t.getElements());
 
-        List<String> newNames = new ArrayList<>(names.size() + t.getNames().size());
+        List<InternalString> newNames = new ArrayList<>(names.size() + t.getNames().size());
         newNames.addAll(names.getNames());
         newNames.addAll(t.names.getNames());
 
@@ -255,7 +255,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      */
     public Tuple<E> projection(int... elements) {
         List<E> newObjects = new ArrayList<>(elements.length);
-        List<String> newNames = new ArrayList<>(elements.length);
+        List<InternalString> newNames = new ArrayList<>(elements.length);
 
         for(int e : elements) {
             newObjects.add(this.elements.get(e));
@@ -272,15 +272,12 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @return Tuple with selected indexes
      */
     public Tuple<E> projection(String... names) {
-        List<E> newObjects = new ArrayList<>(names.length);
-        List<String> newNames = new ArrayList<>(names.length);
-
-        for(String name : names) {
-            newObjects.add(this.get(name));
-            newNames.add(name);
+        int[] indices = new int[names.length];
+        for (int i = 0; i < names.length; i++) {
+            indices[i] = this.names.getIndexOf(names[i]);
         }
 
-        return new Tuple<>(newObjects, newNames, isHorizontal);
+        return projection(indices);
     }
 
     /**
@@ -300,7 +297,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @param newNames New names list, must be same size as this tuple size
      * @return New tuple with copied object list and new names
      */
-    public Tuple<E> newTupleWithNames(List<String> newNames) {
+    public Tuple<E> newTupleWithNames(List<InternalString> newNames) {
         if (newNames.size() != elements.size()) {
             throw new ArrayLengthMismatchException(elements.size(), newNames.size());
         }
@@ -363,7 +360,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
             // ignore length of last element because there'll be a new line anyway
             String formatted = IntStream.range(0, names.size() - 1)
                     .map(i -> Math.max(
-                            names.get(i).length(),
+                            names.get(i).getString().length(),
                             elements.get(i).toString().length()
                     ))
                     .mapToObj(colSize -> "%-" + colSize + "s | ")
@@ -376,7 +373,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
                     .append(String.format(formatted, elements.toArray()));
 
         } else {
-            int namesColSize = names.getNames().stream().max(Comparator.comparing(String::length)).get().length();
+            int namesColSize = names.getNames().stream().max(Comparator.comparing(v -> v.getString().length())).get().getString().length();
             String formatted = "%-" + namesColSize + "s | %s";
 
             var nameIt = names.iterator();

@@ -4,26 +4,27 @@ import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class HeaderNames implements Iterable<String>, Cloneable {
+public class HeaderNames implements Iterable<InternalString>, Cloneable {
 
-    private ArrayList<String> names;
+    private ArrayList<InternalString> names;
     private HashMap<String, Integer> nameLookup;
 
-    public HeaderNames(List<String> names) {
+    public HeaderNames(List<InternalString> names) {
         this.names = new ArrayList<>(names);
         this.nameLookup = new HashMap<>(names.size());
 
         for (int i = 0; i < names.size(); i++)
-            this.nameLookup.put(names.get(i), i);
+            this.nameLookup.put(names.get(i).getString(), i);
 
         // keys in map must not appear twice
         // thus if map-keys-size is not the same as array size, there must be a duplicate value
         if (this.nameLookup.keySet().size() != names.size()) {
             Collections.sort(this.names);
-            String duplicate = findDuplicate(this.names);
+            InternalString duplicate = findDuplicate(this.names);
 
-            throw new DuplicateNamesException(duplicate);
+            throw new DuplicateNamesException(duplicate.getString());
         }
     }
 
@@ -31,8 +32,8 @@ public class HeaderNames implements Iterable<String>, Cloneable {
         this(HeaderNames.collectNames(h));
     }
 
-    private static ArrayList<String> collectNames(HeaderNames... headerNamesArray) {
-        ArrayList<String> l = new ArrayList<>(Arrays.stream(headerNamesArray).mapToInt(HeaderNames::size).sum());
+    private static ArrayList<InternalString> collectNames(HeaderNames... headerNamesArray) {
+        ArrayList<InternalString> l = new ArrayList<>(Arrays.stream(headerNamesArray).mapToInt(HeaderNames::size).sum());
         for(var headerNames : headerNamesArray)
             l.addAll(headerNames.names);
 
@@ -43,12 +44,25 @@ public class HeaderNames implements Iterable<String>, Cloneable {
      * Get String element at corresponding index.
      *
      * @param index List index
-     * @return String element
+     * @return InternalString element
      *
      * @throws IndexOutOfBoundsException if {@code index < 0} or {@code index >= size()}
      */
-    public String get(int index) {
+    public InternalString get(int index) {
         return names.get(index);
+    }
+
+    /**
+     * Get index of InternalString. Note that InternalString could also represent a number, in which case this number is returned
+     * if the String itself doesn't appear in the header list.
+     *
+     * @param name Name or index number of element
+     * @return Element object
+     * @throws NumberFormatException     if name not present and not convertible into a number
+     * @throws IndexOutOfBoundsException if name not present and converted number is out of range
+     */
+    public int getIndexOf(InternalString name) {
+        return getIndexOf(name.getString());
     }
 
     /**
@@ -86,28 +100,28 @@ public class HeaderNames implements Iterable<String>, Cloneable {
      *
      * @return names ArrayList
      */
-    public ArrayList<String> getNames() {
+    public ArrayList<InternalString> getNames() {
         return names;
     }
 
-    public boolean add(String s) {
+    public boolean add(InternalString s) {
         if(nameLookup.containsKey(s))
-            throw new DuplicateNamesException(s);
+            throw new DuplicateNamesException(s.getString());
 
-        nameLookup.put(s, names.size());
+        nameLookup.put(s.getString(), names.size());
         return names.add(s);
     }
 
-    public void add(int index, String element) {
+    public void add(int index, InternalString element) {
         if(nameLookup.containsKey(element))
-            throw new DuplicateNamesException(element);
+            throw new DuplicateNamesException(element.getString());
 
         names.add(index, element);
         updateLookupValues(x -> (x >= index) ? (x + 1) : x);
-        nameLookup.put(element, index);
+        nameLookup.put(element.getString(), index);
     }
 
-    public void addAll(Collection<? extends String> c) {
+    public void addAll(Collection<? extends InternalString> c) {
         c.forEach(this::add);
     }
 
@@ -121,8 +135,8 @@ public class HeaderNames implements Iterable<String>, Cloneable {
         return names.remove(o);
     }
 
-    public String remove(int index) {
-        String element = names.remove(index);
+    public InternalString remove(int index) {
+        InternalString element = names.remove(index);
         Integer i = nameLookup.get(element);
         if(i != null) {
             updateLookupValues(x -> (x > i) ? (x - 1) : x);
@@ -158,7 +172,7 @@ public class HeaderNames implements Iterable<String>, Cloneable {
      * @param arr Sorted String array with variable names
      * @return null, if no same string appears next to each other
      */
-    private static String findDuplicate(List<String> arr) {
+    private static InternalString findDuplicate(List<InternalString> arr) {
         for(int i = 1; i < arr.size(); i++) {
             if(arr.get(i).equals(arr.get(i-1)))
                 return arr.get(i);
@@ -173,7 +187,7 @@ public class HeaderNames implements Iterable<String>, Cloneable {
     }
 
     @Override
-    public Iterator<String> iterator() {
+    public Iterator<InternalString> iterator() {
         return names.iterator();
     }
 

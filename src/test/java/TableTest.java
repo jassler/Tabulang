@@ -21,7 +21,7 @@ class TableTest {
     @Test
     void getColumnIndex() {
         Table<InternalString> t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
         );
@@ -37,20 +37,20 @@ class TableTest {
     void filter() {
 
         Table<InternalString> t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
         );
 
-        assertEquals(new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), new String[]{"First name", "Last name", "Location"}), t.getRow(0));
-        assertEquals(new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten"), new String[]{"First name", "Last name", "Location"}), t.getRow(1));
-        assertEquals(new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"), new String[]{"First name", "Last name", "Location"}), t.getRow(2));
+        assertEquals(new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), InternalString.objToArray("First name", "Last name", "Location")), t.getRow(0));
+        assertEquals(new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten"), InternalString.objToArray("First name", "Last name", "Location")), t.getRow(1));
+        assertEquals(new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"), InternalString.objToArray("First name", "Last name", "Location")), t.getRow(2));
 
         Table<InternalString> filtered = t.filter(tuple -> tuple.get("1").getString().charAt(1) == 'e');
 
         assertEquals(
                 new Table<>(
-                        new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten"), new String[]{"First name", "Last name", "Location"}),
+                        new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten"), InternalString.objToArray("First name", "Last name", "Location")),
                         new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
                 ),
                 filtered
@@ -60,7 +60,7 @@ class TableTest {
     @Test
     void projection() {
         Table<InternalString> t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -68,7 +68,7 @@ class TableTest {
         );
 
         var projected = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz"), new String[]{"First name", "Last name"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz"), InternalString.objToArray("First name", "Last name")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky")),
@@ -80,7 +80,7 @@ class TableTest {
 
         // check that no duplicate rows exist
         t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -88,7 +88,7 @@ class TableTest {
         );
 
         projected = new Table<>(
-                new Tuple<>(InternalString.objToArray("Madrid"), new String[]{"Location"}),
+                new Tuple<>(InternalString.objToArray("Madrid"), InternalString.objToArray("Location")),
                 new Tuple<>(InternalString.objToArray("Kempten")),
                 new Tuple<>(InternalString.objToArray("Berlin"))
         );
@@ -102,7 +102,7 @@ class TableTest {
     @Test
     public void intersection() {
         Table<InternalString> t1 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -110,28 +110,28 @@ class TableTest {
         );
 
         Table<InternalString> t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Bierb", "Ierbi", "Madrid")),
                 new Tuple<>(InternalString.objToArray("Nochw", "Ashie", "Rzuseh"))
         );
 
         Table<InternalString> intersected = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Bierb", "Ierbi", "Madrid"))
         );
 
         assertEquals(intersected, t1.intersection(t2));
 
-        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), new String[]{"first name", "last name", "location"}));
+        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), InternalString.objToArray("first name", "last name", "location")));
         assertThrows(TableHeaderMismatchException.class, () -> t1.intersection(t3));
     }
 
     @Test
     public void union() {
         Table<InternalString> t1 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -139,14 +139,14 @@ class TableTest {
         );
 
         Table<InternalString> t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Bierb", "Ierbi", "Madrid")),
                 new Tuple<>(InternalString.objToArray("Nochw", "Ashie", "Rzuseh"))
         );
 
         Table<InternalString> unioned = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -156,14 +156,14 @@ class TableTest {
 
         assertEquals(unioned, t1.union(t2));
 
-        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), new String[]{"first name", "last name", "location"}));
+        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), InternalString.objToArray("first name", "last name", "location")));
         assertThrows(TableHeaderMismatchException.class, () -> t1.union(t3));
     }
 
     @Test
     public void difference() {
         Table<InternalString> t1 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -171,27 +171,27 @@ class TableTest {
         );
 
         Table<InternalString> t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Bierb", "Ierbi", "Madrid")),
                 new Tuple<>(InternalString.objToArray("Nochw", "Ashie", "Rzuseh"))
         );
 
         Table<InternalString> differenced = new Table<>(
-                new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid"))
         );
 
         assertEquals(differenced, t1.difference(t2));
 
-        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), new String[]{"first name", "last name", "location"}));
+        Table<InternalString> t3 = new Table<>(new Tuple<>(InternalString.objToArray("Wrong", "Column", "Headers"), InternalString.objToArray("first name", "last name", "location")));
         assertThrows(TableHeaderMismatchException.class, () -> t1.difference(t3));
     }
 
     @Test
     public void horizontalPairing() {
         Table<InternalString> t1 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz"), new String[]{"First name", "Last name"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz"), InternalString.objToArray("First name", "Last name")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky")),
@@ -199,14 +199,14 @@ class TableTest {
         );
 
         Table<InternalString> t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Madrid"), new String[]{"Location"}),
+                new Tuple<>(InternalString.objToArray("Madrid"), InternalString.objToArray("Location")),
                 new Tuple<>(InternalString.objToArray("Berlin")),
                 new Tuple<>(InternalString.objToArray("Madrid")),
                 new Tuple<>(InternalString.objToArray("Rzuseh"))
         );
 
         Table<InternalString> paired = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Madrid")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Rzuseh")),
@@ -219,7 +219,7 @@ class TableTest {
     @Test
     public void verticalPairing() {
         Table<InternalString> t1 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -227,14 +227,14 @@ class TableTest {
         );
 
         Table<InternalString> t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Fegex", "Fritz", "Dadrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Fegex", "Fritz", "Dadrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Haana", "Meher", "Berlqn")),
                 new Tuple<>(InternalString.objToArray("Vasrb", "IerbA", "Madrid")),
                 new Tuple<>(InternalString.objToArray("Nocwa", "Ashsa", "Rzudsh"))
         );
 
         Table<InternalString> paired = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -248,13 +248,13 @@ class TableTest {
         assertEquals(paired, t1.verticalPairing(t2));
 
         t2 = new Table<>(
-                new Tuple<>(InternalString.objToArray("Fegex", "Fritz", "Dadrid", "Oh what"), new String[]{"First name", "Last name", "Location", "Unexpected"}),
+                new Tuple<>(InternalString.objToArray("Fegex", "Fritz", "Dadrid", "Oh what"), InternalString.objToArray("First name", "Last name", "Location", "Unexpected")),
                 new Tuple<>(InternalString.objToArray("Haana", "Meher", "Berlqn", "What is")),
                 new Tuple<>(InternalString.objToArray("HaAsa", "Tahar", "DSslqn", "This"))
         );
 
         paired = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid", null), new String[]{"First name", "Last name", "Location", "Unexpected"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid", null), InternalString.objToArray("First name", "Last name", "Location", "Unexpected")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten", null)),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin", null)),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid", null)),
@@ -267,7 +267,7 @@ class TableTest {
         assertEquals(paired, t1.verticalPairing(t2));
 
         paired = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -283,7 +283,7 @@ class TableTest {
     @Test
     public void styling() {
         Table<InternalString> t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), new String[]{"First name", "Last name", "Location"}),
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Madrid"), InternalString.objToArray("First name", "Last name", "Location")),
                 new Tuple<>(InternalString.objToArray("Jonas", "Lärch", "Kempten")),
                 new Tuple<>(InternalString.objToArray("Hanna", "Meher", "Berlin")),
                 new Tuple<>(InternalString.objToArray("Willi", "Wonky", "Madrid")),
@@ -318,7 +318,7 @@ class TableTest {
     @Test
     public void tableToString() {
         var t = new Table<>(
-                new Tuple<>(InternalString.objToArray("Andreas", "Bittner", "Madrid", "24"), new String[]{"First name", "Last name", "Location", "Age"}),
+                new Tuple<>(InternalString.objToArray("Andreas", "Bittner", "Madrid", "24"), InternalString.objToArray("First name", "Last name", "Location", "Age")),
                 new Tuple<>(InternalString.objToArray("Kilian", "Manfred-Anderson", "Sao Paulo", "8"))
         );
 

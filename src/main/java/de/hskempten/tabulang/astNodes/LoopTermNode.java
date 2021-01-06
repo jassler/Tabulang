@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalDataObject;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -61,7 +62,7 @@ public class LoopTermNode extends TermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object termObject = getTerm().evaluateNode(interpretation);
 
-        if (!(termObject instanceof Tuple term))
+        if (!(termObject instanceof Tuple<?> term))
             throw new IllegalTupleOperandArgumentException("Expected Tuple but got " + term.getClass().getSimpleName());
 
         String identifier = getIdentifier().getIdentifier();
@@ -79,11 +80,11 @@ public class LoopTermNode extends TermNode {
             Object tupleElementObj = term.getElements().get(i);
             nestedInterpretation.getEnvironment().put(identifier, tupleElementObj);
 
-            if (tupleElementObj instanceof Tuple tupleElement) {
+            if (tupleElementObj instanceof Tuple<?> tupleElement) {
                 for (int j = 0; j < tupleElement.getElements().size(); j++) {
-                    String type = tupleElement.getNames().getNames().get(j);
+                    InternalString type = tupleElement.getNames().getNames().get(j);
                     Object element = tupleElement.getElements().get(j);
-                    nestedInterpretation.getEnvironment().put(type, element);
+                    nestedInterpretation.getEnvironment().put(type.getString(), element);
                 }
             }
 

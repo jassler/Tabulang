@@ -41,24 +41,24 @@ class TupleTest {
 
     @Test
     public void testThrowsArrayLengthMismatch() {
-        assertThrows(ArrayLengthMismatchException.class, () -> new Tuple<>(InternalString.objToArray(""), new String[]{}));
+        assertThrows(ArrayLengthMismatchException.class, () -> new Tuple<>(InternalString.objToArray(""), new InternalString[]{}));
     }
 
     @Test
     public void testTupleDefaultValues() {
         Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray( "1", 2));
         assertEquals(Stream.of("1", 2).map(InternalDataObject::new).collect(Collectors.toList()), t.getElements());
-        assertEquals(new HeaderNames(Arrays.asList("0", "1")), t.getNames());
+        assertEquals(new HeaderNames(InternalString.objToList("0", "1")), t.getNames());
         assertTrue(t.isHorizontal());
     }
 
     @Test
     public void testTupleNameGeneration() {
         Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"));
-        assertEquals(Arrays.asList("0", "1", "2", "3"), t.getNames().getNames());
+        assertEquals(InternalString.objToList("0", "1", "2", "3"), t.getNames().getNames());
 
-        t.getNames().getNames().set(0, "4");
-        assertEquals(Arrays.asList("4", "1", "2", "3"), t.getNames().getNames());
+        t.getNames().getNames().set(0, new InternalString("4"));
+        assertEquals(InternalString.objToList("4", "1", "2", "3"), t.getNames().getNames());
     }
 
     @Test
@@ -72,7 +72,7 @@ class TupleTest {
         assertThrows(IndexOutOfBoundsException.class, () -> t.get("-1"));
         assertThrows(NumberFormatException.class, () -> t.get("a"));
 
-        final Tuple<InternalNumber> u = new Tuple<InternalNumber>(createList(InternalNumber::new, 1, 4, 2), Arrays.asList("alpha", "beta", "gamma"));
+        final Tuple<InternalNumber> u = new Tuple<>(createList(InternalNumber::new, 1, 4, 2), InternalString.objToList("alpha", "beta", "gamma"));
         // final Tuple<InternalNumber> u = new Tuple<>(new Integer[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
         assertEquals(1, u.get("alpha").getValue());
         assertEquals(4, u.get("beta").getValue());
@@ -88,13 +88,13 @@ class TupleTest {
         t.setHorizontal(false);
 
         Tuple<InternalDataObject> other = new Tuple<>(InternalDataObject.objToArray("a", "b"));
-        other.getNames().getNames().set(0, "c");
-        other.getNames().getNames().set(1, "d");
+        other.getNames().getNames().set(0, new InternalString("c"));
+        other.getNames().getNames().set(1, new InternalString("d"));
 
         t = t.concatenate(other);
 
         assertEquals(Stream.of(12, 13, "a", "b").map(InternalDataObject::new).collect(Collectors.toList()), t.getElements());
-        assertEquals(new HeaderNames(Arrays.asList("0", "1", "c", "d")), t.getNames());
+        assertEquals(new HeaderNames(InternalString.objToList("0", "1", "c", "d")), t.getNames());
         assertFalse(t.isHorizontal());
     }
 
@@ -108,36 +108,36 @@ class TupleTest {
 
         assertEquals(new Tuple<>(
                 Collections.singletonList(new InternalDataObject("1")),
-                Collections.singletonList("2")
+                Collections.singletonList(new InternalString("2"))
         ), t.projection(2));
 
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(13, "2", 12, "1"),
-                new String[]{"1", "3", "0", "2"}
+                InternalString.objToArray("1", "3", "0", "2")
         ), t.projection(1, 3, 0, 2));
 
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(13, "2", 12, "1"),
-                new String[]{"1", "3", "0", "2"}
+                InternalString.objToArray("1", "3", "0", "2")
         ), t.projection("1", "3", "0", "2"));
 
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(13, "2", 12, "1"),
-                new String[]{"beta", "delta", "alpha", "gamma"}
-        ), t.newTupleWithNames(Arrays.asList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
+                InternalString.objToArray("beta", "delta", "alpha", "gamma")
+        ), t.newTupleWithNames(InternalString.objToList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
     }
 
     @Test
     public void testTupleNewNames() {
-        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"), new String[]{"a", "b", "c", "d"});
-        Tuple<InternalDataObject> t2 = t.newTupleWithNames(Arrays.asList("do", "re", "mi", "fa"));
+        Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"), InternalString.objToArray("a", "b", "c", "d"));
+        Tuple<InternalDataObject> t2 = t.newTupleWithNames(InternalString.objToList("do", "re", "mi", "fa"));
 
         // make sure it deep-copies
         t.set("a", null);
 
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(12, 13, "1", "2"),
-                new String[]{"do", "re", "mi", "fa"},
+                InternalString.objToArray("do", "re", "mi", "fa"),
                 true
         ), t2);
     }

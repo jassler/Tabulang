@@ -71,7 +71,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @param colNames Column header names
      * @param tuples Rows of tuples, each row having the same amount of elements as {@code colNames}
      */
-    public Table(ArrayList<String> colNames, ArrayList<Tuple<E>> tuples) {
+    public Table(ArrayList<InternalString> colNames, ArrayList<Tuple<E>> tuples) {
         this(colNames, tuples, null);
     }
 
@@ -84,7 +84,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @param colNames Column header names
      * @param tuples   Rows of tuples, each row having the same amount of elements as {@code colNames}
      */
-    public Table(ArrayList<String> colNames, ArrayList<Tuple<E>> tuples, InternalObject parent) {
+    public Table(ArrayList<InternalString> colNames, ArrayList<Tuple<E>> tuples, InternalObject parent) {
         super(parent);
         this.colNames = new HeaderNames(colNames);
         this.tuples = new ArrayList<>(tuples.size());
@@ -213,7 +213,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         ArrayList<Tuple<E>> newRows = new ArrayList<>(tuples.size());
         Set<ArrayList<E>> existingRows = new HashSet<>(tuples.size());
 
-        ArrayList<String> newColNames = new ArrayList<>(indices.length);
+        ArrayList<InternalString> newColNames = new ArrayList<>(indices.length);
         for(int i : indices)
             newColNames.add(colNames.get(i));
 
@@ -345,7 +345,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         int numCols = colNames.size() + other.colNames.size();
 
         ArrayList<Tuple<E>> newRows = new ArrayList<>(numRows);
-        ArrayList<String> newColNames = new ArrayList<>(numCols);
+        ArrayList<InternalString> newColNames = new ArrayList<>(numCols);
 
         for(int i = 0; i < numRows; i++) {
             ArrayList<E> row = new ArrayList<>(numCols);
@@ -382,7 +382,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         int numCols = Math.max(colNames.size(), other.colNames.size());
 
         ArrayList<Tuple<E>> newRows = new ArrayList<>(numRows);
-        ArrayList<String> newColNames = new ArrayList<>(numCols);
+        ArrayList<InternalString> newColNames = new ArrayList<>(numCols);
 
         List<E> toAppend = Collections.nCopies(numCols - colNames.size(), null);
         for(var row : tuples) {
@@ -419,7 +419,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
 
             // colHeader is index 0
             strLengths[0] = colNames.getNames().stream()
-                    .mapToInt(String::length)
+                    .mapToInt(v -> v.getString().length())
                     .max().getAsInt();
 
             // each tuple represents a column, so we can simply check the longest value in each tuple
@@ -431,7 +431,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         } else {
             strLengths = IntStream.range(0, colNames.size())
                     .map(i -> Math.max(
-                            colNames.get(i).length(),
+                            colNames.get(i).getString().length(),
                             tuples.stream()
                                     .mapToInt(row -> row.getElements().get(i).toString().length())
                                     .max().getAsInt()))

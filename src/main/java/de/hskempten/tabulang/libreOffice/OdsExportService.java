@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.libreOffice;
 
 import de.hskempten.tabulang.datatypes.InternalDataObject;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
@@ -16,6 +17,7 @@ import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class OdsExportService {
     /* PROPERTIES */
@@ -79,7 +81,9 @@ public class OdsExportService {
             }
             content.add(contentRows);
         }
-        AddHeadlines(table.getColNames().getNames());
+        AddHeadlines(table.getColNames().getNames().stream().map(InternalString::getString)
+                .collect(Collectors.toCollection(ArrayList::new))
+        );
         AddContentFromTable(content);
         SetRowStylesFromTable(table);
         // TODO what to do about columns and transposed tables

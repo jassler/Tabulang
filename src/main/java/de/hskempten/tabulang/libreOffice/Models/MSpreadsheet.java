@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.libreOffice.Models;
 
+import de.hskempten.tabulang.datatypes.InternalString;
+import de.hskempten.tabulang.datatypes.Tuple;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -62,22 +65,30 @@ public class MSpreadsheet {
         return _tables;
     }
 
-    public ArrayList<String> get_headlines(int index){
-        var table = _tables.get(index);
-        var headlineRow = table.get_rows().get(0);
-        var headlineCells = headlineRow.get_cells();
-        var returnList = new ArrayList<String>();
-        headlineCells.forEach(item -> returnList.add((String) item.get_value()));
-        return returnList;
+    public ArrayList<InternalString> row_to_list(int tableIndex, int rowNum) {
+        var row = _tables.get(tableIndex).get_rows().get(rowNum).get_cells();
+        var result = new ArrayList<InternalString>(row.size() - 1);
+
+        for(int i = 0; i < row.size() - 1; i++) {
+            result.add(new InternalString((String) row.get(i).get_value()));
+        }
+
+        return result;
     }
 
-    public ArrayList<String> get_values(int index){
-        var table = _tables.get(index);
-        var returnList = new ArrayList<String>();
-        table.get_rows().forEach(row -> {
-            var cells = row.get_cells();
-            cells.forEach(item -> returnList.add((String) item.get_value()));
-        });
+    public ArrayList<InternalString> get_headlines(int index){
+        return row_to_list(index, 0);
+    }
+
+    public ArrayList<Tuple<InternalString>> get_values(int index){
+
+        var rows = _tables.get(index).get_rows();
+        var returnList = new ArrayList<Tuple<InternalString>>(rows.size());
+
+        for (int row = 1; row < rows.size() - 1; row++) {
+            returnList.add(new Tuple<>(row_to_list(index, row)));
+        }
+
         return returnList;
     }
 }

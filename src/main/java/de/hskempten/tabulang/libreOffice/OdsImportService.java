@@ -1,5 +1,8 @@
 package de.hskempten.tabulang.libreOffice;
 
+import de.hskempten.tabulang.datatypes.InternalString;
+import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Models.*;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.w3c.dom.Document;
@@ -16,6 +19,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OdsImportService {
     /* PROPERTIES */
@@ -48,6 +52,14 @@ public class OdsImportService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Table<InternalString> ImportFile(String path)  {
+        MSpreadsheet spreadsheet = Import(path);
+        ArrayList<InternalString> headernames = spreadsheet.get_headlines(0);
+        ArrayList<Tuple<InternalString>> tableRows = spreadsheet.get_values(0);
+
+        return new Table<>(headernames, tableRows);
     }
 
     /* PRIVATE METHODS */
@@ -196,6 +208,10 @@ public class OdsImportService {
 
     private HashMap<String,String> GetAttributes(Node node){
         var returnList = new HashMap<String, String>();
+
+        if(node == null)
+            return null;
+
         if (node.hasAttributes()) {
             var nodeMap = node.getAttributes();
             for (int i = 0; i < nodeMap.getLength(); i++)
