@@ -1,18 +1,18 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Styleable;
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FilterNode extends BinaryTermNode{
-    public FilterNode(Node leftNode, Node rightNode) {
-        super(leftNode, rightNode);
+    public FilterNode(Node leftNode, Node rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
@@ -39,10 +39,15 @@ public class FilterNode extends BinaryTermNode{
             }
 
             Object result = getRightNode().evaluateNode(nested);
-            if (!(result instanceof Boolean))
-                throw new IllegalArgumentException("Expected Boolean but got " + result.getClass().getSimpleName());
-
-            return (Boolean) result;
+            if (!(result instanceof InternalBoolean booleanResult)) {
+                throw new IllegalBooleanOperandArgumentException(toString());
+            }
+            return (boolean) result;
         });
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " filter " + getRightNode();
     }
 }

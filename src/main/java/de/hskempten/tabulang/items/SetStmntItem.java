@@ -1,8 +1,11 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class SetStmntItem implements LanguageItem {
     private TermItem myTerm;
     private LanguageItemType itemType = LanguageItemType.ANYSTATEMENT_SET;
+    private TextPosition myTextPosition;
 
     public SetStmntItem(TermItem myTerm) {
         this.setMyTerm(myTerm);
@@ -16,6 +19,15 @@ public class SetStmntItem implements LanguageItem {
         this.myTerm = myTerm;
     }
 
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
+    }
 
     @Override
     public LanguageItemType getLanguageItemType() {

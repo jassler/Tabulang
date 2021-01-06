@@ -104,4 +104,13 @@ public class Interpretation {
         environment.put(key, value);
         return this;
     }
+
+    public Object getValue (String key){
+        return environment.get(key);
+    }
+
+    public void exitProgram(Exception e){
+        System.err.println(e.getMessage());
+        System.exit(1);
+    }
 }

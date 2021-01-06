@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class BinBoolItem implements LanguageItem {
     //"and"/"or"/"xor"/"iff"/"impl"
     private String myString;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public BinBoolItem(String myString) {
         this.setMyString(myString);
@@ -24,6 +27,16 @@ public class BinBoolItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 
     @Override

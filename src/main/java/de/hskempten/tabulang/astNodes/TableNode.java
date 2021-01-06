@@ -34,4 +34,9 @@ public class TableNode<E extends Styleable> extends TermNode{
         System.out.println("--------");
         return table;
     }
+
+    @Override
+    public String toString() {
+        return table.toString();
+    }
 }

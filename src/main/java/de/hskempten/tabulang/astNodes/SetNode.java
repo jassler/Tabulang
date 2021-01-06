@@ -1,13 +1,14 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class SetNode extends StatementNode{
+public class SetNode extends StatementNode {
     private TermNode node;
     private int mapVal;
 
-    public SetNode(TermNode node, int mapVal) {
+    public SetNode(TermNode node, int mapVal, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
         this.mapVal = mapVal;
     }
@@ -34,5 +35,10 @@ public class SetNode extends StatementNode{
         interpretation.setNestingLevel(mapVal);
         interpretation.getEnvironment().put("mapValue" + mapVal, o);
         return o;
+    }
+
+    @Override
+    public String toString() {
+        return "set " + node;
     }
 }

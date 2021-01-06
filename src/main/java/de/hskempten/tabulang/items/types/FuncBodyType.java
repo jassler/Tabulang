@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.FuncBodyItem;
 import de.hskempten.tabulang.items.StatementAnyItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.LinkedList;
 
@@ -14,10 +15,11 @@ public class FuncBodyType implements Parser {
 
     @Override
     public FuncBodyItem parse(Lexer l) throws ParseTimeException {
-        FuncBodyItem bodyItem;
+        FuncBodyItem item;
 
         LinkedList<StatementAnyItem> myStatements = new LinkedList<StatementAnyItem>();
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "bracket" -> {
                 if (!l.lookahead().getContent().equals("{")) {
@@ -40,8 +42,10 @@ public class FuncBodyType implements Parser {
             default -> throw new ParseTimeException(l, "Illegal type: Expected '{' but got " + l.lookahead().getContent());
         }
 
-        bodyItem = new FuncBodyItem(myStatements);
+        item = new FuncBodyItem(myStatements);
 
-        return bodyItem;
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
+        return item;
     }
 }

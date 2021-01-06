@@ -4,6 +4,7 @@ import de.hskempten.tabulang.items.DirectionalTermItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class DirectionalTermType implements LanguageType {
@@ -17,6 +18,7 @@ public class DirectionalTermType implements LanguageType {
         String myString;
         TermItem myTerm;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("keyword".equals(l.lookahead().getType()) && ("horizontal".equals(l.lookahead().getContent()) || "vertical".equals(l.lookahead().getContent()))) {
             myString = l.lookahead().getContent();
             l.getNextToken();
@@ -27,6 +29,8 @@ public class DirectionalTermType implements LanguageType {
             item = new DirectionalTermItem(myTerm);
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

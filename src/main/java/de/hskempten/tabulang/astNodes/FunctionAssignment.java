@@ -3,6 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,8 @@ public class FunctionAssignment extends StatementNode {
     private ArrayList<IdentifierNode> identifierList;
     private ArrayList<Node> statements;
 
-    public FunctionAssignment(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<Node> statements) {
+    public FunctionAssignment(IdentifierNode identifier, ArrayList<IdentifierNode> identifierList, ArrayList<Node> statements, TextPosition textPosition) {
+        super(textPosition);
         this.setIdentifier(identifier);
         this.setIdentifierList(identifierList);
         this.setStatements(statements);
@@ -48,5 +50,12 @@ public class FunctionAssignment extends StatementNode {
         InternalFunction newFunc = new InternalFunction(identifierList, statements);
         interpretation.getEnvironment().put(o, newFunc);
         return newFunc;
+    }
+
+    @Override
+    public String toString() {
+        return "function" + identifier +
+                "(" + identifierList + ")"
+                + "{" + statements + '}';
     }
 }

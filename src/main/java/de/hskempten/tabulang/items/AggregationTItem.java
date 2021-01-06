@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class AggregationTItem implements LanguageItem {
     private CountTItem myCountT;
     private AverageTItem myAverageT;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public AggregationTItem(CountTItem myCountT) {
         this.setMyCountT(myCountT);
@@ -30,6 +33,16 @@ public class AggregationTItem implements LanguageItem {
 
     public void setMyAverageT(AverageTItem myAverageT) {
         this.myAverageT = myAverageT;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 
     @Override

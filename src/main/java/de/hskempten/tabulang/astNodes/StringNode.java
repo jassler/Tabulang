@@ -2,13 +2,15 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Objects;
 
-public class StringNode extends TermNode{
+public class StringNode extends TermNode {
     private String string;
 
-    public StringNode(String string) {
+    public StringNode(String string, TextPosition textPosition) {
+        super(textPosition);
         this.string = string;
     }
 
@@ -28,9 +30,8 @@ public class StringNode extends TermNode{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StringNode)) return false;
-        StringNode that = (StringNode) o;
-        return Objects.equals(string, that.string);
+        if (!(o instanceof StringNode string)) return false;
+        return Objects.equals(string, string.string);
     }
 
     @Override
@@ -40,6 +41,6 @@ public class StringNode extends TermNode{
 
     @Override
     public String toString() {
-        return string;
+        return "'" + string + "'";
     }
 }

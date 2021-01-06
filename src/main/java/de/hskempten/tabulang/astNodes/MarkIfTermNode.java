@@ -1,14 +1,16 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkIfTermNode extends MarkTermNode {
     private Node pred;
 
-    public MarkIfTermNode(Node left, Node middle, Node right, Node pred) {
-        super(left, middle, right);
+    public MarkIfTermNode(Node left, Node middle, Node right, Node pred, TextPosition textPosition) {
+        super(left, middle, right, textPosition);
         this.pred = pred;
 
     }
@@ -25,24 +27,24 @@ public class MarkIfTermNode extends MarkTermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object date = getLeftNode().evaluateNode(interpretation);
         try {
-            if (date instanceof Tuple) {
+            if (date instanceof Tuple tuple) {
                 Interpretation nestedInterpretation = interpretation.deepCopy();
-                for (int j = 0; j < ((Tuple<?>) date).size(); j++) {
-                    Object element = ((Tuple<?>) date).getElements().get(j);
-                    Object name = ((Tuple<?>) date).getNames().get(j);
+                for (int j = 0; j < tuple.size(); j++) {
+                    Object element = tuple.getElements().get(j);
+                    Object name = tuple.getNames().get(j);
                     nestedInterpretation.getEnvironment().put(name.toString(), element);
                 }
                 Object predicate = pred.evaluateNode(nestedInterpretation);
-                if (predicate instanceof Boolean) {
-                    if ((Boolean) predicate) {
-                        markTupleObject((Tuple) date, interpretation);
+                if (predicate instanceof InternalBoolean internalBoolean) {
+                    if (internalBoolean.getaBoolean()) {
+                        markTupleObject(tuple, interpretation);
                         return null;
                     }
                 }
             } else {
                 Object predicate = pred.evaluateNode(interpretation);
-                if (predicate instanceof Boolean) {
-                    if ((Boolean) predicate) {
+                if (predicate instanceof InternalBoolean internalBoolean) {
+                    if (internalBoolean.getaBoolean()) {
                         markNonTupleObject(date, interpretation);
                         return null;
                     }

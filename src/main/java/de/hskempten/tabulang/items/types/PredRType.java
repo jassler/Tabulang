@@ -6,6 +6,7 @@ import de.hskempten.tabulang.items.PredItem;
 import de.hskempten.tabulang.items.PredRItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class PredRType implements LanguageType {
@@ -19,17 +20,21 @@ public class PredRType implements LanguageType {
         BinBoolItem myBinBool;
         PredItem myPred;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("binBool".equals(l.lookahead().getType())) {
             myBinBool = BinBoolType.instance.parse(l);
             myPred = PredType.instance.parse(l);
             item = new PredRItem(myBinBool, myPred);
         } else {
+            startP = l.lookbehind().getPosition();
             item = new PredRItem();
-            if ("bracket".equals(l.lookahead().getType())&& ")".equals(l.lookahead().getContent())){
+            if ("bracket".equals(l.lookahead().getType()) && ")".equals(l.lookahead().getContent())) {
                 item.setLanguageItemType(LanguageItemType.PREDR_BRACKET);
             }
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -4,14 +4,12 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.math.BigDecimal;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class GreaterThanNode extends BinaryPredicateNode {
-    public GreaterThanNode(TermNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+    public GreaterThanNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override

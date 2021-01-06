@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,8 +11,8 @@ public class HidingGroupFunctionCallNode extends GroupNode {
     private FunctionCallNode funCall;
     private LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX = new LinkedHashMap<>();
 
-    public HidingGroupFunctionCallNode(TermNode term, FunctionCallNode funCall) {
-        super(term);
+    public HidingGroupFunctionCallNode(TermNode term, FunctionCallNode funCall, TextPosition textPosition) {
+        super(term, textPosition);
         this.setFunCall(funCall);
     }
 
@@ -53,5 +54,10 @@ public class HidingGroupFunctionCallNode extends GroupNode {
         }
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
+    }
+
+    @Override
+    public String toString() {
+        return "hiding group " + getTerm();
     }
 }

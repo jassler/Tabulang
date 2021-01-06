@@ -1,13 +1,16 @@
-import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.TokenType;
-import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.astNodes.AssignmentNode;
+import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.Node;
+import de.hskempten.tabulang.astNodes.NumberNode;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
-import de.hskempten.tabulang.items.ast.interfaces.StatementAST;
-import de.hskempten.tabulang.items.ast.nodes.*;
+import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.tokenizer.Lexer;
+import de.hskempten.tabulang.tokenizer.ParameterizedString;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ASTParserTest {
     private Lexer l;
     private TabulangParser parser;
+    TextPosition textPosition = new TextPosition(new ParameterizedString(""), 0);
 
-    private final NumberNode number1 = new NumberNode(new BigInteger("1"), new BigInteger("1"));
-    private final NumberNode number2 = new NumberNode(new BigInteger("2"), new BigInteger("1"));
-    private final NumberNode number3 = new NumberNode(new BigInteger("3"), new BigInteger("1"));
+    private final NumberNode number1 = new NumberNode(new BigInteger("1"), new BigInteger("1"), textPosition);
+    private final NumberNode number2 = new NumberNode(new BigInteger("2"), new BigInteger("1"), textPosition);
+    private final NumberNode number3 = new NumberNode(new BigInteger("3"), new BigInteger("1"), textPosition);
 
     @BeforeEach
     void setUp() {
@@ -44,7 +48,7 @@ public class ASTParserTest {
         l.setText("a := 1;");
 
         ArrayList<Node> statements = new ArrayList<Node>();
-        statements.add(new AssignmentNode(new IdentifierNode("a"), number1));
+        statements.add(new AssignmentNode(new IdentifierNode("a", textPosition), number1, textPosition));
         ProgramAST exp = new ProgramAST(statements);
 
         ProgramItem actPrg = parser.parseN();

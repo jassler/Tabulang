@@ -1,22 +1,19 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalFunction;
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class FunctionCallNode extends TermNode{
     private IdentifierNode node;
     private ArrayList<TermNode> parameters;
 
-    public FunctionCallNode(IdentifierNode node, ArrayList<TermNode> parameters) {
+    public FunctionCallNode(IdentifierNode node, ArrayList<TermNode> parameters, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
         this.parameters = parameters;
     }
@@ -84,7 +81,11 @@ public class FunctionCallNode extends TermNode{
             }
             return null;
         } else
-            throw new IllegalArgumentException("Expected (InternalFunction) or (InternalLibraryFunction) Identifier but got: " + identifier.getClass().getSimpleName());
+            throw new IllegalArgumentException("Identifier " + identifier + "does not refer to a function.");
+    }
 
+    @Override
+    public String toString() {
+        return node + "(" + parameters +")";
     }
 }

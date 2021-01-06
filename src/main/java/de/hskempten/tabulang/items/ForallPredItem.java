@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class ForallPredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredItem myPred;
     private LanguageItemType itemType = LanguageItemType.QUANTIFIED_FORALL;
+    private TextPosition myTextPosition;
 
     public ForallPredItem(IdentifierItem myIdentifier, TermItem myTerm, PredItem myPred) {
         this.setMyIdentifier(myIdentifier);
@@ -35,6 +38,17 @@ public class ForallPredItem implements LanguageItem {
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
     }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
+    }
+
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;

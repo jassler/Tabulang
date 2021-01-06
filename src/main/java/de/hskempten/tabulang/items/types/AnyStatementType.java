@@ -3,6 +3,7 @@ package de.hskempten.tabulang.items.types;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class AnyStatementType implements LanguageType {
@@ -18,6 +19,7 @@ public class AnyStatementType implements LanguageType {
         SetStmntItem mySetStmnt;
         GroupStmntItem myGroupStmnt;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("keyword".equals(l.lookahead().getType())) {
             switch (l.lookahead().getContent()) {
                 case "return" -> {
@@ -33,7 +35,7 @@ public class AnyStatementType implements LanguageType {
                     item = new AnyStatementItem(myGroupStmnt);
                 }
                 default -> {
-                    myStatement=StatementType.instance.parse(l);
+                    myStatement = StatementType.instance.parse(l);
                     item = new AnyStatementItem(myStatement);
                 }
             }
@@ -42,6 +44,8 @@ public class AnyStatementType implements LanguageType {
             item = new AnyStatementItem(myStatement);
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

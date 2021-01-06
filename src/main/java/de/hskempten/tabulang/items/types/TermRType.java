@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class TermRType implements Parser {
 
@@ -23,6 +24,7 @@ public class TermRType implements Parser {
         //"filter", "intersect", "unite", "."
         String myString;
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "binaryOperator" -> {
                 myOperator = OperatorType.instance.parse(l);
@@ -54,6 +56,7 @@ public class TermRType implements Parser {
                         item = new TermRItem(myTermR, myTerm, myString);
                     }
                     default -> {
+                        startP = l.lookbehind().getPosition();
                         item = new TermRItem();
                     }
                 }
@@ -71,6 +74,7 @@ public class TermRType implements Parser {
                     myTermR = TermRType.instance.parse(l);
                     item = new TermRItem(myTermR, myTupel);
                 } else {
+                    startP = l.lookbehind().getPosition();
                     item = new TermRItem();
                     if (")".equals(l.lookahead().getContent())) {
                         item.setLanguageItemType(LanguageItemType.TERMR_BRACKET);
@@ -78,10 +82,13 @@ public class TermRType implements Parser {
                 }
             }
             default -> {
+                startP = l.lookbehind().getPosition();
                 item = new TermRItem();
             }
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

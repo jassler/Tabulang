@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.GroupStmntItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class GroupStmntType implements LanguageType {
@@ -22,6 +23,7 @@ public class GroupStmntType implements LanguageType {
         TermItem myTerm;
         FunCallItem myFunCall = null;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("hiding".equals(l.lookahead().getContent())) {
             myString = l.lookbehind().getContent();
             l.getNextTokenAndExpect(TokenType.KEYWORD);
@@ -29,8 +31,7 @@ public class GroupStmntType implements LanguageType {
         l.getNextTokenAndExpect(TokenType.KEYWORD);
 
         if ("keyword".equals(l.lookahead().getType()) && ("before".equals(l.lookahead().getContent()) || "after".equals(l.lookahead().getContent()))) {
-            myGroupArea = new GroupAreaItem(l.lookahead().getContent());
-            l.getNextTokenAndExpect(TokenType.KEYWORD);
+            myGroupArea = GroupAreaType.instance.parse(l);
         }
         myTerm = TermType.instance.parse(l);
         if ("keyword".equals(l.lookahead().getType()) && "using".equals(l.lookahead().getContent())) {
@@ -57,7 +58,8 @@ public class GroupStmntType implements LanguageType {
             item = new GroupStmntItem(myString, myGroupArea, myTerm, myFunCall);
         }
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -1,14 +1,14 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class InTupleNode extends BinaryPredicateNode {
-    public InTupleNode(IdentifierNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+    public InTupleNode(IdentifierNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class InTupleNode extends BinaryPredicateNode {
         Object identifier = getLeftNode().evaluateNode(interpretation);
         if (!(tupleObject instanceof Tuple tuple)) {
             throw new IllegalOperandArgumentException("Operation '" + tupleObject + " (" + tupleObject.getClass() + ") in " + identifier + " (" + identifier.getClass() + ") can not be executed. " +
-                    "Allowed operands: Boolean.");
+                    "No tuple on left side of the 'in' operator.");
         }
         if (tuple.getElements().contains(identifier)) {
             return new InternalBoolean(true);
@@ -28,6 +28,6 @@ public class InTupleNode extends BinaryPredicateNode {
 
     @Override
     public String toString() {
-        return "InTupleNode{} " + super.toString();
+        return getLeftNode() + " in " + getRightNode();
     }
 }

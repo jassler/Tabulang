@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class FunDefType implements Parser {
 
@@ -18,6 +19,7 @@ public class FunDefType implements Parser {
         FuncBodyItem myFuncBody = null;
         TermItem myTerm = null;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("bracket".equals(l.lookahead().getType()) && "(".equals(l.lookahead().getContent())) {
             l.getNextTokenAndExpect(TokenType.BRACKET);
             myVList = VListType.instance.parse(l);
@@ -49,6 +51,8 @@ public class FunDefType implements Parser {
             }
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

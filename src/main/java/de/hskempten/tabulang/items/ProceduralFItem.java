@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class ProceduralFItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private VListItem myVList;
@@ -7,6 +9,7 @@ public class ProceduralFItem implements LanguageItem {
     private TermItem myTerm;
 
     LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, FuncBodyItem myFuncBody) {
         this.setMyIdentifier(myIdentifier);
@@ -54,6 +57,15 @@ public class ProceduralFItem implements LanguageItem {
         this.myTerm = myTerm;
     }
 
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
+    }
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;

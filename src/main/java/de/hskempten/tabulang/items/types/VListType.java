@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.IdentifierItem;
 import de.hskempten.tabulang.items.VListItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.tokenizer.Token;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class VListType implements Parser {
         IdentifierItem myIdentifier = null;
         ArrayList<IdentifierItem> myOtherIdentifiers = new ArrayList<>();
 
+        TextPosition startP = l.lookbehind().getPosition();
         while (!l.lookahead().getContent().equals(")")) {
             if (myIdentifier == null) {
                 myIdentifier = IdentifierType.instance.parse(l);
@@ -48,6 +50,8 @@ public class VListType implements Parser {
             item = new VListItem(myIdentifier, myOtherIdentifiers);
         }
 
+        TextPosition endP = l.lookahead().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class GroupStmntItem implements LanguageItem {
     private String myString;
     private GroupAreaItem myGroupArea;
@@ -7,6 +9,7 @@ public class GroupStmntItem implements LanguageItem {
     private FunCallItem myFunCall;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
         this.setMyString(myString);
@@ -90,6 +93,16 @@ public class GroupStmntItem implements LanguageItem {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 
     @Override

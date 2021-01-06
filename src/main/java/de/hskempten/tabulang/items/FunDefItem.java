@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class FunDefItem implements LanguageItem {
     private VListItem myVList;
     private IdentifierItem myIdentifier;
@@ -7,6 +9,7 @@ public class FunDefItem implements LanguageItem {
     private TermItem myTerm;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public FunDefItem(VListItem myVList, FuncBodyItem myFuncBody) {
         this.setMyVList(myVList);
@@ -62,6 +65,16 @@ public class FunDefItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 
     @Override

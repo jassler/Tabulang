@@ -1,11 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.datatypes.InternalFunction;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-import de.hskempten.tabulang.items.ast.interfaces.TermAST;
-import de.hskempten.tabulang.items.ast.nodes.FunCallAST;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.*;
 
@@ -13,8 +9,8 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
     private FunctionCallNode funCall;
     private LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX = new LinkedHashMap<>();
 
-    public GroupBeforeFunctionCallNode(TermNode term, FunctionCallNode funCall) {
-        super(term);
+    public GroupBeforeFunctionCallNode(TermNode term, FunctionCallNode funCall, TextPosition textPosition) {
+        super(term, textPosition);
         this.setFunCall(funCall);
     }
 
@@ -57,5 +53,10 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
         }
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
+    }
+
+    @Override
+    public String toString() {
+        return "group before " + getTerm() + " using " + funCall;
     }
 }

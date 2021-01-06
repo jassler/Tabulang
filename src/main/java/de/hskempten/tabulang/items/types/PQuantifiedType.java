@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.ForallPredItem;
 import de.hskempten.tabulang.items.PQuantifiedItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class PQuantifiedType implements LanguageType {
@@ -18,6 +19,7 @@ public class PQuantifiedType implements LanguageType {
         ExistsPredItem myExistsPred;
         ForallPredItem myForallPred;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("keyword".equals(l.lookahead().getType())) {
             switch (l.lookahead().getContent()) {
                 case "exists" -> {
@@ -36,6 +38,8 @@ public class PQuantifiedType implements LanguageType {
             throw new ParseTimeException(l, "Expected keyword 'exists' or 'forAll', but got: " + l.lookahead().getContent());
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

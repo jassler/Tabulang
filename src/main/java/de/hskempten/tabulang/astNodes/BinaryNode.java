@@ -1,15 +1,14 @@
 package de.hskempten.tabulang.astNodes;
 
 
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.math.BigDecimal;
-
-public abstract class BinaryNode extends Node{
+public abstract class BinaryNode extends Node {
     private Node leftNode;
     private Node rightNode;
 
-    public BinaryNode(Node leftNode, Node rightNode) {
+    public BinaryNode(Node leftNode, Node rightNode, TextPosition textPosition) {
+        super(textPosition);
         this.leftNode = leftNode;
         this.rightNode = rightNode;
     }

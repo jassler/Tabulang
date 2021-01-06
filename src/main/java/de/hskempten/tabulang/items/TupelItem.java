@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 import java.util.ArrayList;
 
 public class TupelItem implements LanguageItem {
@@ -8,6 +10,7 @@ public class TupelItem implements LanguageItem {
     private IntervallItem myIntervall;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public TupelItem() {
         this.itemType = LanguageItemType.TUPEL_EMPTY;
@@ -59,6 +62,16 @@ public class TupelItem implements LanguageItem {
 
     public void setItemType(LanguageItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
     }
 
     @Override

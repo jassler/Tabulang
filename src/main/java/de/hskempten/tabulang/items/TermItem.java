@@ -1,5 +1,7 @@
 package de.hskempten.tabulang.items;
 
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
 public class TermItem implements TermOrRItem {
     //'('
     private TermItem myTerm;
@@ -7,7 +9,6 @@ public class TermItem implements TermOrRItem {
     private TermRItem myTermR;
     private IdentifierItem myIdentifier;
     private LoopItem myLoop;
-    private FlipTItem myFlipT;
     private OrdinalItem myOrdinal;
     private DirectionalTermItem myDirectionalTerm;
     private FunDefItem myFunDef;
@@ -16,6 +17,7 @@ public class TermItem implements TermOrRItem {
     private FunCallItem myFunCall;
 
     private LanguageItemType itemType;
+    private TextPosition myTextPosition;
 
     public TermItem(TermItem myTerm, TermRItem myTermR) {
         this.setMyTerm(myTerm);
@@ -33,12 +35,6 @@ public class TermItem implements TermOrRItem {
         this.setMyTermR(myTermR);
         this.setMyLoop(myLoop);
         this.itemType = LanguageItemType.TERM_LOOP;
-    }
-
-    public TermItem(TermRItem myTermR, FlipTItem myFlipT) {
-        this.setMyTermR(myTermR);
-        this.setMyFlipT(myFlipT);
-        this.itemType = LanguageItemType.TERM_FLIP;
     }
 
     public TermItem(TermRItem myTermR, OrdinalItem myOrdinal) {
@@ -109,14 +105,6 @@ public class TermItem implements TermOrRItem {
         this.myLoop = myLoop;
     }
 
-    public FlipTItem getMyFlipT() {
-        return myFlipT;
-    }
-
-    public void setMyFlipT(FlipTItem myFlipT) {
-        this.myFlipT = myFlipT;
-    }
-
     public OrdinalItem getMyOrdinal() {
         return myOrdinal;
     }
@@ -165,6 +153,15 @@ public class TermItem implements TermOrRItem {
         this.myFunCall = myFunCall;
     }
 
+    @Override
+    public TextPosition getTextPosition() {
+        return myTextPosition;
+    }
+
+    @Override
+    public void setTextPosition(TextPosition textPosition) {
+        this.myTextPosition = textPosition;
+    }
     @Override
     public LanguageItemType getLanguageItemType() {
         return itemType;

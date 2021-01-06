@@ -3,24 +3,27 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-
-import java.math.BigDecimal;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MultiplyNode extends BinaryArithmeticNode{
-    public MultiplyNode(TermNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+    public MultiplyNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalNumberOperandArgumentException(toString());
+        try {
+            if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
+                throw new IllegalNumberOperandArgumentException(toString());
+            }
+            return leftNumber.multiply(rightNumber);
+        } catch (IllegalNumberOperandArgumentException e){
+            interpretation.exitProgram(e);
         }
-        return leftNumber.multiply(rightNumber);
+        return null;
     }
 
     @Override

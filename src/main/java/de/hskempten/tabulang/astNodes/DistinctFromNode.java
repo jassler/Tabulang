@@ -4,14 +4,17 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class DistinctFromNode extends TermNode{
+public class DistinctFromNode extends TermNode {
     private TermNode node;
     private IdentifierNode[] names;
 
-    public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names) {
+    public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
         this.names = (IdentifierNode[]) names.toArray();
     }
@@ -37,9 +40,8 @@ public class DistinctFromNode extends TermNode{
         Object object = node.evaluateNode(interpretation);
         try {
             object = ifTupleTransform(object);
-        } catch (TupleCannotBeTransformedException transformedException){
-            throw new IllegalOperandArgumentException("Got " + object + " (" + object.getClass() + ") on the right side of the 'distinct [....] from' keyword." +
-                    "Allowed operand on the right side: Table.");
+        } catch (TupleCannotBeTransformedException ignored) {
+            //TODO testen 4.01.
         }
         if (object instanceof Table) {
             ArrayList<String> columnNames = new ArrayList<>();
@@ -48,7 +50,13 @@ public class DistinctFromNode extends TermNode{
             }
             return ((Table) object).projection((String[]) columnNames.toArray());
         } else {
-            throw new IllegalArgumentException("Expected Table but got " + object.getClass().getSimpleName());
+            throw new IllegalOperandArgumentException("Got " + object + " on the right side of'" + toString()
+                    + "'. Allowed operand on the right side: Table.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "distinct " + Arrays.toString(names) + " from " + node;
     }
 }

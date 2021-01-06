@@ -1,17 +1,17 @@
 package de.hskempten.tabulang.astNodes;
 
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class TupleElementNode extends BinaryTermNode{
 
 
-    public TupleElementNode(TermNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+    public TupleElementNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class TupleElementNode extends BinaryTermNode{
 
     @Override
     public String toString() {
-        return "TupleElementNode{} " + super.toString();
+        return getLeftNode() + "." + getRightNode();
     }
 }

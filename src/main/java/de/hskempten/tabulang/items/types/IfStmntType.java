@@ -6,6 +6,7 @@ import de.hskempten.tabulang.items.IfStmntItem;
 import de.hskempten.tabulang.items.PredItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class IfStmntType implements Parser {
 
@@ -21,6 +22,7 @@ public class IfStmntType implements Parser {
         //'else'
         AnyStatementItem myOptionalAnyStatement;
 
+        TextPosition startP = l.lookahead().getPosition();
         l.getNextTokenAndExpect(TokenType.KEYWORD);
         myPred = PredType.instance.parse(l);
         myAnyStatement = AnyStatementType.instance.parse(l);
@@ -32,6 +34,8 @@ public class IfStmntType implements Parser {
             item = new IfStmntItem(myPred, myAnyStatement);
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

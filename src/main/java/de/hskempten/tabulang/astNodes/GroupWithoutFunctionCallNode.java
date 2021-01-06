@@ -6,6 +6,7 @@ import de.hskempten.tabulang.astNodes.StatementNode;
 import de.hskempten.tabulang.astNodes.TermNode;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,8 +14,8 @@ import java.util.Map;
 
 public class GroupWithoutFunctionCallNode extends GroupNode {
 
-    public GroupWithoutFunctionCallNode(TermNode term) {
-        super(term);
+    public GroupWithoutFunctionCallNode(TermNode term, TextPosition textPosition) {
+        super(term, textPosition);
     }
 
 
@@ -25,13 +26,18 @@ public class GroupWithoutFunctionCallNode extends GroupNode {
         //buildGroupMap(interpretation, groupTerm);
         buildMapValueMap(interpretation, groupTerm);
 
-        if(isLastIteration()){
+        if (isLastIteration()) {
             System.out.println();
-            for(Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
+            for (Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
                 getResultList().addAll(group.getValue());
             }
         }
         setLoopCounter(getLoopCounter() + 1);
         return getResultList();
+    }
+
+    @Override
+    public String toString() {
+        return "group " + getTerm();
     }
 }

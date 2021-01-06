@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.PredItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class ForallPredType implements LanguageType {
@@ -21,6 +22,7 @@ public class ForallPredType implements LanguageType {
         TermItem myTerm;
         PredItem myPred;
 
+        TextPosition startP = l.lookahead().getPosition();
         if ("keyword".equals(l.lookahead().getType()) && "forAll".equals(l.lookahead().getContent())) {
             l.getNextTokenAndExpect(TokenType.KEYWORD);
         } else {
@@ -42,6 +44,8 @@ public class ForallPredType implements LanguageType {
 
         item = new ForallPredItem(myIdentifier, myTerm, myPred);
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

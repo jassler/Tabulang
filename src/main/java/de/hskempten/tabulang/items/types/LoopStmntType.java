@@ -4,6 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.types.LanguageType;
 
 public class LoopStmntType implements LanguageType {
@@ -19,6 +20,7 @@ public class LoopStmntType implements LanguageType {
         GroupStmntItem myGroupStmnt;
         MarkStmntItem myMarkStmnt; //';'
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getContent()) {
             case "set" -> {
                 mySetStmnt = SetStmntType.instance.parse(l);
@@ -39,6 +41,8 @@ public class LoopStmntType implements LanguageType {
             }
         }
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
 
     }

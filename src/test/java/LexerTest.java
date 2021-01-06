@@ -41,12 +41,10 @@ public class LexerTest {
                 "for " +
                 "foreground " +
                 "from function group hiding horizontal " +
-                "horizontalflip " +
                 "if in " +
                 "intersect " +
                 "mark " +
                 "not null return set size suchThat true unite using vertical " +
-                "verticalflip" +
                 "");
         l.lookahead();
         while (!l.isDone()){

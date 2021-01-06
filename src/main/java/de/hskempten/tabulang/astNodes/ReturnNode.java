@@ -1,14 +1,13 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class ReturnNode extends StatementNode{
+public class ReturnNode extends StatementNode {
     private Node node;
 
-    public ReturnNode(Node node) {
-        super();
+    public ReturnNode(Node node, TextPosition textPosition) {
+        super(textPosition);
         this.node = node;
     }
 

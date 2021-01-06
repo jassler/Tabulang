@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.BodyItem;
 import de.hskempten.tabulang.items.StatementItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class BodyType implements Parser {
         ArrayList<StatementItem> myStatements = new ArrayList<>();
         //'}'
 
+        TextPosition startP = l.lookahead().getPosition();
         if (!("bracket".equals(l.lookahead().getType()) && "{".equals(l.lookahead().getContent()))) {
             throw new ParseTimeException(l, "Expected '{', but got: " + l.lookahead().getContent());
         }
@@ -31,6 +33,8 @@ public class BodyType implements Parser {
 
         item = new BodyItem(myStatements);
 
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.items.VarDefItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class VarDefType implements Parser {
 
@@ -17,6 +18,7 @@ public class VarDefType implements Parser {
 
         VarDefItem item;
 
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "keyword" -> {
                 if ("function".equals(l.lookahead().getContent())) {
@@ -45,6 +47,8 @@ public class VarDefType implements Parser {
             }
             default -> throw new ParseTimeException("Illegal type: " + l.lookahead().getType() + " at " + l.lookahead().getContent());
         }
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

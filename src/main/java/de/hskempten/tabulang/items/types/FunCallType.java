@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.items.TupelItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.tokenizer.Token;
 import de.hskempten.tabulang.types.LanguageType;
 
@@ -30,6 +31,7 @@ public class FunCallType implements LanguageType {
 
         ArrayList<TermItem> myTerms = new ArrayList<TermItem>();
 
+        TextPosition startP = l.lookahead().getPosition();
         myIdentifier = IdentifierType.instance.parse(l);
         l.getNextTokenAndExpect(TokenType.BRACKET);
 
@@ -55,7 +57,8 @@ public class FunCallType implements LanguageType {
         l.getNextTokenAndExpect(TokenType.BRACKET);
         item = new FunCallItem(myIdentifier, myTerms);
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

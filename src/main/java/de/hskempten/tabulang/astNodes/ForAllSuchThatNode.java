@@ -1,14 +1,16 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class ForAllSuchThatNode extends BinaryPredicateNode{
     private String variableName;
 
-    public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName) {
-        super(leftNode, rightNode);
+    public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
         this.variableName = variableName;
     }
 
@@ -30,8 +32,8 @@ public class ForAllSuchThatNode extends BinaryPredicateNode{
             //TODO evtl umändern so wie bei ExistsSuchThatNode
             interpretation.getEnvironment().put(variableName, o);
             Object result = getRightNode().evaluateNode(interpretation);
-            if(result instanceof Boolean) {
-                if (!((Boolean)result)) {
+            if(result instanceof InternalBoolean booleanResult) {
+                if (!booleanResult.getaBoolean()) {
                     interpretation.getEnvironment().remove(variableName);
                     return false;
                 }
@@ -39,5 +41,10 @@ public class ForAllSuchThatNode extends BinaryPredicateNode{
         }
         interpretation.getEnvironment().remove(variableName);
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "forAll " + variableName + " in " + getLeftNode() + " such that " + getRightNode();
     }
 }

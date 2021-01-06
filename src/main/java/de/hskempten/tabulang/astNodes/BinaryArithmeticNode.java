@@ -1,10 +1,13 @@
 package de.hskempten.tabulang.astNodes;
 
-public abstract class BinaryArithmeticNode extends ArithmeticNode{
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
+public abstract class BinaryArithmeticNode extends ArithmeticNode {
     private TermNode leftNode;
     private TermNode rightNode;
 
-    public BinaryArithmeticNode(TermNode leftNode, TermNode rightNod) {
+    public BinaryArithmeticNode(TermNode leftNode, TermNode rightNod, TextPosition textPosition) {
+        super(textPosition);
         this.leftNode = leftNode;
         this.rightNode = rightNod;
     }

@@ -1,13 +1,13 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public abstract class BinaryPredicateNode extends PredicateNode{
+public abstract class BinaryPredicateNode extends PredicateNode {
     private Node leftNode;
     private Node rightNode;
 
-    public BinaryPredicateNode(Node leftNode, Node rightNode) {
+    public BinaryPredicateNode(Node leftNode, Node rightNode, TextPosition textPosition) {
+        super(textPosition);
         this.leftNode = leftNode;
         this.rightNode = rightNode;
     }

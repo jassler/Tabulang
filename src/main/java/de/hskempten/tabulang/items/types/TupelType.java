@@ -4,10 +4,7 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.IntervallItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.items.TupelItem;
-import de.hskempten.tabulang.tokenizer.Lexer;
-import de.hskempten.tabulang.tokenizer.ParseTimeException;
-import de.hskempten.tabulang.tokenizer.Token;
-import de.hskempten.tabulang.tokenizer.TokenExpression;
+import de.hskempten.tabulang.tokenizer.*;
 import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
@@ -24,10 +21,11 @@ public class TupelType implements LanguageType {
         ArrayList<TermItem> myTerms = new ArrayList<>();
         IntervallItem myIntervall = null;
 
-
+        TextPosition startP = l.lookahead().getPosition();
         Token bracket = l.getNextTokenAndExpect(TokenType.BRACKET);
         if (!bracket.getContent().equals("["))
             throw new ParseTimeException(l, "Illegal bracket: Expected '[' but got " + l.lookahead().getContent());
+        TextPosition startInterval = l.lookahead().getPosition();
 
         TokenExpression kindOfTupel = null;
         while (!l.lookahead().getContent().equals("]")) {
@@ -58,6 +56,8 @@ public class TupelType implements LanguageType {
                     l.getNextTokenAndExpect(TokenType.INTERVAL);
                     TermItem secondIntervalTerm = TermType.instance.parse(l);
                     myIntervall = new IntervallItem(myTerm, secondIntervalTerm);
+                    TextPosition endInterval = l.lookbehind().getPosition();
+                    myIntervall.setTextPosition(new TextPosition(startInterval, endInterval));
                     break;
                 default:
                     throw new ParseTimeException("Illegal Token: " + l.lookahead().getContent());
@@ -79,7 +79,8 @@ public class TupelType implements LanguageType {
             item = new TupelItem(myTerm, myTerms);
         }
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
 
     }

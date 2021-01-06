@@ -3,14 +3,12 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.math.BigDecimal;
-
-public class PowerNode extends BinaryArithmeticNode{
-    public PowerNode(TermNode leftNode, TermNode rightNode) {
-        super(leftNode, rightNode);
+public class PowerNode extends BinaryArithmeticNode {
+    public PowerNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
+        super(leftNode, rightNode, textPosition);
     }
 
     @Override
@@ -21,5 +19,10 @@ public class PowerNode extends BinaryArithmeticNode{
             throw new IllegalNumberOperandArgumentException(toString());
         }
         return leftNumber.pow(rightNumber);
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " ^ " + getRightNode();
     }
 }

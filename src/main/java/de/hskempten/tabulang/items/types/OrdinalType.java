@@ -7,6 +7,7 @@ import de.hskempten.tabulang.items.QuotedStringItem;
 import de.hskempten.tabulang.items.TupelItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class OrdinalType implements Parser {
 
@@ -22,7 +23,7 @@ public class OrdinalType implements Parser {
         QuotedStringItem myQuotedString;
         TupelItem myTupel;
 
-
+        TextPosition startP = l.lookahead().getPosition();
         switch (l.lookahead().getType()) {
             case "number" -> {
                 myNumber = NumberType.instance.parse(l);
@@ -48,7 +49,8 @@ public class OrdinalType implements Parser {
             default -> throw new ParseTimeException(l, "Not yet implemented case in Ordinal: " + l.lookahead().getType());
         }
 
-
+        TextPosition endP = l.lookbehind().getPosition();
+        item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
 }

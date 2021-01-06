@@ -3,10 +3,11 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class IfElseNode extends TernaryStatementNode {
-    public IfElseNode(Node leftNode, Node middleNode, Node rightNode) {
-        super(leftNode, middleNode, rightNode);
+    public IfElseNode(Node leftNode, Node middleNode, Node rightNode, TextPosition textPosition) {
+        super(leftNode, middleNode, rightNode, textPosition);
     }
 
     @Override
@@ -24,6 +25,6 @@ public class IfElseNode extends TernaryStatementNode {
 
     @Override
     public String toString() {
-        return "if(" +  getLeftNode() + ") " + getMiddleNode() + " else " + getRightNode();
+        return "if(" + getLeftNode() + ") " + getMiddleNode() + " else " + getRightNode();
     }
 }

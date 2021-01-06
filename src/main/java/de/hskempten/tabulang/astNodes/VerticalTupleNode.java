@@ -1,12 +1,15 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class VerticalTupleNode extends TermNode{
+public class VerticalTupleNode extends TermNode {
     private TermNode node;
 
-    public VerticalTupleNode(TermNode tupleNode) {
+    public VerticalTupleNode(TermNode tupleNode, TextPosition textPosition) {
+        super(textPosition);
         this.node = tupleNode;
     }
 
@@ -20,12 +23,16 @@ public class VerticalTupleNode extends TermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object tuple = node.evaluateNode(interpretation);
-        if(tuple instanceof Tuple){
-            ((Tuple<?>) tuple).setHorizontal(false);
-            return tuple;
-        } else {
-            throw new IllegalArgumentException("Expected Tuple but got " + tuple.getClass().getSimpleName());
+        Object o = node.evaluateNode(interpretation);
+        if (!(o instanceof Tuple tuple)) {
+            throw new IllegalTupleOperandArgumentException(toString());
         }
+        tuple.setHorizontal(false);
+        return o;
+    }
+
+    @Override
+    public String toString() {
+        return "vertical " + node;
     }
 }
