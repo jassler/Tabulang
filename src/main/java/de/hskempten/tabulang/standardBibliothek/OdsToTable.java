@@ -8,7 +8,7 @@ public class OdsToTable implements InternalFunction{
     public Object compute(Object... args) {
         if(Helper.LengthReviewer(1, args)){
             var odsImportService = new OdsImportService();
-            return odsImportService.Import(((InternalString) args[0]).getString());
+            return odsImportService.ImportFile(((InternalString) args[0]).getString());
         }
         return null;
     }
