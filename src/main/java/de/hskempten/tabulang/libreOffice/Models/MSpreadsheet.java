@@ -61,4 +61,23 @@ public class MSpreadsheet {
     public ArrayList<MTableWrapper> get_tables() {
         return _tables;
     }
+
+    public ArrayList<String> get_headlines(int index){
+        var table = _tables.get(index);
+        var headlineRow = table.get_rows().get(0);
+        var headlineCells = headlineRow.get_cells();
+        var returnList = new ArrayList<String>();
+        headlineCells.forEach(item -> returnList.add((String) item.get_value()));
+        return returnList;
+    }
+
+    public ArrayList<String> get_values(int index){
+        var table = _tables.get(index);
+        var returnList = new ArrayList<String>();
+        table.get_rows().forEach(row -> {
+            var cells = row.get_cells();
+            cells.forEach(item -> returnList.add((String) item.get_value()));
+        });
+        return returnList;
+    }
 }
