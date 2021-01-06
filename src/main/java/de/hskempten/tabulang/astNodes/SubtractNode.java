@@ -2,9 +2,12 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
+import de.hskempten.tabulang.datatypes.exceptions.TypeMismatchException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -16,23 +19,29 @@ public class SubtractNode extends BinaryArithmeticNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
+        left = ifTupleTransform(left);
+        if (!(left instanceof Table) && !(left instanceof InternalNumber)) {
+            throw new IllegalOperandArgumentException(getTextPosition(), getLeftNode().getTextPosition());
+        }
         Object right = getRightNode().evaluateNode(interpretation);
-        try {
-            left = ifTupleTransform(left);
-            right = ifTupleTransform(right);
-        } catch (TupleCannotBeTransformedException transformedException){
-            throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
-                    "Allowed operands: Numbers or Tables.");
+        right = ifTupleTransform(right);
+        if(!(right instanceof Table) && !(right instanceof InternalNumber)){
+            throw new IllegalOperandArgumentException(getTextPosition(), getRightNode().getTextPosition());
         }
-        if (!(left instanceof InternalNumber) || !(right instanceof InternalNumber)) {
-            if (left instanceof Table leftTable && right instanceof Table rightTable) {
-                return leftTable.difference(rightTable);
-            } else {
-                throw new IllegalOperandArgumentException("Operation '" + left + " (" + left.getClass() + ") - " + right + " (" + right.getClass() + ")' can not be executed. " +
-                        "Allowed operands: Numbers or Tables.");
-            }
-        }
-        return ((InternalNumber) left).subtract((InternalNumber) right);
 
+        if (left instanceof InternalNumber leftNumber && right instanceof InternalNumber rightNumber) {
+            return leftNumber.subtract(rightNumber);
+        }
+        if (left instanceof Table leftTable && right instanceof Table rightTable) {
+            return leftTable.difference(rightTable);
+        } else {
+            throw new TypeMismatchException(getTextPosition());
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return getLeftNode() + " - " + getRightNode();
     }
 }

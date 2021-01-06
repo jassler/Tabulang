@@ -19,7 +19,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      *
      * <p>With no names given as second parameter, elements can be indexed by their position
      * either as int or String, starting with 0.</p>
-     * 
+     *
      * @param elements Elements inside the Tuple
      */
     public Tuple(E[] elements) {
@@ -30,13 +30,17 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     }
 
     /**
+<<<<<<< Updated upstream
      * See {@link Tuple#Tuple(E[], InternalString[], boolean)}
      * 
+=======
+     * See {@link Tuple#Tuple(E[], String[], boolean)}
+     *
+>>>>>>> Stashed changes
      * @param elements Elements inside the Tuple
-     * @param names Name for each element, where {@code objects.length == names.length}
-     *              
+     * @param names    Name for each element, where {@code objects.length == names.length}
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
-     * @throws DuplicateNamesException if names has at least one String appearing twice
+     * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
     public Tuple(E[] elements, InternalString[] names) {
         this(elements, names, true);
@@ -49,12 +53,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * <p>It is assumed that {@code objects.length == names.length}, thus establishing a 1:1 relationship
      * between element name and the element itself.</p>
      *
-     * @param elements Elements inside the Tuple
-     * @param names Name for each element, where {@code objects.length == names.length}
+     * @param elements     Elements inside the Tuple
+     * @param names        Name for each element, where {@code objects.length == names.length}
      * @param isHorizontal Are elements aligned horizontally or vertically?
-     *
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
-     * @throws DuplicateNamesException if names has at least one String appearing twice
+     * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
     public Tuple(E[] elements, InternalString[] names, boolean isHorizontal) {
         this(Arrays.asList(elements), Arrays.asList(names), isHorizontal);
@@ -79,10 +82,9 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * See {@link Tuple#Tuple(List, List, boolean)}
      *
      * @param elements Elements inside the Tuple
-     * @param names Name for each element, where {@code objects.size() == names.size()}
-     *
+     * @param names    Name for each element, where {@code objects.size() == names.size()}
      * @throws ArrayLengthMismatchException if objects and names List do not have the same length
-     * @throws DuplicateNamesException if names has at least one String appearing twice
+     * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
     public Tuple(List<E> elements, List<InternalString> names) {
         this(elements, names, true);
@@ -95,12 +97,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * <p>It is assumed that {@code objects.size() == names.size()}, thus establishing a 1:1 relationship
      * between element name and the element itself. This also implies that each name must be unique.</p>
      *
-     * @param elements Elements inside the Tuple
-     * @param names Name for each element, where {@code objects.length == names.length}
+     * @param elements     Elements inside the Tuple
+     * @param names        Name for each element, where {@code objects.length == names.length}
      * @param isHorizontal Are elements aligned horizontally or vertically?
-     *
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
-     * @throws DuplicateNamesException if names has at least one String appearing twice
+     * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
     public Tuple(List<E> elements, List<InternalString> names, boolean isHorizontal) {
         this(elements, names, isHorizontal, null);
@@ -126,11 +127,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
 
     protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, InternalObject parent) {
         super(parent);
-        if(elements.size() != names.size())
+        if (elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
 
         this.elements = new ArrayList<>(elements);
-        for(var el : this.elements) {
+        for (var el : this.elements) {
             if (el instanceof InternalObject o)
                 o.setParent(this);
         }
@@ -168,7 +169,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     }
 
     public void setNames(HeaderNames names) {
-        if(elements.size() != names.size())
+        if (elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
 
         this.names = names;
@@ -198,7 +199,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      *
      * @param name Name or index number of element
      * @return Element object
-     * @throws NumberFormatException          if name not present and not convertible into a number
+     * @throws NumberFormatException     if name not present and not convertible into a number
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
     public E get(String name) {
@@ -257,7 +258,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         List<E> newObjects = new ArrayList<>(elements.length);
         List<InternalString> newNames = new ArrayList<>(elements.length);
 
-        for(int e : elements) {
+        for (int e : elements) {
             newObjects.add(this.elements.get(e));
             newNames.add(names.get(e));
         }
@@ -272,9 +273,18 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @return Tuple with selected indexes
      */
     public Tuple<E> projection(String... names) {
+<<<<<<< Updated upstream
         int[] indices = new int[names.length];
         for (int i = 0; i < names.length; i++) {
             indices[i] = this.names.getIndexOf(names[i]);
+=======
+        List<E> newObjects = new ArrayList<>(names.length);
+        List<String> newNames = new ArrayList<>(names.length);
+
+        for (String name : names) {
+            newObjects.add(this.get(name));
+            newNames.add(name);
+>>>>>>> Stashed changes
         }
 
         return projection(indices);
@@ -312,8 +322,8 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @return null, if no same string appears next to each other
      */
     private static String findDuplicate(List<String> arr) {
-        for(int i = 1; i < arr.size(); i++) {
-            if(arr.get(i).equals(arr.get(i-1)))
+        for (int i = 1; i < arr.size(); i++) {
+            if (arr.get(i).equals(arr.get(i - 1)))
                 return arr.get(i);
         }
         return null;
@@ -351,12 +361,12 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
 
     @Override
     public String toString() {
-        if(size() == 0)
+        if (size() == 0)
             return "";
 
         StringBuilder sb = new StringBuilder();
 
-        if(isHorizontal) {
+        if (isHorizontal) {
             // ignore length of last element because there'll be a new line anyway
             String formatted = IntStream.range(0, names.size() - 1)
                     .map(i -> Math.max(
@@ -379,7 +389,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
             var nameIt = names.iterator();
             var elementIt = elements.iterator();
 
-            while(nameIt.hasNext()) {
+            while (nameIt.hasNext()) {
                 sb.append(String.format(formatted, nameIt.next(), elementIt.next())).append('\n');
             }
 
@@ -399,18 +409,18 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         return elements.iterator();
     }
 
-    public Table<E> transformIntoTable(){
+    public Object transformIntoTableIfPossible() {
         Object firstObject = elements.get(0);
-        if(firstObject instanceof Tuple){
+        if (firstObject instanceof Tuple) {
             int sizeRequirement = ((Tuple<?>) firstObject).size();
-            for(Object o : elements){
-                if(!(o instanceof Tuple) || ((Tuple<?>) o).size() != sizeRequirement){
-                    throw new TupleCannotBeTransformedException("The tuple ´\n" + this + "\n can not be transformed into a table");
+            for (Object o : elements) {
+                if (!(o instanceof Tuple) || ((Tuple<?>) o).size() != sizeRequirement) {
+                    return this;
                 }
             }
             return new Table<>(elements.toArray(Tuple[]::new));
         } else {
-            throw new TupleCannotBeTransformedException("The tuple \n" + this + "\n can not be transformed into a table");
+            return this;
         }
 
     }

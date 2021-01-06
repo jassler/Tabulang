@@ -18,7 +18,7 @@ public class AddNode extends BinaryArithmeticNode {
         Object right = getRightNode().evaluateNode(interpretation);
         try {
             if ((left instanceof InternalString) || (right instanceof InternalString)) {
-                return left.toString() + right.toString();
+                return new InternalString(left.toString() + right.toString());
             } else if (left instanceof InternalNumber leftNumber && right instanceof InternalNumber rightNumber) {
                 return leftNumber.add(rightNumber);
             } else {

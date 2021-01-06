@@ -24,7 +24,7 @@ public abstract class TermNode extends Node {
 
     public Object ifTupleTransform(Object o) {
         if (o instanceof Tuple) {
-            o = ((Tuple<?>) o).transformIntoTable();
+            o = ((Tuple<?>) o).transformIntoTableIfPossible();
         }
         return o;
     }

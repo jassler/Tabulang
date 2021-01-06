@@ -41,8 +41,8 @@ public class TupleNode extends TermNode {
     public Object evaluateNode(Interpretation interpretation) {
         ArrayList<Object> tupleElements = new ArrayList<>();
         Object o;
-        for (int j = 0; j < tList.size(); j++) {
-            o = tList.get(j).evaluateNode(interpretation);
+        for (TermNode termNode : tList) {
+            o = termNode.evaluateNode(interpretation);
             tupleElements.add(o);
         }
         Tuple tuple = new Tuple(tupleElements);

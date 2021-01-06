@@ -193,19 +193,25 @@ public class TextPosition implements Comparable<TextPosition>, ParsedObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (getSourceName() != null) sb.append(getSourceName()).append(", ");
+        //if (getSourceName() != null) sb.append(getSourceName()).append(", ");
         sb.append("Line ")
                 .append(getFromLine())
                 .append(", Column ")
                 .append(getFromCol())
+                .append(" to ")
+                .append("Line ")
+                .append(getToLine())
+                .append(", Column ")
+                .append(getToCol())
                 .append(":\n");
 
         if (end == start) {
             sb.append(StringUtils.showPositionLine(string.getText(), start));
         } else {
-            String sbTo = "  (End: Line " + getToLine() +
+            /*String sbTo = "  (End: Line " + getToLine() +
                     ", Column " + getToCol() +
-                    ")";
+                    ")";*/
+            String sbTo = "";
             sb.append(StringUtils.showPositionLineRange(string.getText(), start, end, sbTo));
         }
         return sb.toString();

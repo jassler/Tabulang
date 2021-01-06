@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.interpretTest;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -111,6 +113,11 @@ public class Interpretation {
 
     public void exitProgram(Exception e){
         System.err.println(e.getMessage());
+        System.exit(1);
+    }
+
+    public void exitProgram2(IllegalOperandArgumentException e){
+        System.err.println(e);
         System.exit(1);
     }
 }
