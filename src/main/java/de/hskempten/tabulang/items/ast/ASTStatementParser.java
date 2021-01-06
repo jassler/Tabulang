@@ -77,6 +77,7 @@ public class ASTStatementParser {
                     case STATEMENT_IF -> statement.getMyIfStmnt();
                     case STATEMENT_VARDEF -> statement.getMyVarDef();
                     case STATEMENT_BODY -> statement.getMyBody();
+                    case STATEMENT_FUNCALL -> statement.getMyFunCall();
                     default -> throw new IllegalStateException("Unexpected value: " + statement.getLanguageItemType());
                 };
             }

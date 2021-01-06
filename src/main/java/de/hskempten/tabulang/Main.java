@@ -48,7 +48,7 @@ public class Main {
             hasDoneSomething = true;
             try {
                 Object result = executeFile(l, interpreter, cli.inputFile);
-                listInterpreterEnvironment(interpreter);
+                //listInterpreterEnvironment(interpreter);
                 
                 System.out.println("\nProgram exited with the following non-null result: " + result.toString());
 
