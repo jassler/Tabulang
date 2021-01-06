@@ -88,7 +88,6 @@ public class Main {
 
     private static void startRepl(Lexer l, Interpretation interpreter) {
         int count = 0;
-        String line = "";
 
         TabulangParser parser;
         ProgramItem prg;
@@ -101,15 +100,8 @@ public class Main {
                 + "Type \"exit();\" to quit repl.");
 
         while(true) {
-            if(line.isBlank())
-                System.out.printf(REPL_PREFIX, ++count);
-            else
-                // program code not done yet, append to the end of line
-                System.out.print(":" + " ".repeat(String.format(REPL_PREFIX, count).length() + 1));
-
-            line += scanner.nextLine().trim();
-            if(!line.endsWith(";"))
-                continue;
+            System.out.printf(REPL_PREFIX, ++count);
+            String line = scanner.nextLine().trim();
 
             if("exit();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
                 break;
@@ -132,8 +124,6 @@ public class Main {
                     System.out.println(e.getLocalizedMessage());
                 }
             }
-
-            line = "";
         }
     }
 
