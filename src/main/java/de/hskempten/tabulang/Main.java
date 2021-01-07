@@ -108,8 +108,7 @@ public class Main {
             try {
                 line = scanner.nextLine().trim();
             } catch(NoSuchElementException a) {
-                System.out.println("\nk bye");
-                System.exit(0);
+                line = "exit();";
             }
 
             if("exit();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
@@ -127,8 +126,13 @@ public class Main {
                     ast = ASTProgramParser.instance.parse(prg);
 
                     var resultObject = ast.executeProgram(interpreter);
-                    if(resultObject != null)
-                        System.out.println(String.format(REPL_POSTFIX, count, resultObject.toString()));
+                    if(resultObject != null) {
+                        String[] lines = resultObject.toString().split("\n");
+                        if(lines.length == 1)
+                            System.out.printf((REPL_POSTFIX) + "%n", count, resultObject.toString());
+                        else
+                            System.out.printf((REPL_POSTFIX) + "%n%s%n", count, "", resultObject.toString());
+                    }
                 } catch(Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
