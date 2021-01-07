@@ -1,5 +1,6 @@
 import de.hskempten.tabulang.datatypes.*;
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -64,22 +65,22 @@ class TupleTest {
     @Test
     public void testTupleAccess() {
         final Tuple<InternalDataObject> t = new Tuple<>(InternalDataObject.objToArray(12, 13, "1", "2"));
-        assertEquals(12, t.get("0").getObject());
-        assertEquals(13, t.get("1").getObject());
-        assertEquals("1", t.get("2").getObject());
-        assertEquals("2", t.get("3").getObject());
-        assertThrows(IndexOutOfBoundsException.class, () -> t.get("4"));
-        assertThrows(IndexOutOfBoundsException.class, () -> t.get("-1"));
-        assertThrows(NumberFormatException.class, () -> t.get("a"));
+        assertEquals(12, t.get(new InternalString("0")).getObject());
+        assertEquals(13, t.get(new InternalString("1")).getObject());
+        assertEquals("1", t.get(new InternalString("2")).getObject());
+        assertEquals("2", t.get(new InternalString("3")).getObject());
+        assertThrows(TupleNameNotFoundException.class, () -> t.get(new InternalString("4")));
+        assertThrows(TupleNameNotFoundException.class, () -> t.get(new InternalString("-1")));
+        assertThrows(TupleNameNotFoundException.class, () -> t.get(new InternalString("a")));
 
         final Tuple<InternalNumber> u = new Tuple<>(createList(InternalNumber::new, 1, 4, 2), InternalString.objToList("alpha", "beta", "gamma"));
-        // final Tuple<InternalNumber> u = new Tuple<>(new Integer[]{1, 4, 2}, new String[]{"alpha", "beta", "gamma"});
-        assertEquals(1, u.get("alpha").getValue());
-        assertEquals(4, u.get("beta").getValue());
-        assertEquals(2, u.get("gamma").getValue());
-        assertEquals(1, u.get("0").getValue());
-        assertEquals(4, u.get("1").getValue());
-        assertEquals(2, u.get("2").getValue());
+
+        assertEquals(1, u.get(new InternalString("alpha")).getValue());
+        assertEquals(4, u.get(new InternalString("beta")).getValue());
+        assertEquals(2, u.get(new InternalString("gamma")).getValue());
+        assertEquals(1, u.get(new InternalString("0")).getValue());
+        assertEquals(4, u.get(new InternalString("1")).getValue());
+        assertEquals(2, u.get(new InternalString("2")).getValue());
     }
 
     @Test
@@ -119,12 +120,12 @@ class TupleTest {
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(13, "2", 12, "1"),
                 InternalString.objToArray("1", "3", "0", "2")
-        ), t.projection("1", "3", "0", "2"));
+        ), t.projection(InternalString.objToArray("1", "3", "0", "2")));
 
         assertEquals(new Tuple<>(
                 InternalDataObject.objToArray(13, "2", 12, "1"),
                 InternalString.objToArray("beta", "delta", "alpha", "gamma")
-        ), t.newTupleWithNames(InternalString.objToList("alpha", "beta", "gamma", "delta")).projection("beta", "delta", "alpha", "gamma"));
+        ), t.newTupleWithNames(InternalString.objToList("alpha", "beta", "gamma", "delta")).projection(InternalString.objToArray("beta", "delta", "alpha", "gamma")));
     }
 
     @Test

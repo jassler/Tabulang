@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.datatypes;
 
 import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -85,7 +86,7 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
             return i;
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             // TODO should those exceptions be handled differently?
-            throw e;
+            throw new TupleNameNotFoundException(name);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -156,8 +157,8 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
      * @param   name   Name to check if it's in HeaderNames
      * @return {@code true} if this list or header names contains specified name.
      */
-    public boolean contains(String name) {
-        return nameLookup.containsKey(name);
+    public boolean contains(InternalString name) {
+        return nameLookup.containsKey(name.getString());
     }
 
     private void updateLookupValues(Function<Integer, Integer> updatedValue) {

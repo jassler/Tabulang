@@ -19,44 +19,36 @@ public class TupleElementNode extends BinaryTermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object tuple = getLeftNode().evaluateNode(interpretation);
-        if(tuple instanceof Tuple tuple1) {
-            Tuple t = (Tuple) tuple1;
+        Object left = getLeftNode().evaluateNode(interpretation);
+
+        if(left instanceof Tuple<?> tuple) {
+            Object right = getRightNode().evaluateNode(interpretation);
+
+            if(right instanceof InternalString colIdentifier)
+                return tuple.get(colIdentifier);
+
+            else if(right instanceof Tuple<?> t)
+                return tuple.projection(t.getElements().stream().map(v -> new InternalString(v.toString())).toArray(InternalString[]::new));
+
+            else
+                throw new IllegalArgumentException("Expected String but got: " + right.getClass().getSimpleName());
         }
-        if(tuple instanceof Table table1){
-            Table tab = (Table) table1;
+
+        else if(left instanceof Table<?> table) {
+            Object right = getRightNode().evaluateNode(interpretation);
+
+            if(right instanceof InternalString colIdentifier)
+                return table.projection(colIdentifier);
+
+            else if(right instanceof Tuple<?> t)
+                return table.projection((InternalString[]) t.getElements().stream().map(v -> new InternalString(v.toString())).toArray());
+
+            else
+                throw new IllegalArgumentException("Expected String or Tuple but got: " + right.getClass().getSimpleName());
         }
-        if(tuple instanceof Tuple){
-            Object columnIdentifier = getRightNode().evaluateNode(interpretation);
-            if(columnIdentifier instanceof InternalString){
-                if(((Tuple<?>) tuple).getNames().getNames().contains(((InternalString) columnIdentifier).getString())){
-                    return ((Tuple) tuple).get(((InternalString) columnIdentifier).getString());
-                } else {
-                    throw new TupleNameNotFoundException(((InternalString) columnIdentifier).getString());
-                }
-            } else {
-                throw new IllegalArgumentException("Expected String but got: " + columnIdentifier.getClass().getSimpleName());
-            }
-        } else if (tuple instanceof Table){
-            Object columnIdentifier = getRightNode().evaluateNode(interpretation);
-            if(columnIdentifier instanceof InternalString){
-                if(((Table<?>) tuple).getColNames().contains(((InternalString) columnIdentifier).getString())){
-                    int index = ((Table<?>) tuple).getColNames().getIndexOf(((InternalString) columnIdentifier).getString());
-                    return ((Table<?>) tuple).projection(index);
-                } else {
-                    throw new TupleNameNotFoundException(((InternalString) columnIdentifier).getString());
-                }
-            } else if(columnIdentifier instanceof Tuple<?> t ) {
-                String[] projectTo = new String[t.getElements().size()];
-                for (int i = 0; i < projectTo.length; i++) {
-                    projectTo[i] = t.getElements().get(i).toString();
-                }
-                return ((Table<?>) tuple).projection(projectTo);
-            } else {
-                throw new IllegalArgumentException("Expected String but got: " + columnIdentifier.getClass().getSimpleName());
-            }
-        } else {
-            throw new IllegalArgumentException("Expected Tuple but got: " + tuple.getClass().getSimpleName());
+
+        else {
+            throw new IllegalArgumentException("Expected Table or Tuple but got: " + left.getClass().getSimpleName());
         }
     }
 

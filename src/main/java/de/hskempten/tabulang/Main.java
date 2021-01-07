@@ -7,7 +7,7 @@ import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
-import de.hskempten.tabulang.standardBibliothek.StandardBibliothek;
+import de.hskempten.tabulang.standardLibrary.StandardLibrary;
 import de.hskempten.tabulang.tokenizer.Lexer;
 
 import java.nio.file.Files;
@@ -30,7 +30,7 @@ public class Main {
         l.addOneLineCommentMarker("//");
 
         // Setup interpreter library functions
-        StandardBibliothek.addStandardLibrary(interpreter);
+        StandardLibrary.addStandardLibrary(interpreter);
 
         // Parse command line arguments
         CommandLineArguments cli;
@@ -108,8 +108,7 @@ public class Main {
             try {
                 line = scanner.nextLine().trim();
             } catch(NoSuchElementException a) {
-                System.out.println("\nk bye");
-                System.exit(0);
+                line = "exit();";
             }
 
             if("exit();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
@@ -127,8 +126,13 @@ public class Main {
                     ast = ASTProgramParser.instance.parse(prg);
 
                     var resultObject = ast.executeProgram(interpreter);
-                    if(resultObject != null)
-                        System.out.println(String.format(REPL_POSTFIX, count, resultObject.toString()));
+                    if(resultObject != null) {
+                        String[] lines = resultObject.toString().split("\n");
+                        if(lines.length == 1)
+                            System.out.printf((REPL_POSTFIX) + "%n", count, resultObject.toString());
+                        else
+                            System.out.printf((REPL_POSTFIX) + "%n%s%n", count, "", resultObject.toString());
+                    }
                 } catch(Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
