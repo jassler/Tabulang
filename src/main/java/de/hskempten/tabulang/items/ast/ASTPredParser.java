@@ -196,7 +196,7 @@ public class ASTPredParser {
                             && !stack.peek().getLanguageItemType().equals(LanguageItemType.PRED_BRACKET)) {
                         output.add(stack.pop());
                     }
-                    /*if (!stack.isEmpty())*/
+                    if (!stack.isEmpty())
                     stack.pop();
                 }
                 case /*OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
