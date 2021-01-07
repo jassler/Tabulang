@@ -6,7 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
-public class StandardBibliothek {
+public class StandardLibrary {
 
     private static ArrayList<IdentifierNode> generateIdentifiers(String... names) {
         var result = new ArrayList<IdentifierNode>(names.length);
