@@ -1,28 +1,30 @@
 package de.hskempten.tabulang.standardLibrary;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class Helper {
-    public static boolean LengthReviewer(int maxLength, Object... args){
-        if(args.length > maxLength){
-            throw new IndexOutOfBoundsException(String.format("Max items: %s", maxLength));
-        }
-        return true;
+    public static void assertArgumentLength(int length, Object... args){
+        if(args.length == length)
+            throw new IndexOutOfBoundsException("Expected " + length + " parameters, got " + args.length);
     }
 
-    public static String FindPath(Object item){
-        if(((String) item).contains("/") || ((String) item).contains("\\")){
-            return (String) item;
-        }
-        return null;
+    public static IllegalArgumentException generateIllegalArgument(Object got, String... expected) {
+        return new IllegalArgumentException("Expected" + String.join(", ", expected)
+                + ", got " + got.getClass().getSimpleName() + " instead");
     }
 
-    public static String FindSqlStatement(Object item){
-        if(((String) item).contains("SELECT")){
-            return (String) item;
+    public static String findPath(String item){
+        if(item.contains("/") || item.contains("\\")) {
+            return item;
         }
         return null;
     }
 
-    public static boolean hasExpectedObjectType(Class classes, Object item) {
-        return item.getClass().equals(classes);
+    public static String findSqlStatement(String item){
+        if(item.contains("SELECT")) {
+            return item;
+        }
+        return null;
     }
 }

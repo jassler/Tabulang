@@ -3,27 +3,33 @@ package de.hskempten.tabulang.standardLibrary;
 import de.hskempten.tabulang.libreOffice.OdsExportService;
 import de.hskempten.tabulang.mySql.DatabaseConnection;
 
+/**
+ * <p>MySQL -> *.ods file</p>
+ *
+ * <p>{@code databaseToFile(query, path, fileName, odsExportService)}</p>
+ */
 public class DatabaseToFile implements InternalFunction{
     @Override
     public Object compute(Object... args) {
-        if(Helper.LengthReviewer(4, args)){
-            String path, fileName, query;
-            OdsExportService odsExportService;
-            path = fileName = query = null;
-            odsExportService = null;
-            for(var item : args){
-                if(item.getClass().equals(String.class)){
-                    path = Helper.FindPath(item);
-                    query = Helper.FindSqlStatement(item);
-                    fileName = (String) item;
-                }
-                if(item.getClass().equals(OdsExportService.class)){
-                    odsExportService = (OdsExportService) item;
-                }
+        Helper.assertArgumentLength(4, args);
+
+        String path, fileName, query;
+        OdsExportService odsExportService;
+        path = fileName = query = null;
+        odsExportService = null;
+
+        for(var item : args){
+            if(item instanceof String s){
+                path = Helper.findPath(s);
+                query = Helper.findSqlStatement(s);
+                fileName = s;
             }
-            DatabaseConnection.ExportToFile(query, odsExportService, path, fileName);
-            return true;
+
+            if(item.getClass().equals(OdsExportService.class)){
+                odsExportService = (OdsExportService) item;
+            }
         }
-        return false;
+        DatabaseConnection.ExportToFile(query, odsExportService, path, fileName);
+        return true;
     }
 }
