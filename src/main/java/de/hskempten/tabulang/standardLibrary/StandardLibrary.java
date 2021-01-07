@@ -66,5 +66,9 @@ public class StandardLibrary {
 
         interpreter.putValue("stringLength", new InternalLibraryFunction(new StandardStringToObj<>(String::length, InternalNumber::new), "s"));
         interpreter.putValue("splitString", new InternalLibraryFunction(new Split(), "s", "regex"));
+
+        // tuple / table
+        addToInterpreter(interpreter, new GetHeaderNames(), "tupleOrTable");
+        addToInterpreter(interpreter, new SetHeaderNames(), "tupleOrTable", "tupleForNewHeader");
     }
 }

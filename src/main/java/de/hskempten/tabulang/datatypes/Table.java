@@ -15,7 +15,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
     private final ArrayList<Tuple<E>> tuples;
     private boolean transposed = false;
 
-    private final HeaderNames colNames;
+    private HeaderNames colNames;
 
     /**
      * Create table with rows of tuples.
@@ -164,6 +164,13 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
 
     public HeaderNames getColNames() {
         return colNames;
+    }
+
+    public void setColNames(HeaderNames names) {
+        if (this.colNames.size() != names.size())
+            throw new ArrayLengthMismatchException(this.colNames.size(), names.size());
+
+        this.colNames = names;
     }
 
     /**
