@@ -1,7 +1,9 @@
-package de.hskempten.tabulang.standardLibrary;
+package de.hskempten.tabulang.standardLibrary.importexport;
 
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.mySql.DatabaseConnection;
+import de.hskempten.tabulang.standardLibrary.Helper;
+import de.hskempten.tabulang.standardLibrary.InternalFunction;
 
 /**
  * <p>MySQL query -> {@link de.hskempten.tabulang.datatypes.Table} object</p>

@@ -5,6 +5,7 @@ import de.hskempten.tabulang.standardLibrary.InternalFunction;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Node for function calls that are directly implemented in Java, most likely in the standardLibrary package.
@@ -20,6 +21,12 @@ public class InternalLibraryFunction extends InternalObject {
     public InternalLibraryFunction(ArrayList<IdentifierNode> parameters, de.hskempten.tabulang.standardLibrary.InternalFunction f) {
         super(null);
         this.parameters = parameters;
+        this.f = f;
+    }
+
+    public InternalLibraryFunction(de.hskempten.tabulang.standardLibrary.InternalFunction f, String... parameters) {
+        super(null);
+        this.parameters = Stream.of(parameters).map(IdentifierNode::new).collect(Collectors.toCollection(ArrayList::new));
         this.f = f;
     }
 
