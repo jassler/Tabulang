@@ -35,7 +35,7 @@ public class ASTPredParser {
                         default -> throw new IllegalStateException("Unexpected value: " + ((TermItem) actPred).getMyOrdinal().getLanguageItemType());
                     }
                 }
-                case PRED_BINRELSYM, PREDR_BOOL, PRED_TERM, PRED_IN, PRED_NOT, PRED_BOOLEAN -> {
+                case PRED_BINRELSYM, PREDR_BOOL, PRED_TERM, PRED_IN, PRED_NOT, PRED_BOOLEAN, PRED_INDEX -> {
                     syBuilder.add(actPred);
                 }
                 case PREDR_NULL -> {
@@ -66,7 +66,7 @@ public class ASTPredParser {
             actPred = switch (actPred.getLanguageItemType()) {
                 case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_BRACKET -> ((TermItem) actPred).getMyTermR();
                 case TERMR_OPERATOR -> ((TermRItem) actPred).getMyTerm();
-                case PRED_BINRELSYM, PRED_BRACKET, PRED_NOT, PRED_FUNCALL, PRED_BOOLEAN -> ((PredItem) actPred).getMyPredR();
+                case PRED_BINRELSYM, PRED_BRACKET, PRED_NOT, PRED_FUNCALL, PRED_BOOLEAN, PRED_INDEX -> ((PredItem) actPred).getMyPredR();
                 case PREDR_BOOL -> ((PredRItem) actPred).getMyPred();
                 case PRED_TERM, PRED_IN, PRED_QUANTIFIED -> ((PredItem) actPred).getMyPredR();
                 default -> {
@@ -88,14 +88,14 @@ public class ASTPredParser {
                 TermNode leftTerm = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
                 TermNode rightTerm = new ASTTermParser().parse(((PredItem) actItem).getMySecondTerm());
                 textPosition = new TextPosition(leftTerm.getTextPosition(), rightTerm.getTextPosition());
-                return switch (((PredItem) actItem).getMyBinResSym().getMyString()) {
+                return switch (((PredItem) actItem).getMyBinRelSym().getMyString()) {
                     case "=" -> new EqualsNode(leftTerm, rightTerm, textPosition);
                     case "<" -> new LessThanNode(leftTerm, rightTerm, textPosition);
                     case ">" -> new GreaterThanNode(leftTerm, rightTerm, textPosition);
                     case "<=" -> new LessThanOrEqualToNode(leftTerm, rightTerm, textPosition);
                     case ">=" -> new GreaterThanOrEqualToNode(leftTerm, rightTerm, textPosition);
                     case "!=" -> new NotEqualNode(leftTerm, rightTerm, textPosition);
-                    default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinResSym().getMyString());
+                    default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString());
                 };
             }
             case PRED_TERM -> {
@@ -123,6 +123,19 @@ public class ASTPredParser {
                 IdentifierNode identifier = new IdentifierNode(((PredItem) actItem).getMyIdentifier().getMyString(), textPosition);
                 TermNode term = new ASTTermParser().parse(((PredItem) actItem).getMyTerm());
                 return new InTupleNode(identifier, term, textPosition);
+            }
+            case PRED_INDEX -> {
+                IdentifierNode identifier = new IdentifierNode((((PredItem)actItem).getMyTerm().getMyOrdinal().getMyQuotedString().getMyString()));
+                TermNode rightTerm = new ASTTermParser().parse(((PredItem) actItem).getMySecondTerm());
+                return switch (((PredItem) actItem).getMyBinRelSym().getMyString()) {
+                    case "=" -> new EqualsNode(identifier, rightTerm, textPosition);
+                    case "<" -> new LessThanNode(identifier, rightTerm, textPosition);
+                    case ">" -> new GreaterThanNode(identifier, rightTerm, textPosition);
+                    case "<=" -> new LessThanOrEqualToNode(identifier, rightTerm, textPosition);
+                    case ">=" -> new GreaterThanOrEqualToNode(identifier, rightTerm, textPosition);
+                    case "!=" -> new NotEqualNode(identifier, rightTerm, textPosition);
+                    default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString());
+                };
             }
             case QUANTIFIED_EXISTS -> {
                 ExistsPredItem exi = ((ExistsPredItem) actItem);
@@ -171,7 +184,8 @@ public class ASTPredParser {
 
         public void add(LanguageItem item) {
             switch (item.getLanguageItemType()) {
-                case PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT, TERM_FUNCALL, PRED_BOOLEAN -> {
+                case PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT, TERM_FUNCALL,
+                        PRED_BOOLEAN, PRED_INDEX -> {
                     output.add(item);
                 }
                 case PRED_BRACKET -> {
