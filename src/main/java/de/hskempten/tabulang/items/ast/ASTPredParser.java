@@ -125,7 +125,8 @@ public class ASTPredParser {
                 return new InTupleNode(identifier, term, textPosition);
             }
             case PRED_INDEX -> {
-                IdentifierNode identifier = new IdentifierNode((((PredItem)actItem).getMyTerm().getMyOrdinal().getMyQuotedString().getMyString()));
+                QuotedStringItem quotedString = ((PredItem) actItem).getMyTerm().getMyOrdinal().getMyQuotedString();
+                IdentifierNode identifier = new IdentifierNode(quotedString.getMyString(), quotedString.getTextPosition());
                 TermNode rightTerm = new ASTTermParser().parse(((PredItem) actItem).getMySecondTerm());
                 return switch (((PredItem) actItem).getMyBinRelSym().getMyString()) {
                     case "=" -> new EqualsNode(identifier, rightTerm, textPosition);
@@ -197,7 +198,7 @@ public class ASTPredParser {
                         output.add(stack.pop());
                     }
                     if (!stack.isEmpty())
-                    stack.pop();
+                        stack.pop();
                 }
                 case /*OPERATOR_ADD, OPERATOR_SUBTRACT, OPERATOR_MULTIPLY, OPERATOR_DIVIDE,
                         OPERATOR_POWER, OPERATOR_DIV, OPERATOR_MOD, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,*/
