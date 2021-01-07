@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 public class Helper {
     public static void assertArgumentLength(int length, Object... args){
-        if(args.length == length)
+        if(args.length != length)
             throw new IndexOutOfBoundsException("Expected " + length + " parameters, got " + args.length);
     }
 
