@@ -4,6 +4,7 @@ import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.libreOffice.Exceptions.OdsExportException;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
@@ -34,7 +35,7 @@ public class OdsExportService {
      * Constructor: Create a new instance of a table to be exported
      */
 
-    public OdsExportService(){
+    public OdsExportService() throws OdsExportException {
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
             _odfOfficeAutomaticStyles = _spreadsheetDocument.getContentDom().getOrCreateAutomaticStyles();
@@ -42,7 +43,7 @@ public class OdsExportService {
             _initTable.setTableName("Table1");
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new OdsExportException("Cannot create a new spreadsheet object");
         }
     }
 
@@ -52,7 +53,7 @@ public class OdsExportService {
      * @param tableName Specific name of the table in the *.ods-File
      */
 
-    public OdsExportService(String tableName){
+    public OdsExportService(String tableName) throws OdsExportException {
         try {
             _spreadsheetDocument = SpreadsheetDocument.newSpreadsheetDocument();
             _odfOfficeAutomaticStyles = _spreadsheetDocument.getContentDom().getOrCreateAutomaticStyles();
@@ -60,7 +61,7 @@ public class OdsExportService {
             _initTable.setTableName(tableName);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new OdsExportException("Cannot create a new spreadsheet object with the table name %s".formatted(tableName));
         }
     }
 

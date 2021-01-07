@@ -3,6 +3,7 @@ import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.OdsExportService;
+import de.hskempten.tabulang.mySql.Exceptions.*;
 import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
 
@@ -27,14 +28,13 @@ public class DatabaseConnection {
      * @param parameters Contains all necessary information for a stable connection
      */
 
-    private DatabaseConnection(MSqlConnectionParameters parameters) {
+    private DatabaseConnection(MSqlConnectionParameters parameters) throws MySqlConnectionException {
         try {
             _parameters = parameters;
             _connection = DriverManager.getConnection(CreateConnectionString(_parameters));
         }
         catch (SQLException e) {
-            // e.printStackTrace();
-            System.out.println(e.getLocalizedMessage());
+            throw new MySqlConnectionException("Cannot build up a connection to the MySQL-Server. Please check the connection parameters");
         }
     }
 
@@ -54,9 +54,8 @@ public class DatabaseConnection {
             else if (_connection.isClosed()) {
                 _instance = new DatabaseConnection(_parameters);
             }
-        } catch (SQLException e) {
-            // e.printStackTrace();
-            System.out.println(e.getLocalizedMessage());
+        } catch (SQLException | MySqlConnectionException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -64,11 +63,11 @@ public class DatabaseConnection {
      * Close a MySQL connection
      */
 
-    public static void CloseConnection() {
+    public static void CloseConnection() throws MySqlConnectionException {
         try {
             _connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new MySqlConnectionException("Cannot disconnect the MySQL connection");
         }
     }
 
@@ -128,8 +127,7 @@ public class DatabaseConnection {
             }
             ImportCore(new MSqlTableContent(sqlTableName, ReplaceHeadline(table), content));
         } catch(Exception e){
-            // e.printStackTrace();
-            System.out.println(e.getLocalizedMessage());
+            throw new MySqlImportException("Cannot import table to %s".formatted(sqlTableName));
         }
 
     }
@@ -158,7 +156,7 @@ public class DatabaseConnection {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new MySqlImportException(e.getMessage());
         }
     }
 
@@ -182,8 +180,7 @@ public class DatabaseConnection {
             _statement.close();
             return sqlTableContent;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new MySqlExportException("Cannot export %s".formatted(query));
         }
     }
 
@@ -209,8 +206,7 @@ public class DatabaseConnection {
             }
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new MySqlDatabaseNotExistException("Database %s not exist size of the columns or the rows are not correct.".formatted(sqlTableContent.get_dbName()));
         }
     }
 
@@ -265,16 +261,21 @@ public class DatabaseConnection {
      */
 
     private static String GetTableName(String query) {
-        var charArray = query.substring(query.indexOf("FROM") + 5).toCharArray();
-        StringBuilder tableName = new StringBuilder();
+        try {
+            var charArray = query.substring(query.indexOf("FROM") + 5).toCharArray();
+            StringBuilder tableName = new StringBuilder();
 
-        for (char c : charArray) {
-            if (c == ' ') {
-                break;
+            for (char c : charArray) {
+                if (c == ' ') {
+                    break;
+                }
+                tableName.append(c);
             }
-            tableName.append(c);
+            return tableName.toString();
         }
-        return tableName.toString();
+        catch(ValueNotExistException e){
+            throw new ValueNotExistException("Cannot find table name from the statement %s".formatted(query));
+        }
     }
 
     /**
@@ -300,9 +301,8 @@ public class DatabaseConnection {
             }
             return returnList;
         }
-        catch(Exception e){
-            e.printStackTrace();
-            return null;
+        catch(ValueNotExistException | SQLException e){
+            throw new ValueNotExistException("Cannot find column values.");
         }
     }
 
@@ -324,9 +324,8 @@ public class DatabaseConnection {
             }
             return columnNameList;
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        catch(ValueNotExistException | SQLException e){
+            throw new ValueNotExistException("Cannot extract headlines");
         }
     }
 
@@ -347,9 +346,8 @@ public class DatabaseConnection {
             }
             return columnNameList;
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        catch(ValueNotExistException | SQLException e){
+            throw new ValueNotExistException("Column type not found");
         }
     }
 
