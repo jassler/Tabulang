@@ -202,8 +202,8 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws NumberFormatException     if name not present and not convertible into a number
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public E get(String name) {
-        return elements.get(names.getIndexOf(name));
+    public E get(InternalString name) {
+        return elements.get(names.getIndexOf(name.getString()));
     }
 
     public E getFromIndex(int i) {
@@ -272,7 +272,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @param names Choose elements with (column) names
      * @return Tuple with selected indexes
      */
-    public Tuple<E> projection(String... names) {
+    public Tuple<E> projection(InternalString... names) {
         int[] indices = new int[names.length];
         for (int i = 0; i < names.length; i++) {
             indices[i] = this.names.getIndexOf(names[i]);

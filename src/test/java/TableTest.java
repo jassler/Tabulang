@@ -3,19 +3,29 @@ import de.hskempten.tabulang.datatypes.Style;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
+import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TableTest {
 
     @Test
     void transpose() {
-    }
+        Table<InternalString> t = new Table<>(
+                new Tuple<>(InternalString.objToArray("Felix", "Fritz", "Oberstdorf"), InternalString.objToArray("First name", "Last name", "Location")),
+                new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten")),
+                new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
+        );
 
-    @Test
-    void isTransposed() {
+        assertFalse(t.isTransposed());
+        for(var tuple : t)
+            assertTrue(tuple.isHorizontal());
+
+        t.transpose();
+        assertTrue(t.isTransposed());
+        for(var tuple : t)
+            assertFalse(tuple.isHorizontal());
     }
 
     @Test
@@ -26,11 +36,11 @@ class TableTest {
                 new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"))
         );
 
-        assertEquals(0, t.getColumnIndex("First name"));
-        assertEquals(1, t.getColumnIndex("Last name"));
-        assertEquals(2, t.getColumnIndex("Location"));
-        assertThrows(NumberFormatException.class, () -> t.getColumnIndex("Not in there"));
-        assertThrows(IndexOutOfBoundsException.class, () -> t.getColumnIndex("-1"));
+        assertEquals(0, t.getColumnIndex(new InternalString("First name")));
+        assertEquals(1, t.getColumnIndex(new InternalString("Last name")));
+        assertEquals(2, t.getColumnIndex(new InternalString("Location")));
+        assertThrows(TupleNameNotFoundException.class, () -> t.getColumnIndex(new InternalString("Not in there")));
+        assertThrows(TupleNameNotFoundException.class, () -> t.getColumnIndex(new InternalString("-1")));
     }
 
     @Test
@@ -46,7 +56,7 @@ class TableTest {
         assertEquals(new Tuple<>(InternalString.objToArray("Tobias", "Teiher", "Kempten"), InternalString.objToArray("First name", "Last name", "Location")), t.getRow(1));
         assertEquals(new Tuple<>(InternalString.objToArray("Manfred", "Meher", "Berlin"), InternalString.objToArray("First name", "Last name", "Location")), t.getRow(2));
 
-        Table<InternalString> filtered = t.filter(tuple -> tuple.get("1").getString().charAt(1) == 'e');
+        Table<InternalString> filtered = t.filter(tuple -> tuple.get(new InternalString("1")).getString().charAt(1) == 'e');
 
         assertEquals(
                 new Table<>(
@@ -76,7 +86,7 @@ class TableTest {
         );
 
         assertEquals(projected, t.projection(0, 1));
-        assertEquals(projected, t.projection("First name", "Last name"));
+        assertEquals(projected, t.projection(new InternalString("First name"), new InternalString("Last name")));
 
         // check that no duplicate rows exist
         t = new Table<>(
@@ -94,7 +104,7 @@ class TableTest {
         );
 
         assertEquals(projected, t.projection(2));
-        assertEquals(projected, t.projection("Location"));
+        assertEquals(projected, t.projection(new InternalString("Location")));
 
         assertEquals(new Table<>(), t.projection());
     }
@@ -306,13 +316,13 @@ class TableTest {
         assertEquals(s, t.getRow(0).iterator().next().getStyle());
 
         s.reset().setUnderlined(true).setBold(true);
-        assertEquals(s, t.getRow(2).get("Location").getStyle());
+        assertEquals(s, t.getRow(2).get(new InternalString("Location")).getStyle());
 
         s.reset().setFont("Monaco");
-        assertEquals(s, t.getRow(2).get("First name").computeStyle());
+        assertEquals(s, t.getRow(2).get(new InternalString("First name")).computeStyle());
 
         s.reset().setFont("Times");
-        assertEquals(s, t.getRow(0).get("Location").computeStyle());
+        assertEquals(s, t.getRow(0).get(new InternalString("Location")).computeStyle());
     }
 
     @Test

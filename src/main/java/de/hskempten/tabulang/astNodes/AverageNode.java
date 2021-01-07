@@ -28,14 +28,14 @@ public class AverageNode extends BinaryTermNode{
         if(!(columnIdentifierObject instanceof InternalString columnIdentifier))
             throw new IllegalArgumentException("Expected String but got: " + columnIdentifierObject.getClass().getSimpleName());
 
-        if(!table.getColNames().contains(columnIdentifier.getString()))
+        if(!table.getColNames().contains(columnIdentifier))
             throw new TupleNameNotFoundException(columnIdentifier.getString());
 
         InternalNumber sum  = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber numberElements = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber one = new InternalNumber(new BigInteger("1"), new BigInteger("1"));
 
-        int index = table.getColumnIndex(columnIdentifier.getString());
+        int index = table.getColumnIndex(columnIdentifier);
 
         for (Tuple<?> a : table) {
             //TODO remove println after further testing

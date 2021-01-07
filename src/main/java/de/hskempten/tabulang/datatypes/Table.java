@@ -174,15 +174,15 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @throws NumberFormatException     if name not present and not convertible into a number
      * @throws IndexOutOfBoundsException if name not present and converted number is out of range
      */
-    public int getColumnIndex(String name) {
-        return colNames.getIndexOf(name);
+    public int getColumnIndex(InternalString name) {
+        return colNames.getIndexOf(name.getString());
     }
 
     /**
      * Filter tuple rows based on predicate. For storage and timing reason, the parameter passed
      * to the predicate is an {@code ArrayList<E>} and not a {@code Tuple<E>}.
      *
-     * <p>To get a column index by name, call {@link Table#getColumnIndex(String)}.
+     * <p>To get a column index by name, call {@link Table#getColumnIndex(InternalString)}.
      *
      * @param p Predicate by which to determine if a row should be included or not. For example: {@code filter(row -> row.get(0) != null)}
      * @return {@code Table<E>} with filtered rows
@@ -238,7 +238,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @param colNames Column indices on which to project
      * @return {@code Table<E>} with projected table columns
      */
-    public Table<E> projection(String... colNames) {
+    public Table<E> projection(InternalString... colNames) {
         int[] indices = new int[colNames.length];
         for(int i = 0; i < indices.length; i++)
             indices[i] = getColumnIndex(colNames[i]);

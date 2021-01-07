@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
@@ -44,11 +45,11 @@ public class DistinctFromNode extends TermNode {
             //TODO testen 4.01.
         }
         if (object instanceof Table) {
-            ArrayList<String> columnNames = new ArrayList<>();
+            ArrayList<InternalString> columnNames = new ArrayList<>(names.length);
             for (TermNode t : names) {
-                columnNames.add((String) t.evaluateNode(interpretation));
+                columnNames.add((InternalString) t.evaluateNode(interpretation));
             }
-            return ((Table) object).projection((String[]) columnNames.toArray());
+            return ((Table<?>) object).projection(columnNames.toArray(InternalString[]::new));
         } else {
             throw new IllegalOperandArgumentException("Got " + object + " on the right side of'" + toString()
                     + "'. Allowed operand on the right side: Table.");
