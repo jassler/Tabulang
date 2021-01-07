@@ -427,13 +427,13 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
             // colHeader is index 0
             strLengths[0] = colNames.getNames().stream()
                     .mapToInt(v -> v.getString().length())
-                    .max().getAsInt();
+                    .max().orElse(0);
 
             // each tuple represents a column, so we can simply check the longest value in each tuple
             for (int i = 0; i < tuples.size(); i++) {
                 strLengths[i + 1] = tuples.get(i).getElements().stream()
                         .mapToInt(o -> o.toString().length())
-                        .max().getAsInt();
+                        .max().orElse(0);
             }
         } else {
             strLengths = IntStream.range(0, colNames.size())
@@ -441,7 +441,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
                             colNames.get(i).getString().length(),
                             tuples.stream()
                                     .mapToInt(row -> row.getElements().get(i).toString().length())
-                                    .max().getAsInt()))
+                                    .max().orElse(0)))
                     .toArray();
         }
 
@@ -479,7 +479,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
 
                 // variable used in lambda expression must be final
                 int finalRow = row;
-                tuples.stream().forEach(
+                tuples.forEach(
                         t -> sb.append(' ').append(String.format(it.next(), t.getElements().get(finalRow)))
                 );
             }
@@ -499,7 +499,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
             // tuple rows
             sb.append(String.format(formatted, colNames.getNames().toArray())).append('\n');
             sb.append("-".repeat(rowLength));
-            tuples.stream().forEach(t -> sb.append('\n').append(String.format(formatted, t.getElements().toArray())));
+            tuples.forEach(t -> sb.append('\n').append(String.format(formatted, t.getElements().toArray())));
         }
 
         return sb.toString();
