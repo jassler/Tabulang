@@ -1,8 +1,7 @@
-package de.hskempten.tabulang.standardBibliothek;
+package de.hskempten.tabulang.standardLibrary;
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.libreOffice.OdsExportService;
 import de.hskempten.tabulang.mySql.DatabaseConnection;
 import de.hskempten.tabulang.mySql.Models.MSqlConnectionParameters;
 

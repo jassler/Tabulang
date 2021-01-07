@@ -1,6 +1,4 @@
-package de.hskempten.tabulang.standardBibliothek;
-
-import java.util.ArrayList;
+package de.hskempten.tabulang.standardLibrary;
 
 public class Helper {
     public static boolean LengthReviewer(int maxLength, Object... args){

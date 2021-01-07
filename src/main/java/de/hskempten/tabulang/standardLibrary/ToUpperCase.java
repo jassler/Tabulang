@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.standardBibliothek;
+package de.hskempten.tabulang.standardLibrary;
 
 import java.util.ArrayList;
 import java.util.Locale;

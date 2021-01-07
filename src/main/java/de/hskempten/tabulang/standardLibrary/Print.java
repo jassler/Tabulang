@@ -1,9 +1,4 @@
-package de.hskempten.tabulang.standardBibliothek;
-
-import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
-
-import java.util.ArrayList;
+package de.hskempten.tabulang.standardLibrary;
 
 public class Print implements InternalFunction {
 

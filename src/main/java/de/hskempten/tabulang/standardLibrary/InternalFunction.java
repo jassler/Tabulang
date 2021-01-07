@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.standardBibliothek;
+package de.hskempten.tabulang.standardLibrary;
 
 public interface InternalFunction {
     //public boolean hasExpectedObjectType(Object... args);

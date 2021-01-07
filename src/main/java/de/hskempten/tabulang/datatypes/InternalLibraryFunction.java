@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.datatypes;
 
 import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.standardBibliothek.InternalFunction;
+import de.hskempten.tabulang.standardLibrary.InternalFunction;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class InternalLibraryFunction extends InternalObject {
 
     private ArrayList<IdentifierNode> parameters;
-    private de.hskempten.tabulang.standardBibliothek.InternalFunction f;
+    private de.hskempten.tabulang.standardLibrary.InternalFunction f;
 
-    public InternalLibraryFunction(ArrayList<IdentifierNode> parameters, de.hskempten.tabulang.standardBibliothek.InternalFunction f) {
+    public InternalLibraryFunction(ArrayList<IdentifierNode> parameters, de.hskempten.tabulang.standardLibrary.InternalFunction f) {
         super(null);
         this.parameters = parameters;
         this.f = f;

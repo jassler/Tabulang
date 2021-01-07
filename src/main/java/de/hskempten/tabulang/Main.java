@@ -7,7 +7,7 @@ import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
-import de.hskempten.tabulang.standardBibliothek.StandardBibliothek;
+import de.hskempten.tabulang.standardLibrary.StandardBibliothek;
 import de.hskempten.tabulang.tokenizer.Lexer;
 
 import java.nio.file.Files;
