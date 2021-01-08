@@ -5,20 +5,20 @@ import java.util.HashMap;
 
 public class MRow {
     /* PROPERTIES */
-    private HashMap<String,String> Attributes;
+    private HashMap<String,String> _attributes;
     private ArrayList<MCell> _cells;
 
     /* SETTER */
     public void setAttributes(HashMap<String, String> attributes) {
-        Attributes = attributes;
+        _attributes = attributes;
     }
-    public void set_cells(ArrayList<MCell> _cells) {
-        this._cells = _cells;
+    public void set_cells(ArrayList<MCell> cells) {
+        this._cells = cells;
     }
 
     /* GETTER */
     public HashMap<String, String> getAttributes() {
-        return Attributes;
+        return _attributes;
     }
 
     public ArrayList<MCell> get_cells() {

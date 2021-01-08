@@ -16,28 +16,28 @@ public class MSpreadsheet {
     private ArrayList<MTableWrapper> _tables;
 
     /* SETTER */
-    public void set_fontStyles(ArrayList<HashMap<String, String>> _fontStyles) {
-        this._fontStyles = _fontStyles;
+    public void set_fontStyles(ArrayList<HashMap<String, String>> fontStyles) {
+        this._fontStyles = fontStyles;
     }
 
-    public void set_tableStyles(HashMap<String, HashMap<String, String>> _tableStyles) {
-        this._tableStyles = _tableStyles;
+    public void set_tableStyles(HashMap<String, HashMap<String, String>> tableStyles) {
+        this._tableStyles = tableStyles;
     }
 
-    public void set_rowStyles(HashMap<String, HashMap<String, String>> _rowStyles) {
-        this._rowStyles = _rowStyles;
+    public void set_rowStyles(HashMap<String, HashMap<String, String>> rowStyles) {
+        this._rowStyles = rowStyles;
     }
 
-    public void set_columnStyles(HashMap<String, HashMap<String, String>> _columnStyles) {
-        this._columnStyles = _columnStyles;
+    public void set_columnStyles(HashMap<String, HashMap<String, String>> columnStyles) {
+        this._columnStyles = columnStyles;
     }
 
-    public void set_cellStyles(HashMap<String, HashMap<String, String>> _cellStyles) {
-        this._cellStyles = _cellStyles;
+    public void set_cellStyles(HashMap<String, HashMap<String, String>> cellStyles) {
+        this._cellStyles = cellStyles;
     }
 
-    public void set_tables(ArrayList<MTableWrapper> _tables) {
-        this._tables = _tables;
+    public void set_tables(ArrayList<MTableWrapper> tables) {
+        this._tables = tables;
     }
 
     /* GETTER */

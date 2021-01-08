@@ -9,24 +9,24 @@ public class MSqlConnectionParameters {
     private String _password;
 
     /* SETTER */
-    public void set_ip(String _ip) {
+    public void set_ip(String ip) {
         this._ip = _ip;
     }
 
-    public void set_port(int _port) {
-        this._port = _port;
+    public void set_port(int port) {
+        this._port = port;
     }
 
-    public void set_dbName(String _dbName) {
-        this._dbName = _dbName;
+    public void set_dbName(String dbName) {
+        this._dbName = dbName;
     }
 
-    public void set_username(String _username) {
-        this._username = _username;
+    public void set_username(String username) {
+        this._username = username;
     }
 
-    public void set_password(String _password) {
-        this._password = _password;
+    public void set_password(String password) {
+        this._password = password;
     }
 
     /* GETTER */

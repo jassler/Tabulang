@@ -4,15 +4,15 @@ import java.util.HashMap;
 
 public class MColumn {
     /* PROPERTIES */
-    private HashMap<String,String> Attributes;
+    private HashMap<String,String> _attributes;
 
     /* SETTER */
     public void setAttributes(HashMap<String, String> attributes) {
-        Attributes = attributes;
+        _attributes = attributes;
     }
 
     /* GETTER */
     public HashMap<String, String> getAttributes() {
-        return Attributes;
+        return _attributes;
     }
 }

@@ -9,16 +9,16 @@ public class MSqlTableContent {
     private ArrayList<ArrayList<String>> _content;
 
     /* SETTER */
-    public void set_dbName(String _dbName) {
-        this._dbName = _dbName;
+    public void set_dbName(String dbName) {
+        this._dbName = dbName;
     }
 
-    public void set_headlines(ArrayList<String> _headlines) {
-        this._headlines = _headlines;
+    public void set_headlines(ArrayList<String> headlines) {
+        this._headlines = headlines;
     }
 
-    public void set_content(ArrayList<ArrayList<String>> _content) {
-        this._content = _content;
+    public void set_content(ArrayList<ArrayList<String>> content) {
+        this._content = content;
     }
 
     /* GETTER */

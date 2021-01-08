@@ -4,21 +4,21 @@ import java.util.HashMap;
 
 public class MCell {
     /* PROPERTIES */
-    private HashMap<String,String> Attributes;
+    private HashMap<String,String> _attributes;
     private Object _value;
 
     /* SETTER */
     public void setAttributes(HashMap<String, String> attributes) {
-        Attributes = attributes;
+        _attributes = attributes;
     }
 
-    public void set_value(Object _value) {
-        this._value = _value;
+    public void set_value(Object value) {
+        this._value = value;
     }
 
     /* GETTER */
     public HashMap<String, String> getAttributes() {
-        return Attributes;
+        return _attributes;
     }
 
     public Object get_value() {

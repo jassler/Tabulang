@@ -10,16 +10,16 @@ public class MTableWrapper {
     private ArrayList<MRow> _rows;
 
     /* SETTER */
-    public void set_attributes(HashMap<String, String> _attributes) {
-        this._attributes = _attributes;
+    public void set_attributes(HashMap<String, String> attributes) {
+        this._attributes = attributes;
     }
 
-    public void set_columns(ArrayList<MColumn> _columns) {
-        this._columns = _columns;
+    public void set_columns(ArrayList<MColumn> columns) {
+        this._columns = columns;
     }
 
-    public void set_rows(ArrayList<MRow> _rows) {
-        this._rows = _rows;
+    public void set_rows(ArrayList<MRow> rows) {
+        this._rows = rows;
     }
 
     /* GETTER */
