@@ -91,7 +91,7 @@ public class Interpretation {
 
     public void exitProgram(Exception e) {
         System.err.println(e.getMessage());
-        System.exit(1);
+        //System.exit(1);
     }
 
 }
