@@ -1,9 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.*;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -30,7 +27,7 @@ public class AverageNode extends BinaryTermNode {
             throw new IllegalArgumentException("Expected String but got: " + columnIdentifierObject.getClass().getSimpleName());
 
         if (!table.getColNames().contains(columnIdentifier))
-            throw new TupleNameNotFoundException(columnIdentifier.getString());
+            throw new TupleNameNotFoundException(getTextPosition(), columnIdentifier.getString(), tableObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
 
         InternalNumber sum = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber numberElements = new InternalNumber(new BigInteger("0"), new BigInteger("1"));

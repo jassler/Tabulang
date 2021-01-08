@@ -31,6 +31,7 @@ public class TupleElementNode extends BinaryTermNode {
         if(!(right instanceof InternalString) && !(right instanceof Tuple<?>)){
             throw new IllegalOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent(), "Allowed operands: String or Tuple.");
         }
+
         if (left instanceof Tuple<?> tuple) {
 
             if (right instanceof InternalString colIdentifier) {
@@ -46,7 +47,7 @@ public class TupleElementNode extends BinaryTermNode {
                 return table.projection(colIdentifier);
             } else {
                 Tuple<?> tupleColIdentifier = (Tuple<?>) right;
-                return table.projection((InternalString[]) tupleColIdentifier.getElements().stream().map(v -> new InternalString(v.toString())).toArray());
+                return table.projection(tupleColIdentifier.getElements().stream().map(v -> new InternalString(v.toString())).toArray(InternalString[]::new));
             }
         }
     }

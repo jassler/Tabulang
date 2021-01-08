@@ -18,4 +18,8 @@ public class IllegalNumberOperandArgumentException extends IllegalOperandArgumen
     public IllegalNumberOperandArgumentException(TextPosition term, TextPosition firstOperandInTerm, String firstOperandClass, TextPosition secondOperandInTerm, String secondOperandClass) {
         super(term, "Allowed operands: Number. Got: " + firstOperandClass + "(" + firstOperandInTerm.getContent() + ") and " + secondOperandClass + "(" + secondOperandInTerm.getContent() + ").");
     }
+
+    public IllegalNumberOperandArgumentException(TextPosition textPosition, String simpleName, TextPosition textPosition1) {
+        super(textPosition, simpleName, textPosition1, "Allowed operands: Number.");
+    }
 }
