@@ -1,12 +1,16 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class ForAllSuchThatNode extends BinaryPredicateNode{
+public class ForAllSuchThatNode extends BinaryPredicateNode {
     private String variableName;
 
     public ForAllSuchThatNode(Node leftNode, Node rightNode, String variableName, TextPosition textPosition) {
@@ -24,23 +28,31 @@ public class ForAllSuchThatNode extends BinaryPredicateNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object tuple = getLeftNode().evaluateNode(interpretation);
-        if(interpretation.getEnvironment().containsKey(variableName)){
+        if (interpretation.getEnvironment().containsKey(variableName)) {
             throw new VariableAlreadyDefinedException(variableName);
         }
-        for(Object o : ((Tuple) tuple).getElements()){
-            //TODO evtl umändern so wie bei ExistsSuchThatNode
-            interpretation.getEnvironment().put(variableName, o);
-            Object result = getRightNode().evaluateNode(interpretation);
-            if(result instanceof InternalBoolean booleanResult) {
+        Object o = getLeftNode().evaluateNode(interpretation);
+        o = ifTupleTransform(o);
+        if (!(o instanceof Tuple<?>) && !(o instanceof Table)) {
+            throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
+        }
+
+        if(o instanceof Tuple<?> tuple) {
+            for (Object object : tuple.getElements()) {
+                InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
                 if (!booleanResult.getaBoolean()) {
-                    interpretation.getEnvironment().remove(variableName);
-                    return false;
+                    return new InternalBoolean(false);
+                }
+            }
+        } else {
+            for (Object object : ((Table<?>) o).getRows()) {
+                InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
+                if(!booleanResult.getaBoolean()){
+                    return new InternalBoolean(false);
                 }
             }
         }
-        interpretation.getEnvironment().remove(variableName);
-        return true;
+        return new InternalBoolean(true);
     }
 
     @Override

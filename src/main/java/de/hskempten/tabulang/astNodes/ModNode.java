@@ -16,7 +16,7 @@ public class ModNode extends BinaryArithmeticNode{
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
         if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalNumberOperandArgumentException(toString());
+            throw new IllegalNumberOperandArgumentException(getTextPosition(), getLeftNode().getTextPosition(), left.getClass().getSimpleName(), getRightNode().getTextPosition(), right.getClass().getSimpleName());
         }
         return leftNumber.mod(rightNumber);
     }

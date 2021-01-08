@@ -14,10 +14,8 @@ public class ImplNode extends BinaryPredicateNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalBoolean leftBool) || !(right instanceof InternalBoolean rightBool)) {
-            throw new IllegalBooleanOperandArgumentException(toString());
-        }
-        return leftBool.getaBoolean() || !rightBool.getaBoolean();
+        throwExceptionIfNotBoolean(left, right);
+        return new InternalBoolean(((InternalBoolean)left).getaBoolean() || !((InternalBoolean) right).getaBoolean());
     }
 
     @Override

@@ -47,7 +47,7 @@ public class StandardLibrary {
 
         // db / sql / odf stuff
         addToInterpreter(interpreter, new OpenDbConnection(), "ip", "port", "dbName", "userName", "password");
-        addToInterpreter(interpreter, new CloseDbConnection());
+        //addToInterpreter(interpreter, new CloseDbConnection());
         addToInterpreter(interpreter, new DatabaseToTable(), "query");
         addToInterpreter(interpreter, new DatabaseToFile(), "query", "path", "fileName", "odsExportService");
         addToInterpreter(interpreter, new OdsToTable(), "path");

@@ -25,7 +25,6 @@ public class PredTermNode extends PredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        throw new IllegalArgumentException("PredTerm");
-
+        return term.evaluateNode(interpretation);
     }
 }

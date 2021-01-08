@@ -6,6 +6,7 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
+//TODO remove if not used 07.01
 public class TableNode<E extends Styleable> extends TermNode{
     private Table<E> table;
 

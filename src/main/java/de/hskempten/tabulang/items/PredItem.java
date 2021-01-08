@@ -6,7 +6,7 @@ public class PredItem implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredRItem myPredR;
-    private BinRelSymItem myBinResSym;
+    private BinRelSymItem myBinRelSym;
     private TermItem mySecondTerm;
     private PredItem myPred;
     private PQuantifiedItem myPQuantified;
@@ -23,10 +23,10 @@ public class PredItem implements LanguageItem {
         this.itemType = LanguageItemType.PRED_IN;
     }
 
-    public PredItem(TermItem myTerm, PredRItem myPredR, BinRelSymItem myBinResSym, TermItem mySecondTerm) {
+    public PredItem(TermItem myTerm, PredRItem myPredR, BinRelSymItem myBinRelSym, TermItem mySecondTerm) {
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
-        this.setMyBinResSym(myBinResSym);
+        this.setMyBinRelSym(myBinRelSym);
         this.setMySecondTerm(mySecondTerm);
         this.itemType = LanguageItemType.PRED_BINRELSYM;
     }
@@ -62,6 +62,14 @@ public class PredItem implements LanguageItem {
         this.itemType = LanguageItemType.PRED_FUNCALL;
     }
 
+    public PredItem(String s, TermItem myTerm, BinRelSymItem myBinRelSym, TermItem mySecondTerm, PredRItem myPredR) {
+        this.myTerm = myTerm;
+        this.myBinRelSym = myBinRelSym;
+        this.mySecondTerm = mySecondTerm;
+        this.myPredR = myPredR;
+        this.itemType = LanguageItemType.PRED_INDEX;
+    }
+
     public IdentifierItem getMyIdentifier() {
         return myIdentifier;
     }
@@ -86,12 +94,12 @@ public class PredItem implements LanguageItem {
         this.myPredR = myPredR;
     }
 
-    public BinRelSymItem getMyBinResSym() {
-        return myBinResSym;
+    public BinRelSymItem getMyBinRelSym() {
+        return myBinRelSym;
     }
 
-    public void setMyBinResSym(BinRelSymItem myBinResSym) {
-        this.myBinResSym = myBinResSym;
+    public void setMyBinRelSym(BinRelSymItem myBinRelSym) {
+        this.myBinRelSym = myBinRelSym;
     }
 
     public TermItem getMySecondTerm() {

@@ -24,10 +24,10 @@ public class NotNode extends PredicateNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object pred = node.evaluateNode(interpretation);
-        if (!(pred instanceof InternalBoolean bool)) {
+        if (!(pred instanceof InternalBoolean internalBoolean)) {
             throw new IllegalBooleanOperandArgumentException(toString());
         }
-        return !(bool.getaBoolean());
+        return new InternalBoolean(!(internalBoolean.getaBoolean()));
     }
 
     @Override

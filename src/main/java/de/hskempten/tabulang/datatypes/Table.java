@@ -3,14 +3,12 @@ package de.hskempten.tabulang.datatypes;
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import de.hskempten.tabulang.datatypes.exceptions.TableHeaderMismatchException;
 
-import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table<E extends Styleable> extends InternalObject implements Iterable<Tuple<E>>, Cloneable {
+public class Table<E extends Styleable> extends InternalObject implements Iterable<Tuple<E>>, Cloneable, TupleOperation<Table<E>> {
 
     private final ArrayList<Tuple<E>> tuples;
     private boolean transposed = false;
@@ -151,6 +149,18 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         return tuples;
     }
 
+    @Override
+    public boolean isHorizontal() {
+        return !transposed;
+    }
+
+    @Override
+    public void setHorizontal(boolean horizontal) {
+        if ((horizontal && transposed) || (!horizontal && !transposed))
+            transpose();
+    }
+
+    @Override
     public void transpose() {
         transposed = !transposed;
         // if transposed, tuples are vertical
@@ -158,6 +168,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         tuples.forEach(t -> t.setHorizontal(!transposed));
     }
 
+    @Override
     public boolean isTransposed() {
         return transposed;
     }
@@ -214,6 +225,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @param indices Column indices on which to project
      * @return {@code Table<E>} with projected table columns
      */
+    @Override
     public Table<E> projection(int... indices) {
         // newRows keeps it in order
         // existingRows makes sure each row only appears once
@@ -245,6 +257,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      * @param colNames Column indices on which to project
      * @return {@code Table<E>} with projected table columns
      */
+    @Override
     public Table<E> projection(InternalString... colNames) {
         int[] indices = new int[colNames.length];
         for(int i = 0; i < indices.length; i++)
@@ -261,8 +274,19 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      *
      * @return an empty Table
      */
+    @Override
     public Table<E> projection() {
         return new Table<>(getParent());
+    }
+
+    @Override
+    public int getWidth() {
+        return transposed ? tuples.size() : colNames.size();
+    }
+
+    @Override
+    public int getHeight() {
+        return transposed ? colNames.size() : tuples.size();
     }
 
     /**
@@ -273,7 +297,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
      */
     public Table<E> intersection(Table<E> other) {
 
-        if(!colNames.equals(other.colNames))
+        if (!colNames.equals(other.colNames))
             throw new TableHeaderMismatchException(colNames.getNames(), other.colNames.getNames());
 
         Set<Tuple<E>> otherTuples = new HashSet<>(other.tuples);
@@ -427,13 +451,13 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
             // colHeader is index 0
             strLengths[0] = colNames.getNames().stream()
                     .mapToInt(v -> v.getString().length())
-                    .max().getAsInt();
+                    .max().orElse(0);
 
             // each tuple represents a column, so we can simply check the longest value in each tuple
             for (int i = 0; i < tuples.size(); i++) {
                 strLengths[i + 1] = tuples.get(i).getElements().stream()
                         .mapToInt(o -> o.toString().length())
-                        .max().getAsInt();
+                        .max().orElse(0);
             }
         } else {
             strLengths = IntStream.range(0, colNames.size())
@@ -441,7 +465,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
                             colNames.get(i).getString().length(),
                             tuples.stream()
                                     .mapToInt(row -> row.getElements().get(i).toString().length())
-                                    .max().getAsInt()))
+                                    .max().orElse(0)))
                     .toArray();
         }
 
@@ -479,7 +503,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
 
                 // variable used in lambda expression must be final
                 int finalRow = row;
-                tuples.stream().forEach(
+                tuples.forEach(
                         t -> sb.append(' ').append(String.format(it.next(), t.getElements().get(finalRow)))
                 );
             }
@@ -499,7 +523,7 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
             // tuple rows
             sb.append(String.format(formatted, colNames.getNames().toArray())).append('\n');
             sb.append("-".repeat(rowLength));
-            tuples.stream().forEach(t -> sb.append('\n').append(String.format(formatted, t.getElements().toArray())));
+            tuples.forEach(t -> sb.append('\n').append(String.format(formatted, t.getElements().toArray())));
         }
 
         return sb.toString();

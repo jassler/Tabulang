@@ -1,7 +1,11 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
@@ -24,33 +28,29 @@ public class ExistsSuchThatNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object tuple = getLeftNode().evaluateNode(interpretation);
-        if (!(tuple instanceof Tuple)) {
-            throw new IllegalOperandArgumentException("Operation 'exists" + variableName + " in " + tuple + " (" + tuple.getClass() + ") can not be executed." +
-                    tuple + " has to a a tuple.");
-        }
         if (interpretation.getEnvironment().containsKey(variableName)) {
             throw new VariableAlreadyDefinedException(variableName);
         }
-        for (Object o : ((Tuple) tuple).getElements()) {
-            //TODO remove lines 33-36 if 38-40 dont cause problems;
-            /*HashMap<String, Object> nestedHashmap = new HashMap<>(interpretation.getEnvironment());
-            Interpretation nestedInterpretation = new Interpretation(nestedHashmap);
-            nestedInterpretation.getEnvironment().put(variableName, o);
-            Boolean result = (Boolean) getRightNode().evaluateNode(nestedInterpretation);*/
-
-            interpretation.getEnvironment().put(variableName, o);
-            Object result = getRightNode().evaluateNode(interpretation);
-            interpretation.getEnvironment().remove(variableName);
-            if (!(result instanceof Boolean)) {
-                throw new IllegalArgumentException("Operation '" + toString() + "' can not be finished." +
-                        "The condition " + getRightNode() + " returned a non-boolean value.");
+        Object o = getLeftNode().evaluateNode(interpretation);
+        if (!(o instanceof Tuple<?>) && !(o instanceof Table)) {
+            throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
+        }
+        if(o instanceof Tuple<?> tuple) {
+            for (Object object : tuple.getElements()) {
+                InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
+                if (booleanResult.getaBoolean()) {
+                    return new InternalBoolean(true);
+                }
             }
-            if ((Boolean) result) {
-                return true;
+        } else {
+            for (Object object : ((Table<?>) o).getRows()) {
+                InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
+                if(booleanResult.getaBoolean()){
+                    return new InternalBoolean(true);
+                }
             }
         }
-        return false;
+        return new InternalBoolean(false);
 
     }
 

@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalDataObject;
+import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -61,32 +62,24 @@ public class LoopStatementNode extends StatementNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object term = getTerm().evaluateNode(interpretation);
+        Object termObject = getTerm().evaluateNode(interpretation);
 
-        if (!(term instanceof Tuple<?> tuple))
-            throw new IllegalTupleOperandArgumentException(toString());
+        if (!(termObject instanceof Tuple<?> tuple))
+            throw new IllegalTupleOperandArgumentException(getTextPosition(), termObject.getClass().getSimpleName(), getTerm().getTextPosition().getContent());
 
         String identifier = getIdentifier().getIdentifier();
         LinkedList<Object> resultList = new LinkedList<>();
         Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
-        /*
-        System.out.println("Loop Nested Interpretation vor erstem Schleifendurchlauf: ");
-        Iterator<Map.Entry<String, Object>> it = interpretation.getEnvironment().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Object> pair = it.next();
-            System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
-        }
-        System.out.println();
-        */
-        for (int i = 0; i < tuple.getElements().size(); ++i) {
-            Object tupleElement = tuple.getElements().get(i);
-            nestedInterpretation.getEnvironment().put(identifier, tupleElement);
 
-            if (tupleElement instanceof Tuple<?> el) {
-                for (int j = 0; j < el.getElements().size(); j++) {
-                    String type = el.getNames().get(j).getString();
-                    Object element = el.getElements().get(j);
-                    nestedInterpretation.getEnvironment().put(type, element);
+        for (int i = 0; i < tuple.getElements().size(); ++i) {
+            Object tupleElementObject = tuple.getElements().get(i);
+            nestedInterpretation.getEnvironment().put(identifier, tupleElementObject);
+
+            if (tupleElementObject instanceof Tuple<?> tupleElement) {
+                for (int j = 0; j < tupleElement.getElements().size(); j++) {
+                    InternalString type = tupleElement.getNames().getNames().get(j);
+                    Object element = tupleElement.getElements().get(j);
+                    nestedInterpretation.getEnvironment().put(type.getString(), element);
                 }
             }
             for (Node statementNode : statements) {
@@ -95,7 +88,7 @@ public class LoopStatementNode extends StatementNode {
                     ((GroupNode) statementNode).setLastIteration(false);
                     groupStatementFound = true;
                 }
-                if (statementNode instanceof GroupNode && i + 1 == ((Tuple) term).getElements().size()) {
+                if (statementNode instanceof GroupNode && i + 1 == tuple.getElements().size()) {
                     ((GroupNode) statementNode).setLastIteration(true);
                     resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
                 } else {
@@ -111,7 +104,7 @@ public class LoopStatementNode extends StatementNode {
         ArrayList<InternalDataObject> annotatedResults = new ArrayList<>(resultList.size());
         resultList.forEach(el -> annotatedResults.add(new InternalDataObject(el)));
         Tuple<InternalDataObject> result = new Tuple<>(annotatedResults);
-        //System.out.println("Loop Result: " + result);
+        System.out.println("Loop Result: " + result);
         return result;
     }
 

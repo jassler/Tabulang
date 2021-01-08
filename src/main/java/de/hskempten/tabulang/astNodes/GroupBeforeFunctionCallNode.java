@@ -39,10 +39,10 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
         buildMapValueMap(interpretation, groupTerm);
         buildFunctionParametersMap(interpretation, groupTerm, funCall, variableValueInLoopX);
 
-        if(isLastIteration()){
+        if (isLastIteration()) {
             System.out.println();
             Iterator iterator = variableValueInLoopX.values().iterator();
-            for(Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
+            for (Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
                 for (TermNode parameter : funCall.getParameters()) {
                     Object value = iterator.next();
                     interpretation.getEnvironment().put(((IdentifierNode) parameter).getIdentifier(), value);

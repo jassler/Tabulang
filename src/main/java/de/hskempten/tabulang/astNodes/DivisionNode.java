@@ -15,11 +15,8 @@ public class DivisionNode extends BinaryArithmeticNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (left instanceof InternalNumber && right instanceof InternalNumber) {
-            return ((InternalNumber) left).divide((InternalNumber) right);
-        } else {
-            throw new IllegalNumberOperandArgumentException(toString());
-        }
+        throwExceptionIfNotNumbers(left, right);
+        return ((InternalNumber)left).divide(((InternalNumber) right));
     }
 
     @Override

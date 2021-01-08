@@ -2,7 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
@@ -29,32 +29,27 @@ public class MarkIfInLoopNode extends MarkStatementNode {
             throw new VariableNotDeclaredException("mapValue" + interpretation.getNestingLevel());
         }
         Object date = interpretation.getEnvironment().get("mapValue" + interpretation.getNestingLevel());
-        try {
-            if (date instanceof Tuple) {
-                Interpretation nestedInterpretation = interpretation.deepCopy();
-                for (int j = 0; j < ((Tuple<?>) date).size(); j++) {
-                    Object element = ((Tuple<?>) date).getElements().get(j);
-                    Object name = ((Tuple<?>) date).getNames().get(j);
-                    nestedInterpretation.getEnvironment().put(name.toString(), element);
-                }
-                Object predicate = pred.evaluateNode(nestedInterpretation);
-                if (predicate instanceof InternalBoolean internalBoolean) {
-                    if (internalBoolean.getaBoolean()) {
-                        markTupleObject((Tuple) date, interpretation);
-                        return null;
-                    }
-                }
-            } else {
-                Object predicate = pred.evaluateNode(interpretation);
-                if (predicate instanceof InternalBoolean internalBoolean) {
-                    if (internalBoolean.getaBoolean()) {
-                        markNonTupleObject(date, interpretation);
-                        return null;
-                    }
+        if (date instanceof Tuple<?> tuple) {
+            Interpretation nestedInterpretation = interpretation.deepCopy();
+            for (int j = 0; j < ((Tuple<?>) date).size(); j++) {
+                Object element = ((Tuple<?>) date).getElements().get(j);
+                Object name = ((Tuple<?>) date).getNames().get(j);
+                nestedInterpretation.getEnvironment().put(name.toString(), element);
+            }
+            Object predicate = pred.evaluateNode(nestedInterpretation);
+            if (predicate instanceof InternalBoolean internalBoolean) {
+                if (internalBoolean.getaBoolean()) {
+                    prepareTupleMark(tuple, interpretation);
                 }
             }
-        } catch (IllegalOperandArgumentException illegalOperandArgumentException){
-            illegalOperandArgumentException.printStackTrace();
+        } else {
+            Object predicate = pred.evaluateNode(interpretation);
+            if (!(predicate instanceof InternalBoolean booleanResult)) {
+                throw new IllegalBooleanOperandArgumentException(getTextPosition(), predicate.getClass().getSimpleName(), pred.getTextPosition().getContent());
+            }
+            if (booleanResult.getaBoolean()) {
+                setMark(date, interpretation);
+            }
         }
         return null;
     }

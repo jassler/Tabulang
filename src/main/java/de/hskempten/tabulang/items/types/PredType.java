@@ -111,6 +111,22 @@ public class PredType implements LanguageType {
                     throw new ParseTimeException(l, "Illegal bracket: " + l.lookahead().getContent());
                 }
             }
+            case "." -> {
+                if ("quotedString".equals(l.lookahead(2).getType())) {
+                    if ("binRelSym".equals(l.lookahead(3).getType())) {
+                        l.getNextTokenAndExpect(TokenType.DOT);
+                        myTerm = TermType.instance.parse(l);
+                        myBinRelSym = BinRelSymType.instance.parse(l);
+                        mySecondTerm = TermType.instance.parse(l);
+                        myPredR = PredRType.instance.parse(l);
+                        item = new PredItem(".", myTerm, myBinRelSym, mySecondTerm, myPredR);
+                    } else {
+                        throw new ParseTimeException(l, "Expected binRelSym after Index, got: " + l.lookahead().getContent());
+                    }
+                } else {
+                    throw new ParseTimeException(l, "Expected quoted String after '.' for Index, got: " + l.lookahead().getContent());
+                }
+            }
             default -> {
                 myTerm = TermType.instance.parse(l);
                 if ("binRelSym".equals(l.lookahead().getType())) {

@@ -2,13 +2,12 @@ package de.hskempten.tabulang.datatypes;
 
 import de.hskempten.tabulang.datatypes.exceptions.ArrayLengthMismatchException;
 import de.hskempten.tabulang.datatypes.exceptions.DuplicateNamesException;
-import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E extends Styleable> extends InternalObject implements Cloneable, Iterable<E> {
+public class Tuple<E extends Styleable> extends InternalObject implements Cloneable, Iterable<E>, TupleOperation<Tuple<E>> {
 
     private final ArrayList<E> elements;
     private HeaderNames names;
@@ -30,13 +29,8 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     }
 
     /**
-<<<<<<< Updated upstream
      * See {@link Tuple#Tuple(E[], InternalString[], boolean)}
-     * 
-=======
-     * See {@link Tuple#Tuple(E[], String[], boolean)}
      *
->>>>>>> Stashed changes
      * @param elements Elements inside the Tuple
      * @param names    Name for each element, where {@code objects.length == names.length}
      * @throws ArrayLengthMismatchException if objects and names array do not have the same length
@@ -180,8 +174,19 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      *
      * @return {@code true} for horizontal, {@code false} for vertical.
      */
+    @Override
     public boolean isHorizontal() {
         return isHorizontal;
+    }
+
+    @Override
+    public void transpose() {
+        this.isHorizontal = !this.isHorizontal;
+    }
+
+    @Override
+    public boolean isTransposed() {
+        return !this.isHorizontal;
     }
 
     /**
@@ -206,10 +211,25 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         return elements.get(names.getIndexOf(name.getString()));
     }
 
+    /**
+     * Get element from tuple by index. Same operation as {@link List#get(int)}.
+     *
+     * @param i Non-negative index
+     * @return Tuple element
+     * @throws IndexOutOfBoundsException if i &lt; 0 or i &ge; {@link Tuple#size()}
+     */
     public E getFromIndex(int i) {
         return elements.get(i);
     }
 
+    /**
+     * Replaces the element at the specified position in this list with
+     * the specified element. Same operation as {@link List#set(int, Object)}.
+     *
+     * @param index Non-negative index
+     * @param value Value to replace element at position index with
+     * @throws IndexOutOfBoundsException if i &lt; 0 or i &ge; {@link Tuple#size()}
+     */
     public void setToIndex(int index, E value) {
         elements.set(index, value);
     }
@@ -254,6 +274,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @param elements Element indexes
      * @return Tuple with selected indexes
      */
+    @Override
     public Tuple<E> projection(int... elements) {
         List<E> newObjects = new ArrayList<>(elements.length);
         List<InternalString> newNames = new ArrayList<>(elements.length);
@@ -272,6 +293,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @param names Choose elements with (column) names
      * @return Tuple with selected indexes
      */
+    @Override
     public Tuple<E> projection(InternalString... names) {
         int[] indices = new int[names.length];
         for (int i = 0; i < names.length; i++) {
@@ -288,8 +310,33 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      *
      * @return Tuple with no elements
      */
+    @Override
     public Tuple<E> projection() {
         return new Tuple<>(new ArrayList<>(0));
+    }
+
+    /**
+     * Get width of tuple. If tuple is vertical (or transposed), it returns 1.
+     *
+     * <p>To get the amount of elements in this tuple, use {@link Tuple#size()}</p>
+     *
+     * @return 1 if not horizontal or transposed, else tuple size
+     */
+    @Override
+    public int getWidth() {
+        return isHorizontal ? size() : 1;
+    }
+
+    /**
+     * Get height of tuple. If tuple is horizontal (or not transposed), it returns 1.
+     *
+     * <p>To get the amount of elements in this tuple, use {@link Tuple#size()}</p>
+     *
+     * @return 1 if horizontal or not transposed, else tuple size
+     */
+    @Override
+    public int getHeight() {
+        return isHorizontal ? 1 : size();
     }
 
     /**
@@ -304,20 +351,6 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         }
 
         return new Tuple<>(elements, newNames, isHorizontal);
-    }
-
-    /**
-     * Check if <b>sorted</b> array has duplicate elements, returns first element string it finds.
-     *
-     * @param arr Sorted String array with variable names
-     * @return null, if no same string appears next to each other
-     */
-    private static String findDuplicate(List<String> arr) {
-        for (int i = 1; i < arr.size(); i++) {
-            if (arr.get(i).equals(arr.get(i - 1)))
-                return arr.get(i);
-        }
-        return null;
     }
 
     /**
@@ -374,7 +407,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
                     .append(String.format(formatted, elements.toArray()));
 
         } else {
-            int namesColSize = names.getNames().stream().max(Comparator.comparing(v -> v.getString().length())).get().getString().length();
+            int namesColSize = names.getNames().stream().max(Comparator.comparing(v -> v.getString().length())).orElse(new InternalString("")).getString().length();
             String formatted = "%-" + namesColSize + "s | %s";
 
             var nameIt = names.iterator();
@@ -413,6 +446,5 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         } else {
             return this;
         }
-
     }
 }

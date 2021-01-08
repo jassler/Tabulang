@@ -50,10 +50,8 @@ public class FunctionDeclarationNode extends TermNode {
 
     @Override
     public String toString() {
-        return "FunctionDeclarationNode{" +
-                "parameters=" + parameters +
-                ", statements=" + statements +
-                "} ";
+        return "(" + parameters + ") " +
+                "-> {" + statements +"}";
     }
 }
 

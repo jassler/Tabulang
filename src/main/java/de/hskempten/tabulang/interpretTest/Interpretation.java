@@ -53,51 +53,29 @@ public class Interpretation {
         this.nestingLevel = nestingLevel;
     }
 
-    //TODO remove if not needed
-    public Interpretation findIdentifier(Identifier identifier){
-        if(environment.containsKey(identifier.getIdentifierName())){
+
+    public Interpretation findIdentifier(String identifier) {
+        if (environment.containsKey(identifier)) {
             return this;
-        } else if(parent == null){
+        } else if (parent == null) {
             return null;
         } else {
             return parent.findIdentifier(identifier);
         }
     }
 
-    public Interpretation findIdentifierTest2(String identifier){
-        if(parent == null){
-            if(environment.containsKey(identifier)) {
-                return this;
-            } else {
-                return null;
-            }
-        } else {
-            return parent.findIdentifierTest2(identifier);
-        }
-    }
-
-    public Interpretation findIdentifier(String identifier){
-        if(environment.containsKey(identifier)){
-            return this;
-        } else if(parent == null){
-            return null;
-        } else {
-            return parent.findIdentifier(identifier);
-        }
-    }
-
-    public Interpretation deepCopy(){
+    public Interpretation deepCopy() {
         Interpretation deepCopy = new Interpretation(new HashMap<>(this.getEnvironment()));
-        if(this.parent != null) {
+        if (this.parent != null) {
             deepCopyParents(deepCopy, this.parent);
         }
         return deepCopy;
     }
 
-    public void deepCopyParents(Interpretation current, Interpretation parent){
+    public void deepCopyParents(Interpretation current, Interpretation parent) {
         Interpretation deepCopyParent = new Interpretation(new HashMap<>(parent.getEnvironment()));
         current.setParent(deepCopyParent);
-        if(parent.getParent() != null) {
+        if (parent.getParent() != null) {
             deepCopyParents(deepCopyParent, parent.getParent());
         }
     }
@@ -107,17 +85,13 @@ public class Interpretation {
         return this;
     }
 
-    public Object getValue (String key){
+    public Object getValue(String key) {
         return environment.get(key);
     }
 
-    public void exitProgram(Exception e){
+    public void exitProgram(Exception e) {
         System.err.println(e.getMessage());
         System.exit(1);
     }
 
-    public void exitProgram2(IllegalOperandArgumentException e){
-        System.err.println(e);
-        System.exit(1);
-    }
 }

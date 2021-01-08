@@ -27,7 +27,7 @@ public class MarkIfTermNode extends MarkTermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object date = getLeftNode().evaluateNode(interpretation);
         try {
-            if (date instanceof Tuple tuple) {
+            if (date instanceof Tuple<?> tuple) {
                 Interpretation nestedInterpretation = interpretation.deepCopy();
                 for (int j = 0; j < tuple.size(); j++) {
                     Object element = tuple.getElements().get(j);
@@ -37,16 +37,14 @@ public class MarkIfTermNode extends MarkTermNode {
                 Object predicate = pred.evaluateNode(nestedInterpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
                     if (internalBoolean.getaBoolean()) {
-                        markTupleObject(tuple, interpretation);
-                        return null;
+                        prepareTupleMark(tuple, interpretation);
                     }
                 }
             } else {
                 Object predicate = pred.evaluateNode(interpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
                     if (internalBoolean.getaBoolean()) {
-                        markNonTupleObject(date, interpretation);
-                        return null;
+                        setMark(date, interpretation);
                     }
                 }
             }
