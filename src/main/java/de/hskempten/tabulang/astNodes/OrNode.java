@@ -14,10 +14,8 @@ public class OrNode extends BinaryPredicateNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalBoolean leftBoolean) || !(right instanceof InternalBoolean rightBoolean)) {
-            throw new IllegalBooleanOperandArgumentException(toString());
-        }
-        return new InternalBoolean(leftBoolean.getaBoolean() || rightBoolean.getaBoolean());
+        throwExceptionIfNotBoolean(left, right);
+        return new InternalBoolean(((InternalBoolean)left).getaBoolean() || ((InternalBoolean) right).getaBoolean());
     }
 
     @Override

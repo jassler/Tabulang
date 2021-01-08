@@ -12,17 +12,10 @@ public class AndNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        try {
-            Object left = getLeftNode().evaluateNode(interpretation);
-            Object right = getRightNode().evaluateNode(interpretation);
-            if (!(left instanceof InternalBoolean leftBool) || !(right instanceof InternalBoolean rightBool)) {
-                throw new IllegalBooleanOperandArgumentException(toString());
-            }
-            return new InternalBoolean(leftBool.getaBoolean() && rightBool.getaBoolean());
-        } catch (IllegalBooleanOperandArgumentException booleanOperandArgumentException) {
-            interpretation.exitProgram(booleanOperandArgumentException);
-        }
-        return null;
+        Object left = getLeftNode().evaluateNode(interpretation);
+        Object right = getRightNode().evaluateNode(interpretation);
+        throwExceptionIfNotBoolean(left, right);
+        return new InternalBoolean(((InternalBoolean)left).getaBoolean() && ((InternalBoolean) right).getaBoolean());
     }
 
     @Override

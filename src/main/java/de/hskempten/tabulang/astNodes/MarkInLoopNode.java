@@ -20,9 +20,9 @@ public class MarkInLoopNode extends MarkStatementNode {
         Object date = interpretation.getEnvironment().get("mapValue" + interpretation.getNestingLevel());
         try {
             if (date instanceof Tuple tuple) {
-                markTupleObject(tuple, interpretation);
+                prepareTupleMark(tuple, interpretation);
             } else {
-                markNonTupleObject(date, interpretation);
+                setMark(date, interpretation);
             }
             return null;
         } catch (IllegalOperandArgumentException illegalOperandArgumentException) {

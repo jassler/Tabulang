@@ -1,8 +1,10 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
+import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -15,13 +17,25 @@ public class InTupleNode extends BinaryPredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object tupleObject = getRightNode().evaluateNode(interpretation);
         Object identifier = getLeftNode().evaluateNode(interpretation);
-        if (!(tupleObject instanceof Tuple tuple)) {
-            throw new IllegalOperandArgumentException("Operation '" + tupleObject + " (" + tupleObject.getClass() + ") in " + identifier + " (" + identifier.getClass() + ") can not be executed. " +
-                    "No tuple on left side of the 'in' operator.");
+        tupleObject = ifTupleTransform(tupleObject);
+        if (!(tupleObject instanceof Tuple<?>) && !(tupleObject instanceof Table)) {
+            throw new IllegalTupleOperandArgumentException(getTextPosition(), tupleObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
-        if (tuple.getElements().contains(identifier)) {
-            return new InternalBoolean(true);
+        if(tupleObject instanceof Tuple<?> tuple){
+            if (tuple.getElements().contains(identifier)) {
+                return new InternalBoolean(true);
+            } else {
+                return new InternalBoolean(false);
+            }
         } else {
+            for(Object t : ((Table<?>) tupleObject).getRows()){
+                if(t.equals(identifier)){
+                    return new InternalBoolean(true);
+                }
+                if(((Tuple<?>)t).getElements().contains(identifier)){
+                    return new InternalBoolean(true);
+                }
+            }
             return new InternalBoolean(false);
         }
     }

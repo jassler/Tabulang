@@ -18,14 +18,11 @@ public class EqualsNode extends BinaryPredicateNode {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
 
-        if(left instanceof InternalString l && right instanceof InternalString r) {
-            return new InternalBoolean(l.equals(r));
+        if(left instanceof InternalString leftString && right instanceof InternalString rightString) {
+            return new InternalBoolean(leftString.equals(rightString));
         }
-
-        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalBooleanOperandArgumentException(toString());
-        }
-        return new InternalBoolean(leftNumber.compareTo(rightNumber) == 0);
+        throwExceptionIfNotNumbers(left, right);
+        return new InternalBoolean(((InternalNumber)left).compareTo(((InternalNumber) right)) == 0);
     }
 
     @Override

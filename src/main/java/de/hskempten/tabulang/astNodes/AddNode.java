@@ -15,20 +15,18 @@ public class AddNode extends BinaryArithmeticNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        try {
-            if ((left instanceof InternalString) || (right instanceof InternalString)) {
-                return new InternalString(left.toString() + right.toString());
-            } else if (left instanceof InternalNumber leftNumber && right instanceof InternalNumber rightNumber) {
-                return leftNumber.add(rightNumber);
-            } else {
-                throw new IllegalOperandArgumentException("Operation '" + toString() + "' can not be executed. " +
-                        "Allowed operands: Strings and/or Numbers.");
-            }
-        } catch (Exception e) {
-            interpretation.exitProgram(e);
+        if (!(left instanceof InternalString) && !(left instanceof InternalNumber)) {
+            throw new IllegalOperandArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent(), "Allowed operands: Number and/or String.");
         }
-        return null;
+        Object right = getRightNode().evaluateNode(interpretation);
+        if (!(right instanceof InternalString) && !(right instanceof InternalNumber)) {
+            throw new IllegalOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent(), "Allowed operands: Number and/or String.");
+        }
+        if ((left instanceof InternalNumber leftNumber) && (right instanceof InternalNumber rightNumber)) {
+            return leftNumber.add(rightNumber);
+        } else {
+            return new InternalString(left.toString() + right.toString());
+        }
     }
 
     @Override

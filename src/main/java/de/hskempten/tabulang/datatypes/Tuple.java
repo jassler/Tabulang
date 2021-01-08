@@ -413,6 +413,5 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
         } else {
             return this;
         }
-
     }
 }

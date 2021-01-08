@@ -37,7 +37,7 @@ public class VerticalTupleNode extends TermNode {
             flipped.setHorizontal(false);
             return flipped;
         } else {
-            throw new IllegalTupleOperandArgumentException(toString());
+            throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
         }
     }
 

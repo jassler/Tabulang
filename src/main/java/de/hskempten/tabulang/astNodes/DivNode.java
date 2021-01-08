@@ -15,10 +15,8 @@ public class DivNode extends BinaryArithmeticNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalNumber leftNumber) || !(right instanceof InternalNumber rightNumber)) {
-            throw new IllegalNumberOperandArgumentException(toString());
-        }
-        return leftNumber.div(rightNumber);
+        throwExceptionIfNotNumbers(left, right);
+        return ((InternalNumber)left).div(((InternalNumber) right));
     }
 
     @Override

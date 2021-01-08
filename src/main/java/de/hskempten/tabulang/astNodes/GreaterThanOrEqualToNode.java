@@ -16,11 +16,8 @@ public class GreaterThanOrEqualToNode extends BinaryPredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        if (left instanceof InternalNumber leftNumber && right instanceof InternalNumber rightNumber) {
-            return new InternalBoolean(leftNumber.compareTo(rightNumber) >= 0);
-        } else {
-            throw new IllegalBooleanOperandArgumentException(toString());
-        }
+        throwExceptionIfNotNumbers(left, right);
+        return new InternalBoolean(((InternalNumber)left).compareTo(((InternalNumber) right)) >= 0);
     }
 
     @Override

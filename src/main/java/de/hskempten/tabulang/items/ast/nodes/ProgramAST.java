@@ -46,8 +46,8 @@ public class ProgramAST extends RootNode {
                 Object result = statementNode.evaluateNode(interpretation);
                 if (result != null)
                     finalResult = result;
-            } catch(IllegalOperandArgumentException e){
-                interpretation.exitProgram2(e);
+            } catch(Exception e){
+                interpretation.exitProgram(e);
             }
         }
 

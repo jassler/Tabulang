@@ -6,7 +6,7 @@ import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedExcept
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class UniteNode extends BinaryTermNode{
+public class UniteNode extends BinaryTermNode {
     public UniteNode(Node leftNode, Node rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }
@@ -15,13 +15,9 @@ public class UniteNode extends BinaryTermNode{
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
-        try {
-            left = checkIfTable(left);
-            right = checkIfTable(right);
-        } catch (TupleCannotBeTransformedException | IllegalArgumentException runtimeException){
-            throw new IllegalTableOperandArgumentException(toString());
-        }
-        return ((Table) left).union((Table) right);
+        Table leftTable = checkIfTable(left);
+        Table rightTable = checkIfTable(right);
+        return leftTable.union(rightTable);
     }
 
     @Override

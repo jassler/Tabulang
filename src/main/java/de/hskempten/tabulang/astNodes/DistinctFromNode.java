@@ -3,21 +3,23 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DistinctFromNode extends TermNode {
     private TermNode node;
-    private IdentifierNode[] names;
+    private ArrayList<IdentifierNode> names;
 
     public DistinctFromNode(TermNode node, ArrayList<IdentifierNode> names, TextPosition textPosition) {
         super(textPosition);
         this.node = node;
-        this.names = (IdentifierNode[]) names.toArray();
+        this.names = names;
     }
 
     public Node getNode() {
@@ -28,36 +30,32 @@ public class DistinctFromNode extends TermNode {
         this.node = node;
     }
 
-    public IdentifierNode[] getNames() {
+    public ArrayList<IdentifierNode> getNames() {
         return names;
     }
 
-    public void setNames(IdentifierNode[] names) {
+    public void setNames(ArrayList<IdentifierNode> names) {
         this.names = names;
     }
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object object = node.evaluateNode(interpretation);
-        try {
-            object = ifTupleTransform(object);
-        } catch (TupleCannotBeTransformedException ignored) {
-            //TODO testen 4.01.
-        }
-        if (object instanceof Table) {
-            ArrayList<InternalString> columnNames = new ArrayList<>(names.length);
-            for (TermNode t : names) {
-                columnNames.add((InternalString) t.evaluateNode(interpretation));
+        object = ifTupleTransform(object);
+
+        if (object instanceof Table table) {
+            ArrayList<InternalString> columnNames = new ArrayList<>();
+            for (IdentifierNode identifier : names) {
+                columnNames.add((InternalString) identifier.evaluateNode(interpretation));
             }
-            return ((Table<?>) object).projection(columnNames.toArray(InternalString[]::new));
+            return table.projection(columnNames.toArray(InternalString[]::new));
         } else {
-            throw new IllegalOperandArgumentException("Got " + object + " on the right side of'" + toString()
-                    + "'. Allowed operand on the right side: Table.");
+            throw new IllegalTableOperandArgumentException(getTextPosition(), object.getClass().getSimpleName(), node.getTextPosition().getContent());
         }
     }
 
     @Override
     public String toString() {
-        return "distinct " + Arrays.toString(names) + " from " + node;
+        return "distinct " + names + " from " + node;
     }
 }

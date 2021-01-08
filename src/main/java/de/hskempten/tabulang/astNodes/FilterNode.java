@@ -4,14 +4,13 @@ import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
-public class FilterNode extends BinaryTermNode{
+public class FilterNode extends BinaryTermNode {
     public FilterNode(Node leftNode, Node rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }
@@ -19,15 +18,9 @@ public class FilterNode extends BinaryTermNode{
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object object = getLeftNode().evaluateNode(interpretation);
-        try {
-            object = ifTupleTransform(object);
-        } catch (TupleCannotBeTransformedException transformedException){
-            throw new IllegalOperandArgumentException("Got " + object + " (" + object.getClass() + ") on the left side of the 'filter' keyword." +
-                    "Allowed operand on the left side: Table.");
-        }
-
-        if(!(object instanceof Table<?> table))
-            throw new IllegalArgumentException("Expected Table but got " + object.getClass().getSimpleName());
+        object = ifTupleTransform(object);
+        if (!(object instanceof Table<?> table))
+            throw new IllegalTableOperandArgumentException(getTextPosition(), object.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
 
         ArrayList<InternalString> colNames = new ArrayList<>(table.getColNames().getNames());
 
@@ -40,7 +33,7 @@ public class FilterNode extends BinaryTermNode{
                 nested.getEnvironment().put(name.getString(), element);
             }
 
-            nested.putValue("mapvalue", tuple);
+            //nested.putValue("mapvalue", tuple);
 
             Object result = getRightNode().evaluateNode(nested);
             if (!(result instanceof InternalBoolean booleanResult)) {

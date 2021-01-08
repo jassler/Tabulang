@@ -202,6 +202,10 @@ public class InternalNumber extends InternalObject {
         return newNumeratorAndDenominator;
     }
 
+    public Boolean isInteger(InternalNumber number){
+        return getFloatValue() % 1 == 0;
+    }
+
     @Override
     public String toString() {
             return "" + getValue() + "";

@@ -29,11 +29,11 @@ public class CountHorizontalNode extends TermNode {
         Object o = node.evaluateNode(interpretation);
         int width;
 
-        if (o instanceof Table<?> t)
-            width = t.getNumberOfColumns();
+        if (o instanceof Table<?> table)
+            width = table.getNumberOfColumns();
 
-        else if (o instanceof Tuple<?> t)
-            width = t.size();
+        else if (o instanceof Tuple<?> tuple)
+            width = tuple.size();
 
         else
             width = 1;

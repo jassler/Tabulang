@@ -4,6 +4,7 @@ public class InternalBoolean extends InternalObject{
     private Boolean aBoolean;
 
     public InternalBoolean(Boolean aBoolean) {
+        super();
         this.aBoolean = aBoolean;
     }
 
@@ -13,6 +14,14 @@ public class InternalBoolean extends InternalObject{
 
     public void setaBoolean(Boolean aBoolean) {
         this.aBoolean = aBoolean;
+    }
+
+    public InternalBoolean and(InternalBoolean other){
+        if(this.getaBoolean() && other.getaBoolean()){
+            return new InternalBoolean(true);
+        } else {
+            return new InternalBoolean(false);
+        }
     }
 
     @Override
