@@ -3,7 +3,6 @@ package de.hskempten.tabulang.libreOffice;
 import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.libreOffice.Exceptions.OdsExportException;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
@@ -14,7 +13,6 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
-import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +24,6 @@ public class OdsExportService {
     private OdfOfficeAutomaticStyles _odfOfficeAutomaticStyles;
     private org.odftoolkit.simple.table.Table _initTable;
     private ArrayList<MStyle> _styles;
-
-
 
     /* PUBLIC METHODS */
 
@@ -74,23 +70,28 @@ public class OdsExportService {
      */
 
     public void Export(Table<InternalDataObject> table, String path, String fileName){
-        var content = new ArrayList<ArrayList<String>>();
-        for(var row : table){
-            var contentRows = new ArrayList<String>();
-            for(var cell : row){
-                contentRows.add(cell.getObject().toString());
+        try {
+            var content = new ArrayList<ArrayList<String>>();
+            for(var row : table){
+                var contentRows = new ArrayList<String>();
+                for(var cell : row){
+                    contentRows.add(cell.getObject().toString());
+                }
+                content.add(contentRows);
             }
-            content.add(contentRows);
+            AddHeadlines(table.getColNames().getNames().stream().map(InternalString::getString)
+                    .collect(Collectors.toCollection(ArrayList::new))
+            );
+            AddContentFromTable(content);
+            SetRowStylesFromTable(table);
+            // TODO what to do about columns and transposed tables
+            // SetColumnStylesFromTable(table.getColumnStyles());
+            SetCellStylesFromTable(table);
+            SaveFile(path, fileName);
         }
-        AddHeadlines(table.getColNames().getNames().stream().map(InternalString::getString)
-                .collect(Collectors.toCollection(ArrayList::new))
-        );
-        AddContentFromTable(content);
-        SetRowStylesFromTable(table);
-        // TODO what to do about columns and transposed tables
-        // SetColumnStylesFromTable(table.getColumnStyles());
-        SetCellStylesFromTable(table);
-        SaveFile(path, fileName);
+        catch(Exception e){
+            throw new OdsExportException("Cannot export table %s to %s with file name %s.".formatted(table, path, fileName));
+        }
     }
 
     /**
@@ -120,7 +121,7 @@ public class OdsExportService {
                 _initTable.getCellByPosition(i, 0).setStringValue(headlines.get(i));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new OdsExportException("Cannot add headlines %s to table.".formatted(headlines));
         }
     }
 
@@ -131,10 +132,15 @@ public class OdsExportService {
      */
 
     public void AddContent(ArrayList<ArrayList<String>> content){
-        for(var i = 0; i < content.size(); i++){
-            for(var j = 0; j < content.get(i).size(); j++){
-                _initTable.getCellByPosition(i, j + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+        try {
+            for(var i = 0; i < content.size(); i++){
+                for(var j = 0; j < content.get(i).size(); j++){
+                    _initTable.getCellByPosition(i, j + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+                }
             }
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot add content %s to table.".formatted(content));
         }
     }
 
@@ -144,8 +150,13 @@ public class OdsExportService {
      */
 
     public void CreateTable(String tableName){
-        _initTable = _spreadsheetDocument.addTable();
-        _initTable.setTableName(tableName);
+        try {
+            _initTable = _spreadsheetDocument.addTable();
+            _initTable.setTableName(tableName);
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot create a new table with table name %s.".formatted(tableName));
+        }
     }
 
     /**
@@ -153,7 +164,12 @@ public class OdsExportService {
      */
 
     public void CreateStyle(){
-        this._styles = new ArrayList<>();
+        try {
+            this._styles = new ArrayList<>();
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot create a new style");
+        }
     }
 
     /**
@@ -163,9 +179,14 @@ public class OdsExportService {
      */
 
     public void SetStyleToRow(int rowIndex){
-        var row = _initTable.getRowByIndex(rowIndex);
-        for(int i = 0; i < row.getCellCount(); i++){
-            SetStyleToCell(row.getRowIndex(), i);
+        try {
+            var row = _initTable.getRowByIndex(rowIndex);
+            for(int i = 0; i < row.getCellCount(); i++){
+                SetStyleToCell(row.getRowIndex(), i);
+            }
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set style to row %s.".formatted(rowIndex));
         }
     }
 
@@ -176,9 +197,14 @@ public class OdsExportService {
      */
 
     public void SetStyleToColumn(int columnIndex){
-        var column = _initTable.getColumnByIndex(columnIndex);
-        for(int i = 0; i < column.getCellCount(); i++){
-            SetStyleToCell(i, column.getColumnIndex());
+        try {
+            var column = _initTable.getColumnByIndex(columnIndex);
+            for(int i = 0; i < column.getCellCount(); i++){
+                SetStyleToCell(i, column.getColumnIndex());
+            }
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set style to column %s.".formatted(columnIndex));
         }
     }
 
@@ -190,8 +216,13 @@ public class OdsExportService {
      */
 
     public void SetStyleToCell(int rowIndex, int columnIndex){
-        var cell = _initTable.getCellByPosition(columnIndex, rowIndex);
-        cell.setCellStyleName(CreateOdfStyle().getStyleNameAttribute());
+        try {
+            var cell = _initTable.getCellByPosition(columnIndex, rowIndex);
+            cell.setCellStyleName(CreateOdfStyle().getStyleNameAttribute());
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set style to cell (row %s, column %s).".formatted(rowIndex, columnIndex));
+        }
     }
 
     /**
@@ -201,7 +232,12 @@ public class OdsExportService {
      */
 
     public void SetBackgroundColor(String value){
-        this._styles.add(new MStyle(OdfTableCellProperties.BackgroundColor, value));
+        try {
+            this._styles.add(new MStyle(OdfTableCellProperties.BackgroundColor, value));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set background color to %s.".formatted(value));
+        }
     }
 
     /**
@@ -209,9 +245,14 @@ public class OdsExportService {
      */
 
     public void SetBold() {
-        this._styles.add(new MStyle(OdfTextProperties.FontWeight, "bold"));
-        this._styles.add(new MStyle(OdfTextProperties.FontWeightAsian, "bold"));
-        this._styles.add(new MStyle(OdfTextProperties.FontWeightComplex, "bold"));
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.FontWeight, "bold"));
+            this._styles.add(new MStyle(OdfTextProperties.FontWeightAsian, "bold"));
+            this._styles.add(new MStyle(OdfTextProperties.FontWeightComplex, "bold"));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set font weight to bold");
+        }
     }
 
     /**
@@ -219,9 +260,14 @@ public class OdsExportService {
      */
 
     public void SetItalic() {
-        this._styles.add(new MStyle(OdfTextProperties.FontStyle, "italic"));
-        this._styles.add(new MStyle(OdfTextProperties.FontStyleAsian, "italic"));
-        this._styles.add(new MStyle(OdfTextProperties.FontStyleComplex, "italic"));
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.FontStyle, "italic"));
+            this._styles.add(new MStyle(OdfTextProperties.FontStyleAsian, "italic"));
+            this._styles.add(new MStyle(OdfTextProperties.FontStyleComplex, "italic"));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set text to italic");
+        }
     }
 
     /**
@@ -229,9 +275,14 @@ public class OdsExportService {
      */
 
     public void SetUnderline() {
-        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineStyle, "solid"));
-        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineColor, "font-color"));
-        this._styles.add(new MStyle(OdfTextProperties.TextUnderlineWidth, "auto"));
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.TextUnderlineStyle, "solid"));
+            this._styles.add(new MStyle(OdfTextProperties.TextUnderlineColor, "font-color"));
+            this._styles.add(new MStyle(OdfTextProperties.TextUnderlineWidth, "auto"));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot underline text");
+        }
     }
 
     /**
@@ -240,13 +291,18 @@ public class OdsExportService {
      * @param value Font-Family name as String (e. g. 'Arial')
      */
 
-    public void SetFontFamliy(String value){
-        this._styles.add(new MStyle(OdfTextProperties.FontFamily, value));
-        this._styles.add(new MStyle(OdfTextProperties.FontFamilyAsian, value));
-        this._styles.add(new MStyle(OdfTextProperties.FontFamilyComplex, value));
-        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGeneric, value));
-        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericAsian, value));
-        this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericComplex, value));
+    public void SetFonFamily(String value){
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.FontFamily, value));
+            this._styles.add(new MStyle(OdfTextProperties.FontFamilyAsian, value));
+            this._styles.add(new MStyle(OdfTextProperties.FontFamilyComplex, value));
+            this._styles.add(new MStyle(OdfTextProperties.FontFamilyGeneric, value));
+            this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericAsian, value));
+            this._styles.add(new MStyle(OdfTextProperties.FontFamilyGenericComplex, value));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set font family to %s.".formatted(value));
+        }
     }
 
     /**
@@ -256,7 +312,12 @@ public class OdsExportService {
      */
 
     public void SetFontColor(String value){
-        this._styles.add(new MStyle(OdfTextProperties.Color, value));
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.Color, value));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set font color to %s.".formatted(value));
+        }
     }
 
     /**
@@ -266,7 +327,12 @@ public class OdsExportService {
      */
 
     public void SetFontSize(double value){
-        this._styles.add(new MStyle(OdfTextProperties.FontSize, String.valueOf(value)));
+        try {
+            this._styles.add(new MStyle(OdfTextProperties.FontSize, String.valueOf(value)));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set font size to %s.".formatted(value));
+        }
     }
 
     /**
@@ -277,7 +343,12 @@ public class OdsExportService {
      */
 
     public void SetColumnWidth(int columnIndex, double value){
-        _initTable.getColumnByIndex(columnIndex).setWidth(value * 10);
+        try {
+            _initTable.getColumnByIndex(columnIndex).setWidth(value * 10);
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set column width to %s".formatted(value * 10));
+        }
     }
 
     /**
@@ -288,7 +359,12 @@ public class OdsExportService {
      */
 
     public void SetRowHeight(int rowIndex, double value){
-        _initTable.getRowByIndex(rowIndex).setHeight(value * 10, false);
+        try {
+            _initTable.getRowByIndex(rowIndex).setHeight(value * 10, false);
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set row height to %s".formatted(value * 10));
+        }
     }
 
     /**
@@ -298,9 +374,14 @@ public class OdsExportService {
      */
 
     public void SetTextAlign(String value){
-        if(value.equals("right")) { value = "end"; }
-        if(value.equals("left")) { value = "start"; }
-        this._styles.add(new MStyle(OdfParagraphProperties.TextAlign, value));
+        try {
+            if(value.equals("right")) { value = "end"; }
+            if(value.equals("left")) { value = "start"; }
+            this._styles.add(new MStyle(OdfParagraphProperties.TextAlign, value));
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set %s as text align".formatted(value));
+        }
     }
 
     /**
@@ -315,7 +396,7 @@ public class OdsExportService {
             var file = new File(path, fileName + ".ods");
             _spreadsheetDocument.save(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new OdsExportException("Cannot save %s to %s.".formatted(fileName, path));
         }
     }
 
@@ -329,10 +410,15 @@ public class OdsExportService {
      */
 
     private void AddContentFromTable(ArrayList<ArrayList<String>> content){
-        for(var i = 0; i < content.size(); i++){
-            for(var j = 0; j < content.get(i).size(); j++){
-                _initTable.getCellByPosition(j, i + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+        try {
+            for(var i = 0; i < content.size(); i++){
+                for(var j = 0; j < content.get(i).size(); j++){
+                    _initTable.getCellByPosition(j, i + 1).setStringValue(String.valueOf(content.get(i).get(j)));
+                }
             }
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot add content to table.");
         }
     }
 
@@ -344,9 +430,14 @@ public class OdsExportService {
      */
 
     private OdfStyle CreateOdfStyle(){
-        var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
-        _styles.forEach(item -> style.setProperty(item.getProperty(), item.getValue()));
-        return style;
+        try {
+            var style = _odfOfficeAutomaticStyles.newStyle(OdfStyleFamily.TableCell);
+            _styles.forEach(item -> style.setProperty(item.getProperty(), item.getValue()));
+            return style;
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot create automatic style to table cell.");
+        }
     }
 
     /**
@@ -377,6 +468,7 @@ public class OdsExportService {
      *
      * @param styles Specific style for a column
      */
+
     private void SetColumnStylesFromTable(HashMap<Integer, de.hskempten.tabulang.datatypes.Style> styles){
         styles.forEach((key, value) -> {
             CreateStyle();
@@ -391,23 +483,29 @@ public class OdsExportService {
      *
      * @param table Table with cells that have styles applied to them
      */
+
     private void SetCellStylesFromTable(Table<?> table){
-        int x, y;
+        try {
+            int x, y;
 
-        y = -1;
-        for(var tuple : table) {
-            y++;
-            x = -1;
+            y = -1;
+            for(var tuple : table) {
+                y++;
+                x = -1;
 
-            for(var cell : tuple) {
-                x++;
-                if(cell.getStyle().isEmpty())
-                    continue;
+                for(var cell : tuple) {
+                    x++;
+                    if(cell.getStyle().isEmpty())
+                        continue;
 
-                CreateStyle();
-                WrapperSetStyleToTable(cell.getStyle(), y, x);
-                SetStyleToCell(y, x);
+                    CreateStyle();
+                    WrapperSetStyleToTable(cell.getStyle(), y, x);
+                    SetStyleToCell(y, x);
+                }
             }
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set styles to table %s".formatted(table));
         }
     }
 
@@ -425,21 +523,26 @@ public class OdsExportService {
      */
 
     private void WrapperSetStyleToTable(de.hskempten.tabulang.datatypes.Style styles, int rowIndex, int columnIndex) {
-        styles.forEach(item -> {
-            var key = item.getKey();
-            var value = item.getValue();
-             switch (key) {
-                case "font-color" -> SetFontColor(value);
-                case "font-family" -> SetFontFamliy(value);
-                case "font-size" -> SetFontSize(Double.parseDouble(value));
-                case "text-align" -> SetTextAlign(value);
-                case "background-color" -> SetBackgroundColor(value);
-                case "bold" -> SetBold();
-                case "italics" -> SetItalic();
-                case "underlined" -> SetUnderline();
-                case "rowheight" -> SetRowHeight(rowIndex, Double.parseDouble(value));
-                case "colwidth" -> SetColumnWidth(columnIndex, Double.parseDouble(value));
-            }
-        });
+        try {
+            styles.forEach(item -> {
+                var key = item.getKey();
+                var value = item.getValue();
+                switch (key) {
+                    case "font-color" -> SetFontColor(value);
+                    case "font-family" -> SetFonFamily(value);
+                    case "font-size" -> SetFontSize(Double.parseDouble(value));
+                    case "text-align" -> SetTextAlign(value);
+                    case "background-color" -> SetBackgroundColor(value);
+                    case "bold" -> SetBold();
+                    case "italics" -> SetItalic();
+                    case "underlined" -> SetUnderline();
+                    case "rowheight" -> SetRowHeight(rowIndex, Double.parseDouble(value));
+                    case "colwidth" -> SetColumnWidth(columnIndex, Double.parseDouble(value));
+                }
+            });
+        }
+        catch(Exception e){
+            throw new OdsExportException("Cannot set style to row %s and column %s with style %s.".formatted(rowIndex, columnIndex, styles));
+        }
     }
 }

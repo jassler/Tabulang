@@ -3,6 +3,7 @@ package de.hskempten.tabulang.libreOffice;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.libreOffice.Exceptions.OdsImportException;
 import de.hskempten.tabulang.libreOffice.Models.*;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.w3c.dom.Document;
@@ -19,7 +20,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class OdsImportService {
     /* PROPERTIES */
@@ -49,17 +49,30 @@ public class OdsImportService {
             FindElementInXml(_odfDocument.getContentDom().toString());
             return _spreadsheet;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new OdsImportException("Cannot import this File from %s".formatted(path));
         }
     }
 
-    public Table<InternalString> ImportFile(String path)  {
-        MSpreadsheet spreadsheet = Import(path);
-        ArrayList<InternalString> headernames = spreadsheet.get_headlines(0);
-        ArrayList<Tuple<InternalString>> tableRows = spreadsheet.get_values(0);
+    /**
+     * Import an *.ods-File from a specific path of the file explorer
+     *
+     * Returns all table with headlines and contents
+     *
+     * @param path  Specific path
+     * @return Table of InternalStrings
+     */
 
-        return new Table<>(headernames, tableRows);
+    public Table<InternalString> ImportFile(String path)  {
+        try {
+            MSpreadsheet spreadsheet = Import(path);
+            ArrayList<InternalString> headernames = spreadsheet.get_headlines(0);
+            ArrayList<Tuple<InternalString>> tableRows = spreadsheet.get_values(0);
+
+            return new Table<>(headernames, tableRows);
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot import this File from %s".formatted(path));
+        }
     }
 
     /* PRIVATE METHODS */
@@ -83,7 +96,7 @@ public class OdsImportService {
             CreateTableWrapper();
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            throw new OdsImportException("There is an error in this XML-String.");
         }
     }
 
@@ -93,28 +106,33 @@ public class OdsImportService {
      */
 
     private void CreateTableWrapper() {
-        var nodeList = GetNodeList("table:table");
-        var nodeListLength = nodeList.getLength();
+        try {
+            var nodeList = GetNodeList("table:table");
+            var nodeListLength = nodeList.getLength();
 
-        var temp = new ArrayList<MTableWrapper>();
-        for(var i = 0; i < nodeListLength; i++){
-            var tableWrapper = new MTableWrapper();
-            var item = nodeList.item(i);
-            tableWrapper.set_attributes(GetAttributes(item));
+            var temp = new ArrayList<MTableWrapper>();
+            for(var i = 0; i < nodeListLength; i++){
+                var tableWrapper = new MTableWrapper();
+                var item = nodeList.item(i);
+                tableWrapper.set_attributes(GetAttributes(item));
 
-            var selectCorrectChildren = item.getChildNodes();
+                var selectCorrectChildren = item.getChildNodes();
 
-            _columnList = new ArrayList<>();
-            VisitColumns(selectCorrectChildren, "table:table-column");
-            tableWrapper.set_columns(_columnList);
+                _columnList = new ArrayList<>();
+                VisitColumns(selectCorrectChildren, "table:table-column");
+                tableWrapper.set_columns(_columnList);
 
-            _rowList = new ArrayList<>();
-            VisitRows(selectCorrectChildren, "table:table-row");
-            tableWrapper.set_rows(_rowList);
+                _rowList = new ArrayList<>();
+                VisitRows(selectCorrectChildren, "table:table-row");
+                tableWrapper.set_rows(_rowList);
 
-            temp.add(tableWrapper);
+                temp.add(tableWrapper);
+            }
+            _spreadsheet.set_tables(temp);
         }
-        _spreadsheet.set_tables(temp);
+        catch(Exception e){
+            throw new OdsImportException("Cannot create the table wrapper object.");
+        }
     }
 
     /**
@@ -123,12 +141,17 @@ public class OdsImportService {
      */
 
     private void CreateAllLists() {
-        _spreadsheet = new MSpreadsheet();
-        _spreadsheet.set_fontStyles(new ArrayList<>());
-        _spreadsheet.set_tableStyles(new HashMap<>());
-        _spreadsheet.set_rowStyles(new HashMap<>());
-        _spreadsheet.set_columnStyles(new HashMap<>());
-        _spreadsheet.set_cellStyles(new HashMap<>());
+        try {
+            _spreadsheet = new MSpreadsheet();
+            _spreadsheet.set_fontStyles(new ArrayList<>());
+            _spreadsheet.set_tableStyles(new HashMap<>());
+            _spreadsheet.set_rowStyles(new HashMap<>());
+            _spreadsheet.set_columnStyles(new HashMap<>());
+            _spreadsheet.set_cellStyles(new HashMap<>());
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot creates necessary objects or lists.");
+        }
     }
 
     /**
@@ -143,7 +166,12 @@ public class OdsImportService {
      */
 
     private NodeList GetNodeList(String tagName){
-        return _xmlDocument.getElementsByTagName(tagName);
+        try {
+            return _xmlDocument.getElementsByTagName(tagName);
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot find node list by tag name %s".formatted(tagName));
+        }
     }
 
     /**
@@ -152,15 +180,21 @@ public class OdsImportService {
      */
 
     private void FontStyles() {
-        var nodeList = GetNodeList("style:font-face");
-        var nodeListLength = nodeList.getLength();
+        try {
+            var nodeList = GetNodeList("style:font-face");
+            var nodeListLength = nodeList.getLength();
 
-        var temp = new ArrayList<HashMap<String, String>>();
-        for(var i = 0; i < nodeListLength; i++){
-            var item = nodeList.item(i);
-            temp.add(GetAttributes(item));
+            var temp = new ArrayList<HashMap<String, String>>();
+            for(var i = 0; i < nodeListLength; i++){
+                var item = nodeList.item(i);
+                temp.add(GetAttributes(item));
+            }
+            _spreadsheet.set_fontStyles(temp);
         }
-        _spreadsheet.set_fontStyles(temp);
+        catch(Exception e){
+            throw new OdsImportException("Cannot set font style.");
+        }
+
     }
 
     /**
@@ -169,33 +203,38 @@ public class OdsImportService {
      */
 
     private void StylesWrapper(){
-        var nodeList = GetNodeList("style:style");
-        var nodeListLength = nodeList.getLength();
+        try {
+            var nodeList = GetNodeList("style:style");
+            var nodeListLength = nodeList.getLength();
 
-        for (int temp = 0; temp < nodeListLength; temp++)
-        {
-            var node = nodeList.item(temp);
-            var nodeAttributes = GetAttributes(node);
-            switch (Objects.requireNonNull(nodeAttributes).get("style:family")){
-                case "table":
-                    var nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet.get_tableStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
-                    break;
-                case "table-row":
-                    nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet.get_rowStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
-                    break;
-                case "table-column":
-                    nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet.get_columnStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
-                    break;
-                case "table-cell":
-                    nodeStyleId = nodeAttributes.get("style:name");
-                    _spreadsheet.get_cellStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
-                    break;
-                default:
-                    break;
+            for (int temp = 0; temp < nodeListLength; temp++)
+            {
+                var node = nodeList.item(temp);
+                var nodeAttributes = GetAttributes(node);
+                switch (Objects.requireNonNull(nodeAttributes).get("style:family")){
+                    case "table":
+                        var nodeStyleId = nodeAttributes.get("style:name");
+                        _spreadsheet.get_tableStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                        break;
+                    case "table-row":
+                        nodeStyleId = nodeAttributes.get("style:name");
+                        _spreadsheet.get_rowStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                        break;
+                    case "table-column":
+                        nodeStyleId = nodeAttributes.get("style:name");
+                        _spreadsheet.get_columnStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                        break;
+                    case "table-cell":
+                        nodeStyleId = nodeAttributes.get("style:name");
+                        _spreadsheet.get_cellStyles().put(nodeStyleId, GetAttributes(node.getFirstChild()));
+                        break;
+                    default:
+                        throw new OdsImportException("Cannot find section.");
+                }
             }
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot find section.");
         }
     }
 
@@ -207,21 +246,26 @@ public class OdsImportService {
      */
 
     private HashMap<String,String> GetAttributes(Node node){
-        var returnList = new HashMap<String, String>();
+        try {
 
-        if(node == null)
-            return null;
+            var returnList = new HashMap<String, String>();
 
-        if (node.hasAttributes()) {
-            var nodeMap = node.getAttributes();
-            for (int i = 0; i < nodeMap.getLength(); i++)
-            {
-                Node tempNode = nodeMap.item(i);
-                returnList.put(tempNode.getNodeName(), tempNode.getNodeValue());
+            if(node == null)
+                return null;
+
+            if (node.hasAttributes()) {
+                var nodeMap = node.getAttributes();
+                for (int i = 0; i < nodeMap.getLength(); i++)
+                {
+                    Node tempNode = nodeMap.item(i);
+                    returnList.put(tempNode.getNodeName(), tempNode.getNodeValue());
+                }
+                return returnList;
             }
-            return returnList;
+            return null;}
+        catch(Exception e){
+            throw new OdsImportException("Cannot find attributes from node %s.".formatted(node));
         }
-        return null;
     }
 
     /**
@@ -239,22 +283,27 @@ public class OdsImportService {
      */
 
     private ArrayList<MCell> SearchCell(NodeList nList) {
-        var list = new ArrayList<MCell>();
-        for (int temp = 0; temp < nList.getLength(); temp++)
-        {
-            var node = nList.item(temp);
-            var cell = new MCell();
-            cell.setAttributes(GetAttributes(node));
-            if (node.hasChildNodes()) {
-                var children = node.getChildNodes();
-                for(int valueIndex = 0; valueIndex < children.getLength(); valueIndex++){
-                    var cellValue = children.item(valueIndex);
-                    cell.set_value(cellValue.getFirstChild().getNodeValue());
+        try {
+            var list = new ArrayList<MCell>();
+            for (int temp = 0; temp < nList.getLength(); temp++)
+            {
+                var node = nList.item(temp);
+                var cell = new MCell();
+                cell.setAttributes(GetAttributes(node));
+                if (node.hasChildNodes()) {
+                    var children = node.getChildNodes();
+                    for(int valueIndex = 0; valueIndex < children.getLength(); valueIndex++){
+                        var cellValue = children.item(valueIndex);
+                        cell.set_value(cellValue.getFirstChild().getNodeValue());
+                    }
                 }
+                list.add(cell);
             }
-            list.add(cell);
+            return list;
         }
-        return list;
+        catch(Exception e){
+            throw new OdsImportException("Cannot find cell from node list %s.".formatted(nList));
+        }
     }
 
     /**
@@ -267,17 +316,22 @@ public class OdsImportService {
      */
 
     private void VisitColumns(NodeList nList, String tagName) {
-        for (int temp = 0; temp < nList.getLength(); temp++)
-        {
-            var node = nList.item(temp);
-            if(node.getNodeName().equals(tagName)){
-                var column = new MColumn();
-                column.setAttributes(GetAttributes(node));
-                _columnList.add(column);
+        try {
+            for (int temp = 0; temp < nList.getLength(); temp++)
+            {
+                var node = nList.item(temp);
+                if(node.getNodeName().equals(tagName)){
+                    var column = new MColumn();
+                    column.setAttributes(GetAttributes(node));
+                    _columnList.add(column);
+                }
+                if (node.hasChildNodes()) {
+                    VisitColumns(node.getChildNodes(), tagName);
+                }
             }
-            if (node.hasChildNodes()) {
-                VisitColumns(node.getChildNodes(), tagName);
-            }
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot visit Row with the tag name %s and the node list %s".formatted(tagName, nList));
         }
     }
 
@@ -291,18 +345,23 @@ public class OdsImportService {
      */
 
     private void VisitRows(NodeList nList, String tagName) {
-        for (int temp = 0; temp < nList.getLength(); temp++)
-        {
-            var node = nList.item(temp);
-            if(node.getNodeName().equals(tagName)){
-                var row = new MRow();
-                row.setAttributes(GetAttributes(node));
-                _rowList.add(row);
-                row.set_cells(SearchCell(node.getChildNodes()));
+        try {
+            for (int temp = 0; temp < nList.getLength(); temp++)
+            {
+                var node = nList.item(temp);
+                if(node.getNodeName().equals(tagName)){
+                    var row = new MRow();
+                    row.setAttributes(GetAttributes(node));
+                    _rowList.add(row);
+                    row.set_cells(SearchCell(node.getChildNodes()));
+                }
+                if (node.hasChildNodes()) {
+                    VisitRows(node.getChildNodes(), tagName);
+                }
             }
-            if (node.hasChildNodes()) {
-                VisitRows(node.getChildNodes(), tagName);
-            }
+        }
+        catch(Exception e){
+            throw new OdsImportException("Cannot visit Row with the tag name %s and the node list %s".formatted(tagName, nList));
         }
     }
 }
