@@ -1,6 +1,5 @@
 package de.hskempten.tabulang;
 
-import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
@@ -132,18 +131,23 @@ public class Tabulang {
 
         if (true) {
             l.setText("\n" +
-                    "z := [[1], [7, '3.00', 5.0, 6*8, 'b' + 6]];\n" +
-                    "y := [[1, 2],[2, 3],[3, 4]];\n" +
+                    "tuple := [[1, 2]," +
+                              "[2, 3]," +
+                              "[3, 11]];\n" +
+                    //"b := '2';\n" +
+                    "c := tuple.[1];\n" +
+                    //"multTest := '1' * 6;\n" +
+                    //"modTest := '1' mod 6;\n" +
+                    //"c := average b tuple;\n" +
+                    //"z := [[1], [7, '3.00', 5.0, 6*8, 'b' + 6]];\n" +
                     //"z := [[1, 2],[2, 3],[3, 6]];\n" +
-                    "tableSub := y - z;\n" +
+                    //"tableSub := y - z;\n" +
                     //"y := [6, 7, 8, 7];\n" +
-                    //"a := y + 6;\n" +
-                    "b := '0';\n" +
-                    "c := average b y;\n" +
+                    //"a := 6 + y;\n" +
                     //"s := (c) -> {c := 2; return c;};\n" +
-                    //"d := y.'0';\n" +
+                    //"d := y.'0'.'2';\n" +
                     //"var f := 6 * 'y';\n" +
-                    //"g := y.'1'.'1';\n" +
+                    //"g := tuple.'1'.'1';\n" +
                     //"if(true) c := 2;\n" +
                     //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +

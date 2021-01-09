@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class IllegalOperandArgumentException extends RuntimeException{
 
     public IllegalOperandArgumentException(String message) {
-        super("Operation '" + message + "' can not be executed.");
+        super(message);
     }
 
     public IllegalOperandArgumentException(String message, TextPosition textPosition) {
@@ -21,6 +21,10 @@ public class IllegalOperandArgumentException extends RuntimeException{
     }
 
     public IllegalOperandArgumentException(TextPosition term, String className, String content, String allowedOperands) {
+        super(term + "can not be executed because " + className + "(" + content + ") can not be used in operation. " + allowedOperands);
+    }
+
+    public IllegalOperandArgumentException(TextPosition term, String className, TextPosition content, String allowedOperands) {
         super(term + "can not be executed because " + className + "(" + content + ") can not be used in operation. " + allowedOperands);
     }
 
