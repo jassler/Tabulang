@@ -27,7 +27,7 @@ public class AverageNode extends BinaryTermNode {
             throw new IllegalArgumentException("Expected String but got: " + columnIdentifierObject.getClass().getSimpleName());
 
         if (!table.getColNames().contains(columnIdentifier))
-            throw new TupleNameNotFoundException(getTextPosition(), columnIdentifier.getString(), tableObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
+            throw new TupleNameNotFoundException(getTextPosition(), columnIdentifier.getString(), tableObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent(), table.getColNames().getNames());
 
         InternalNumber sum = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber numberElements = new InternalNumber(new BigInteger("0"), new BigInteger("1"));

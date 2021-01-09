@@ -6,11 +6,8 @@ import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.TupleNameNotFoundException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-
-import java.util.stream.Collectors;
 
 public class TupleElementNode extends BinaryTermNode {
 
@@ -22,13 +19,12 @@ public class TupleElementNode extends BinaryTermNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);
-
-        if(!(left instanceof Tuple<?>) && !(left instanceof Table<?>)){
+        if (!(left instanceof Tuple<?>) && !(left instanceof Table<?>)) {
             throw new IllegalTupleOperandArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
         }
 
         Object right = getRightNode().evaluateNode(interpretation);
-        if(!(right instanceof InternalString) && !(right instanceof Tuple<?>)){
+        if (!(right instanceof InternalString) && !(right instanceof Tuple<?>)) {
             throw new IllegalOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent(), "Allowed operands: String or Tuple.");
         }
 

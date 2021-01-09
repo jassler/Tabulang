@@ -86,7 +86,7 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
             return i;
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             // TODO should those exceptions be handled differently?
-            throw new TupleNameNotFoundException(name);
+            throw new TupleNameNotFoundException(name, names);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

@@ -5,7 +5,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 public class IllegalOperandArgumentException extends RuntimeException{
 
     public IllegalOperandArgumentException(String message) {
-        super("Operation '" + message + "' can not be executed.");
+        super(message);
     }
 
     public IllegalOperandArgumentException(String message, TextPosition textPosition) {
