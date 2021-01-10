@@ -116,10 +116,6 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
      * @throws DuplicateNamesException      if names has at least one String appearing twice
      */
     public Tuple(List<E> elements, List<InternalString> names, boolean isHorizontal, InternalObject parent) {
-        this(elements, new HeaderNames(names), isHorizontal, parent);
-    }
-
-    protected Tuple(List<E> elements, HeaderNames names, boolean isHorizontal, InternalObject parent) {
         super(parent);
         if (elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
@@ -365,7 +361,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
     @SuppressWarnings({"MethodDoesntCallSuperMethod"})
     @Override
     public Tuple<E> clone() {
-        var clone = new Tuple<>(elements, names, isHorizontal, getParent());
+        var clone = new Tuple<>(elements, names.getNames(), isHorizontal, getParent());
         clone.setStyle(getStyle().clone());
         return clone;
     }
