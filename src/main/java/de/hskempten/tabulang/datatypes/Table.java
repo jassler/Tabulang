@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table<E extends Styleable> extends InternalObject implements Iterable<Tuple<E>>, Cloneable, TupleOperation<Table<E>> {
+public class Table<E extends Styleable> extends InternalObject implements TupleOperation<Table<E>, Tuple<E>> {
 
     private final ArrayList<Tuple<E>> tuples;
     private boolean transposed = false;
@@ -94,8 +94,19 @@ public class Table<E extends Styleable> extends InternalObject implements Iterab
         }
     }
 
+    /**
+     * @deprecated Use TupleOperation {@link Table#get(int)} instead.
+     * @param rowNum Row number
+     * @return tuple element
+     */
+    @Deprecated()
     public Tuple<E> getRow(int rowNum) {
         return tuples.get(rowNum);
+    }
+
+    @Override
+    public Tuple<E> get(int index) {
+        return tuples.get(index);
     }
 
     public void setRowHeight(int rowNum, double height) {

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E extends Styleable> extends InternalObject implements Cloneable, Iterable<E>, TupleOperation<Tuple<E>> {
+public class Tuple<E extends Styleable> extends InternalObject implements TupleOperation<Tuple<E>, E> {
 
     private final ArrayList<E> elements;
     private HeaderNames names;
@@ -163,6 +163,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements Clonea
             throw new ArrayLengthMismatchException(elements.size(), names.size());
 
         this.names = names;
+    }
+
+    @Override
+    public E get(int index) {
+        return elements.get(index);
     }
 
     /**
