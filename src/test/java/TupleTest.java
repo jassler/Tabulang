@@ -158,11 +158,23 @@ class TupleTest {
         assertEquals(expected, t.toString());
 
         t.setHorizontal(false);
-        expected = "" +
-                "0 | Alpha\n" +
-                "1 | Beta\n" +
-                "2 | Gamma";
+        expected = """
+                0 | Alpha
+                1 | Beta
+                2 | Gamma""";
 
         assertEquals(expected, t.toString());
+
+        Tuple<Tuple<InternalString>> t2 = new Tuple<Tuple<InternalString>>(new Tuple[]{
+                new Tuple<>(InternalString.objToArray("a", "b")),
+                new Tuple<>(InternalString.objToArray("x", "y")),
+                new Tuple<>(InternalString.objToArray("o", "i"))
+        });
+
+        expected = "" +
+                "0           | 1           | 2\n" +
+                "0 | 1␤a | b | 0 | 1␤x | y | 0 | 1␤o | i";
+
+        assertEquals(expected, t2.toString());
     }
 }

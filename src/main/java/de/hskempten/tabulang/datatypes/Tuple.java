@@ -405,7 +405,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
             sb
                     .append(String.format(formatted, names.getNames().toArray()))
                     .append('\n')
-                    .append(String.format(formatted, elements.toArray()));
+                    .append(String.format(formatted, elements.toArray()).replace('\n', '␤'));
 
         } else {
             int namesColSize = names.getNames().stream().max(Comparator.comparing(v -> v.getString().length())).orElse(new InternalString("")).getString().length();
@@ -415,7 +415,7 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
             var elementIt = elements.iterator();
 
             while (nameIt.hasNext()) {
-                sb.append(String.format(formatted, nameIt.next(), elementIt.next())).append('\n');
+                sb.append(String.format(formatted, nameIt.next(), elementIt.next()).replace('\n', '␤')).append('\n');
             }
 
             sb.deleteCharAt(sb.length() - 1);
