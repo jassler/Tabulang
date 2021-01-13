@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.datatypes;
 
-public interface TupleOperation<E, F> extends Cloneable, Iterable<F> {
+public interface TupleOperation<E> extends Cloneable, Iterable<E> {
 
-    F get(int index);
+    E get(int index);
 
     boolean isHorizontal();
     void setHorizontal(boolean horizontal);
@@ -10,12 +10,12 @@ public interface TupleOperation<E, F> extends Cloneable, Iterable<F> {
     void transpose();
     boolean isTransposed();
 
-    E projection(int... elements);
-    E projection(InternalString... elements);
-    E projection();
+    TupleOperation<E> projection(int... elements);
+    TupleOperation<E> projection(InternalString... elements);
+    TupleOperation<E> projection();
 
     int getWidth();
     int getHeight();
 
-    TupleOperation<E, F> clone();
+    TupleOperation<E> clone();
 }

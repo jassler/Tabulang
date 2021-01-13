@@ -27,10 +27,10 @@ public class HorizontalTupleNode extends TermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
 
-        if(!(o instanceof TupleOperation<?, ?> t))
+        if(!(o instanceof TupleOperation<?> t))
             throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
 
-        TupleOperation<?, ?> result = t.clone();
+        TupleOperation<?> result = t.clone();
         result.setHorizontal(true);
         return result;
     }

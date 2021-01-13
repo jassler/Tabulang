@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Table<E extends Styleable> extends InternalObject implements TupleOperation<Table<E>, Tuple<E>> {
+public class Table<E extends Styleable> extends InternalObject implements TupleOperation<Tuple<E>> {
 
     private final ArrayList<Tuple<E>> tuples;
     private boolean transposed = false;

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Tuple<E extends Styleable> extends InternalObject implements TupleOperation<Tuple<E>, E> {
+public class Tuple<E extends Styleable> extends InternalObject implements TupleOperation<E> {
 
     private final ArrayList<E> elements;
     private HeaderNames names;
