@@ -54,7 +54,6 @@ public class Main {
             hasDoneSomething = true;
             try {
                 Object result = executeFile(l, interpreter, cli.inputFile);
-                //listInterpreterEnvironment(interpreter);
 
                 if(result != null)
                     System.out.println("\nProgram exited with the following non-null result: " + result.toString());
@@ -117,9 +116,10 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("REPL started.\n"
-                + "Type \"showEnvironment();\" to list variables in the current environment.\n"
-                + "Type \"exit();\" to quit repl.");
+        System.out.println("""
+                REPL started.
+                Type "showEnvironment();" to list variables in the current environment.
+                Type "exit();" to quit repl.""");
 
         while(true) {
             try {
@@ -164,6 +164,8 @@ public class Main {
                 } catch(Exception e) {
                     if(isDebug)
                         e.printStackTrace();
+                    else
+                        System.err.println(e.getLocalizedMessage());
                 }
             }
         }
