@@ -3,6 +3,7 @@ package de.hskempten.tabulang.datatypes;
 public interface TupleOperation<E> extends Cloneable, Iterable<E> {
 
     E get(int index);
+    InternalString getHeader(int index);
 
     boolean isHorizontal();
     void setHorizontal(boolean horizontal);

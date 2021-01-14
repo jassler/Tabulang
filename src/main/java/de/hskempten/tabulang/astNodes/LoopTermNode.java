@@ -3,6 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalDataObject;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
@@ -65,21 +66,21 @@ public class LoopTermNode extends TermNode {
     public Object evaluateNode(Interpretation interpretation) {
         Object termObject = getTerm().evaluateNode(interpretation);
 
-        if (!(termObject instanceof Tuple<?> tuple))
+        if (!(termObject instanceof TupleOperation<?> tuple))
             throw new IllegalTupleOperandArgumentException(getTextPosition(), termObject.getClass().getSimpleName(), getTerm().getTextPosition().getContent());
 
         String identifier = getIdentifier().getIdentifier();
         LinkedList<Object> resultList = new LinkedList<>();
         Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
 
-        for (int i = 0; i < tuple.getElements().size(); ++i) {
-            Object tupleElementObject = tuple.getElements().get(i);
+        for (int i = 0; i < tuple.getHeight(); ++i) {
+            Object tupleElementObject = tuple.get(i);
             nestedInterpretation.getEnvironment().put(identifier, tupleElementObject);
 
-            if (tupleElementObject instanceof Tuple<?> tupleElement) {
-                for (int j = 0; j < tupleElement.getElements().size(); j++) {
-                    InternalString type = tupleElement.getNames().getNames().get(j);
-                    Object element = tupleElement.getElements().get(j);
+            if (tupleElementObject instanceof TupleOperation<?> tupleElement) {
+                for (int j = 0; j < tupleElement.getWidth(); j++) {
+                    InternalString type = tupleElement.getHeader(j);
+                    Object element = tupleElement.get(j);
                     nestedInterpretation.getEnvironment().put(type.getString(), element);
                 }
             }
@@ -90,7 +91,7 @@ public class LoopTermNode extends TermNode {
                     ((GroupNode) statementNode).setLastIteration(false);
                     groupStatementFound = true;
                 }
-                if (statementNode instanceof GroupNode && i + 1 == tuple.getElements().size()) {
+                if (statementNode instanceof GroupNode && i + 1 == tuple.getHeight()) {
                     ((GroupNode) statementNode).setLastIteration(true);
                     resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
                 } else {
