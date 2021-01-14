@@ -193,7 +193,7 @@ public class Lexer implements Cloneable {
             return tokens.get(tokens.size() - 1).getPosition().getEndPosition();
 
         Token currentToken = tokens.get(tokenPointer);
-        return currentToken.getPosition().getStartPosition();
+        return currentToken.getPosition();
     }
 
     /**

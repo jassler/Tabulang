@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.IdentifierItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
+import de.hskempten.tabulang.tokenizer.Token;
 
 public class IdentifierType implements Parser {
 
@@ -16,11 +17,10 @@ public class IdentifierType implements Parser {
         IdentifierItem item;
 
         TextPosition startP = l.lookahead().getPosition();
-        String myString = l.lookahead().getContent();
-        l.getNextTokenAndExpect(TokenType.VARIABLE);
-        item = new IdentifierItem(myString);
+        Token t = l.getNextTokenAndExpect(TokenType.VARIABLE);
+        item = new IdentifierItem(t.getContent());
 
-        TextPosition endP = l.lookbehind().getPosition();
+        TextPosition endP = l.lookahead().getPosition();
         item.setTextPosition(new TextPosition(startP, endP));
         return item;
     }
