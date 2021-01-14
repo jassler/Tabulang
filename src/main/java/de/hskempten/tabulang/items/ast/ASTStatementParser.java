@@ -123,7 +123,8 @@ public class ASTStatementParser {
                 ArrayList<Node> statements = new ArrayList<Node>();
                 switch (actItem.getLanguageItemType()) {
                     case PROCEDURALF_TERM -> {
-                        statements.add((StatementNode) new ASTStatementParser().parse(new ReturnStmntItem(((ProceduralFItem) actItem).getMyTerm())));
+                        ProceduralFItem pFItem = ((ProceduralFItem) actItem);
+                        statements.add((StatementNode) new ASTStatementParser().parse(new ReturnStmntItem(pFItem.getMyTerm(),pFItem.getTextPosition())));
                     }
                     case PROCEDURALF_FUNCBODY -> {
                         FuncBodyItem bodyStatements = ((ProceduralFItem) actItem).getMyFuncBody();
