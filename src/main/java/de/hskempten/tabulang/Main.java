@@ -2,6 +2,7 @@ package de.hskempten.tabulang;
 
 import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
+import de.hskempten.tabulang.datatypes.exceptions.DataTypeException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
@@ -9,15 +10,19 @@ import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
 import de.hskempten.tabulang.standardLibrary.StandardLibrary;
 import de.hskempten.tabulang.tokenizer.Lexer;
+import de.hskempten.tabulang.tokenizer.ParseTimeException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
     private static final String REPL_PREFIX = "[%2d] < ";
     private static final String REPL_POSTFIX = "[%2d] > %s";
+
+    private static boolean isDebug = false;
 
     public static void main(String[] args) {
         Lexer l = new Lexer();
@@ -36,6 +41,7 @@ public class Main {
         CommandLineArguments cli;
         try {
             cli = CommandLineArguments.parse(args);
+            Main.isDebug = cli.debug;
         } catch(RuntimeException e) {
             System.err.println(e.getLocalizedMessage());
             return;
@@ -67,8 +73,21 @@ public class Main {
 
         // nothing?
         if(!hasDoneSomething) {
-            System.out.println("Usage:\n\t-r\tStart repl\n\t<string>\tInterpret filename\n");
+            System.out.println("""
+                    Usage:
+                    \t-r\tStart repl
+                    \t-d\tDebug mode
+                    \t<string>\tInterpret filename
+                    """);
         }
+    }
+
+    /**
+     * Check if debug flag in command line arguments was set.
+     * @return true if debug flag was set
+     */
+    public static boolean isDebug() {
+        return isDebug;
     }
 
     private static Object executeFile(Lexer l, Interpretation interpreter, String filename) throws Exception {
@@ -103,6 +122,11 @@ public class Main {
                 + "Type \"exit();\" to quit repl.");
 
         while(true) {
+            try {
+                // sleep so syserr can print
+                TimeUnit.MILLISECONDS.sleep(50);
+            } catch(InterruptedException ignored) {}
+
             System.out.printf(REPL_PREFIX, ++count);
             String line = "";
             try {
@@ -113,8 +137,10 @@ public class Main {
 
             if("exit();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
                 break;
+
             } else if("showEnvironment();".equals(line.replaceAll("\\(\\s+\\)", "()"))) {
                 listInterpreterEnvironment(interpreter);
+
             } else {
                 l.setText(line);
                 parser = new TabulangParser(l, interpreter);
@@ -133,8 +159,11 @@ public class Main {
                         else
                             System.out.printf((REPL_POSTFIX) + "%n%s%n", count, "", resultObject.toString());
                     }
-                } catch(Exception e) {
+                } catch(DataTypeException | ParseTimeException e) {
                     System.out.println(e.getLocalizedMessage());
+                } catch(Exception e) {
+                    if(isDebug)
+                        e.printStackTrace();
                 }
             }
         }
@@ -164,19 +193,17 @@ public class Main {
 
     private static class CommandLineArguments {
         String inputFile = null;
+        boolean debug = false;
         boolean repl = false;
 
         private static CommandLineArguments parse(String[] args) {
             var cli = new CommandLineArguments();
 
             for(int i = 0; i < args.length; i++) {
-                switch(args[i].toLowerCase(Locale.ROOT)) {
-                    case "-r":
-                        cli.repl = true;
-                        break;
-
-                    default:
-                        cli.inputFile = args[i];
+                switch (args[i].toLowerCase(Locale.ROOT)) {
+                    case "-r" -> cli.repl = true;
+                    case "-d" -> cli.debug = true;
+                    default -> cli.inputFile = args[i];
                 }
             }
 
