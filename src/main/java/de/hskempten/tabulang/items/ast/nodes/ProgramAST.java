@@ -2,6 +2,7 @@ package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.RootNode;
+import de.hskempten.tabulang.datatypes.exceptions.DataTypeException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.TypeMismatchException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -46,7 +47,7 @@ public class ProgramAST extends RootNode {
                 Object result = statementNode.evaluateNode(interpretation);
                 if (result != null)
                     finalResult = result;
-            } catch(Exception e){
+            } catch(DataTypeException e) {
                 interpretation.exitProgram(e);
             }
         }

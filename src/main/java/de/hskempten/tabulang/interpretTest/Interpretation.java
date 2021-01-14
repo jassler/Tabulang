@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.interpretTest;
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.exceptions.DataTypeException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -89,7 +90,7 @@ public class Interpretation {
         return environment.get(key);
     }
 
-    public void exitProgram(Exception e) {
+    public void exitProgram(DataTypeException e) {
         System.err.println(e.getMessage());
         //System.exit(1);
     }

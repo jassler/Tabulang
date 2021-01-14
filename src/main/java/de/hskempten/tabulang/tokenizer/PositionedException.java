@@ -4,7 +4,7 @@ package de.hskempten.tabulang.tokenizer;
 /**
  * Exception thrown with a position in the source code
  */
-public abstract class PositionedException extends Exception {
+public abstract class PositionedException extends RuntimeException {
 
     private TextPosition position = null;
 
