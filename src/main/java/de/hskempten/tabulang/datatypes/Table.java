@@ -109,6 +109,11 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         return tuples.get(index);
     }
 
+    @Override
+    public InternalString getHeader(int index) {
+        return colNames.get(index);
+    }
+
     public void setRowHeight(int rowNum, double height) {
         this.tuples.get(rowNum).getStyle().setAttribute(Style.ROW_HEIGHT, Double.toString(height));
     }

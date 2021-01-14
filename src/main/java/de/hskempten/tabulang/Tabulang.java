@@ -5,6 +5,7 @@ import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 import de.hskempten.tabulang.parser.TabulangParser;
+import de.hskempten.tabulang.standardLibrary.StandardLibrary;
 import de.hskempten.tabulang.tokenizer.Lexer;
 
 import java.util.Iterator;
@@ -129,40 +130,72 @@ public class Tabulang {
                     "");
         }
 
-        if (true) {
+        if (false) {
             l.setText("\n" +
                     "tuple := [[1, 2]," +
                               "[2, 3]," +
                               "[3, 11]];\n" +
                     //"b := '2';\n" +
-                    "c := tuple.[1];\n" +
+                   // "c := 1/0;\n" +
                     //"multTest := '1' * 6;\n" +
                     //"modTest := '1' mod 6;\n" +
                     //"c := average b tuple;\n" +
                     //"z := [[1], [7, '3.00', 5.0, 6*8, 'b' + 6]];\n" +
                     //"z := [[1, 2],[2, 3],[3, 6]];\n" +
                     //"tableSub := y - z;\n" +
-                    //"y := [6, 7, 8, 7];\n" +
+                    "y := [6, 7, 8, 7];\n" +
                     //"a := 6 + y;\n" +
                     //"s := (c) -> {c := 2; return c;};\n" +
                     //"d := y.'0'.'2';\n" +
                     //"var f := 6 * 'y';\n" +
                     //"g := tuple.'1'.'1';\n" +
-                    //"if(true) c := 2;\n" +
+                    //"testest := if(true) return 0; return 5;\n" +
                     //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 < 4 iff 6 > 7) d := 10;\n" +
-                    "function f1(x, z) return 5;\n" +
+                    "function f(x) { if( x <= 0 ) return 0; return 0.1 + f(x - 0.1); }\n" +
                     //"res := f1(d);\n" +
                     //"for x in y {set x; c := x + 1; mark '0' as 'grey' if x > 6;}\n" +
                     //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; hiding group after d using f1(c, e) mark 'background' as 'blue';}\n" +
                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +
-                   // "e := hi(c, d);" +
+                    "e := f(5);" +
+                    "\n");
+        }
+
+        if (true) {
+            l.setText("\n" +
+
+                    "openDbConnection('85.214.33.119', 3306, 'sakila', 'db_user', 'HsKemptenProjekt2020');\n" +
+                    //"tActor := databaseToTable('select * from abc');\n" +
+                    "actorsInJMovie := databaseToTable('SELECT a.first_name, a.last_name, f.title FROM sakila.actor as a JOIN sakila.film_actor as fa ON a.actor_id = fa.actor_id JOIN sakila.film as f ON f.film_id = fa.film_id WHERE f.title LIKE \"J%\";' );\n" +
+                    "actorsInYMovie := databaseToTable('SELECT a.first_name, a.last_name, f.title FROM sakila.actor as a JOIN sakila.film_actor as fa ON a.actor_id = fa.actor_id JOIN sakila.film as f ON f.film_id = fa.film_id WHERE f.title LIKE \"Y%\";' );\n" +
+
+                    //"tTitle := databaseToTable(queryTitle);\n" +
+                    //"allenPlayedIn := tActor filter last_name = 'ALLEN';\n" +
+                   // "allenMovieAmount := count vertical allenPlayedIn;\n" +
+                   // "allenTransformedHorizontal := horizontal allenPlayedIn;\n" +
+                    "function findActorByLastName(x, y) return x filter last_name = y;\n" +
+                    "function findActorsInJungleCloser(x) return x filter title = 'JUNGLE CLOSER';\n" +
+                    "function uniteTables(x, y) return x unite y;\n" +
+                    "function iCount(x) return count vertical x;\n" +
+                    "function idk(y) for x in y {set x;};\n" +
+
+
+                    //"res := findActorByLastName(actorsInJMovie, 'ALLEN');\n" +
+                    //"jungleCloserActors := findActorsInJungleCloser(actorsInJMovie);\n" +
+                    //"unitedTables := uniteTables(actorsInJMovie, actorsInYMovie);\n" +
+                    //"actorsInYMovieTransposed := horizontal actorsInYMovie ;\n" +
+                    "countedJ := iCount(actorsInJMovie) ;\n" +
+                    "countedY := iCount(actorsInYMovie) ;\n" +
+
+                    //"S := idk(actorsInYMovie);\n" +
+
+
                     "\n");
         }
         Interpretation interpretation = new Interpretation();
-
+        StandardLibrary.addStandardLibrary(interpretation);
         TabulangParser parser = new TabulangParser(l, interpretation);
         l.reset();
         ProgramItem prg = parser.parseN();

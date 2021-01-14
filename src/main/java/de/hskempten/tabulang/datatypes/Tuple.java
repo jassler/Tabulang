@@ -170,6 +170,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return elements.get(index);
     }
 
+    @Override
+    public InternalString getHeader(int index) {
+        return names.get(index);
+    }
+
     /**
      * Get tuple orientation.
      *
