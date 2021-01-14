@@ -1,37 +1,33 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class OrdinalItem implements LanguageItem {
+public class OrdinalItem extends LanguageItemAbstract implements LanguageItem {
     //"null"
     private String myString;
     private NumberItem myNumber;
     private QuotedStringItem myQuotedString;
     private TupelItem myTupel;
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public OrdinalItem(String myString) {
+        super(ORDINAL_NULL);
         this.setMyString(myString);
-        this.itemType = LanguageItemType.ORDINAL_NULL;
     }
 
     public OrdinalItem(NumberItem myNumber) {
+        super(ORDINAL_NUMBER);
         this.setMyNumber(myNumber);
-        this.itemType = LanguageItemType.ORDINAL_NUMBER;
     }
 
     public OrdinalItem(QuotedStringItem myQuotedString) {
+        super(ORDINAL_QUOTEDSTRING);
         this.setMyQuotedString(myQuotedString);
-        this.itemType = LanguageItemType.ORDINAL_QUOTEDSTRING;
     }
 
     public OrdinalItem(TupelItem myTupel) {
+        super(ORDINAL_TUPEL);
         this.setMyTupel(myTupel);
-        this.itemType = LanguageItemType.ORDINAL_TUPEL;
     }
-
 
     public String getMyString() {
         return myString;
@@ -63,20 +59,5 @@ public class OrdinalItem implements LanguageItem {
 
     public void setMyTupel(TupelItem myTupel) {
         this.myTupel = myTupel;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

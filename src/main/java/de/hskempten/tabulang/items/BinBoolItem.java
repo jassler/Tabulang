@@ -1,24 +1,21 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class BinBoolItem implements LanguageItem {
+public class BinBoolItem extends LanguageItemAbstract implements LanguageItem {
     //"and"/"or"/"xor"/"iff"/"impl"
     private String myString;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public BinBoolItem(String myString) {
+        super(switch (myString) {
+            case "and" -> BINBOOL_AND;
+            case "or" -> BINBOOL_OR;
+            case "xor" -> BINBOOL_XOR;
+            case "iff" -> BINBOOL_IFF;
+            case "impl" -> BINBOOL_IMPL;
+            default -> BINBOOL_NULL;
+        });
         this.setMyString(myString);
-        this.itemType = switch (myString) {
-            case "and" -> LanguageItemType.BINBOOL_AND;
-            case "or" -> LanguageItemType.BINBOOL_OR;
-            case "xor" -> LanguageItemType.BINBOOL_XOR;
-            case "iff" -> LanguageItemType.BINBOOL_IFF;
-            case "impl" -> LanguageItemType.BINBOOL_IMPL;
-            default -> LanguageItemType.BINBOOL_NULL;
-        };
     }
 
     public String getMyString() {
@@ -27,20 +24,5 @@ public class BinBoolItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

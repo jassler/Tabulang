@@ -1,27 +1,24 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.MARK_WITHIF;
+import static de.hskempten.tabulang.items.LanguageItemType.MARK_WITHOUTIF;
 
-public class MarkStmntItem implements LanguageItem {
+public class MarkStmntItem extends LanguageItemAbstract implements LanguageItem {
     private TermItem myTerm;
     private TermItem mySecondTerm;
     private PredItem myPred;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
-
     public MarkStmntItem(TermItem myTerm, TermItem mySecondTerm, PredItem myPred) {
+        super(MARK_WITHIF);
         this.setMyTerm(myTerm);
         this.setMySecondTerm(mySecondTerm);
         this.setMyPred(myPred);
-        this.itemType = LanguageItemType.MARK_WITHIF;
     }
 
     public MarkStmntItem(TermItem myTerm, TermItem mySecondTerm) {
+        super(MARK_WITHOUTIF);
         this.setMyTerm(myTerm);
         this.setMySecondTerm(mySecondTerm);
-        this.itemType = LanguageItemType.MARK_WITHOUTIF;
     }
 
     public TermItem getMyTerm() {
@@ -46,24 +43,5 @@ public class MarkStmntItem implements LanguageItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
-    }
-
-    public void setLanguageItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
     }
 }

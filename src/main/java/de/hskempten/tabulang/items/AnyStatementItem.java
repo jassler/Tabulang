@@ -1,33 +1,31 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class AnyStatementItem implements StatementAnyItem {
+public class AnyStatementItem extends LanguageItemAbstract implements StatementAnyItem {
     private StatementItem myStatement;
     private ReturnStmntItem myReturnStmnt;
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
 
     public AnyStatementItem(StatementItem myStatement) {
+        super(ANYSTATEMENT_STATEMENT);
         this.setMyStatement(myStatement);
-        this.itemType = LanguageItemType.ANYSTATEMENT_STATEMENT;
     }
 
     public AnyStatementItem(ReturnStmntItem myReturnStmnt) {
+        super(ANYSTATEMENT_RETURN);
         this.setMyReturnStmnt(myReturnStmnt);
-        this.itemType = LanguageItemType.ANYSTATEMENT_RETURN;
     }
 
     public AnyStatementItem(SetStmntItem mySetStmnt) {
+        super(ANYSTATEMENT_SET);
         this.setMySetStmnt(mySetStmnt);
-        this.itemType = LanguageItemType.ANYSTATEMENT_SET;
     }
 
     public AnyStatementItem(GroupStmntItem myGroupStmnt) {
+        super(ANYSTATEMENT_GROUP);
         this.setMyGroupStmnt(myGroupStmnt);
-        this.itemType = LanguageItemType.ANYSTATEMENT_GROUP;
     }
 
     public StatementItem getMyStatement() {
@@ -60,20 +58,5 @@ public class AnyStatementItem implements StatementAnyItem {
 
     public void setMyGroupStmnt(GroupStmntItem myGroupStmnt) {
         this.myGroupStmnt = myGroupStmnt;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

@@ -1,16 +1,15 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
 import java.util.ArrayList;
 
-public class DistinctTItem implements LanguageItem {
+import static de.hskempten.tabulang.items.LanguageItemType.DISTINCT_ITEM;
+
+public class DistinctTItem extends LanguageItemAbstract implements LanguageItem {
     private ArrayList<IdentifierItem> myIdentifiers;
     private TermItem myTerm;
-    private LanguageItemType itemType = LanguageItemType.DISTINCT_ITEM;
-    private TextPosition myTextPosition;
 
     public DistinctTItem(ArrayList<IdentifierItem> myIdentifiers, TermItem myTerm) {
+        super(DISTINCT_ITEM);
         this.setMyIdentifiers(myIdentifiers);
         this.setMyTerm(myTerm);
     }
@@ -29,20 +28,5 @@ public class DistinctTItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return LanguageItemType.DISTINCT_ITEM;
     }
 }

@@ -1,29 +1,26 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
 import java.util.ArrayList;
 
-public class VListItem implements LanguageItem {
+import static de.hskempten.tabulang.items.LanguageItemType.*;
+
+public class VListItem extends LanguageItemAbstract implements LanguageItem {
     private IdentifierItem myIdentifier;
     private ArrayList<IdentifierItem> myOtherIdentifiers;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public VListItem() {
-        this.itemType = LanguageItemType.VLIST_EMPTY;
+        super(VLIST_EMPTY);
     }
 
     public VListItem(IdentifierItem myIdentifier) {
+        super(VLIST_ONE);
         this.setMyIdentifier(myIdentifier);
-        this.itemType = LanguageItemType.VLIST_ONE;
     }
 
     public VListItem(IdentifierItem myIdentifier, ArrayList<IdentifierItem> myOtherIdentifiers) {
+        super(VLIST_MULTI);
         this.setMyIdentifier(myIdentifier);
         this.setMyOtherIdentifiers(myOtherIdentifiers);
-        this.itemType = LanguageItemType.VLIST_MULTI;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -40,20 +37,5 @@ public class VListItem implements LanguageItem {
 
     public void setMyOtherIdentifiers(ArrayList<IdentifierItem> myOtherIdentifiers) {
         this.myOtherIdentifiers = myOtherIdentifiers;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

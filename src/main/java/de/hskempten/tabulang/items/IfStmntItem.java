@@ -1,28 +1,26 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.IF_WITHELSE;
+import static de.hskempten.tabulang.items.LanguageItemType.IF_WITHOUTELSE;
 
-public class IfStmntItem implements LanguageItem {
+public class IfStmntItem extends LanguageItemAbstract implements LanguageItem {
     //'if'
     private PredItem myPred;
     private AnyStatementItem myAnyStatement;
     //'else'
     private AnyStatementItem myOptionalAnyStatement;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement) {
+        super(IF_WITHOUTELSE);
         this.setMyPred(myPred);
         this.setMyAnyStatement(myAnyStatement);
-        this.itemType = LanguageItemType.IF_WITHOUTELSE;
     }
 
     public IfStmntItem(PredItem myPred, AnyStatementItem myAnyStatement, AnyStatementItem myOptionalAnyStatement) {
+        super(IF_WITHELSE);
         this.setMyPred(myPred);
         this.setMyAnyStatement(myAnyStatement);
         this.setMyOptionalAnyStatement(myOptionalAnyStatement);
-        this.itemType = LanguageItemType.IF_WITHELSE;
     }
 
     public PredItem getMyPred() {
@@ -47,20 +45,5 @@ public class IfStmntItem implements LanguageItem {
 
     public void setMyOptionalAnyStatement(AnyStatementItem myOptionalAnyStatement) {
         this.myOptionalAnyStatement = myOptionalAnyStatement;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

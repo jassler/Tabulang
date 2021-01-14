@@ -1,22 +1,20 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.TERM_DIRECTIONAL_H;
+import static de.hskempten.tabulang.items.LanguageItemType.TERM_DIRECTIONAL_V;
 
-public class DirectionalTermItem implements LanguageItem {
+public class DirectionalTermItem extends LanguageItemAbstract implements LanguageItem {
     private String myString;
     private TermItem myTerm;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public DirectionalTermItem(String myString, TermItem myTerm) {
-        this.setMyString(myString);
-        this.setMyTerm(myTerm);
-        this.setLanguageItemType(switch (myString) {
-            case "horizontal" -> LanguageItemType.TERM_DIRECTIONAL_H;
-            case "vertical" -> LanguageItemType.TERM_DIRECTIONAL_V;
+        super(switch (myString) {
+            case "horizontal" -> TERM_DIRECTIONAL_H;
+            case "vertical" -> TERM_DIRECTIONAL_V;
             default -> throw new IllegalStateException("Unexpected value: " + myString);
         });
+        this.setMyString(myString);
+        this.setMyTerm(myTerm);
     }
 
     public DirectionalTermItem(TermItem myTerm) {
@@ -37,24 +35,5 @@ public class DirectionalTermItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    public void setLanguageItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

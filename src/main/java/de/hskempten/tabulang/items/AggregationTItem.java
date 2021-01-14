@@ -1,22 +1,20 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.AGGREGATION_AVERAGE;
+import static de.hskempten.tabulang.items.LanguageItemType.AGGREGATION_COUNT;
 
-public class AggregationTItem implements LanguageItem {
+public class AggregationTItem extends LanguageItemAbstract implements LanguageItem {
     private CountTItem myCountT;
     private AverageTItem myAverageT;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public AggregationTItem(CountTItem myCountT) {
+        super(AGGREGATION_COUNT);
         this.setMyCountT(myCountT);
-        this.itemType = LanguageItemType.AGGREGATION_COUNT;
     }
 
     public AggregationTItem(AverageTItem myAverageT) {
+        super(AGGREGATION_AVERAGE);
         this.setMyAverageT(myAverageT);
-        this.itemType = LanguageItemType.AGGREGATION_AVERAGE;
     }
 
     public CountTItem getMyCountT() {
@@ -33,20 +31,5 @@ public class AggregationTItem implements LanguageItem {
 
     public void setMyAverageT(AverageTItem myAverageT) {
         this.myAverageT = myAverageT;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

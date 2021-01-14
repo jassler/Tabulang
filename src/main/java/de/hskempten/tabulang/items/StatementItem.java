@@ -2,39 +2,38 @@ package de.hskempten.tabulang.items;
 
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class StatementItem implements StatementAnyItem {
+import static de.hskempten.tabulang.items.LanguageItemType.*;
+
+public class StatementItem extends LanguageItemAbstract implements StatementAnyItem {
     private LoopItem myLoop;
     private IfStmntItem myIfStmnt;
     private VarDefItem myVarDef;
     private BodyItem myBody;
     private FunCallItem myFunCall;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public StatementItem(LoopItem myLoop) {
+        super(STATEMENT_LOOP);
         this.setMyLoop(myLoop);
-        this.itemType = LanguageItemType.STATEMENT_LOOP;
     }
 
     public StatementItem(IfStmntItem myIfStmnt) {
+        super(STATEMENT_IF);
         this.setMyIfStmnt(myIfStmnt);
-        this.itemType = LanguageItemType.STATEMENT_IF;
     }
 
     public StatementItem(VarDefItem myVarDef) {
+        super(STATEMENT_VARDEF);
         this.setMyVarDef(myVarDef);
-        this.itemType = LanguageItemType.STATEMENT_VARDEF;
     }
 
     public StatementItem(BodyItem myBody) {
+        super(STATEMENT_BODY);
         this.setMyBody(myBody);
-        this.itemType = LanguageItemType.STATEMENT_BODY;
     }
 
     public StatementItem(FunCallItem myFunCall) {
+        super(STATEMENT_FUNCALL);
         this.setMyFunCall(myFunCall);
-        this.itemType = LanguageItemType.STATEMENT_FUNCALL;
     }
 
     public LoopItem getMyLoop() {
@@ -75,20 +74,5 @@ public class StatementItem implements StatementAnyItem {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
     }
 }

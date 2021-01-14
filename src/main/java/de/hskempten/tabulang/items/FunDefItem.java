@@ -1,38 +1,35 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class FunDefItem implements LanguageItem {
+public class FunDefItem extends LanguageItemAbstract implements LanguageItem {
     private VListItem myVList;
     private IdentifierItem myIdentifier;
     private FuncBodyItem myFuncBody;
     private TermItem myTerm;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public FunDefItem(VListItem myVList, FuncBodyItem myFuncBody) {
+        super(FUNDEF_VLIST_FUNCBODY);
         this.setMyVList(myVList);
         this.setMyFuncBody(myFuncBody);
-        this.itemType = LanguageItemType.FUNDEF_VLIST_FUNCBODY;
     }
 
     public FunDefItem(VListItem myVList, TermItem myTerm) {
+        super(FUNDEF_VLIST_TERM);
         this.setMyVList(myVList);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.FUNDEF_VLIST_TERM;
     }
 
     public FunDefItem(IdentifierItem myIdentifier, FuncBodyItem myFuncBody) {
+        super(FUNDEF_IDENTIFIER_FUNCBODY);
         this.setMyIdentifier(myIdentifier);
         this.setMyFuncBody(myFuncBody);
-        this.itemType = LanguageItemType.FUNDEF_IDENTIFIER_FUNCBODY;
     }
 
     public FunDefItem(IdentifierItem myIdentifier, TermItem myTerm) {
+        super(FUNDEF_IDENTIFIER_TERM);
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.FUNDEF_IDENTIFIER_TERM;
     }
 
     public VListItem getMyVList() {
@@ -65,20 +62,5 @@ public class FunDefItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

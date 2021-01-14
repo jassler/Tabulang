@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class TermRItem implements TermOrRItem {
+public class TermRItem extends LanguageItemAbstract implements TermOrRItem {
     //myPreds darf nicht null sein; pred+
     private PredItem myPred;
     private TermRItem myTermR;
@@ -14,61 +14,59 @@ public class TermRItem implements TermOrRItem {
     //"filter", "intersect", "unite", "."
     private String myString;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public TermRItem(PredItem myPred, TermRItem myTermR, String myString) {
+        super(TERMR_FILTER);
         this.myPred = myPred;
         this.myTermR = myTermR;
         this.myString = myString;
-        this.itemType = LanguageItemType.TERMR_FILTER;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm, String myString) {
+        super(switch (myString) {
+            case "intersect" -> TERMR_INTERSECT;
+            case "unite" -> TERMR_UNITE;
+            default -> throw new IllegalStateException("Unexpected value: " + myString);
+        });
         this.myTermR = myTermR;
         this.myTerm = myTerm;
         this.myString = myString;
-        switch (myString) {
-            case "intersect" -> this.itemType = LanguageItemType.TERMR_INTERSECT;
-            case "unite" -> this.itemType = LanguageItemType.TERMR_UNITE;
-        }
+
     }
 
     public TermRItem(PredItem myPred, TermRItem myTermR) {
+        super(TERMR_FILTER);
         this.setMyPred(myPred);
         this.myTermR = myTermR;
-        this.itemType = LanguageItemType.TERMR_FILTER;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm) {
+        super(TERMR_DOT);
         this.setMyTermR(myTermR);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.TERMR_DOT;
     }
 
     public TermRItem(TermRItem myTermR, TermItem myTerm, OperatorItem myOperator) {
+        super(TERMR_OPERATOR);
         this.setMyTermR(myTermR);
         this.setMyTerm(myTerm);
         this.setMyOperator(myOperator);
-        this.itemType = LanguageItemType.TERMR_OPERATOR;
     }
 
     public TermRItem(TermRItem myTermR, MarkStmntItem myMarkStmnt) {
+        super(TERMR_MARK);
         this.setMyTermR(myTermR);
         this.setMyMarkStmnt(myMarkStmnt);
-        this.itemType = LanguageItemType.TERMR_MARK;
     }
 
     public TermRItem(TermRItem myTermR, TupelItem myTupel) {
+        super(TERMR_TUPEL);
         this.setMyTermR(myTermR);
         this.setMyTupel(myTupel);
-        this.itemType = LanguageItemType.TERMR_TUPEL;
     }
 
     public TermRItem() {
-        this.itemType = LanguageItemType.TERMR_NULL;
+        super(TERMR_NULL);
     }
-
 
     public TermRItem getMyTermR() {
         return myTermR;
@@ -124,24 +122,5 @@ public class TermRItem implements TermOrRItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
-    }
-
-    public void setLanguageItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
     }
 }

@@ -1,13 +1,10 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
-public class ReturnStmntItem implements StatementAnyItem {
+public class ReturnStmntItem extends LanguageItemAbstract implements StatementAnyItem {
     private TermItem myTerm;
-    private LanguageItemType itemType = LanguageItemType.ANYSTATEMENT_RETURN;
-    private TextPosition myTextPosition;
 
     public ReturnStmntItem(TermItem myTerm) {
+        super(LanguageItemType.ANYSTATEMENT_RETURN);
         this.setMyTerm(myTerm);
     }
 
@@ -17,20 +14,5 @@ public class ReturnStmntItem implements StatementAnyItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

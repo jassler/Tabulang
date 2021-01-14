@@ -1,10 +1,7 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
-public class BinRelSymItem implements LanguageItem {
+public class BinRelSymItem extends LanguageItemAbstract implements LanguageItem {
     private String myString;
-    private TextPosition myTextPosition;
 
     public BinRelSymItem(String myString) {
         this.setMyString(myString);
@@ -17,15 +14,4 @@ public class BinRelSymItem implements LanguageItem {
     public void setMyString(String myString) {
         this.myString = myString;
     }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
 }

@@ -1,28 +1,26 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.PROCEDURALF_FUNCBODY;
+import static de.hskempten.tabulang.items.LanguageItemType.PROCEDURALF_TERM;
 
-public class ProceduralFItem implements LanguageItem {
+public class ProceduralFItem extends LanguageItemAbstract implements LanguageItem {
     private IdentifierItem myIdentifier;
     private VListItem myVList;
     private FuncBodyItem myFuncBody;
     private TermItem myTerm;
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, FuncBodyItem myFuncBody) {
+        super(PROCEDURALF_FUNCBODY);
         this.setMyIdentifier(myIdentifier);
         this.setMyVList(myVList);
         this.setMyFuncBody(myFuncBody);
-        this.itemType = LanguageItemType.PROCEDURALF_FUNCBODY;
     }
 
     public ProceduralFItem(IdentifierItem myIdentifier, VListItem myVList, TermItem myTerm) {
+        super(PROCEDURALF_TERM);
         this.setMyIdentifier(myIdentifier);
         this.setMyVList(myVList);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.PROCEDURALF_TERM;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -55,19 +53,5 @@ public class ProceduralFItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

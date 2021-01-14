@@ -1,22 +1,20 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_EXISTS;
+import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_FORALL;
 
-public class PQuantifiedItem implements LanguageItem {
+public class PQuantifiedItem extends LanguageItemAbstract implements LanguageItem {
     private ExistsPredItem myExistsPred;
     private ForallPredItem myForallPred;
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public PQuantifiedItem(ExistsPredItem myExistsPred) {
+        super(QUANTIFIED_EXISTS);
         this.setMyExistsPred(myExistsPred);
-        this.itemType = LanguageItemType.QUANTIFIED_EXISTS;
     }
 
     public PQuantifiedItem(ForallPredItem myForallPred) {
+        super(QUANTIFIED_FORALL);
         this.setMyForallPred(myForallPred);
-        this.itemType = LanguageItemType.QUANTIFIED_FORALL;
     }
 
     public ExistsPredItem getMyExistsPred() {
@@ -33,20 +31,5 @@ public class PQuantifiedItem implements LanguageItem {
 
     public void setMyForallPred(ForallPredItem myForallPred) {
         this.myForallPred = myForallPred;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

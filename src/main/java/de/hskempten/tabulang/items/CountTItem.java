@@ -1,24 +1,22 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.COUNT_DIRECTIONAL;
+import static de.hskempten.tabulang.items.LanguageItemType.COUNT_EMPTY;
 
-public class CountTItem implements LanguageItem {
+public class CountTItem extends LanguageItemAbstract implements LanguageItem {
     //"horizontal"/"vertical"
     private String myString;
     private TermItem myTerm;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public CountTItem(TermItem myTerm) {
+        super(COUNT_EMPTY);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.COUNT_EMPTY;
     }
 
     public CountTItem(String myString, TermItem myTerm) {
+        super(COUNT_DIRECTIONAL);
         this.setMyString(myString);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.COUNT_DIRECTIONAL;
     }
 
     public String getMyString() {
@@ -35,20 +33,5 @@ public class CountTItem implements LanguageItem {
 
     public void setMyTerm(TermItem myTerm) {
         this.myTerm = myTerm;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

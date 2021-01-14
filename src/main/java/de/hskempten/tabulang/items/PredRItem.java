@@ -1,22 +1,20 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.PREDR_BOOL;
+import static de.hskempten.tabulang.items.LanguageItemType.PREDR_NULL;
 
-public class PredRItem implements LanguageItem {
+public class PredRItem extends LanguageItemAbstract implements LanguageItem {
     private BinBoolItem myBinBool;
     private PredItem myPred;
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public PredRItem(BinBoolItem myBinBool, PredItem myPred) {
+        super(PREDR_BOOL);
         this.setMyBinBool(myBinBool);
         this.setMyPred(myPred);
-        this.itemType = LanguageItemType.PREDR_BOOL;
     }
 
     public PredRItem() {
-        this.itemType = LanguageItemType.PREDR_NULL;
+        super(PREDR_NULL);
     }
 
     public BinBoolItem getMyBinBool() {
@@ -33,24 +31,5 @@ public class PredRItem implements LanguageItem {
 
     public void setMyPred(PredItem myPred) {
         this.myPred = myPred;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
-    }
-
-    public void setLanguageItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
     }
 }

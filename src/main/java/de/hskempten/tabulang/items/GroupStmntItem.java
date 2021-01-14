@@ -1,66 +1,63 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class GroupStmntItem implements LanguageItem {
+public class GroupStmntItem extends LanguageItemAbstract implements LanguageItem {
     private String myString;
     private GroupAreaItem myGroupArea;
     private TermItem myTerm;
     private FunCallItem myFunCall;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
+        super(GROUP_HIDING_AREA_FUNCALL);
         this.setMyString(myString);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
-        this.itemType = LanguageItemType.GROUP_HIDING_AREA_FUNCALL;
     }
 
     public GroupStmntItem(String myString, GroupAreaItem myGroupArea, TermItem myTerm) {
+        super(GROUP_HIDING_AREA);
         this.setMyString(myString);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.GROUP_HIDING_AREA;
     }
 
     public GroupStmntItem(String myString, TermItem myTerm, FunCallItem myFunCall) {
+        super(GROUP_HIDING_FUNCALL);
         this.setMyString(myString);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
-        this.itemType = LanguageItemType.GROUP_HIDING_FUNCALL;
     }
 
     public GroupStmntItem(String myString, TermItem myTerm) {
+        super(GROUP_HIDING);
         this.setMyString(myString);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.GROUP_HIDING;
     }
 
     public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm, FunCallItem myFunCall) {
+        super(GROUP_AREA_FUNCALL);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
-        this.itemType = LanguageItemType.GROUP_AREA_FUNCALL;
     }
 
     public GroupStmntItem(GroupAreaItem myGroupArea, TermItem myTerm) {
+        super(GROUP_AREA);
         this.setMyGroupArea(myGroupArea);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.GROUP_AREA;
     }
 
     public GroupStmntItem(TermItem myTerm, FunCallItem myFunCall) {
+        super(GROUP_FUNCALL);
         this.setMyTerm(myTerm);
         this.setMyFunCall(myFunCall);
-        this.itemType = LanguageItemType.GROUP_FUNCALL;
     }
 
     public GroupStmntItem(TermItem myTerm) {
+        super(GROUP_EMPTY);
         this.setMyTerm(myTerm);
-        this.itemType = LanguageItemType.GROUP_EMPTY;
     }
 
     public String getMyString() {
@@ -93,20 +90,5 @@ public class GroupStmntItem implements LanguageItem {
 
     public void setMyFunCall(FunCallItem myFunCall) {
         this.myFunCall = myFunCall;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

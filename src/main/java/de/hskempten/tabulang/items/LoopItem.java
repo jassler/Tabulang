@@ -1,8 +1,9 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.LOOP_LOOPBODY;
+import static de.hskempten.tabulang.items.LanguageItemType.LOOP_STATEMENT;
 
-public class LoopItem implements LanguageItem {
+public class LoopItem extends LanguageItemAbstract implements LanguageItem {
     //'for'
     private IdentifierItem myIdentifier;
     //'in'
@@ -12,21 +13,18 @@ public class LoopItem implements LanguageItem {
     private LoopBodyItem myLoopBody;
     //')'
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public LoopItem(IdentifierItem myIdentifier, TermItem myTerm, LoopStmntItem myLoopStmnt) {
+        super(LOOP_STATEMENT);
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyLoopStmnt(myLoopStmnt);
-        this.itemType = LanguageItemType.LOOP_STATEMENT;
     }
 
     public LoopItem(IdentifierItem myIdentifier, TermItem myTerm, LoopBodyItem myLoopBody) {
+        super(LOOP_LOOPBODY);
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyLoopBody(myLoopBody);
-        this.itemType = LanguageItemType.LOOP_LOOPBODY;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -59,20 +57,5 @@ public class LoopItem implements LanguageItem {
 
     public void setMyLoopBody(LoopBodyItem myLoopBody) {
         this.myLoopBody = myLoopBody;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

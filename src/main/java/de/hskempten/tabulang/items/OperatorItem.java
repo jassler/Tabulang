@@ -1,26 +1,23 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class OperatorItem implements LanguageItem {
+public class OperatorItem extends LanguageItemAbstract implements LanguageItem {
     //+ - * / div mod ^
     private String myString;
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public OperatorItem(String myString) {
+        super(switch (myString) {
+            case "+" -> OPERATOR_ADD;
+            case "-" -> OPERATOR_SUBTRACT;
+            case "*" -> OPERATOR_MULTIPLY;
+            case "/" -> OPERATOR_DIVIDE;
+            case "div" -> OPERATOR_DIV;
+            case "mod" -> OPERATOR_MOD;
+            case "^" -> OPERATOR_POWER;
+            default -> NULL;
+        });
         this.setMyString(myString);
-        this.itemType = switch (myString) {
-            case "+" -> LanguageItemType.OPERATOR_ADD;
-            case "-" -> LanguageItemType.OPERATOR_SUBTRACT;
-            case "*" -> LanguageItemType.OPERATOR_MULTIPLY;
-            case "/" -> LanguageItemType.OPERATOR_DIVIDE;
-            case "div" -> LanguageItemType.OPERATOR_DIV;
-            case "mod" -> LanguageItemType.OPERATOR_MOD;
-            case "^" -> LanguageItemType.OPERATOR_POWER;
-            default -> LanguageItemType.NULL;
-        };
     }
 
     public String getMyString() {
@@ -29,20 +26,5 @@ public class OperatorItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

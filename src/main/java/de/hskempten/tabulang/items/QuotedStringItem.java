@@ -2,12 +2,14 @@ package de.hskempten.tabulang.items;
 
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class QuotedStringItem implements LanguageItem {
+import static de.hskempten.tabulang.items.LanguageItemType.ORDINAL_QUOTEDSTRING;
+
+public class QuotedStringItem extends LanguageItemAbstract implements LanguageItem {
     //any char except the quote char
     private String myString;
-    private TextPosition myTextPosition;
 
     public QuotedStringItem(String myString) {
+        super(ORDINAL_QUOTEDSTRING);
         this.setMyString(myString);
     }
 
@@ -17,20 +19,5 @@ public class QuotedStringItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return LanguageItemType.ORDINAL_QUOTEDSTRING;
     }
 }

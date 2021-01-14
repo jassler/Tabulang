@@ -1,17 +1,15 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
 import java.math.BigInteger;
 
-public class NumberItem implements LanguageItem {
+import static de.hskempten.tabulang.items.LanguageItemType.ORDINAL_NUMBER;
+
+public class NumberItem extends LanguageItemAbstract implements LanguageItem {
     private BigInteger numerator;
     private BigInteger denominator;
 
-    private LanguageItemType itemType = LanguageItemType.ORDINAL_NUMBER;
-    private TextPosition myTextPosition;
-
     public NumberItem(String myNumber) {
+        super(ORDINAL_NUMBER);
         this.setValueFromString(myNumber);
     }
 
@@ -55,20 +53,5 @@ public class NumberItem implements LanguageItem {
 
     public void setDenominator(BigInteger denominator) {
         this.denominator = denominator;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

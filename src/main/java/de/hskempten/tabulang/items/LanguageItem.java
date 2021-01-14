@@ -1,10 +1,16 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public interface LanguageItem {
 
+    LanguageItemType getLanguageItemType();
+
+    TextPosition getTextPosition();
+
+    void setTextPosition(TextPosition textPosition);
+
+    /*
     default public LanguageItemType getLanguageItemType() {
         return LanguageItemType.NULL;
     }
@@ -27,4 +33,5 @@ public interface LanguageItem {
             e.printStackTrace();
         }
     }
+    */
 }

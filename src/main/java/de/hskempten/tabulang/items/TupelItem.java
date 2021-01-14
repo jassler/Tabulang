@@ -1,35 +1,32 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
 import java.util.ArrayList;
 
-public class TupelItem implements LanguageItem {
+import static de.hskempten.tabulang.items.LanguageItemType.*;
+
+public class TupelItem extends LanguageItemAbstract implements LanguageItem {
     private TermItem myTerm;
     private ArrayList<TermItem> myTerms;
     private IntervallItem myIntervall;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public TupelItem() {
-        this.itemType = LanguageItemType.TUPEL_EMPTY;
+        super(TUPEL_EMPTY);
     }
 
     public TupelItem(TermItem myTerm) {
+        super(TUPEL_ONE);
         this.myTerm = myTerm;
-        this.itemType = LanguageItemType.TUPEL_ONE;
     }
 
     public TupelItem(TermItem myTerm, ArrayList<TermItem> myTerms) {
+        super(TUPEL_MULTI);
         this.myTerm = myTerm;
         this.myTerms = myTerms;
-        this.itemType = LanguageItemType.TUPEL_MULTI;
     }
 
     public TupelItem(IntervallItem myIntervall) {
+        super(TUPEL_INTERVAL);
         this.myIntervall = myIntervall;
-        this.itemType = LanguageItemType.TUPEL_INTERVAL;
     }
 
     public TermItem getMyTerm() {
@@ -54,28 +51,5 @@ public class TupelItem implements LanguageItem {
 
     public void setMyIntervall(IntervallItem myIntervall) {
         this.myIntervall = myIntervall;
-    }
-
-    public LanguageItemType getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

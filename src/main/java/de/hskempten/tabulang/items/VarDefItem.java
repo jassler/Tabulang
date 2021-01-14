@@ -1,8 +1,9 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.VARDEF_ASSIGNMENT;
+import static de.hskempten.tabulang.items.LanguageItemType.VARDEF_PROCEDURALF;
 
-public class VarDefItem implements LanguageItem {
+public class VarDefItem extends LanguageItemAbstract implements LanguageItem {
     private boolean isNewAssignment;
     private IdentifierItem myIdentifier;
     //':='
@@ -10,19 +11,16 @@ public class VarDefItem implements LanguageItem {
     //';'
     private ProceduralFItem myProceduralF;
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public VarDefItem(IdentifierItem myIdentifier, TermItem myTerm, boolean isNewAssignment) {
+        super(VARDEF_ASSIGNMENT);
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setNewAssignment(isNewAssignment);
-        this.itemType = LanguageItemType.VARDEF_ASSIGNMENT;
     }
 
     public VarDefItem(ProceduralFItem myProceduralF) {
+        super(VARDEF_PROCEDURALF);
         this.setMyProceduralF(myProceduralF);
-        this.itemType = LanguageItemType.VARDEF_PROCEDURALF;
     }
 
     public boolean isNewAssignment() {
@@ -55,20 +53,5 @@ public class VarDefItem implements LanguageItem {
 
     public void setMyProceduralF(ProceduralFItem myProceduralF) {
         this.myProceduralF = myProceduralF;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

@@ -1,12 +1,12 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.STATEMENT_IDENTIFIER;
 
-public class IdentifierItem implements LanguageItem {
+public class IdentifierItem extends LanguageItemAbstract implements LanguageItem {
     private String myString; //[a-zA-Z][0-9a-zA-Z]*
-    private TextPosition myTextPosition;
 
     public IdentifierItem(String myString) {
+        super(STATEMENT_IDENTIFIER);
         this.myString = myString;
     }
 
@@ -16,20 +16,5 @@ public class IdentifierItem implements LanguageItem {
 
     public void setMyString(String myString) {
         this.myString = myString;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return LanguageItemType.STATEMENT_IDENTIFIER;
     }
 }

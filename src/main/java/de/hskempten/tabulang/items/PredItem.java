@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class PredItem implements LanguageItem {
+public class PredItem extends LanguageItemAbstract implements LanguageItem {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredRItem myPredR;
@@ -13,61 +13,59 @@ public class PredItem implements LanguageItem {
     private Boolean myBoolean;
     private FunCallItem myFunCallItem; //TODO add funCall to pred?
 
-    LanguageItemType itemType;
-    private TextPosition myTextPosition;
 
     public PredItem(IdentifierItem myIdentifier, TermItem myTerm, PredRItem myPredR) {
+        super(PRED_IN);
         this.setMyIdentifier(myIdentifier);
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
-        this.itemType = LanguageItemType.PRED_IN;
     }
 
     public PredItem(TermItem myTerm, PredRItem myPredR, BinRelSymItem myBinRelSym, TermItem mySecondTerm) {
+        super(PRED_BINRELSYM);
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
         this.setMyBinRelSym(myBinRelSym);
         this.setMySecondTerm(mySecondTerm);
-        this.itemType = LanguageItemType.PRED_BINRELSYM;
     }
 
     public PredItem(TermItem myTerm, PredRItem myPredR) {
+        super(PRED_TERM);
         this.setMyTerm(myTerm);
         this.setMyPredR(myPredR);
-        this.itemType = LanguageItemType.PRED_TERM;
     }
 
     public PredItem(PredRItem myPredR, PredItem myPred) {
+        super(PRED_BRACKET);
+        // TODO case for 'not'
         this.setMyPredR(myPredR);
         this.setMyPred(myPred);
-        this.itemType = LanguageItemType.PRED_BRACKET;
-        // TODO case for 'not'
     }
 
     public PredItem(PredRItem myPredR, PQuantifiedItem myPQuantified) {
+        super(PRED_QUANTIFIED);
         this.setMyPredR(myPredR);
         this.setMyPQuantified(myPQuantified);
-        this.itemType = LanguageItemType.PRED_QUANTIFIED;
     }
 
     public PredItem(PredRItem myPredR, Boolean myBoolean) {
+        super(PRED_BOOLEAN);
         this.myPredR = myPredR;
         this.myBoolean = myBoolean;
-        this.itemType = LanguageItemType.PRED_BOOLEAN;
     }
 
     public PredItem(FunCallItem myFunCallItem, PredRItem myPredR) {
+        super(PRED_FUNCALL);
         this.myFunCallItem = myFunCallItem;
         this.myPredR = myPredR;
-        this.itemType = LanguageItemType.PRED_FUNCALL;
     }
 
     public PredItem(String s, TermItem myTerm, BinRelSymItem myBinRelSym, TermItem mySecondTerm, PredRItem myPredR) {
+        super(PRED_INDEX);
         this.myTerm = myTerm;
         this.myBinRelSym = myBinRelSym;
         this.mySecondTerm = mySecondTerm;
         this.myPredR = myPredR;
-        this.itemType = LanguageItemType.PRED_INDEX;
     }
 
     public IdentifierItem getMyIdentifier() {
@@ -140,24 +138,5 @@ public class PredItem implements LanguageItem {
 
     public void setMyFunCallItem(FunCallItem myFunCallItem) {
         this.myFunCallItem = myFunCallItem;
-    }
-
-    public void setLanguageItemType(LanguageItemType itemType) {
-        this.itemType = itemType;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }

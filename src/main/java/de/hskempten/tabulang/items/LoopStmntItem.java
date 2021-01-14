@@ -1,34 +1,31 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
+import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class LoopStmntItem implements StatementAnyItem {
+public class LoopStmntItem extends LanguageItemAbstract implements StatementAnyItem {
     private StatementItem myStatement;
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;
     private MarkStmntItem myMarkStmnt; //';'
 
-    private LanguageItemType itemType;
-    private TextPosition myTextPosition;
-
     public LoopStmntItem(StatementItem myStatement) {
+        super(LOOP_STMT_STATEMENT);
         this.setMyStatement(myStatement);
-        this.itemType = LanguageItemType.LOOP_STMT_STATEMENT;
     }
 
     public LoopStmntItem(SetStmntItem mySetStmnt) {
+        super(LOOP_STMT_SET);
         this.setMySetStmnt(mySetStmnt);
-        this.itemType = LanguageItemType.LOOP_STMT_SET;
     }
 
     public LoopStmntItem(GroupStmntItem myGroupStmnt) {
+        super(LOOP_STMT_GROUP);
         this.setMyGroupStmnt(myGroupStmnt);
-        this.itemType = LanguageItemType.LOOP_STMT_GROUP;
     }
 
     public LoopStmntItem(MarkStmntItem myMarkStmnt) {
+        super(LOOP_STMT_MARK);
         this.setMyMarkStmnt(myMarkStmnt);
-        this.itemType = LanguageItemType.LOOP_STMT_MARK;
     }
 
     public StatementItem getMyStatement() {
@@ -61,20 +58,5 @@ public class LoopStmntItem implements StatementAnyItem {
 
     public void setMyMarkStmnt(MarkStmntItem myMarkStmnt) {
         this.myMarkStmnt = myMarkStmnt;
-    }
-
-    @Override
-    public TextPosition getTextPosition() {
-        return myTextPosition;
-    }
-
-    @Override
-    public void setTextPosition(TextPosition textPosition) {
-        this.myTextPosition = textPosition;
-    }
-
-    @Override
-    public LanguageItemType getLanguageItemType() {
-        return itemType;
     }
 }
