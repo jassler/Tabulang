@@ -2,6 +2,8 @@ package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.PositionedException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -15,12 +17,12 @@ public class ASTTermParser {
     ShuntingYardBuilder syBuilder = new ShuntingYardBuilder();
     private int nestingLevel = 0;
 
-    public TermNode parse(TermItem originalTerm, int nestingLevel) throws Exception {
+    public TermNode parse(TermItem originalTerm, int nestingLevel) throws PositionedException {
         this.nestingLevel = nestingLevel;
         return parse(originalTerm);
     }
 
-    public TermNode parse(TermItem originalTerm) throws Exception {
+    public TermNode parse(TermItem originalTerm) throws PositionedException {
 
         traverseTerm(originalTerm);
         TermNode parsedTerm = termParser(syBuilder.getOutput());
@@ -28,7 +30,7 @@ public class ASTTermParser {
         return parsedTerm;
     }
 
-    private void traverseTerm(TermItem originalTerm) throws Exception {
+    private void traverseTerm(TermItem originalTerm) throws PositionedException {
         TermOrRItem actTerm = originalTerm;
         int i = 20;
         while (i > 0) {
@@ -96,25 +98,23 @@ public class ASTTermParser {
                         traverseTerm(((TermRItem) actTerm).getMyTerm());
                     }
                     default -> {
-                        throw new Exception("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType());
+                        throw new ParseTimeException("ASTTermParser case not yet implemented: " + actTerm.getLanguageItemType(), originalTerm.getTextPosition());
                     }
                 }
                 switch (actTerm.getLanguageItemType()) {
                     case TERM_IDENTIFIER, TERM_ORDINAL, TERM_DIRECTIONAL, TERM_FUNCALL, TERM_AGGREGATION,
-                            TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF, TERMR_DOT -> actTerm = actTerm.getMyTermR();
+                            TERM_DISTINCT, TERM_LOOP, TERMR_MARK, TERMR_FILTER, TERM_FUNDEF, TERMR_DOT, TERM_BRACKET -> actTerm = actTerm.getMyTermR();
                     case TERMR_OPERATOR -> actTerm = ((TermRItem) actTerm).getMyTerm();
-                    case TERM_BRACKET -> actTerm = actTerm.getMyTermR();
                     default -> {
-                        throw new IllegalStateException("Unexpected value: " + actTerm.getLanguageItemType());
+                        throw new ParseTimeException("Unexpected value: " + actTerm.getLanguageItemType(), originalTerm.getTextPosition());
                     }
                 }
             }
-            ;
             i--;
         }
     }
 
-    private TermNode termParser(ArrayList<LanguageItem> items) throws Exception {
+    private TermNode termParser(ArrayList<LanguageItem> items) throws PositionedException {
 
 
         LanguageItem actItem = items.get(items.size() - 1);
@@ -143,7 +143,7 @@ public class ASTTermParser {
                     case OPERATOR_POWER:
                         return new PowerNode(left, right, textPosition);
                     default:
-                        throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                        throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
             }
             case ORDINAL_NUMBER -> {
@@ -394,10 +394,10 @@ public class ASTTermParser {
                     < LanguageItemType.getPrecedence(stack.peek().getLanguageItemType());
         }
 
-        public ArrayList<LanguageItem> getOutput() throws Exception {
+        public ArrayList<LanguageItem> getOutput() throws PositionedException {
             while (!stack.isEmpty()) {
                 if (LanguageItemType.TERM_BRACKET.equals(stack.peek().getLanguageItemType())) {
-                    throw new Exception("Shunting Yard Builder Term invalid");
+                    throw new ParseTimeException("Shunting Yard Builder invalid", stack.peek().getTextPosition());
                 }
                 output.add(stack.pop());
             }

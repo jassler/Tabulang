@@ -3,6 +3,8 @@ package de.hskempten.tabulang.items.ast;
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.astNodes.PlaceholderNodes.PredTermNode;
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.PositionedException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class ASTPredParser {
 
     ASTPredParser.ShuntingYardBuilder syBuilder = new ASTPredParser.ShuntingYardBuilder();
 
-    public PredicateNode parse(LanguageItem originalPred) throws Exception {
+    public PredicateNode parse(LanguageItem originalPred) throws PositionedException {
 
         traversePred(originalPred);
         PredicateNode parsedPred = predParser(syBuilder.getOutput());
@@ -20,7 +22,7 @@ public class ASTPredParser {
         return parsedPred;
     }
 
-    private void traversePred(LanguageItem originalPred) throws Exception {
+    private void traversePred(LanguageItem originalPred) throws PositionedException {
         LanguageItem actPred = originalPred;
         int i = 20;
         while (i > 0) {
@@ -60,7 +62,7 @@ public class ASTPredParser {
                     syBuilder.add(((PredItem) actPred).getMyFunCallItem());
                 }
                 default -> {
-                    throw new Exception("ASTTermParser case not yet implemented: " + actPred.getLanguageItemType());
+                    throw new ParseTimeException("ASTTermParser case not yet implemented: " + actPred.getLanguageItemType(), actPred.getTextPosition());
                 }
             }
             actPred = switch (actPred.getLanguageItemType()) {
@@ -70,14 +72,14 @@ public class ASTPredParser {
                 case PREDR_BOOL -> ((PredRItem) actPred).getMyPred();
                 case PRED_TERM, PRED_IN, PRED_QUANTIFIED -> ((PredItem) actPred).getMyPredR();
                 default -> {
-                    throw new IllegalStateException("Unexpected value: " + actPred.getLanguageItemType());
+                    throw new ParseTimeException("Unexpected value: " + actPred.getLanguageItemType(), actPred.getTextPosition());
                 }
             };
             i--;
         }
     }
 
-    private PredicateNode predParser(ArrayList<LanguageItem> items) throws Exception {
+    private PredicateNode predParser(ArrayList<LanguageItem> items) throws PositionedException {
 
 
         LanguageItem actItem = items.get(items.size() - 1);
@@ -95,7 +97,7 @@ public class ASTPredParser {
                     case "<=" -> new LessThanOrEqualToNode(leftTerm, rightTerm, textPosition);
                     case ">=" -> new GreaterThanOrEqualToNode(leftTerm, rightTerm, textPosition);
                     case "!=" -> new NotEqualNode(leftTerm, rightTerm, textPosition);
-                    default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString());
+                    default -> throw new ParseTimeException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString(), actItem.getTextPosition());
                 };
             }
             case PRED_TERM -> {
@@ -112,7 +114,7 @@ public class ASTPredParser {
                     case "xor" -> new XorNode(left, right, textPosition);
                     case "iff" -> new IffNode(left, right, textPosition);
                     case "impl" -> new ImplNode(left, right, textPosition);
-                    default -> throw new IllegalStateException("Unexpected value: " + ((PredRItem) actItem).getMyBinBool().getMyString());
+                    default -> throw new ParseTimeException("Unexpected value: " + ((PredRItem) actItem).getMyBinBool().getMyString(), actItem.getTextPosition());
                 };
             }
             case PRED_NOT -> {
@@ -135,7 +137,7 @@ public class ASTPredParser {
                     case "<=" -> new LessThanOrEqualToNode(identifier, rightTerm, textPosition);
                     case ">=" -> new GreaterThanOrEqualToNode(identifier, rightTerm, textPosition);
                     case "!=" -> new NotEqualNode(identifier, rightTerm, textPosition);
-                    default -> throw new IllegalStateException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString());
+                    default -> throw new ParseTimeException("Unexpected value: " + ((PredItem) actItem).getMyBinRelSym().getMyString(), actItem.getTextPosition());
                 };
             }
             case QUANTIFIED_EXISTS -> {
@@ -168,7 +170,7 @@ public class ASTPredParser {
             case PRED_BOOLEAN -> {
                 return new BooleanNode(((PredItem) actItem).getMyBoolean(), textPosition);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+            default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
         }
 
     }
@@ -222,10 +224,10 @@ public class ASTPredParser {
                     < LanguageItemType.getPrecedence(stack.peek().getLanguageItemType());
         }
 
-        public ArrayList<LanguageItem> getOutput() throws Exception {
+        public ArrayList<LanguageItem> getOutput() throws PositionedException {
             while (!stack.isEmpty()) {
                 if (LanguageItemType.TERM_BRACKET.equals(stack.peek().getLanguageItemType())) {
-                    throw new Exception("Shunting Yard Builder Term invalid");
+                    throw new ParseTimeException("Shunting Yard Builder Term invalid", stack.peek().getTextPosition());
                 }
                 output.add(stack.pop());
             }

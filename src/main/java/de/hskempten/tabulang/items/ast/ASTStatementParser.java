@@ -2,6 +2,8 @@ package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
 import de.hskempten.tabulang.items.*;
+import de.hskempten.tabulang.tokenizer.ParseTimeException;
+import de.hskempten.tabulang.tokenizer.PositionedException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -12,17 +14,17 @@ public class ASTStatementParser {
 
     private int nestingLevel = 0;
 
-    public Node parse(StatementAnyItem originalStatement, int nestingLevel) throws Exception {
+    public Node parse(StatementAnyItem originalStatement, int nestingLevel) throws PositionedException {
         this.nestingLevel = nestingLevel;
         return parse(originalStatement);
     }
 
-    public Node parse(StatementAnyItem originalStatement) throws Exception {
+    public Node parse(StatementAnyItem originalStatement) throws PositionedException {
 
         return statementParser(traverseStatement(originalStatement));
     }
 
-    private LanguageItem traverseStatement(StatementAnyItem originalStatement) throws Exception {
+    private LanguageItem traverseStatement(StatementAnyItem originalStatement) throws PositionedException {
         StatementAnyItem actStatement = originalStatement;
 
 
@@ -31,7 +33,7 @@ public class ASTStatementParser {
                 return switch (((StatementItem) actStatement).getMyVarDef().getLanguageItemType()) {
                     case VARDEF_ASSIGNMENT -> ((StatementItem) actStatement).getMyVarDef();
                     case VARDEF_PROCEDURALF -> ((StatementItem) actStatement).getMyVarDef().getMyProceduralF();
-                    default -> throw new IllegalStateException("Unexpected value: " + ((StatementItem) actStatement).getMyVarDef().getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + ((StatementItem) actStatement).getMyVarDef().getLanguageItemType(), actStatement.getTextPosition());
                 };
             }
             case ANYSTATEMENT_STATEMENT -> {
@@ -41,7 +43,7 @@ public class ASTStatementParser {
                     case STATEMENT_IF -> statement.getMyIfStmnt();
                     case STATEMENT_BODY -> statement.getMyBody();
                     case STATEMENT_VARDEF -> statement.getMyVarDef();
-                    default -> throw new IllegalStateException("Unexpected value: " + statement.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + statement.getLanguageItemType(), actStatement.getTextPosition());
                 };
             }
             case ANYSTATEMENT_RETURN -> {
@@ -66,7 +68,7 @@ public class ASTStatementParser {
                 ((LoopStmntItem) actStatement).getMyMarkStmnt().setLanguageItemType(switch (((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType()) {
                     case MARK_WITHOUTIF -> LanguageItemType.LOOP_MARK_WITHOUTIF;
                     case MARK_WITHIF -> LanguageItemType.LOOP_MARK_WITHIF;
-                    default -> throw new IllegalStateException("Unexpected value: " + ((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + ((LoopStmntItem) actStatement).getMyMarkStmnt().getLanguageItemType(), actStatement.getTextPosition());
                 });
                 return ((LoopStmntItem) actStatement).getMyMarkStmnt();
             }
@@ -78,7 +80,7 @@ public class ASTStatementParser {
                     case STATEMENT_VARDEF -> statement.getMyVarDef();
                     case STATEMENT_BODY -> statement.getMyBody();
                     case STATEMENT_FUNCALL -> statement.getMyFunCall();
-                    default -> throw new IllegalStateException("Unexpected value: " + statement.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + statement.getLanguageItemType(), actStatement.getTextPosition());
                 };
             }
             case STATEMENT_IF -> {
@@ -88,12 +90,12 @@ public class ASTStatementParser {
                 return ((StatementItem) actStatement).getMyFunCall();
             }
             // TODO implement case STATEMENT_BODY
-            default -> throw new IllegalStateException("Unexpected value: " +
-                    actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName());
+            default -> throw new ParseTimeException("Unexpected value: " +
+                    actStatement.getLanguageItemType() + " " + actStatement.getClass().getSimpleName(), actStatement.getTextPosition());
         }
     }
 
-    private Node statementParser(LanguageItem actItem) throws Exception {
+    private Node statementParser(LanguageItem actItem) throws PositionedException {
         TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
@@ -130,11 +132,16 @@ public class ASTStatementParser {
                             statements.add((StatementNode) new ASTStatementParser().parse(myStatement));
                         }
                     }
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
                 return new FunctionAssignment(identifier, identifierList, statements, textPosition);
             }
             case ANYSTATEMENT_RETURN -> {
+                if(actItem instanceof AnyStatementItem item) {
+                    TermNode term = new ASTTermParser().parse(item.getMyReturnStmnt().getMyTerm());
+                    return new ReturnNode(term, textPosition);
+                }
+
                 TermNode term = new ASTTermParser().parse(((ReturnStmntItem) actItem).getMyTerm());
                 return new ReturnNode(term, textPosition);
             }
@@ -172,7 +179,7 @@ public class ASTStatementParser {
                         StatementNode elseStatement = (StatementNode) new ASTStatementParser().parse(ifStmnt.getMyOptionalAnyStatement());
                         return new IfElseNode(pred, ifStatement, elseStatement, textPosition);
                     }
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
             }
             case GROUP_EMPTY, GROUP_AREA, GROUP_HIDING_AREA, GROUP_HIDING -> {
@@ -194,10 +201,10 @@ public class ASTStatementParser {
                     case GROUP_AREA_FUNCALL -> switch (grp.getMyGroupArea().getMyString()) {
                         case "before" -> new GroupBeforeFunctionCallNode(term, funCall, textPosition);
                         case "after" -> new GroupAfterFunctionCallNode(term, funCall, textPosition);
-                        default -> throw new IllegalStateException("Unexpected area value: " + grp.getMyGroupArea().getMyString());
+                        default -> throw new ParseTimeException("Unexpected area value: " + grp.getMyGroupArea().getMyString(), actItem.getTextPosition());
                     };
                     case GROUP_HIDING_AREA_FUNCALL, GROUP_HIDING_FUNCALL -> new HidingGroupFunctionCallNode(term, funCall, textPosition);
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 };
             }
             case LOOP_MARK_WITHIF, LOOP_MARK_WITHOUTIF -> {
@@ -212,7 +219,7 @@ public class ASTStatementParser {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
                         return new MarkIfInLoopNode(markTerm, asTerm, ifPred, textPosition);
                     }
-                    default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+                    default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
             }
             case TERM_FUNCALL -> {
@@ -224,7 +231,7 @@ public class ASTStatementParser {
                 }
                 return new FunctionCallNode(identifier, terms, textPosition);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
+            default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
         }
     }
 }
