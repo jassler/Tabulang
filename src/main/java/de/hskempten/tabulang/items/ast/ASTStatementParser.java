@@ -14,12 +14,12 @@ public class ASTStatementParser {
 
     private int nestingLevel = 0;
 
-    public Node parse(StatementAnyItem originalStatement, int nestingLevel) throws PositionedException {
+    public StatementNode parse(StatementAnyItem originalStatement, int nestingLevel) throws PositionedException {
         this.nestingLevel = nestingLevel;
         return parse(originalStatement);
     }
 
-    public Node parse(StatementAnyItem originalStatement) throws PositionedException {
+    public StatementNode parse(StatementAnyItem originalStatement) throws PositionedException {
 
         return statementParser(traverseStatement(originalStatement));
     }
@@ -95,7 +95,7 @@ public class ASTStatementParser {
         }
     }
 
-    private Node statementParser(LanguageItem actItem) throws PositionedException {
+    private StatementNode statementParser(LanguageItem actItem) throws PositionedException {
         TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
@@ -223,14 +223,14 @@ public class ASTStatementParser {
                     default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
             }
-            case TERM_FUNCALL -> {
+            case STATEMENT_FUNCALL -> {
                 FunCallItem fc = (FunCallItem) actItem;
                 IdentifierNode identifier = new IdentifierNode(fc.getMyIdentifier().getMyString(), textPosition);
                 ArrayList<TermNode> terms = new ArrayList<>();
                 for (int i = 0; i < fc.getTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(fc.getTerms().get(i)));
                 }
-                return new FunctionCallNode(identifier, terms, textPosition);
+                return new FunctionCallStatementNode(identifier, terms, textPosition);
             }
             default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
         }

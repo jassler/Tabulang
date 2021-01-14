@@ -1,6 +1,8 @@
 package de.hskempten.tabulang.items.types;
 
 import de.hskempten.tabulang.TokenType;
+import de.hskempten.tabulang.items.FunCallItem;
+import de.hskempten.tabulang.items.LanguageItemType;
 import de.hskempten.tabulang.items.StatementItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
@@ -32,7 +34,9 @@ public class StatementType implements Parser {
             }
             case "variable" -> {
                 if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
-                    statement = new StatementItem(FunCallType.instance.parse(l));
+                    FunCallItem funCall = FunCallType.instance.parse(l);
+                    funCall.setLanguageItemType(LanguageItemType.STATEMENT_FUNCALL);
+                    statement = new StatementItem(funCall);
                     l.getNextTokenAndExpect(TokenType.SEMICOLON);
                 } else {
                     statement = new StatementItem(VarDefType.instance.parse(l));

@@ -32,8 +32,7 @@ public class ASTTermParser {
 
     private void traverseTerm(TermItem originalTerm) throws PositionedException {
         TermOrRItem actTerm = originalTerm;
-        int i = 20;
-        while (i > 0) {
+        while (true) {
             if (Arrays.asList(TERM_IDENTIFIER, TERM_ORDINAL).contains(actTerm.getLanguageItemType())
                     && Arrays.asList(TERMR_FILTER, TERMR_INTERSECT, TERMR_UNITE, TERMR_MARK).contains(((TermItem) actTerm).getMyTermR().getLanguageItemType())) {
 
@@ -110,7 +109,6 @@ public class ASTTermParser {
                     }
                 }
             }
-            i--;
         }
     }
 

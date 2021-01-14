@@ -24,8 +24,7 @@ public class ASTPredParser {
 
     private void traversePred(LanguageItem originalPred) throws PositionedException {
         LanguageItem actPred = originalPred;
-        int i = 20;
-        while (i > 0) {
+        while (true) {
             switch (actPred.getLanguageItemType()) {
                 case TERM_IDENTIFIER -> syBuilder.add(((TermItem) actPred).getMyIdentifier());
                 case TERM_ORDINAL -> {
@@ -75,7 +74,6 @@ public class ASTPredParser {
                     throw new ParseTimeException("Unexpected value: " + actPred.getLanguageItemType(), actPred.getTextPosition());
                 }
             };
-            i--;
         }
     }
 
