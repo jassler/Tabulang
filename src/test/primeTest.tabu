@@ -1,0 +1,48 @@
+
+
+// x X y Tabelle
+// x = 3, y = 3
+// 0 1 2
+// 3 4 5
+// 6 7 8 
+
+function genTab(anzZeilen, anzSpalten) {
+    return vertical for z in [0 ... anzZeilen - 1] {
+       set horizontal for q in [z * anzSpalten ... (z + 1) * anzSpalten - 1] {
+           set q mark 'background' as 'red' if isPrime(q) = 1;
+       };
+       //set z;
+    };
+}
+
+function sqrtRek(x, left, right) {
+    m := (left + right) div 2;
+    result := 0;
+    if (m ^ 2) <= x and ((m + 1) ^ 2) > x return m;
+
+    if (m ^ 2) > x
+        return sqrtRek(x, left, m - 1);
+    else
+        return sqrtRek(x, m + 1, right);
+
+}
+
+function sqrt(x) {
+    if x = 0 return 0;
+    if x < 4 return 1;
+    return sqrtRek(x, 0, x div 2);
+}
+
+function isPrime(x) {
+    if x < 2 return 0;
+    if x != 2 and x mod 2 = 0 return 0;
+    sqx := sqrt(x);
+
+    primey := 1;
+
+    for i in [1 ... sqx div 2]
+        if x mod (2*i+1) = 0 primey := 0;
+
+    return primey;
+}
+
