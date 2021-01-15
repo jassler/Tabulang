@@ -2,6 +2,7 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
@@ -25,20 +26,13 @@ public class VerticalTupleNode extends TermNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
-        if(o instanceof Table<?> table) {
-            Table<?> transposed = table.clone();
-            if(transposed.isTransposed()) {
-                transposed.transpose();
-            }
-            return transposed;
 
-        } else if(o instanceof Tuple<?> tuple) {
-            Tuple<?> flipped = tuple.clone();
-            flipped.setHorizontal(false);
-            return flipped;
-        } else {
+        if(!(o instanceof TupleOperation<?> t))
             throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
-        }
+
+        TupleOperation<?> result = t.clone();
+        result.setHorizontal(false);
+        return result;
     }
 
     @Override
