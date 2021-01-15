@@ -44,14 +44,14 @@ public class FunCallType implements LanguageType {
             switch (bracketOrComma.getType()) {
                 case "bracket":
                     if (!bracketOrComma.getContent().equals(")"))
-                        throw new ParseTimeException("Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
+                        throw new ParseTimeException(l, "Illegal bracket: Expected ')' but got " + l.lookahead().getContent());
                     break;
                 case "comma":
                     l.getNextTokenAndExpect(TokenType.COMMA);
                     myTerms.add(TermType.instance.parse(l));
                     break;
                 default:
-                    throw new ParseTimeException("Illegal Token: " + l.lookahead().getContent());
+                    throw new ParseTimeException(l, "Illegal Token: " + l.lookahead().getContent());
             }
         }
         l.getNextTokenAndExpect(TokenType.BRACKET);
