@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class VListItem extends LanguageItemAbstract implements LanguageItem {
+public class VListItem extends LanguageItemAbstract {
     private IdentifierItem myIdentifier;
     private ArrayList<IdentifierItem> myOtherIdentifiers;
 

@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.PREDR_BOOL;
 import static de.hskempten.tabulang.items.LanguageItemType.PREDR_NULL;
 
-public class PredRItem extends LanguageItemAbstract implements LanguageItem {
+public class PredRItem extends LanguageItemAbstract {
     private BinBoolItem myBinBool;
     private PredItem myPred;
 

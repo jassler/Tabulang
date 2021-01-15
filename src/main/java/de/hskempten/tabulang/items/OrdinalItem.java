@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class OrdinalItem extends LanguageItemAbstract implements LanguageItem {
+public class OrdinalItem extends LanguageItemAbstract {
     //"null"
     private String myString;
     private NumberItem myNumber;

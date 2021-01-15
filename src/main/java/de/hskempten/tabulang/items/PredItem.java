@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class PredItem extends LanguageItemAbstract implements LanguageItem {
+public class PredItem extends LanguageItemAbstract {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredRItem myPredR;

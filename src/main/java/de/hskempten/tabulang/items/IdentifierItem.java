@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.STATEMENT_IDENTIFIER;
 
-public class IdentifierItem extends LanguageItemAbstract implements LanguageItem {
+public class IdentifierItem extends LanguageItemAbstract {
     private String myString; //[a-zA-Z][0-9a-zA-Z]*
 
     public IdentifierItem(String myString) {

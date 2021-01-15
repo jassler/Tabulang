@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.AGGREGATION_AVERAGE;
 import static de.hskempten.tabulang.items.LanguageItemType.AGGREGATION_COUNT;
 
-public class AggregationTItem extends LanguageItemAbstract implements LanguageItem {
+public class AggregationTItem extends LanguageItemAbstract {
     private CountTItem myCountT;
     private AverageTItem myAverageT;
 

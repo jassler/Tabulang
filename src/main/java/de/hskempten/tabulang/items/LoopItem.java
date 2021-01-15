@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.LOOP_LOOPBODY;
 import static de.hskempten.tabulang.items.LanguageItemType.LOOP_STATEMENT;
 
-public class LoopItem extends LanguageItemAbstract implements LanguageItem {
+public class LoopItem extends LanguageItemAbstract {
     //'for'
     private IdentifierItem myIdentifier;
     //'in'

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_EXISTS;
 
-public class ExistsPredItem extends LanguageItemAbstract implements LanguageItem {
+public class ExistsPredItem extends LanguageItemAbstract {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredItem myPred;

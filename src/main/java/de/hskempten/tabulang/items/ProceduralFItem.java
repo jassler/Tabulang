@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.PROCEDURALF_FUNCBODY;
 import static de.hskempten.tabulang.items.LanguageItemType.PROCEDURALF_TERM;
 
-public class ProceduralFItem extends LanguageItemAbstract implements LanguageItem {
+public class ProceduralFItem extends LanguageItemAbstract {
     private IdentifierItem myIdentifier;
     private VListItem myVList;
     private FuncBodyItem myFuncBody;

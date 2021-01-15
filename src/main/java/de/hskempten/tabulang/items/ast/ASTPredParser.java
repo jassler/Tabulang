@@ -14,7 +14,7 @@ public class ASTPredParser {
 
     ASTPredParser.ShuntingYardBuilder syBuilder = new ASTPredParser.ShuntingYardBuilder();
 
-    public PredicateNode parse(LanguageItem originalPred) throws PositionedException {
+    public PredicateNode parse(LanguageItemAbstract originalPred) throws PositionedException {
 
         traversePred(originalPred);
         PredicateNode parsedPred = predParser(syBuilder.getOutput());
@@ -22,8 +22,8 @@ public class ASTPredParser {
         return parsedPred;
     }
 
-    private void traversePred(LanguageItem originalPred) throws PositionedException {
-        LanguageItem actPred = originalPred;
+    private void traversePred(LanguageItemAbstract originalPred) throws PositionedException {
+        LanguageItemAbstract actPred = originalPred;
         while (true) {
             switch (actPred.getLanguageItemType()) {
                 case TERM_IDENTIFIER -> syBuilder.add(((TermItem) actPred).getMyIdentifier());
@@ -77,10 +77,10 @@ public class ASTPredParser {
         }
     }
 
-    private PredicateNode predParser(ArrayList<LanguageItem> items) throws PositionedException {
+    private PredicateNode predParser(ArrayList<LanguageItemAbstract> items) throws PositionedException {
 
 
-        LanguageItem actItem = items.get(items.size() - 1);
+        LanguageItemAbstract actItem = items.get(items.size() - 1);
         items.remove(items.size() - 1);
         TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
@@ -175,15 +175,15 @@ public class ASTPredParser {
 
 
     private static class ShuntingYardBuilder {
-        Stack<LanguageItem> stack;
-        ArrayList<LanguageItem> output;
+        Stack<LanguageItemAbstract> stack;
+        ArrayList<LanguageItemAbstract> output;
 
         public ShuntingYardBuilder() {
-            this.stack = new Stack<LanguageItem>();
-            this.output = new ArrayList<LanguageItem>();
+            this.stack = new Stack<LanguageItemAbstract>();
+            this.output = new ArrayList<LanguageItemAbstract>();
         }
 
-        public void add(LanguageItem item) {
+        public void add(LanguageItemAbstract item) {
             switch (item.getLanguageItemType()) {
                 case PRED_BINRELSYM, PRED_TERM, PRED_IN, QUANTIFIED_EXISTS, QUANTIFIED_FORALL, PRED_NOT, TERM_FUNCALL,
                         PRED_BOOLEAN, PRED_INDEX -> {
@@ -222,7 +222,7 @@ public class ASTPredParser {
                     < LanguageItemType.getPrecedence(stack.peek().getLanguageItemType());
         }
 
-        public ArrayList<LanguageItem> getOutput() throws PositionedException {
+        public ArrayList<LanguageItemAbstract> getOutput() throws PositionedException {
             while (!stack.isEmpty()) {
                 if (LanguageItemType.TERM_BRACKET.equals(stack.peek().getLanguageItemType())) {
                     throw new ParseTimeException("Shunting Yard Builder Term invalid", stack.peek().getTextPosition());

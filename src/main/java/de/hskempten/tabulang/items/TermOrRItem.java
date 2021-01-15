@@ -1,7 +1,18 @@
 package de.hskempten.tabulang.items;
 
-public interface TermOrRItem extends LanguageItem {
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
-    public TermRItem getMyTermR();
+public abstract class TermOrRItem extends LanguageItemAbstract {
 
+    public TermRItem getMyTermR() {
+        return null;
+    }
+
+    public TermOrRItem(LanguageItemType languageItemType) {
+        super(languageItemType);
+    }
+
+    public TermOrRItem(LanguageItemType languageItemType, TextPosition textPosition) {
+        super(languageItemType, textPosition);
+    }
 }

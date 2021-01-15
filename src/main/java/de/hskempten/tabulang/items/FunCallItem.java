@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static de.hskempten.tabulang.items.LanguageItemType.TERM_FUNCALL;
 
-public class FunCallItem extends LanguageItemAbstract implements LanguageItem {
+public class FunCallItem extends LanguageItemAbstract {
 
     private IdentifierItem myIdentifier;
     private TupelItem myTupel;

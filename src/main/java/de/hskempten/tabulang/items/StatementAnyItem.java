@@ -1,4 +1,14 @@
 package de.hskempten.tabulang.items;
 
-public interface StatementAnyItem extends LanguageItem {
+import de.hskempten.tabulang.tokenizer.TextPosition;
+
+public abstract class StatementAnyItem extends LanguageItemAbstract {
+
+    public StatementAnyItem(LanguageItemType languageItemType) {
+        super(languageItemType);
+    }
+
+    public StatementAnyItem(LanguageItemType languageItemType, TextPosition textPosition) {
+        super(languageItemType, textPosition);
+    }
 }

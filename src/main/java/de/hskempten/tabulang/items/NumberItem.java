@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import static de.hskempten.tabulang.items.LanguageItemType.ORDINAL_NUMBER;
 
-public class NumberItem extends LanguageItemAbstract implements LanguageItem {
+public class NumberItem extends LanguageItemAbstract {
     private BigInteger numerator;
     private BigInteger denominator;
 

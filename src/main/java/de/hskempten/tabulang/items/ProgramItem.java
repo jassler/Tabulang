@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class ProgramItem extends LanguageItemAbstract implements LanguageItem {
+public class ProgramItem extends LanguageItemAbstract {
     private ArrayList<StatementItem> myStatements;
 
     public ProgramItem(ArrayList<StatementItem> myStatements) {

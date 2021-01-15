@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class GroupStmntItem extends LanguageItemAbstract implements LanguageItem {
+public class GroupStmntItem extends LanguageItemAbstract {
     private String myString;
     private GroupAreaItem myGroupArea;
     private TermItem myTerm;

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import static de.hskempten.tabulang.items.LanguageItemType.FUNCBODY_STATEMENTS;
 
-public class FuncBodyItem extends LanguageItemAbstract implements LanguageItem {
+public class FuncBodyItem extends LanguageItemAbstract {
     private LinkedList<StatementAnyItem> myStatements;
 
     public FuncBodyItem(LinkedList<StatementAnyItem> myStatements) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class TupelItem extends LanguageItemAbstract implements LanguageItem {
+public class TupelItem extends LanguageItemAbstract {
     private TermItem myTerm;
     private ArrayList<TermItem> myTerms;
     private IntervallItem myIntervall;

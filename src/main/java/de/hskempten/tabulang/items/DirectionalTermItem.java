@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.TERM_DIRECTIONAL_H;
 import static de.hskempten.tabulang.items.LanguageItemType.TERM_DIRECTIONAL_V;
 
-public class DirectionalTermItem extends LanguageItemAbstract implements LanguageItem {
+public class DirectionalTermItem extends LanguageItemAbstract {
     private String myString;
     private TermItem myTerm;
 

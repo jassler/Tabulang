@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class TermItem extends LanguageItemAbstract implements TermOrRItem {
+public class TermItem extends TermOrRItem {
     //'('
     private TermItem myTerm;
     //')'

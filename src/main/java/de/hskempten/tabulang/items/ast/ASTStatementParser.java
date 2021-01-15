@@ -24,7 +24,7 @@ public class ASTStatementParser {
         return statementParser(traverseStatement(originalStatement));
     }
 
-    private LanguageItem traverseStatement(StatementAnyItem originalStatement) throws PositionedException {
+    private LanguageItemAbstract traverseStatement(StatementAnyItem originalStatement) throws PositionedException {
         StatementAnyItem actStatement = originalStatement;
 
 
@@ -95,7 +95,7 @@ public class ASTStatementParser {
         }
     }
 
-    private StatementNode statementParser(LanguageItem actItem) throws PositionedException {
+    private StatementNode statementParser(LanguageItemAbstract actItem) throws PositionedException {
         TextPosition textPosition = actItem.getTextPosition();
         switch (actItem.getLanguageItemType()) {
             case VARDEF_ASSIGNMENT -> {
@@ -124,7 +124,7 @@ public class ASTStatementParser {
                 switch (actItem.getLanguageItemType()) {
                     case PROCEDURALF_TERM -> {
                         ProceduralFItem pFItem = ((ProceduralFItem) actItem);
-                        statements.add((StatementNode) new ASTStatementParser().parse(new ReturnStmntItem(pFItem.getMyTerm(),pFItem.getTextPosition())));
+                        statements.add((StatementNode) new ASTStatementParser().parse(new ReturnStmntItem(pFItem.getMyTerm(), pFItem.getTextPosition())));
                     }
                     case PROCEDURALF_FUNCBODY -> {
                         FuncBodyItem bodyStatements = ((ProceduralFItem) actItem).getMyFuncBody();
@@ -138,7 +138,7 @@ public class ASTStatementParser {
                 return new FunctionAssignment(identifier, identifierList, statements, textPosition);
             }
             case ANYSTATEMENT_RETURN -> {
-                if(actItem instanceof AnyStatementItem item) {
+                if (actItem instanceof AnyStatementItem item) {
                     TermNode term = new ASTTermParser().parse(item.getMyReturnStmnt().getMyTerm());
                     return new ReturnNode(term, textPosition);
                 }

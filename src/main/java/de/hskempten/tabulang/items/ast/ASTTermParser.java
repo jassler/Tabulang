@@ -58,11 +58,11 @@ public class ASTTermParser {
                     }
                     case TERMR_OPERATOR -> syBuilder.add(((TermRItem) actTerm).getMyOperator());
                     case TERM_BRACKET -> {
-                        syBuilder.add(actTerm);
+                        syBuilder.add((LanguageItemAbstract) actTerm);
                         traverseTerm(((TermItem) actTerm).getMyTerm());
                     }
                     case TERMR_BRACKET -> {
-                        syBuilder.add(actTerm);
+                        syBuilder.add((LanguageItemAbstract) actTerm);
                         return;
                     }
                     case TERMR_NULL -> {
@@ -87,13 +87,13 @@ public class ASTTermParser {
                         syBuilder.add(((TermRItem) actTerm).getMyMarkStmnt());
                     }
                     case TERMR_FILTER -> {
-                        syBuilder.add(actTerm);
+                        syBuilder.add((LanguageItemAbstract) actTerm);
                     }
                     case TERM_FUNDEF -> {
                         syBuilder.add(((TermItem) actTerm).getMyFunDef());
                     }
                     case TERMR_DOT -> {
-                        syBuilder.add(actTerm);
+                        syBuilder.add((LanguageItemAbstract) actTerm);
                         traverseTerm(((TermRItem) actTerm).getMyTerm());
                     }
                     default -> {
@@ -112,10 +112,10 @@ public class ASTTermParser {
         }
     }
 
-    private TermNode termParser(ArrayList<LanguageItem> items) throws PositionedException {
+    private TermNode termParser(ArrayList<LanguageItemAbstract> items) throws PositionedException {
 
 
-        LanguageItem actItem = items.get(items.size() - 1);
+        LanguageItemAbstract actItem = items.get(items.size() - 1);
         items.remove(items.size() - 1);
 
         TextPosition textPosition = actItem.getTextPosition();
@@ -344,15 +344,15 @@ public class ASTTermParser {
 
 
     private static class ShuntingYardBuilder {
-        Stack<LanguageItem> stack;
-        ArrayList<LanguageItem> output;
+        Stack<LanguageItemAbstract> stack;
+        ArrayList<LanguageItemAbstract> output;
 
         public ShuntingYardBuilder() {
-            this.stack = new Stack<LanguageItem>();
-            this.output = new ArrayList<LanguageItem>();
+            this.stack = new Stack<LanguageItemAbstract>();
+            this.output = new ArrayList<LanguageItemAbstract>();
         }
 
-        public void add(LanguageItem item) {
+        public void add(LanguageItemAbstract item) {
             switch (item.getLanguageItemType()) {
                 case STATEMENT_IDENTIFIER, ORDINAL_NUMBER, TUPEL_EMPTY, TUPEL_ONE, TUPEL_MULTI, TUPEL_INTERVAL,
                         ORDINAL_QUOTEDSTRING, ORDINAL_NULL, TERM_FUNCALL, AGGREGATION_COUNT, AGGREGATION_AVERAGE,
@@ -392,7 +392,7 @@ public class ASTTermParser {
                     < LanguageItemType.getPrecedence(stack.peek().getLanguageItemType());
         }
 
-        public ArrayList<LanguageItem> getOutput() throws PositionedException {
+        public ArrayList<LanguageItemAbstract> getOutput() throws PositionedException {
             while (!stack.isEmpty()) {
                 if (LanguageItemType.TERM_BRACKET.equals(stack.peek().getLanguageItemType())) {
                     throw new ParseTimeException("Shunting Yard Builder invalid", stack.peek().getTextPosition());

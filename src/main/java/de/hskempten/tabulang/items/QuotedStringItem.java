@@ -1,10 +1,8 @@
 package de.hskempten.tabulang.items;
 
-import de.hskempten.tabulang.tokenizer.TextPosition;
-
 import static de.hskempten.tabulang.items.LanguageItemType.ORDINAL_QUOTEDSTRING;
 
-public class QuotedStringItem extends LanguageItemAbstract implements LanguageItem {
+public class QuotedStringItem extends LanguageItemAbstract {
     //any char except the quote char
     private String myString;
 

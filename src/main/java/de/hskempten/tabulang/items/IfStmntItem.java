@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.IF_WITHELSE;
 import static de.hskempten.tabulang.items.LanguageItemType.IF_WITHOUTELSE;
 
-public class IfStmntItem extends LanguageItemAbstract implements LanguageItem {
+public class IfStmntItem extends LanguageItemAbstract {
     //'if'
     private PredItem myPred;
     private AnyStatementItem myAnyStatement;

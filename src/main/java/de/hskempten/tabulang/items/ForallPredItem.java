@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_FORALL;
 
-public class ForallPredItem extends LanguageItemAbstract implements LanguageItem {
+public class ForallPredItem extends LanguageItemAbstract {
     private IdentifierItem myIdentifier;
     private TermItem myTerm;
     private PredItem myPred;

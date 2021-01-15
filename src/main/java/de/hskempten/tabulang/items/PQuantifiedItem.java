@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_EXISTS;
 import static de.hskempten.tabulang.items.LanguageItemType.QUANTIFIED_FORALL;
 
-public class PQuantifiedItem extends LanguageItemAbstract implements LanguageItem {
+public class PQuantifiedItem extends LanguageItemAbstract {
     private ExistsPredItem myExistsPred;
     private ForallPredItem myForallPred;
 

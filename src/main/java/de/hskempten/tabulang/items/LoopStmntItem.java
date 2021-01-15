@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class LoopStmntItem extends LanguageItemAbstract implements StatementAnyItem {
+public class LoopStmntItem extends StatementAnyItem {
     private StatementItem myStatement;
     private SetStmntItem mySetStmnt;
     private GroupStmntItem myGroupStmnt;

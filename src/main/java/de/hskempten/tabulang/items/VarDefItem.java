@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.VARDEF_ASSIGNMENT;
 import static de.hskempten.tabulang.items.LanguageItemType.VARDEF_PROCEDURALF;
 
-public class VarDefItem extends LanguageItemAbstract implements LanguageItem {
+public class VarDefItem extends LanguageItemAbstract {
     private boolean isNewAssignment;
     private IdentifierItem myIdentifier;
     //':='

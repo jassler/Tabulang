@@ -4,7 +4,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class StatementItem extends LanguageItemAbstract implements StatementAnyItem {
+public class StatementItem extends StatementAnyItem {
     private LoopItem myLoop;
     private IfStmntItem myIfStmnt;
     private VarDefItem myVarDef;

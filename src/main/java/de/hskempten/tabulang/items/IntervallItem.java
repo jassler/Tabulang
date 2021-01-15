@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items;
 
-public class IntervallItem extends LanguageItemAbstract implements LanguageItem {
+public class IntervallItem extends LanguageItemAbstract {
     private TermItem myTerm;
     private TermItem mySecondTerm;
 

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class TermRItem extends LanguageItemAbstract implements TermOrRItem {
+public class TermRItem extends TermOrRItem {
     //myPreds darf nicht null sein; pred+
     private PredItem myPred;
     private TermRItem myTermR;

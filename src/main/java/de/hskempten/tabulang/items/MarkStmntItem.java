@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.MARK_WITHIF;
 import static de.hskempten.tabulang.items.LanguageItemType.MARK_WITHOUTIF;
 
-public class MarkStmntItem extends LanguageItemAbstract implements LanguageItem {
+public class MarkStmntItem extends LanguageItemAbstract {
     private TermItem myTerm;
     private TermItem mySecondTerm;
     private PredItem myPred;

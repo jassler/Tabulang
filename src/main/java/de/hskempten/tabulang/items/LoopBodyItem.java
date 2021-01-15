@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import java.util.ArrayList;
 
-public class LoopBodyItem extends LanguageItemAbstract implements LanguageItem {
+public class LoopBodyItem extends LanguageItemAbstract {
     private ArrayList<LoopStmntItem> myLoopStmnts;
 
     public LoopBodyItem(ArrayList<LoopStmntItem> myLoopStmnts) {

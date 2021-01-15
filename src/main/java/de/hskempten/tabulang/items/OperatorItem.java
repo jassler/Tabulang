@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class OperatorItem extends LanguageItemAbstract implements LanguageItem {
+public class OperatorItem extends LanguageItemAbstract {
     //+ - * / div mod ^
     private String myString;
 

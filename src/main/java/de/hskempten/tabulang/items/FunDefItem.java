@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class FunDefItem extends LanguageItemAbstract implements LanguageItem {
+public class FunDefItem extends LanguageItemAbstract {
     private VListItem myVList;
     private IdentifierItem myIdentifier;
     private FuncBodyItem myFuncBody;

@@ -3,7 +3,7 @@ package de.hskempten.tabulang.items;
 import static de.hskempten.tabulang.items.LanguageItemType.COUNT_DIRECTIONAL;
 import static de.hskempten.tabulang.items.LanguageItemType.COUNT_EMPTY;
 
-public class CountTItem extends LanguageItemAbstract implements LanguageItem {
+public class CountTItem extends LanguageItemAbstract {
     //"horizontal"/"vertical"
     private String myString;
     private TermItem myTerm;

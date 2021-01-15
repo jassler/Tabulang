@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static de.hskempten.tabulang.items.LanguageItemType.DISTINCT_ITEM;
 
-public class DistinctTItem extends LanguageItemAbstract implements LanguageItem {
+public class DistinctTItem extends LanguageItemAbstract {
     private ArrayList<IdentifierItem> myIdentifiers;
     private TermItem myTerm;
 

@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items;
 
 import static de.hskempten.tabulang.items.LanguageItemType.*;
 
-public class BinBoolItem extends LanguageItemAbstract implements LanguageItem {
+public class BinBoolItem extends LanguageItemAbstract {
     //"and"/"or"/"xor"/"iff"/"impl"
     private String myString;
 

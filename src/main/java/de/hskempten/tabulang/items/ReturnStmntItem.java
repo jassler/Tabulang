@@ -4,7 +4,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import static de.hskempten.tabulang.items.LanguageItemType.ANYSTATEMENT_RETURN;
 
-public class ReturnStmntItem extends LanguageItemAbstract implements StatementAnyItem {
+public class ReturnStmntItem extends StatementAnyItem {
     private TermItem myTerm;
 
     public ReturnStmntItem(TermItem myTerm) {
