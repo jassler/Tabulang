@@ -2,7 +2,9 @@ package de.hskempten.tabulang.items.types;
 
 import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.BodyItem;
+import de.hskempten.tabulang.items.StatementAnyItem;
 import de.hskempten.tabulang.items.StatementItem;
+import de.hskempten.tabulang.nodes.AnyStatement;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
@@ -18,7 +20,7 @@ public class BodyType implements Parser {
         BodyItem item;
 
         //'{'
-        ArrayList<StatementItem> myStatements = new ArrayList<>();
+        ArrayList<StatementAnyItem> myStatements = new ArrayList<>();
         //'}'
 
         TextPosition startP = l.lookahead().getPosition();
@@ -27,7 +29,10 @@ public class BodyType implements Parser {
         }
         l.getNextTokenAndExpect(TokenType.BRACKET);
         while (!("bracket".equals(l.lookahead().getType()) && "}".equals(l.lookahead().getContent()))) {
-            myStatements.add(StatementType.instance.parse(l));
+            if("return".equals(l.lookahead().getContent()))
+                myStatements.add(ReturnStmntType.instance.parse(l));
+            else
+                myStatements.add(StatementType.instance.parse(l));
         }
         l.getNextTokenAndExpect(TokenType.BRACKET);
 
