@@ -34,10 +34,10 @@ public class PredType implements LanguageType {
                     myTerm = TermType.instance.parse(l);
                     myPredR = PredRType.instance.parse(l);
                     item = new PredItem(myIdentifier, myTerm, myPredR);
-                } else if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
-                    myFunCallItem = FunCallType.instance.parse(l);
-                    myPredR = PredRType.instance.parse(l);
-                    item = new PredItem(myFunCallItem, myPredR);
+//                } else if ("bracket".equals(l.lookahead(2).getType()) && "(".equals(l.lookahead(2).getContent())) {
+//                    myFunCallItem = FunCallType.instance.parse(l);
+//                    myPredR = PredRType.instance.parse(l);
+//                    item = new PredItem(myFunCallItem, myPredR);
                 } else {
                     myTerm = TermType.instance.parse(l);
                     if ("binRelSym".equals(l.lookahead().getType())) {
@@ -87,14 +87,24 @@ public class PredType implements LanguageType {
             }
             case "bracket" -> {
                 if ("(".equals(l.lookahead().getContent())) {
-                    l.getNextTokenAndExpect(TokenType.BRACKET);
-                    myPred = PredType.instance.parse(l);
-                    if ("bracket".equals(l.lookahead().getType()) && ")".equals(l.lookahead().getContent())) {
-                        l.getNextTokenAndExpect(TokenType.BRACKET);
+//                    l.getNextTokenAndExpect(TokenType.BRACKET);
+//                    myPred = PredType.instance.parse(l);
+//                    if ("bracket".equals(l.lookahead().getType()) && ")".equals(l.lookahead().getContent())) {
+//                        l.getNextTokenAndExpect(TokenType.BRACKET);
+//                        myPredR = PredRType.instance.parse(l);
+//                        item = new PredItem(myPredR, myPred);
+//                    } else {
+//                        throw new ParseTimeException(l, "Illegal end of PredItem: " + l.lookahead().getContent());
+//                    }
+                    myTerm = TermType.instance.parse(l);
+                    if ("binRelSym".equals(l.lookahead().getType())) {
+                        myBinRelSym = BinRelSymType.instance.parse(l);
+                        mySecondTerm = TermType.instance.parse(l);
                         myPredR = PredRType.instance.parse(l);
-                        item = new PredItem(myPredR, myPred);
+                        item = new PredItem(myTerm, myPredR, myBinRelSym, mySecondTerm);
                     } else {
-                        throw new ParseTimeException(l, "Illegal end of PredItem: " + l.lookahead().getContent());
+                        myPredR = PredRType.instance.parse(l);
+                        item = new PredItem(myTerm, myPredR);
                     }
                 } else if ("[".equals(l.lookahead().getContent())) {
                     myTerm = TermType.instance.parse(l);
