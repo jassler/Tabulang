@@ -29,6 +29,14 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
         }
     }
 
+    protected boolean hasNumberOnly() {
+        for(int i = 0; i < names.size(); i++) {
+            if(!String.valueOf(i).equals(names.get(i).getString()))
+                return false;
+        }
+        return true;
+    }
+
     public HeaderNames(HeaderNames... h) {
         this(HeaderNames.collectNames(h));
     }
