@@ -104,7 +104,6 @@ public class LoopStatementNode extends StatementNode {
         ArrayList<InternalDataObject> annotatedResults = new ArrayList<>(resultList.size());
         resultList.forEach(el -> annotatedResults.add(new InternalDataObject(el)));
         Tuple<InternalDataObject> result = new Tuple<>(annotatedResults);
-        System.out.println("Loop Result: " + result);
         return result;
     }
 
