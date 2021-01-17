@@ -1,9 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.InternalDataObject;
-import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.datatypes.TupleOperation;
+import de.hskempten.tabulang.datatypes.*;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
@@ -73,7 +70,7 @@ public class LoopTermNode extends TermNode {
         LinkedList<Object> resultList = new LinkedList<>();
         Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
 
-        for (int i = 0; i < tuple.getHeight(); ++i) {
+        for (int i = 0; i < tuple.getSize(); ++i) {
             Object tupleElementObject = tuple.get(i);
             nestedInterpretation.getEnvironment().put(identifier, tupleElementObject);
 
@@ -105,11 +102,14 @@ public class LoopTermNode extends TermNode {
             }
         }
 
-        List<InternalDataObject> converted = new ArrayList<>(resultList.size());
-        for (var obj : resultList)
-            converted.add(new InternalDataObject(obj));
-        Tuple<InternalDataObject> result = new Tuple<>(converted);
-        System.out.println("Loop Result: " + result);
+        List<InternalObject> converted = new ArrayList<>(resultList.size());
+        for (var obj : resultList) {
+            if(obj instanceof InternalObject o)
+                converted.add(o);
+            else
+                converted.add(new InternalDataObject(obj));
+        }
+        Tuple<InternalObject> result = new Tuple<>(converted);
         return result;
     }
 
