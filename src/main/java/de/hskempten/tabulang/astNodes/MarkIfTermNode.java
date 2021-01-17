@@ -51,6 +51,6 @@ public class MarkIfTermNode extends MarkTermNode {
         } catch (IllegalOperandArgumentException illegalOperandArgumentException) {
             illegalOperandArgumentException.printStackTrace();
         }
-        return null;
+        return date;
     }
 }

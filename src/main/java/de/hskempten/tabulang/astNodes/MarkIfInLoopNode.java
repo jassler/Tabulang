@@ -51,6 +51,7 @@ public class MarkIfInLoopNode extends MarkStatementNode {
                 setMark(date, interpretation);
             }
         }
-        return null;
+        // TODO return null?
+        return date;
     }
 }
