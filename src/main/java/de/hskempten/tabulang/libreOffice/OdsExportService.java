@@ -1,8 +1,6 @@
 package de.hskempten.tabulang.libreOffice;
 
-import de.hskempten.tabulang.datatypes.InternalDataObject;
-import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.datatypes.Table;
+import de.hskempten.tabulang.datatypes.*;
 import de.hskempten.tabulang.libreOffice.Exceptions.OdsExportException;
 import de.hskempten.tabulang.libreOffice.Models.MStyle;
 import de.hskempten.tabulang.mySql.Models.MSqlTableContent;
@@ -13,6 +11,8 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,13 +69,20 @@ public class OdsExportService {
      * @param fileName  File name of the table to be exported (without specifying ods)
      */
 
-    public void Export(Table<InternalDataObject> table, String path, String fileName){
+    public void Export(Table<InternalObject> table, String path, String fileName){
         try {
             var content = new ArrayList<ArrayList<String>>();
             for(var row : table){
                 var contentRows = new ArrayList<String>();
                 for(var cell : row){
-                    contentRows.add(cell.getObject().toString());
+                    if(cell instanceof InternalDataObject c)
+                        contentRows.add(c.getObject().toString());
+                    else if(cell instanceof InternalString c)
+                        contentRows.add(c.getString());
+                    else if(cell instanceof InternalNumber c)
+                        contentRows.add(c.getValue().toString());
+                    else
+                        throw new RuntimeException("Data cannot be put inside an ods file (yet)");
                 }
                 content.add(contentRows);
             }
@@ -90,7 +97,7 @@ public class OdsExportService {
             SaveFile(path, fileName);
         }
         catch(Exception e){
-            throw new OdsExportException("Cannot export table %s to %s with file name %s.".formatted(table, path, fileName));
+            throw new OdsExportException("Cannot export table %s to %s with file name %s: %s".formatted(table, path, fileName, e.getLocalizedMessage()));
         }
     }
 
@@ -447,7 +454,7 @@ public class OdsExportService {
      * @param table Table with styled tuples
      */
 
-    private void SetRowStylesFromTable(Table<InternalDataObject> table){
+    private void SetRowStylesFromTable(Table<InternalObject> table){
         int rowNum = -1;
         for(var tuple : table) {
             rowNum++;
@@ -500,7 +507,7 @@ public class OdsExportService {
 
                     CreateStyle();
                     WrapperSetStyleToTable(cell.getStyle(), y, x);
-                    SetStyleToCell(y, x);
+                    SetStyleToCell(y+1, x);
                 }
             }
         }
@@ -524,7 +531,7 @@ public class OdsExportService {
 
     private void WrapperSetStyleToTable(de.hskempten.tabulang.datatypes.Style styles, int rowIndex, int columnIndex) {
         try {
-            styles.forEach(item -> {
+            for(var item : styles) {
                 var key = item.getKey();
                 var value = item.getValue();
                 switch (key) {
@@ -539,7 +546,7 @@ public class OdsExportService {
                     case "rowheight" -> SetRowHeight(rowIndex, Double.parseDouble(value));
                     case "colwidth" -> SetColumnWidth(columnIndex, Double.parseDouble(value));
                 }
-            });
+            }
         }
         catch(Exception e){
             throw new OdsExportException("Cannot set style to row %s and column %s with style %s.".formatted(rowIndex, columnIndex, styles));
