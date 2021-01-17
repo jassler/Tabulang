@@ -9,7 +9,8 @@
 function genTab(anzZeilen, anzSpalten) {
     return vertical for z in [0 ... anzZeilen - 1] {
        set horizontal for q in [z * anzSpalten ... (z + 1) * anzSpalten - 1] {
-           set q mark 'background' as 'red' if isPrime(q) = 1;
+           set q mark 'background-color' as '#ff0000' if isPrime(q) = 1;
+           //mark 'bold' as 'true' if isPrime(q) = 0;
        };
        //set z;
     };
@@ -36,13 +37,19 @@ function sqrt(x) {
 function isPrime(x) {
     if x < 2 return 0;
     if x != 2 and x mod 2 = 0 return 0;
-    sqx := sqrt(x);
+    sqx := sqrt(x) div 2;
 
     primey := 1;
 
-    for i in [1 ... sqx div 2]
+    if sqx < 1
+        return 1;
+
+    for i in [1 ... sqx]
         if x mod (2*i+1) = 0 primey := 0;
 
     return primey;
 }
 
+t := genTab(4,4);
+tableToStyledOds('E:\Felix Fritz\Documents', 'test', t);
+print('table generated successfully (maybe)');
