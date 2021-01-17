@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.interpretTest;
 
+import de.hskempten.tabulang.Main;
 import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
@@ -91,6 +92,8 @@ public class Interpretation {
 
     public void exitProgram(Exception e) {
         System.err.println(e.getMessage());
+        if(Main.isDebug())
+            e.printStackTrace();
         //System.exit(1);
     }
 
