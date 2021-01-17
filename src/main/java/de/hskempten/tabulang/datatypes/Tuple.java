@@ -345,6 +345,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return isHorizontal ? 1 : size();
     }
 
+    @Override
+    public int getSize() {
+        return size();
+    }
+
     /**
      * Create tuple with new names. Copies objects of current tuple to the other tuple over.
      *
@@ -393,6 +398,10 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
     public String toString() {
         if (size() == 0)
             return "";
+
+        if(names.hasNumberOnly()) {
+            return elements.toString();
+        }
 
         StringBuilder sb = new StringBuilder();
 

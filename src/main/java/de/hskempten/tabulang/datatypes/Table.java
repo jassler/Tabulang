@@ -305,6 +305,11 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         return transposed ? colNames.size() : tuples.size();
     }
 
+    @Override
+    public int getSize() {
+        return tuples.size();
+    }
+
     /**
      * Given two tables generate a new table with rows that appear in both of them only.
      *

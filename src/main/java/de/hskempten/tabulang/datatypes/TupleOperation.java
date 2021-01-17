@@ -17,6 +17,7 @@ public interface TupleOperation<E> extends Cloneable, Iterable<E> {
 
     int getWidth();
     int getHeight();
+    int getSize();
 
     TupleOperation<E> clone();
 }
