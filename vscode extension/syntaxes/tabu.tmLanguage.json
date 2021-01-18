@@ -1,0 +1,54 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Tabu",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"include": "#numbers"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.tabu",
+				"match": "\\b(after|as|average|background|before|count|direction|distinct|else|exists|false|filter|forAll|fontStyle|font|foreground|for|from|function|group|hiding|holds|horizontal|if|intersect|in|mark|not|null|return|set|size|suchThat|true|unite|using|var|vertical|and|or|xor|iff|impl)\\b"
+			}, {
+				"name": "keyword.operator.new",
+				"match": "\\b(:=)\\b"
+			}, {
+				"name": "keyword.operator",
+				"match": "\\b(<=?|>=?|!=|=)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.single.tabu",
+			"begin": "'",
+			"end": "'"
+		},
+		"comment": {
+			"name": "comment.line.double-slash",
+			"begin": "//",
+			"end": "\n"
+		},
+		"variables": {
+			"name":	"variable.name",
+			"match": "([a-zA-Z]\\w*)"
+		},
+		"numbers": {
+			"name": "constant.numeric",
+			"match": "\\b(-?[0-9]+(\\.[0-9]+)?)\\b"
+		}
+	},
+	"scopeName": "source.tabu"
+}

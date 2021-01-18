@@ -1,0 +1,25 @@
+{
+    "name": "tabulang",
+    "displayName": "Tabulang Highlighter",
+    "description": "Syntax highlighting for Tabulang",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.52.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "tabu",
+            "aliases": ["Tabu", "tabu"],
+            "extensions": [".tabu"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "tabu",
+            "scopeName": "source.tabu",
+            "path": "./syntaxes/tabu.tmLanguage.json"
+        }]
+    }
+}

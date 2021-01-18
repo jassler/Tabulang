@@ -1,0 +1,32 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Tabu",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.tabu",
+				"match": "\\b(after|as|average|background|before|count|direction|distinct|else|exists|false|filter|forAll|fontStyle|font|foreground|for|from|function|group|hiding|holds|horizontal|if|intersect|in|mark|not|null|return|set|size|suchThat|true|unite|using|var|vertical)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.tabu",
+			"begin": "'",
+			"end": "'",
+			"patterns": [
+				{
+					"name": "constant.character.escape.tabu",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.tabu"
+}
