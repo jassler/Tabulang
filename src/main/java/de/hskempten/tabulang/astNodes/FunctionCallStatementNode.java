@@ -6,7 +6,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
-public class FunctionCallStatementNode extends StatementNode{
+public class FunctionCallStatementNode extends StatementNode {
     private IdentifierNode node;
     private ArrayList<TermNode> parameters;
 
@@ -39,6 +39,6 @@ public class FunctionCallStatementNode extends StatementNode{
 
     @Override
     public String toString() {
-        return node + "(" + parameters +")";
+        return node + "(" + parameters + ")";
     }
 }

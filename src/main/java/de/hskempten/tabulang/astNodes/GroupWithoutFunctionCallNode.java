@@ -1,14 +1,8 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.astNodes.GroupNode;
-import de.hskempten.tabulang.astNodes.IdentifierNode;
-import de.hskempten.tabulang.astNodes.StatementNode;
-import de.hskempten.tabulang.astNodes.TermNode;
 import de.hskempten.tabulang.interpretTest.Interpretation;
-import de.hskempten.tabulang.items.ast.interfaces.TermAST;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 

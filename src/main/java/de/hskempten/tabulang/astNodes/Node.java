@@ -49,7 +49,7 @@ public abstract class Node {
         return o;
     }
 
-    public InternalNumber verifyAndReturnNumber(Node node, Interpretation interpretation){
+    public InternalNumber verifyAndReturnNumber(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         if (!(o instanceof InternalNumber internalNumber)) {
             throw new IllegalNumberOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());

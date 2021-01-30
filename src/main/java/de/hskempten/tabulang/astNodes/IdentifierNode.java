@@ -27,7 +27,7 @@ public class IdentifierNode extends TermNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        if(identifier.equals("mapValue")){
+        if (identifier.equals("mapValue")) {
             identifier = "mapValue" + interpretation.getNestingLevel();
         }
         Interpretation found = interpretation.findIdentifier(identifier);

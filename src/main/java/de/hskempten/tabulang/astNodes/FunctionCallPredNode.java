@@ -6,7 +6,7 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
-public class FunctionCallPredNode extends PredicateNode{
+public class FunctionCallPredNode extends PredicateNode {
     private IdentifierNode node;
     private ArrayList<TermNode> parameters;
 
@@ -39,6 +39,6 @@ public class FunctionCallPredNode extends PredicateNode{
 
     @Override
     public String toString() {
-        return node + "(" + parameters +")";
+        return node + "(" + parameters + ")";
     }
 }

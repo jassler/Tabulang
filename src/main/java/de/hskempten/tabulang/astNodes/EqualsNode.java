@@ -20,7 +20,7 @@ public class EqualsNode extends BinaryPredicateNode {
         Object left = getLeftNode().evaluateNode(interpretation);
         Object right = getRightNode().evaluateNode(interpretation);
 
-        if(left instanceof InternalString leftString && right instanceof InternalString rightString) {
+        if (left instanceof InternalString leftString && right instanceof InternalString rightString) {
             return new InternalBoolean(leftString.equals(rightString));
         }
         if (!(left instanceof InternalNumber leftNumber)) {

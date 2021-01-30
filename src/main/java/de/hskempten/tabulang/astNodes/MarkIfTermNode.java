@@ -7,9 +7,6 @@ import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentExceptio
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import static de.hskempten.tabulang.astNodes.Helper.MarkHelper.prepareTupleMark;
-import static de.hskempten.tabulang.astNodes.Helper.MarkHelper.setMark;
-
 public class MarkIfTermNode extends MarkTermNode {
     private Node pred;
 

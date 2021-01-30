@@ -5,7 +5,7 @@ import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentE
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class ImplNode extends BinaryPredicateNode{
+public class ImplNode extends BinaryPredicateNode {
     public ImplNode(PredicateNode leftNode, PredicateNode rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }

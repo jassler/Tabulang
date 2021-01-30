@@ -1,6 +1,5 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ public class InternalString extends InternalObject implements Comparable<Interna
         InternalString[] result = new InternalString[values.length];
 
         for (int i = 0; i < values.length; i++) {
-            if(values[i] == null)
+            if (values[i] == null)
                 result[i] = null;
             else
                 result[i] = new InternalString(values[i].toString());

@@ -3,10 +3,8 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public abstract class GroupNode extends StatementNode {
     private TermNode term;
@@ -52,10 +50,6 @@ public abstract class GroupNode extends StatementNode {
 
     public LinkedList<Object> getResultList() {
         return resultList;
-    }
-
-    public void setResultList(LinkedList<Object> resultList) {
-        this.resultList = resultList;
     }
 
     public int getLoopCounter() {

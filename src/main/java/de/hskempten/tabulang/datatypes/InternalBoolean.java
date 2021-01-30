@@ -12,10 +12,6 @@ public class InternalBoolean extends InternalObject{
         return aBoolean;
     }
 
-    public void setaBoolean(Boolean aBoolean) {
-        this.aBoolean = aBoolean;
-    }
-
     public InternalBoolean and(InternalBoolean other){
         if(this.getaBoolean() && other.getaBoolean()){
             return new InternalBoolean(true);

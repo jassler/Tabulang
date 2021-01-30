@@ -11,7 +11,7 @@ public class UniteNode extends BinaryTermNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Table leftTable = verifyAndReturnTable(getLeftNode(), interpretation);
+        Table<?> leftTable = verifyAndReturnTable(getLeftNode(), interpretation);
         Table rightTable = verifyAndReturnTable(getRightNode(), interpretation);
         return leftTable.union(rightTable);
     }

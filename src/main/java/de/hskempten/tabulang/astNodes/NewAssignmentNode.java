@@ -1,11 +1,9 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Identifier;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class NewAssignmentNode extends BinaryStatementNode{
+public class NewAssignmentNode extends BinaryStatementNode {
     public NewAssignmentNode(IdentifierNode leftNode, Node rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }

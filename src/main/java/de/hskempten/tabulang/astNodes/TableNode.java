@@ -4,9 +4,7 @@ import de.hskempten.tabulang.datatypes.Styleable;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 
-import java.util.ArrayList;
-
-public class TableNode<E extends Styleable> extends TermNode{
+public class TableNode<E extends Styleable> extends TermNode {
     private Table<E> table;
 
     public TableNode(Table<E> table) {
@@ -23,10 +21,10 @@ public class TableNode<E extends Styleable> extends TermNode{
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        for(var tuple : table){
+        for (var tuple : table) {
             System.out.println(tuple);
             int i = 0;
-            for(int j = 0; j < tuple.size(); j++) {
+            for (int j = 0; j < tuple.size(); j++) {
                 tuple.setToIndex(j, (E) (((Node) tuple.getFromIndex(j)).evaluateNode(interpretation)));
             }
         }

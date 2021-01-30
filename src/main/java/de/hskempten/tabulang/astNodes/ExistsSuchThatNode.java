@@ -1,8 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableAlreadyDefinedException;
@@ -30,10 +28,10 @@ public class ExistsSuchThatNode extends BinaryPredicateNode {
         }
 
         Iterator it = tupleOperation.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Object object = it.next();
             InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
-            if(booleanResult.getaBoolean()){
+            if (booleanResult.getaBoolean()) {
                 return new InternalBoolean(true);
             }
         }

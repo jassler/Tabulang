@@ -5,13 +5,13 @@ import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentE
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public abstract class PredicateNode extends Node{
+public abstract class PredicateNode extends Node {
 
     public PredicateNode(TextPosition textPosition) {
         super(textPosition);
     }
 
-    public InternalBoolean verifyAndReturnBoolean(Node node, Interpretation interpretation){
+    public InternalBoolean verifyAndReturnBoolean(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         if (!(o instanceof InternalBoolean internalBoolean)) {
             throw new IllegalBooleanOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());

@@ -38,15 +38,15 @@ public class InternalObject implements Styleable {
 
     @Override
     public Style computeStyle() {
-        if(style == null)
+        if (style == null)
             style = new Style();
 
-        if(parent == null)
+        if (parent == null)
             return style;
 
         Style s = style.clone();
         InternalObject p = parent;
-        while(p != null) {
+        while (p != null) {
             s.importStyleIfAbsent(p.getStyle());
             p = p.getParent();
         }

@@ -5,8 +5,6 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class FunctionDeclarationNode extends TermNode {
     private ArrayList<IdentifierNode> parameters;
@@ -41,7 +39,7 @@ public class FunctionDeclarationNode extends TermNode {
     @Override
     public String toString() {
         return "(" + parameters + ") " +
-                "-> {" + statements +"}";
+                "-> {" + statements + "}";
     }
 }
 

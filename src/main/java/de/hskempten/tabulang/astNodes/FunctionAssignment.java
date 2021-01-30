@@ -7,7 +7,6 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
-//function f(x1,x2) {s1,....,si}
 public class FunctionAssignment extends StatementNode {
     private IdentifierNode identifier;
     private ArrayList<IdentifierNode> identifierList;

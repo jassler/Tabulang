@@ -1,11 +1,10 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class OrNode extends BinaryPredicateNode{
+public class OrNode extends BinaryPredicateNode {
     public OrNode(PredicateNode leftNode, PredicateNode rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }

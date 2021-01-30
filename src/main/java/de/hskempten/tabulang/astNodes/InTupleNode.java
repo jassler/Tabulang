@@ -22,18 +22,18 @@ public class InTupleNode extends BinaryPredicateNode {
         if (!(tupleObject instanceof TupleOperation<?> tupleOperation)) {
             throw new IllegalTupleOperandArgumentException(getTextPosition(), tupleObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
-        if(tupleObject instanceof Tuple<?> tuple){
+        if (tupleObject instanceof Tuple<?> tuple) {
             if (tuple.getElements().contains(identifier)) {
                 return new InternalBoolean(true);
             } else {
                 return new InternalBoolean(false);
             }
         } else {
-            for(Object t : ((Table<?>) tupleObject).getRows()){
-                if(t.equals(identifier)){
+            for (Object t : ((Table<?>) tupleObject).getRows()) {
+                if (t.equals(identifier)) {
                     return new InternalBoolean(true);
                 }
-                if(((Tuple<?>)t).getElements().contains(identifier)){
+                if (((Tuple<?>) t).getElements().contains(identifier)) {
                     return new InternalBoolean(true);
                 }
             }
