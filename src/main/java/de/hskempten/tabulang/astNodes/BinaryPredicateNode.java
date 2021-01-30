@@ -33,24 +33,6 @@ public abstract class BinaryPredicateNode extends PredicateNode {
         this.rightNode = rightNode;
     }
 
-    public void throwExceptionIfNotBoolean(Object left, Object right){
-        if (!(left instanceof InternalBoolean)) {
-            throw new IllegalBooleanOperandArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
-        }
-        if (!(right instanceof InternalBoolean)) {
-            throw new IllegalBooleanOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
-        }
-    }
-
-    public void throwExceptionIfNotNumbers(Object left, Object right){
-        if (!(left instanceof InternalNumber)) {
-            throw new IllegalNumberOperandArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
-        }
-        if (!(right instanceof InternalNumber)) {
-            throw new IllegalNumberOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
-        }
-    }
-
     public InternalBoolean insertVariableAndEvaluate(Object object, String variableName, Interpretation interpretation){
         interpretation.getEnvironment().put(variableName, object);
         Object result = getRightNode().evaluateNode(interpretation);
@@ -59,13 +41,5 @@ public abstract class BinaryPredicateNode extends PredicateNode {
             throw new IllegalBooleanOperandArgumentException(getTextPosition(), result.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
         return new InternalBoolean(booleanResult.getaBoolean());
-    }
-
-    @Override
-    public String toString() {
-        return "BinaryPredicateNode{" +
-                "leftNode=" + leftNode +
-                ", rightNode=" + rightNode +
-                "} ";
     }
 }

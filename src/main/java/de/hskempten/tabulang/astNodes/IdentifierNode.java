@@ -32,7 +32,6 @@ public class IdentifierNode extends TermNode {
         }
         Interpretation found = interpretation.findIdentifier(identifier);
         if (found == null) {
-            //TODO Fehlermeldung oder Identifier -> Null setzen                                                                                                  111111                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ee
             throw new VariableNotDeclaredException(identifier);
         } else {
             return found.getEnvironment().get(identifier);

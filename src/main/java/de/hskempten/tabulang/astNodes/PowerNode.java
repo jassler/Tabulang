@@ -13,10 +13,9 @@ public class PowerNode extends BinaryArithmeticNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        throwExceptionIfNotNumbers(left, right);
-        return ((InternalNumber)left).pow((InternalNumber) right);
+        InternalNumber leftNumber = verifyAndReturnNumber(getLeftNode(), interpretation);
+        InternalNumber rightNumber = verifyAndReturnNumber(getRightNode(), interpretation);
+        return leftNumber.pow(rightNumber);
     }
 
     @Override

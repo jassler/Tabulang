@@ -22,12 +22,9 @@ public class GroupWithoutFunctionCallNode extends GroupNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);
-        //TODO groupmap not necessary, but for test purposed: shows the loop indices per group
-        //buildGroupMap(interpretation, groupTerm);
         buildMapValueMap(interpretation, groupTerm);
 
         if (isLastIteration()) {
-            System.out.println();
             for (Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
                 getResultList().addAll(group.getValue());
             }

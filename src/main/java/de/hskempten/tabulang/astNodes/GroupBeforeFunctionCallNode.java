@@ -34,8 +34,6 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);
-        //TODO groupmap not necessary, but for test purposed: shows the loop indices per group
-        //buildGroupMap(interpretation, groupTerm);
         buildMapValueMap(interpretation, groupTerm);
         buildFunctionParametersMap(interpretation, groupTerm, funCall, variableValueInLoopX);
 

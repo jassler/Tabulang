@@ -6,7 +6,6 @@ import de.hskempten.tabulang.interpretTest.Interpretation;
 
 import java.util.ArrayList;
 
-//TODO remove if not used 07.01
 public class TableNode<E extends Styleable> extends TermNode{
     private Table<E> table;
 
@@ -30,9 +29,7 @@ public class TableNode<E extends Styleable> extends TermNode{
             for(int j = 0; j < tuple.size(); j++) {
                 tuple.setToIndex(j, (E) (((Node) tuple.getFromIndex(j)).evaluateNode(interpretation)));
             }
-            System.out.println("......");
         }
-        System.out.println("--------");
         return table;
     }
 

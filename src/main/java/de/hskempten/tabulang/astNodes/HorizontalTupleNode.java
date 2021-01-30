@@ -1,7 +1,5 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -15,21 +13,13 @@ public class HorizontalTupleNode extends TermNode {
         this.node = tupleNode;
     }
 
-    public TermNode getTupleNode() {
-        return node;
-    }
-
-    public void setTupleNode(TermNode tupleNode) {
-        this.node = tupleNode;
-    }
-
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
 
-        if(!(o instanceof TupleOperation<?> t))
+        if(!(o instanceof TupleOperation<?> t)) {
             throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
-
+        }
         TupleOperation<?> result = t.clone();
         result.setHorizontal(true);
         return result;

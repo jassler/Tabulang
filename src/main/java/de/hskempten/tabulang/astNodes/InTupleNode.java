@@ -3,6 +3,7 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -18,7 +19,7 @@ public class InTupleNode extends BinaryPredicateNode {
         Object tupleObject = getRightNode().evaluateNode(interpretation);
         Object identifier = getLeftNode().evaluateNode(interpretation);
         tupleObject = ifTupleTransform(tupleObject);
-        if (!(tupleObject instanceof Tuple<?>) && !(tupleObject instanceof Table)) {
+        if (!(tupleObject instanceof TupleOperation<?> tupleOperation)) {
             throw new IllegalTupleOperandArgumentException(getTextPosition(), tupleObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
         if(tupleObject instanceof Tuple<?> tuple){

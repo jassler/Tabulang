@@ -18,17 +18,17 @@ public class AverageNode extends BinaryTermNode {
         Object tableObject = getRightNode().evaluateNode(interpretation);
         tableObject = ifTupleTransform(tableObject);
 
-        if (!(tableObject instanceof Table<?> table))
+        if (!(tableObject instanceof Table<?> table)) {
             throw new IllegalArgumentException("Expected Table but got: " + tableObject.getClass().getSimpleName());
-
+        }
         Object columnIdentifierObject = getLeftNode().evaluateNode(interpretation);
 
-        if (!(columnIdentifierObject instanceof InternalString columnIdentifier))
+        if (!(columnIdentifierObject instanceof InternalString columnIdentifier)) {
             throw new IllegalArgumentException("Expected String but got: " + columnIdentifierObject.getClass().getSimpleName());
-
-        if (!table.getColNames().contains(columnIdentifier))
+        }
+        if (!table.getColNames().contains(columnIdentifier)) {
             throw new TupleNameNotFoundException(getTextPosition(), columnIdentifier.getString(), tableObject.getClass().getSimpleName(), getRightNode().getTextPosition().getContent(), table.getColNames().getNames());
-
+        }
         InternalNumber sum = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber numberElements = new InternalNumber(new BigInteger("0"), new BigInteger("1"));
         InternalNumber one = new InternalNumber(new BigInteger("1"), new BigInteger("1"));

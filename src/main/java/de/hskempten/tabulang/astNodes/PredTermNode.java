@@ -1,4 +1,4 @@
-package de.hskempten.tabulang.astNodes.PlaceholderNodes;
+package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.astNodes.PredicateNode;
 import de.hskempten.tabulang.astNodes.TermNode;

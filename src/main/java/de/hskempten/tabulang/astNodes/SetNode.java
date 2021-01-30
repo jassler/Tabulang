@@ -21,14 +21,6 @@ public class SetNode extends StatementNode {
         this.node = node;
     }
 
-    public int getMapVal() {
-        return mapVal;
-    }
-
-    public void setMapVal(int mapVal) {
-        this.mapVal = mapVal;
-    }
-
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = getNode().evaluateNode(interpretation);

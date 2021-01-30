@@ -33,8 +33,6 @@ public class FilterNode extends BinaryTermNode {
                 nested.getEnvironment().put(name.getString(), element);
             }
 
-            //nested.putValue("mapvalue", tuple);
-
             Object result = getRightNode().evaluateNode(nested);
             if (!(result instanceof InternalBoolean booleanResult)) {
                 throw new IllegalBooleanOperandArgumentException(toString());

@@ -37,13 +37,10 @@ public class GroupAfterFunctionCallNode extends GroupNode {
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);
-        //TODO groupmap not necessary, but for test purposed: shows the loop indices per group
-        //buildGroupMap(interpretation, groupTerm);
         buildMapValueMap(interpretation, groupTerm);
         buildFunctionParametersMap(interpretation, groupTerm, funCall, variableValueInLoopX);
 
         if (isLastIteration()) {
-            System.out.println();
             Iterator iterator = variableValueInLoopX.values().iterator();
             for (Map.Entry<Object, LinkedList<Object>> group : getMapValueInLoopX().entrySet()) {
                 for (TermNode parameter : funCall.getParameters()) {
