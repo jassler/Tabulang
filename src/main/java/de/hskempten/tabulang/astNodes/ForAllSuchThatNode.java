@@ -27,11 +27,10 @@ public class ForAllSuchThatNode extends BinaryPredicateNode {
         if (!(o instanceof TupleOperation<?> tupleOperation)) {
             throw new IllegalTupleOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
-        Iterator it = tupleOperation.iterator();
-        while (it.hasNext()) {
-            Object object = it.next();
+        
+        for (Object object : tupleOperation) {
             InternalBoolean booleanResult = insertVariableAndEvaluate(object, variableName, interpretation);
-            if (!booleanResult.getaBoolean()) {
+            if (!booleanResult.getBoolean()) {
                 return new InternalBoolean(false);
             }
         }

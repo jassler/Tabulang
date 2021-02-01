@@ -1,27 +1,23 @@
 package de.hskempten.tabulang.datatypes;
 
 public class InternalBoolean extends InternalObject{
-    private Boolean aBoolean;
+    private Boolean b;
 
     public InternalBoolean(Boolean aBoolean) {
         super();
-        this.aBoolean = aBoolean;
+        this.b = aBoolean;
     }
 
-    public Boolean getaBoolean() {
-        return aBoolean;
+    public Boolean getBoolean() {
+        return b;
     }
 
     public InternalBoolean and(InternalBoolean other){
-        if(this.getaBoolean() && other.getaBoolean()){
-            return new InternalBoolean(true);
-        } else {
-            return new InternalBoolean(false);
-        }
+        return new InternalBoolean(this.b && other.b);
     }
 
     @Override
     public String toString() {
-        return aBoolean.toString();
+        return b.toString();
     }
 }

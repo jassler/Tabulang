@@ -39,7 +39,7 @@ public class MarkIfInLoopNode extends MarkStatementNode {
             }
             Object predicate = pred.evaluateNode(nestedInterpretation);
             if (predicate instanceof InternalBoolean internalBoolean) {
-                if (internalBoolean.getaBoolean()) {
+                if (internalBoolean.getBoolean()) {
                     MarkHelper.prepareTupleMark(tuple, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                 }
             }
@@ -48,7 +48,7 @@ public class MarkIfInLoopNode extends MarkStatementNode {
             if (!(predicate instanceof InternalBoolean booleanResult)) {
                 throw new IllegalBooleanOperandArgumentException(getTextPosition(), predicate.getClass().getSimpleName(), pred.getTextPosition().getContent());
             }
-            if (booleanResult.getaBoolean()) {
+            if (booleanResult.getBoolean()) {
                 MarkHelper.setMark(date, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
             }
         }

@@ -16,7 +16,7 @@ public class IfElseNode extends TernaryStatementNode {
         if (!(left instanceof InternalBoolean leftBool)) {
             throw new IllegalBooleanOperandArgumentException(toString());
         }
-        if (leftBool.getaBoolean()) {
+        if (leftBool.getBoolean()) {
             return getMiddleNode().evaluateNode(interpretation);
         } else {
             return getRightNode().evaluateNode(interpretation);

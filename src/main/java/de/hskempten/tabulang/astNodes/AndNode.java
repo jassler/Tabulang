@@ -13,7 +13,7 @@ public class AndNode extends BinaryPredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         InternalBoolean leftBool = verifyAndReturnBoolean(getLeftNode(), interpretation);
         InternalBoolean rightBool = verifyAndReturnBoolean(getRightNode(), interpretation);
-        return new InternalBoolean(leftBool.getaBoolean() && rightBool.getaBoolean());
+        return new InternalBoolean(leftBool.getBoolean() && rightBool.getBoolean());
     }
 
     @Override

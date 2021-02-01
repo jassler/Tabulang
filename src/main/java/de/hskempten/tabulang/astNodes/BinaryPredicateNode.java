@@ -38,6 +38,6 @@ public abstract class BinaryPredicateNode extends PredicateNode {
         if (!(result instanceof InternalBoolean booleanResult)) {
             throw new IllegalBooleanOperandArgumentException(getTextPosition(), result.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
         }
-        return new InternalBoolean(booleanResult.getaBoolean());
+        return new InternalBoolean(booleanResult.getBoolean());
     }
 }

@@ -1,7 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -14,7 +13,7 @@ public class ImplNode extends BinaryPredicateNode {
     public Object evaluateNode(Interpretation interpretation) {
         InternalBoolean leftBool = verifyAndReturnBoolean(getLeftNode(), interpretation);
         InternalBoolean rightBool = verifyAndReturnBoolean(getRightNode(), interpretation);
-        return new InternalBoolean(leftBool.getaBoolean() || !rightBool.getaBoolean());
+        return new InternalBoolean(leftBool.getBoolean() || !rightBool.getBoolean());
     }
 
     @Override

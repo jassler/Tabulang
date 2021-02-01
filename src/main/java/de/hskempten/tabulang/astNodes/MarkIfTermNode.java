@@ -37,14 +37,14 @@ public class MarkIfTermNode extends MarkTermNode {
                 }
                 Object predicate = pred.evaluateNode(nestedInterpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
-                    if (internalBoolean.getaBoolean()) {
+                    if (internalBoolean.getBoolean()) {
                         MarkHelper.prepareTupleMark(tuple, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                     }
                 }
             } else {
                 Object predicate = pred.evaluateNode(interpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
-                    if (internalBoolean.getaBoolean()) {
+                    if (internalBoolean.getBoolean()) {
                         MarkHelper.setMark(date, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                     }
                 }

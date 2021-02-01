@@ -27,7 +27,7 @@ public class NotNode extends PredicateNode {
         if (!(pred instanceof InternalBoolean internalBoolean)) {
             throw new IllegalBooleanOperandArgumentException(toString());
         }
-        return new InternalBoolean(!(internalBoolean.getaBoolean()));
+        return new InternalBoolean(!(internalBoolean.getBoolean()));
     }
 
     @Override

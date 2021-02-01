@@ -16,7 +16,7 @@ public class IfNode extends BinaryStatementNode {
         if (!(left instanceof InternalBoolean bool)) {
             throw new IllegalBooleanOperandArgumentException(toString());
         }
-        if (bool.getaBoolean()) {
+        if (bool.getBoolean()) {
             return getRightNode().evaluateNode(interpretation);
         } else {
             return null;

@@ -37,7 +37,7 @@ public class FilterNode extends BinaryTermNode {
             if (!(result instanceof InternalBoolean booleanResult)) {
                 throw new IllegalBooleanOperandArgumentException(toString());
             }
-            return booleanResult.getaBoolean();
+            return booleanResult.getBoolean();
         });
     }
 
