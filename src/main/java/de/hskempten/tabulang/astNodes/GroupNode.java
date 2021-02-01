@@ -3,10 +3,8 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public abstract class GroupNode extends StatementNode {
     private TermNode term;
@@ -54,10 +52,6 @@ public abstract class GroupNode extends StatementNode {
         return resultList;
     }
 
-    public void setResultList(LinkedList<Object> resultList) {
-        this.resultList = resultList;
-    }
-
     public int getLoopCounter() {
         return loopCounter;
     }
@@ -82,26 +76,6 @@ public abstract class GroupNode extends StatementNode {
         this.lastIteration = lastIteration;
     }
 
-
-    public void buildGroupMap(Interpretation interpretation, Object groupTerm) {
-        if (getGroupMap().containsKey(groupTerm)) {
-            LinkedList indices = getGroupMap().get(groupTerm);
-            indices.add(getLoopCounter());
-        } else {
-            LinkedList indices = new LinkedList();
-            indices.add(getLoopCounter());
-            getGroupMap().put(groupTerm, indices);
-        }
-        if (isLastIteration()) {
-            Iterator iter = getGroupMap().entrySet().iterator();
-            System.out.print("GroupList: Durchlauf " + loopCounter + " \n");
-            while (iter.hasNext()) {
-                Map.Entry pair = (Map.Entry) iter.next();
-                System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
-            }
-        }
-    }
-
     public void buildMapValueMap(Interpretation interpretation, Object groupTerm) {
         if (getMapValueInLoopX().containsKey(groupTerm + "/mV")) {
             LinkedList indices = getMapValueInLoopX().get(groupTerm + "/mV");
@@ -110,15 +84,6 @@ public abstract class GroupNode extends StatementNode {
             LinkedList indices = new LinkedList();
             indices.add(interpretation.getEnvironment().get("mapValue" + getNestingLevel()));
             getMapValueInLoopX().put(groupTerm + "/mV", indices);
-        }
-
-        if (isLastIteration()) {
-            Iterator iterat = getMapValueInLoopX().entrySet().iterator();
-            System.out.print("MapValue: Durchlauf " + loopCounter + " \n");
-            while (iterat.hasNext()) {
-                Map.Entry pair = (Map.Entry) iterat.next();
-                System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
-            }
         }
     }
 
@@ -135,22 +100,5 @@ public abstract class GroupNode extends StatementNode {
                 variableValueInLoopX.put(groupTerm + "/x" + numberVariable, variableValues);
             }
         }
-
-        if (isLastIteration()) {
-            System.out.println();
-            Iterator itera = variableValueInLoopX.entrySet().iterator();
-            System.out.print("VariableList: Durchlauf " + getLoopCounter() + " \n");
-            while (itera.hasNext()) {
-                Map.Entry pair = (Map.Entry) itera.next();
-                System.out.println("Key: " + pair.getKey() + " Value: " + pair.getValue());
-            }
-        }
-    }
-
-    public Object getFirstValueAndRemoveFirstKeySet(LinkedHashMap<Object, LinkedList<Object>> map) {
-        Object key = map.keySet().iterator().next();
-        Object value = map.get(key);
-        map.remove(key);
-        return value;
     }
 }

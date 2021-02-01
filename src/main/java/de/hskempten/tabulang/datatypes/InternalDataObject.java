@@ -1,10 +1,6 @@
 package de.hskempten.tabulang.datatypes;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.function.IntFunction;
 
 public class InternalDataObject extends InternalObject {
 

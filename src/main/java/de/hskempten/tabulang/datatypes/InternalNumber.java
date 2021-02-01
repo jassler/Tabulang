@@ -38,8 +38,8 @@ public class InternalNumber extends InternalObject {
         return numerator.floatValue() / denominator.floatValue();
     }
 
-    public Object getValue(){
-        if(getFloatValue() % 1 == 0){
+    public Object getValue() {
+        if (getFloatValue() % 1 == 0) {
             return (int) getFloatValue();
         } else {
             return getFloatValue();
@@ -202,13 +202,13 @@ public class InternalNumber extends InternalObject {
         return newNumeratorAndDenominator;
     }
 
-    public Boolean isInteger(InternalNumber number){
+    public Boolean isInteger(InternalNumber number) {
         return getFloatValue() % 1 == 0;
     }
 
     @Override
     public String toString() {
-            return "" + getValue() + "";
+        return "" + getValue() + "";
     }
 
     @Override

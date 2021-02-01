@@ -29,15 +29,16 @@ public class CountHorizontalNode extends TermNode {
         Object o = node.evaluateNode(interpretation);
         int width;
 
-        if (o instanceof Table<?> table)
+        if (o instanceof Table<?> table) {
             width = table.getNumberOfColumns();
+        }
 
-        else if (o instanceof Tuple<?> tuple)
+        else if (o instanceof Tuple<?> tuple) {
             width = tuple.size();
-
-        else
+        }
+        else {
             width = 1;
-
+        }
         return new InternalNumber(new BigInteger(Integer.toString(width)), new BigInteger("1"));
     }
 }

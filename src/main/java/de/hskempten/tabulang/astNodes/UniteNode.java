@@ -1,8 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.TupleCannotBeTransformedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -13,10 +11,8 @@ public class UniteNode extends BinaryTermNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        Table leftTable = checkIfTable(left);
-        Table rightTable = checkIfTable(right);
+        Table<?> leftTable = verifyAndReturnTable(getLeftNode(), interpretation);
+        Table rightTable = verifyAndReturnTable(getRightNode(), interpretation);
         return leftTable.union(rightTable);
     }
 

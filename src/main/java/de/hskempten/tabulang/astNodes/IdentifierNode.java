@@ -27,12 +27,11 @@ public class IdentifierNode extends TermNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        if(identifier.equals("mapValue")){
+        if (identifier.equals("mapValue")) {
             identifier = "mapValue" + interpretation.getNestingLevel();
         }
         Interpretation found = interpretation.findIdentifier(identifier);
         if (found == null) {
-            //TODO Fehlermeldung oder Identifier -> Null setzen                                                                                                  111111                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ee
             throw new VariableNotDeclaredException(identifier);
         } else {
             return found.getEnvironment().get(identifier);

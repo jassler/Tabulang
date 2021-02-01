@@ -3,7 +3,6 @@ package de.hskempten.tabulang.astNodes;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -14,10 +13,9 @@ public class GreaterThanNode extends BinaryPredicateNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        throwExceptionIfNotNumbers(left, right);
-        return new InternalBoolean(((InternalNumber)left).compareTo(((InternalNumber) right)) == 1);
+        InternalNumber leftNumber = verifyAndReturnNumber(getLeftNode(), interpretation);
+        InternalNumber rightNumber = verifyAndReturnNumber(getRightNode(), interpretation);
+        return new InternalBoolean(leftNumber.compareTo(rightNumber) == 1);
     }
 
     @Override

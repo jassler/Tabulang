@@ -2,8 +2,11 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.Identifier;
+import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
 import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
@@ -29,20 +32,29 @@ public abstract class Node {
 
     public abstract Object evaluateNode(Interpretation interpretation);
 
-    public Table checkIfTable(Object o) {
+    public Table verifyAndReturnTable(Node node, Interpretation interpretation) {
+        Object o = node.evaluateNode(interpretation);
         o = ifTupleTransform(o);
-        if (o instanceof Table) {
-            return (Table) o;
+        if (o instanceof Table<?> table) {
+            return table;
         } else {
-            throw new IllegalArgumentException(o + " (" + o.getClass() + ") is not a table.");
+            throw new IllegalTableOperandArgumentException(node.getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent(), o + " (" + o.getClass() + ") is not a table.");
         }
     }
 
     public Object ifTupleTransform(Object o) {
-        if (o instanceof Tuple) {
-            o = ((Tuple<?>) o).transformIntoTableIfPossible();
+        if (o instanceof Tuple<?> tuple) {
+            o = tuple.transformIntoTableIfPossible();
         }
         return o;
+    }
+
+    public InternalNumber verifyAndReturnNumber(Node node, Interpretation interpretation) {
+        Object o = node.evaluateNode(interpretation);
+        if (!(o instanceof InternalNumber internalNumber)) {
+            throw new IllegalNumberOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
+        }
+        return internalNumber;
     }
 
 }

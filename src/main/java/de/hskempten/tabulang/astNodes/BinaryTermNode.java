@@ -27,5 +27,4 @@ public abstract class BinaryTermNode extends TermNode {
     public void setRightNode(Node rightNode) {
         this.rightNode = rightNode;
     }
-
 }

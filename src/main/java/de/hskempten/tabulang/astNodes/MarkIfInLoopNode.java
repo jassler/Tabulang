@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.astNodes.Helper.MarkHelper;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanOperandArgumentException;
@@ -39,7 +40,7 @@ public class MarkIfInLoopNode extends MarkStatementNode {
             Object predicate = pred.evaluateNode(nestedInterpretation);
             if (predicate instanceof InternalBoolean internalBoolean) {
                 if (internalBoolean.getaBoolean()) {
-                    prepareTupleMark(tuple, interpretation);
+                    MarkHelper.prepareTupleMark(tuple, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                 }
             }
         } else {
@@ -48,10 +49,9 @@ public class MarkIfInLoopNode extends MarkStatementNode {
                 throw new IllegalBooleanOperandArgumentException(getTextPosition(), predicate.getClass().getSimpleName(), pred.getTextPosition().getContent());
             }
             if (booleanResult.getaBoolean()) {
-                setMark(date, interpretation);
+                MarkHelper.setMark(date, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
             }
         }
-        // TODO return null?
-        return date;
+        return null;
     }
 }

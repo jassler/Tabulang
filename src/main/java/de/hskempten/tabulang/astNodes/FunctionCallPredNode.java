@@ -6,11 +6,11 @@ import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 
-public class FunctionCallStatementNode extends StatementNode {
+public class FunctionCallPredNode extends PredicateNode {
     private IdentifierNode node;
     private ArrayList<TermNode> parameters;
 
-    public FunctionCallStatementNode(IdentifierNode node, ArrayList<TermNode> parameters, TextPosition textPosition) {
+    public FunctionCallPredNode(IdentifierNode node, ArrayList<TermNode> parameters, TextPosition textPosition) {
         super(textPosition);
         this.node = node;
         this.parameters = parameters;

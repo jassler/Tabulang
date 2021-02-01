@@ -10,4 +10,8 @@ public class IllegalTableOperandArgumentException extends IllegalOperandArgument
     public IllegalTableOperandArgumentException(TextPosition term, String className, String termContent) {
         super(term, className, termContent, "Allowed operands: Table.");
     }
+
+    public IllegalTableOperandArgumentException(TextPosition term, String className, String termContent, String additionalInfo) {
+        super(term, className, termContent, additionalInfo);
+    }
 }

@@ -6,7 +6,7 @@ import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentEx
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
-public class ModNode extends BinaryArithmeticNode{
+public class ModNode extends BinaryArithmeticNode {
     public ModNode(TermNode leftNode, TermNode rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }

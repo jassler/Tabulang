@@ -102,14 +102,9 @@ public class LoopTermNode extends TermNode {
             }
         }
 
-        List<InternalObject> converted = new ArrayList<>(resultList.size());
-        for (var obj : resultList) {
-            if(obj instanceof InternalObject o)
-                converted.add(o);
-            else
-                converted.add(new InternalDataObject(obj));
-        }
-        Tuple<InternalObject> result = new Tuple<>(converted);
+        ArrayList<InternalDataObject> annotatedResults = new ArrayList<>(resultList.size());
+        resultList.forEach(el -> annotatedResults.add(new InternalDataObject(el)));
+        Tuple<InternalDataObject> result = new Tuple<>(annotatedResults);
         return result;
     }
 

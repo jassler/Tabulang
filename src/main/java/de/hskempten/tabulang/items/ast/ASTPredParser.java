@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PlaceholderNodes.PredTermNode;
+import de.hskempten.tabulang.astNodes.PredTermNode;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.PositionedException;
@@ -140,7 +140,6 @@ public class ASTPredParser {
             }
             case QUANTIFIED_EXISTS -> {
                 ExistsPredItem exi = ((ExistsPredItem) actItem);
-                //TODO changed Identifier to String, can use Identifier if really necessary
                 String string = exi.getMyIdentifier().getMyString();
                 TermNode term = new ASTTermParser().parse(exi.getMyTerm());
                 PredicateNode pred = new ASTPredParser().parse(exi.getMyPred());
@@ -148,8 +147,6 @@ public class ASTPredParser {
             }
             case QUANTIFIED_FORALL -> {
                 ForallPredItem fora = ((ForallPredItem) actItem);
-                //TODO changed Identifier to String, can use Identifier if really necessary
-                //IdentifierAST identifier = new IdentifierAST(fora.getMyIdentifier().getMyString());
                 String string = fora.getMyIdentifier().getMyString();
                 TermNode term = new ASTTermParser().parse(fora.getMyTerm());
                 PredicateNode pred = new ASTPredParser().parse(fora.getMyPred());
@@ -161,9 +158,7 @@ public class ASTPredParser {
                 for (int i = 0; i < ((FunCallItem) actItem).getTerms().size(); i++) {
                     terms.add(new ASTTermParser().parse(((FunCallItem) actItem).getTerms().get(i)));
                 }
-                //TODO remove once line 151 works
-                return new PredTermNode(identifier, textPosition); //Placeholder
-                //return new FunctionCallNode(identifier, terms);
+                return new FunctionCallPredNode(identifier, terms, textPosition);
             }
             case PRED_BOOLEAN -> {
                 return new BooleanNode(((PredItem) actItem).getMyBoolean(), textPosition);

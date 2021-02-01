@@ -1,5 +1,6 @@
 package de.hskempten.tabulang.astNodes;
 
+import de.hskempten.tabulang.astNodes.Helper.MarkHelper;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
@@ -37,20 +38,20 @@ public class MarkIfTermNode extends MarkTermNode {
                 Object predicate = pred.evaluateNode(nestedInterpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
                     if (internalBoolean.getaBoolean()) {
-                        prepareTupleMark(tuple, interpretation);
+                        MarkHelper.prepareTupleMark(tuple, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                     }
                 }
             } else {
                 Object predicate = pred.evaluateNode(interpretation);
                 if (predicate instanceof InternalBoolean internalBoolean) {
                     if (internalBoolean.getaBoolean()) {
-                        setMark(date, interpretation);
+                        MarkHelper.setMark(date, interpretation, getMiddleNode(), getRightNode(), getTextPosition());
                     }
                 }
             }
         } catch (IllegalOperandArgumentException illegalOperandArgumentException) {
             illegalOperandArgumentException.printStackTrace();
         }
-        return date;
+        return null;
     }
 }

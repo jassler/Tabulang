@@ -2,7 +2,6 @@ package de.hskempten.tabulang.astNodes;
 
 
 import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -13,10 +12,9 @@ public class DivNode extends BinaryArithmeticNode {
 
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        Object right = getRightNode().evaluateNode(interpretation);
-        throwExceptionIfNotNumbers(left, right);
-        return ((InternalNumber)left).div(((InternalNumber) right));
+        InternalNumber leftNumber = verifyAndReturnNumber(getLeftNode(), interpretation);
+        InternalNumber rightNumber = verifyAndReturnNumber(getRightNode(), interpretation);
+        return leftNumber.div(rightNumber);
     }
 
     @Override

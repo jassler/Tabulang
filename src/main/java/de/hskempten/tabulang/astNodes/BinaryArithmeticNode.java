@@ -1,7 +1,5 @@
 package de.hskempten.tabulang.astNodes;
 
-import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public abstract class BinaryArithmeticNode extends ArithmeticNode {
@@ -28,22 +26,5 @@ public abstract class BinaryArithmeticNode extends ArithmeticNode {
 
     public void setRightNode(TermNode rightNode) {
         this.rightNode = rightNode;
-    }
-
-    public void throwExceptionIfNotNumbers(Object left, Object right){
-        if (!(left instanceof InternalNumber)) {
-            throw new IllegalNumberOperandArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
-        }
-        if (!(right instanceof InternalNumber)) {
-            throw new IllegalNumberOperandArgumentException(getTextPosition(), right.getClass().getSimpleName(), getRightNode().getTextPosition().getContent());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "BinaryArithmeticNode{" +
-                "leftNode=" + leftNode +
-                ", rightNode=" + rightNode +
-                "} ";
     }
 }

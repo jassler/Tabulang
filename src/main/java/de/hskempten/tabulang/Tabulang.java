@@ -130,13 +130,13 @@ public class Tabulang {
                     "");
         }
 
-        if (false) {
+        if (true) {
             l.setText("\n" +
                     "tuple := [[1, 2]," +
                               "[2, 3]," +
                               "[3, 11]];\n" +
-                    //"b := '2';\n" +
-                   // "c := 1/0;\n" +
+                    "b := 1;\n" +
+                   "if(true) c := 1;\n" +
                     //"multTest := '1' * 6;\n" +
                     //"modTest := '1' mod 6;\n" +
                     //"c := average b tuple;\n" +
@@ -159,16 +159,16 @@ public class Tabulang {
                     //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; hiding group after d using f1(c, e) mark 'background' as 'blue';}\n" +
                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +
-                    "e := f(5);" +
+                    //"e := f(5);" +
                     "\n");
         }
 
-        if (true) {
+        if (false) {
             l.setText("\n" +
 
                     "openDbConnection('85.214.33.119', 3306, 'sakila', 'db_user', 'HsKemptenProjekt2020');\n" +
                     //"tActor := databaseToTable('select * from abc');\n" +
-                    "actorsInJMovie := databaseToTable('SELECT a.first_name, a.last_name, f.title FROM sakila.actor as a JOIN sakila.film_actor as fa ON a.actor_id = fa.actor_id JOIN sakila.film as f ON f.film_id = fa.film_id WHERE f.title LIKE \"J%\";' );\n" +
+                    "actorsInZMovie := databaseToTable('SELECT a.first_name, a.last_name, f.title FROM sakila.actor as a JOIN sakila.film_actor as fa ON a.actor_id = fa.actor_id JOIN sakila.film as f ON f.film_id = fa.film_id WHERE f.title LIKE \"Z%\";' );\n" +
                     "actorsInYMovie := databaseToTable('SELECT a.first_name, a.last_name, f.title FROM sakila.actor as a JOIN sakila.film_actor as fa ON a.actor_id = fa.actor_id JOIN sakila.film as f ON f.film_id = fa.film_id WHERE f.title LIKE \"Y%\";' );\n" +
 
                     //"tTitle := databaseToTable(queryTitle);\n" +
@@ -176,20 +176,27 @@ public class Tabulang {
                    // "allenMovieAmount := count vertical allenPlayedIn;\n" +
                    // "allenTransformedHorizontal := horizontal allenPlayedIn;\n" +
                     "function findActorByLastName(x, y) return x filter last_name = y;\n" +
-                    "function findActorsInJungleCloser(x) return x filter title = 'JUNGLE CLOSER';\n" +
+                    "function findActorsInZorroArk(x) {names := x filter title = 'ZORRO ARK'; return names.['first_name', 'last_name'];}\n" +
                     "function uniteTables(x, y) return x unite y;\n" +
                     "function iCount(x) return count vertical x;\n" +
-                    "function idk(y) for x in y {set x;};\n" +
+                    "function createTable(anzahlZeilen, anzahlSpalten) {" +
+                    "   return for z in [0...anzahlZeilen - 1] {" +
+                            "set [z * anzahlSpalten...(z + 1) * anzahlSpalten - 1];};}\n" +
+                    //"function rating(x) {if(x = 'YOUTH KICK') return 'Super'; if(x = 'YOUNG LANGUAGE') return 'Okay'; else return 'Nicht gesehen';}\n" +
+                    "function f3(y) { print(y + 1); print(y * 2); print(y / 2); print(y - 1); }\n" +
+                    "function getTitles(y) for x in y {set x.'title';};\n" +
 
 
-                    //"res := findActorByLastName(actorsInJMovie, 'ALLEN');\n" +
-                    //"jungleCloserActors := findActorsInJungleCloser(actorsInJMovie);\n" +
+                    "res := createTable(4,3);\n" +
+                    "zorroArkActors := findActorsInZorroArk(actorsInZMovie);\n" +
                     //"unitedTables := uniteTables(actorsInJMovie, actorsInYMovie);\n" +
                     //"actorsInYMovieTransposed := horizontal actorsInYMovie ;\n" +
-                    "countedJ := iCount(actorsInJMovie) ;\n" +
-                    "countedY := iCount(actorsInYMovie) ;\n" +
+                    //"countedZ := iCount(actorsInZMovie) ;\n" +
+                    //"countedY := iCount(actorsInYMovie) ;\n" +
+                    "distinctTitle := 'title';\n" +
+                    "distinctTable := distinct distinctTitle from actorsInZMovie;\n" +
 
-                    //"S := idk(actorsInYMovie);\n" +
+                    //"S := getTitles(actorsInYMovie);\n" +
 
 
                     "\n");
