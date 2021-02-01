@@ -17,20 +17,9 @@ class TupleTest {
 
     @Test
     public void testConstructors() {
-        /*
-        Tuple#Tuple(Object[])
-        Tuple#Tuple(Object[], String[])
-        Tuple#Tuple(Object[], String[], boolean)
-        Tuple#Tuple(List)
-        Tuple#Tuple(List, List)
-        Tuple#Tuple(List, List, boolean)
-        Tuple#Tuple(List, HeaderNames, boolean, TableObject)
-
-        protected Tuple#Tuple(List, List, boolean, TableObject)
-         */
-        // TODO
     }
 
+    @SafeVarargs
     private <T, U extends Styleable> ArrayList<U> createList(Function<T, U> constructor, T... values) {
         ArrayList<U> result = new ArrayList<>(values.length);
         for(var v : values) {
