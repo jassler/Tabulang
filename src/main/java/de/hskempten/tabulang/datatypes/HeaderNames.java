@@ -7,11 +7,21 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Headers for named tuples and table columns. Creates a convenient and efficient lookup table
+ * to find the name indices.
+ */
 public class HeaderNames implements Iterable<InternalString>, Cloneable {
 
     private ArrayList<InternalString> names;
     private HashMap<String, Integer> nameLookup;
 
+    /**
+     * Create HeaderNames object with deep-copied list of names.
+     *
+     * @param names Header names
+     * @throws DuplicateNamesException if there is at least one name twice in the names list (case-insensitive)
+     */
     public HeaderNames(List<InternalString> names) {
         this.names = new ArrayList<>(names);
         this.nameLookup = new HashMap<>(names.size());
@@ -25,18 +35,17 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
             Collections.sort(this.names);
             InternalString duplicate = findDuplicate(this.names);
 
+            assert duplicate != null;
             throw new DuplicateNamesException(duplicate.getString());
         }
     }
 
-    protected boolean hasNumberOnly() {
-        for(int i = 0; i < names.size(); i++) {
-            if(!String.valueOf(i).equals(names.get(i).getString()))
-                return false;
-        }
-        return true;
-    }
-
+    /**
+     * Create HeaderNames object by appending the names of several HeaderNames objects.
+     *
+     * @param h Array of HeaderNames objects with each object's names array concatenated
+     * @throws DuplicateNamesException if one name appears twice in different HeaderNames objects
+     */
     public HeaderNames(HeaderNames... h) {
         this(HeaderNames.collectNames(h));
     }
@@ -113,16 +122,34 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
         return names;
     }
 
+    /**
+     * <p>Add new name to the end of the HeaderNames object (see {@link ArrayList#add(Object)}.</p>
+     *
+     * <p><b>Warning:</b> This method mutates the size of the names list and breaks the functional programming paradigm.
+     * Make sure containers that have objects associated with header names are updated accordingly.</p>
+     *
+     * @param s InternalString name to add
+     * @return {@code true} (as specified by {@link Collection#add})
+     */
     public boolean add(InternalString s) {
-        if(nameLookup.containsKey(s))
+        if(nameLookup.containsKey(s.getString()))
             throw new DuplicateNamesException(s.getString());
 
         nameLookup.put(s.getString(), names.size());
         return names.add(s);
     }
 
+    /**
+     * <p>Add new name at specified index (see {@link ArrayList#add(int, Object)}.</p>
+     *
+     * <p><b>Warning:</b> This method mutates the size of the names list and breaks the functional programming paradigm.
+     * Make sure containers that have objects associated with header names are updated accordingly.</p>
+     *
+     * @param index Index at which to insert the element
+     * @param element InternalString name to add
+     */
     public void add(int index, InternalString element) {
-        if(nameLookup.containsKey(element))
+        if(nameLookup.containsKey(element.getString()))
             throw new DuplicateNamesException(element.getString());
 
         names.add(index, element);
@@ -130,10 +157,27 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
         nameLookup.put(element.getString(), index);
     }
 
+    /**
+     * <p>Add collection of names at the end of HeaderNames object (see {@link ArrayList#addAll(Collection)}.</p>
+     *
+     * <p><b>Warning:</b> This method mutates the size of the names list and breaks the functional programming paradigm.
+     * Make sure containers that have objects associated with header names are updated accordingly.</p>
+     *
+     * @param c Container with {@link InternalString} objects
+     */
     public void addAll(Collection<? extends InternalString> c) {
         c.forEach(this::add);
     }
 
+    /**
+     * <p>Remove name object from list (see {@link ArrayList#remove(Object)}.</p>
+     *
+     * <p><b>Warning:</b> This method mutates the size of the names list and breaks the functional programming paradigm.
+     * Make sure containers that have objects associated with header names are updated accordingly.</p>
+     *
+     * @param o String name to remove
+     * @return true if removal was successful
+     */
     public boolean remove(String o) {
         Integer i = nameLookup.get(o);
         if(i != null) {
@@ -141,20 +185,39 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
             nameLookup.remove(o);
         }
 
-        return names.remove(o);
+        return names.remove(new InternalString(o));
     }
 
+    /**
+     * <p>Remove element at specified index (see {@link ArrayList#remove(int)}.</p>
+     *
+     * <p><b>Warning:</b> This method mutates the size of the names list and breaks the functional programming paradigm.
+     * Make sure containers that have objects associated with header names are updated accordingly.</p>
+     *
+     * @param index Index at which to remove the element
+     */
     public InternalString remove(int index) {
         InternalString element = names.remove(index);
-        Integer i = nameLookup.get(element);
+        Integer i = nameLookup.get(element.getString());
         if(i != null) {
             updateLookupValues(x -> (x > i) ? (x - 1) : x);
-            nameLookup.remove(element);
+            nameLookup.remove(element.getString());
         }
 
         return element;
     }
 
+    private void updateLookupValues(Function<Integer, Integer> updatedValue) {
+        for(var entry : nameLookup.entrySet()) {
+            entry.setValue(updatedValue.apply(entry.getValue()));
+        }
+    }
+
+    /**
+     * <p>Get number of elements in header.</p>
+     *
+     * @return number of elements
+     */
     public int size() {
         return names.size();
     }
@@ -169,12 +232,6 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
         return nameLookup.containsKey(name.getString());
     }
 
-    private void updateLookupValues(Function<Integer, Integer> updatedValue) {
-        for(var entry : nameLookup.entrySet()) {
-            entry.setValue(updatedValue.apply(entry.getValue()));
-        }
-    }
-
     /**
      * Check if <b>sorted</b> array has duplicate elements, returns first element string it finds.
      *
@@ -187,6 +244,19 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
                 return arr.get(i);
         }
         return null;
+    }
+
+    /**
+     * <p>Check if names only consists of ascending numbers from 0 to {@link HeaderNames#size()}-1</p>
+     *
+     * @return true, if elements from index 0 to {@link HeaderNames#size()}-1 are equal to 0, 1, ..., {@link HeaderNames#size()}-1
+     */
+    protected boolean hasNumberOnly() {
+        for(int i = 0; i < names.size(); i++) {
+            if(!String.valueOf(i).equals(names.get(i).getString()))
+                return false;
+        }
+        return true;
     }
 
     @SuppressWarnings({"MethodDoesntCallSuperMethod"})
