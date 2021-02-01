@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  */
 public class HeaderNames implements Iterable<InternalString>, Cloneable {
 
-    private ArrayList<InternalString> names;
-    private HashMap<String, Integer> nameLookup;
+    private final ArrayList<InternalString> names;
+    private final HashMap<String, Integer> nameLookup;
 
     /**
      * Create HeaderNames object with deep-copied list of names.
