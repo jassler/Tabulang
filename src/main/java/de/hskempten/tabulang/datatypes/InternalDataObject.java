@@ -2,6 +2,9 @@ package de.hskempten.tabulang.datatypes;
 
 import java.util.Objects;
 
+/**
+ * An InternalObject that holds some Object value.
+ */
 public class InternalDataObject extends InternalObject {
 
     private Object data;
