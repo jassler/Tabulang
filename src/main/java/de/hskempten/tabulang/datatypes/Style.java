@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Style class for internal data annotations.
+ */
 public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
 
     public static final String FONT_COLOR = "font-color";
@@ -22,19 +25,38 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
 
     private final HashMap<String, String> annotations;
 
-
+    /**
+     * Create new Style object with no annotations attached.
+     */
     public Style() {
         this.annotations = new HashMap<>();
     }
 
+    /**
+     * <p>Create new Style object with set annotations.</p>
+     *
+     * <p>This list is deep-copied. To copy annotations from another Style object, see {@link Style#clone()}.</p>
+     *
+     * @param annotations Initialize annotations
+     */
     public Style(HashMap<String, String> annotations) {
-        this.annotations = annotations;
+        this.annotations = new HashMap<>(annotations);
     }
 
+    /**
+     * <p>Get annotations object reference. While possible, it is discouraged to alter annotations this way.</p>
+     *
+     * @return annotations object
+     */
     public HashMap<String, String> getAnnotations() {
         return annotations;
     }
 
+    /**
+     * <p>Check if map of annotations is empty.</p>
+     *
+     * @return true if no annotation has been applied yet
+     */
     public boolean isEmpty() {
         return annotations.isEmpty();
     }
@@ -59,6 +81,12 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
         return this;
     }
 
+    /**
+     * <p>Set {@link Style#FONT_COLOR} to given color object. Transforms color into hex-representation.</p>
+     *
+     * @param c Color object
+     * @return this Style object
+     */
     public Style setColor(Color c) {
         annotations.put(FONT_COLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
         return this;
@@ -69,6 +97,12 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
         return this;
     }
 
+    /**
+     * <p>Set {@link Style#BACKGROUND_COLOR} to given color object. Transforms color into hex-representation.</p>
+     *
+     * @param c Color object
+     * @return this Style object
+     */
     public Style setBackgroundColor(Color c) {
         annotations.put(BACKGROUND_COLOR, String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()));
         return this;
@@ -89,21 +123,52 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
         return this;
     }
 
+    /**
+     * <p>Set any String attribute to any String value. Preexisting annotations will be overridden.</p>
+     *
+     * @param attribute Annotation name
+     * @param value Annotation value
+     * @return this Style object
+     */
     public Style setAttribute(String attribute, String value) {
         annotations.put(attribute, value);
         return this;
     }
 
+    /**
+     * <p>Remove all annotations.</p>
+     *
+     * @return this Style object
+     */
     public Style reset() {
         this.annotations.clear();
         return this;
     }
 
+    /**
+     * <p>Add all annotations from another Style to this Style object. Annotations with the same name will be
+     * overridden.</p>
+     *
+     * <p>If you wish to only add Style annotations that are not in this Style object yet,
+     * see {@link Style#importStyleIfAbsent(Style)}</p>
+     *
+     * @param s Style to import
+     * @return this Style object
+     */
     public Style importStyle(Style s) {
         annotations.putAll(s.annotations);
         return this;
     }
 
+    /**
+     * <p>Add all annotations from another Style to this Style object. Annotations with the same name will be
+     * ignored (see {@link HashMap#putIfAbsent(Object, Object)}).</p>
+     *
+     * <p>If you wish to override preexisting annotations with the same name, see {@link Style#importStyle(Style)}.</p>
+     *
+     * @param s Annotations to import that are not in the current map of annotations
+     * @return this Style object
+     */
     public Style importStyleIfAbsent(Style s) {
         for (var a : s) {
             annotations.putIfAbsent(a.getKey(), a.getValue());
@@ -111,9 +176,10 @@ public class Style implements Iterable<Map.Entry<String, String>>, Cloneable {
         return this;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Style clone() {
-        return new Style((HashMap<String, String>) this.annotations.clone());
+        return new Style(this.annotations);
     }
 
     @Override
