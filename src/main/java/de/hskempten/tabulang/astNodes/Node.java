@@ -1,14 +1,11 @@
 package de.hskempten.tabulang.astNodes;
 
 
-import de.hskempten.tabulang.datatypes.Identifier;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotDeclaredException;
-import de.hskempten.tabulang.datatypes.exceptions.VariableNotInitializedException;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -32,7 +29,7 @@ public abstract class Node {
 
     public abstract Object evaluateNode(Interpretation interpretation);
 
-    public Table verifyAndReturnTable(Node node, Interpretation interpretation) {
+    public Table<?> verifyAndReturnTable(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         o = ifTupleTransform(o);
         if (o instanceof Table<?> table) {

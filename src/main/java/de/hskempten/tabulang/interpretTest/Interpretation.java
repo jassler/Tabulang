@@ -1,13 +1,8 @@
 package de.hskempten.tabulang.interpretTest;
 
 import de.hskempten.tabulang.Main;
-import de.hskempten.tabulang.datatypes.Identifier;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
-import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 public class Interpretation {
 
