@@ -85,7 +85,7 @@ public class InternalObject implements Styleable {
      * annotation {@link Style#FONT_SIZE} and one of its parents has an annotation {@link Style#FONT_SIZE}, it will use
      * <i>this</i> object's font size annotation).</p>
      *
-     * <p>Changes made to the Style return will not affect the Style in this object. Either use
+     * <p>Changes made to the Style returned will not affect the Style in this object. Either use
      * {@link InternalObject#setStyle(Style)} or {@link InternalObject#getStyle()} to modify its values.</p>
      *
      * @return computed Style object from this and all its parent's objects

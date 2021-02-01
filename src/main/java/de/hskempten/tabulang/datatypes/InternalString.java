@@ -57,6 +57,14 @@ public class InternalString extends InternalObject implements Comparable<Interna
         return string;
     }
 
+    /**
+     * <p>Check if this object's string equals to others object's string.</p>
+     *
+     * <p>Parameter it compares against must be of type {@link InternalString}, else it returns {@code false}.</p>
+     *
+     * @param o InternalString object to compare against
+     * @return true if string attributes of internal strings are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
