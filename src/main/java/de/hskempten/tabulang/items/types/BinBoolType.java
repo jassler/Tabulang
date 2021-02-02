@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.BinBoolItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class BinBoolType implements LanguageType {
+public class BinBoolType implements Parser {
 
     public static BinBoolType instance = new BinBoolType();
 

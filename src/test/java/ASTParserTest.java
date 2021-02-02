@@ -51,7 +51,7 @@ public class ASTParserTest {
         statements.add(new AssignmentNode(new IdentifierNode("a", textPosition), number1, textPosition));
         ProgramAST exp = new ProgramAST(statements);
 
-        ProgramItem actPrg = parser.parseN();
+        ProgramItem actPrg = parser.parse();
         ProgramAST act = ASTProgramParser.instance.parse(actPrg);
 
         //exp.print(0);

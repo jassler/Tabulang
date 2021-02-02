@@ -97,7 +97,7 @@ public class Main {
         l.setText(Files.readString(Path.of(filename)));
         parser = new TabulangParser(l, interpreter);
 
-        prg = parser.parseN();
+        prg = parser.parse();
 
         // build the abstract syntax tree
         ast = ASTProgramParser.instance.parse(prg);
@@ -146,7 +146,7 @@ public class Main {
                 parser = new TabulangParser(l, interpreter);
 
                 try {
-                    prg = parser.parseN();
+                    prg = parser.parse();
 
                     // build the abstract syntax tree
                     ast = ASTProgramParser.instance.parse(prg);

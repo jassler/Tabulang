@@ -205,7 +205,7 @@ public class Tabulang {
         StandardLibrary.addStandardLibrary(interpretation);
         TabulangParser parser = new TabulangParser(l, interpretation);
         l.reset();
-        ProgramItem prg = parser.parseN();
+        ProgramItem prg = parser.parse();
         System.out.println("NumberAST of statements: " + prg.getMyStatements().size());
         //System.out.println("Evaluating \"" + l.getText());
         ProgramAST prgAST = ASTProgramParser.instance.parse(prg);

@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.BinRelSymItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class BinRelSymType implements LanguageType {
+public class BinRelSymType implements Parser {
 
     public static BinRelSymType instance = new BinRelSymType();
 

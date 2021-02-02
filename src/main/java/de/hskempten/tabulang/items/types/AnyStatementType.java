@@ -4,9 +4,8 @@ import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class AnyStatementType implements LanguageType {
+public class AnyStatementType implements Parser {
 
     public static AnyStatementType instance = new AnyStatementType();
 

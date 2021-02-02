@@ -1,4 +1,3 @@
-import de.hskempten.tabulang.Interpreter;
 import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.*;
@@ -42,7 +41,7 @@ public class ParserTest {
         ArrayList<StatementItem> statements = new ArrayList<>();
         ProgramItem prg = new ProgramItem(statements);
 
-        assertEquals(parser.parseN().getMyStatements(), prg.getMyStatements());
+        assertEquals(parser.parse().getMyStatements(), prg.getMyStatements());
     }
 
     @Test
@@ -52,7 +51,7 @@ public class ParserTest {
         statements.add(new StatementItem(new VarDefItem(new IdentifierItem("a"), new TermItem(new TermRItem(), new OrdinalItem(new NumberItem("9"))), true)));
         ProgramItem prg = new ProgramItem(statements);
 
-        ProgramItem act = parser.parseN();
+        ProgramItem act = parser.parse();
         assertEquals(prg.getMyStatements().size(), act.getMyStatements().size());
         assertEquals(
                 prg.getMyStatements().get(0).getMyVarDef().getMyIdentifier().getMyString(),

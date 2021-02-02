@@ -6,9 +6,8 @@ import de.hskempten.tabulang.items.PQuantifiedItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class PQuantifiedType implements LanguageType {
+public class PQuantifiedType implements Parser {
 
     public static PQuantifiedType instance = new PQuantifiedType();
 

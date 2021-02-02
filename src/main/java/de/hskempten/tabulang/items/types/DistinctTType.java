@@ -7,11 +7,10 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
 
-public class DistinctTType implements LanguageType {
+public class DistinctTType implements Parser {
 
     public static DistinctTType instance = new DistinctTType();
 

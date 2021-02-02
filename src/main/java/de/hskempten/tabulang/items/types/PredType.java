@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class PredType implements LanguageType {
+public class PredType implements Parser {
 
     public static PredType instance = new PredType();
 

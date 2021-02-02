@@ -5,11 +5,10 @@ import de.hskempten.tabulang.items.LoopStmntItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
 
-public class LoopBodyType implements LanguageType {
+public class LoopBodyType implements Parser {
 
     public static LoopBodyType instance = new LoopBodyType();
 

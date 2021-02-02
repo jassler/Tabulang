@@ -6,9 +6,8 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class SetStmntType implements LanguageType {
+public class SetStmntType implements Parser {
 
     public static SetStmntType instance = new SetStmntType();
 

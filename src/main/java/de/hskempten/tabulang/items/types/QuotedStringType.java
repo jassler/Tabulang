@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.QuotedStringItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class QuotedStringType implements LanguageType {
+public class QuotedStringType implements Parser {
 
     public static QuotedStringType instance = new QuotedStringType();
 

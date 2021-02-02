@@ -4,16 +4,14 @@ import de.hskempten.tabulang.TokenType;
 import de.hskempten.tabulang.items.FunCallItem;
 import de.hskempten.tabulang.items.IdentifierItem;
 import de.hskempten.tabulang.items.TermItem;
-import de.hskempten.tabulang.items.TupelItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 import de.hskempten.tabulang.tokenizer.Token;
-import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
 
-public class FunCallType implements LanguageType {
+public class FunCallType implements Parser {
 
     public static FunCallType instance = new FunCallType();
 
@@ -22,12 +20,6 @@ public class FunCallType implements LanguageType {
         FunCallItem item;
 
         IdentifierItem myIdentifier;
-        /*TupelItem myTupel;
-
-        myIdentifier = IdentifierType.instance.parse(l);
-        myTupel = TupelType.instance.parse(l);
-
-        item = new FunCallItem(myIdentifier, myTupel);*/
 
         ArrayList<TermItem> myTerms = new ArrayList<TermItem>();
 

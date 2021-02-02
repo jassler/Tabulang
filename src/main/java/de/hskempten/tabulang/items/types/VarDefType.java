@@ -26,7 +26,7 @@ public class VarDefType implements Parser {
                     item = new VarDefItem(myProceduralF);
                 } else if ("var".equals(l.lookahead().getContent())) {
                     l.getNextTokenAndExpect(TokenType.KEYWORD);
-                    if (!"variable".equals(l.lookahead().getType())){
+                    if (!"variable".equals(l.lookahead().getType())) {
                         throw new ParseTimeException("Illegal type: " + l.lookahead().getType() + " at " + l.lookahead().getContent() + " expected Identifier");
                     }
                     IdentifierItem myIdentifier = IdentifierType.instance.parse(l);
@@ -34,7 +34,7 @@ public class VarDefType implements Parser {
                     TermItem myTerm = TermType.instance.parse(l);
                     l.getNextTokenAndExpect(TokenType.SEMICOLON);
                     item = new VarDefItem(myIdentifier, myTerm, true);
-                }else{
+                } else {
                     throw new ParseTimeException("Illegal keyword: " + l.lookahead().getContent());
                 }
             }

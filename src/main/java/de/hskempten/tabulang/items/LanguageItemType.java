@@ -46,6 +46,12 @@ public enum LanguageItemType {
     AGGREGATION_COUNT, AGGREGATION_AVERAGE, TERMR_BRACKET, STATEMENT_IDENTIFIER, TERM_DIRECTIONAL_H, TERM_DIRECTIONAL_V,
     DISTINCT_ITEM, PREDR_BRACKET, STATEMENT_FUNCALL, LOOP_MARK_WITHOUTIF, LOOP_MARK_WITHIF, PRED_INDEX;
 
+    /**
+     * Returns the precedence for the different LanguageItemTypes needed for ShuntingYard.
+     *
+     * @param type LanguageItemType enum
+     * @return int precedence
+     */
     public static int getPrecedence(LanguageItemType type) {
         return switch (type) {
             case TERMR_OPERATOR -> 0;

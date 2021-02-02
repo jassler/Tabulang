@@ -10,6 +10,13 @@ import java.util.Collections;
 
 public class ASTStatementSorter {
 
+    /**
+     * Sorts a list of statements so that function definitions are the first entries in the list.
+     * A GroupStatement is placed at the end.
+     *
+     * @param statements A list of statements
+     * @return The sorted list of statements
+     */
     public static ArrayList<Node> sortStatements(ArrayList<Node> statements) {
 
         for (int n = statements.size() - 1; n > 0; n--) {

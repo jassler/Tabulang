@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class DirectionalTermType implements LanguageType {
+public class DirectionalTermType implements Parser {
 
     public static DirectionalTermType instance = new DirectionalTermType();
 

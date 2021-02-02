@@ -8,9 +8,8 @@ import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class ForallPredType implements LanguageType {
+public class ForallPredType implements Parser {
 
     public static ForallPredType instance = new ForallPredType();
 

@@ -5,9 +5,8 @@ import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class LoopStmntType implements LanguageType {
+public class LoopStmntType implements Parser {
 
     public static LoopStmntType instance = new LoopStmntType();
 

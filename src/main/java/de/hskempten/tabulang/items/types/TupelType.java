@@ -5,11 +5,10 @@ import de.hskempten.tabulang.items.IntervallItem;
 import de.hskempten.tabulang.items.TermItem;
 import de.hskempten.tabulang.items.TupelItem;
 import de.hskempten.tabulang.tokenizer.*;
-import de.hskempten.tabulang.types.LanguageType;
 
 import java.util.ArrayList;
 
-public class TupelType implements LanguageType {
+public class TupelType implements Parser {
 
     public static TupelType instance = new TupelType();
 

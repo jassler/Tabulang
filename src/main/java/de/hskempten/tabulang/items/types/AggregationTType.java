@@ -6,9 +6,8 @@ import de.hskempten.tabulang.items.CountTItem;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.TextPosition;
-import de.hskempten.tabulang.types.LanguageType;
 
-public class AggregationTType implements LanguageType {
+public class AggregationTType implements Parser {
 
     public static AggregationTType instance = new AggregationTType();
 
