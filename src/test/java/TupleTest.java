@@ -135,34 +135,35 @@ class TupleTest {
     @Test
     public void testToString() {
         assertEquals("", new Tuple<>(new InternalString[0]).toString());
-        assertEquals("0\n4", new Tuple<>(new InternalNumber[]{new InternalNumber(4)}).toString());
-        assertEquals("0 | 1\n4 | 1", new Tuple<>(Stream.of(4, 1).map(InternalNumber::new).collect(Collectors.toList())).toString());
-        assertEquals("0 | 1 | 2\n4 | 1 | 4", new Tuple<>(Stream.of(4, 1, 4).map(InternalNumber::new).collect(Collectors.toList())).toString());
+        assertEquals("[4]", new Tuple<>(new InternalNumber[]{new InternalNumber(4)}).toString());
+        assertEquals("[4, 1]", new Tuple<>(Stream.of(4, 1).map(InternalNumber::new).collect(Collectors.toList())).toString());
+        assertEquals("[4, 1, 4]", new Tuple<>(Stream.of(4, 1, 4).map(InternalNumber::new).collect(Collectors.toList())).toString());
 
-        Tuple<InternalString> t = new Tuple<>(InternalString.objToArray("Alpha", "Beta", "Gamma"));
+        Tuple<InternalString> t = new Tuple<>(InternalString.objToArray("Alpha", "Beta", "Gamma"), InternalString.objToArray("a", "b", "c"));
         String expected = "" +
-                "0     | 1    | 2\n" +
+                "a     | b    | c\n" +
                 "Alpha | Beta | Gamma";
 
         assertEquals(expected, t.toString());
 
         t.setHorizontal(false);
         expected = """
-                0 | Alpha
-                1 | Beta
-                2 | Gamma""";
+                a | Alpha
+                b | Beta
+                c | Gamma""";
 
         assertEquals(expected, t.toString());
 
         Tuple<Tuple<InternalString>> t2 = new Tuple<Tuple<InternalString>>(new Tuple[]{
-                new Tuple<>(InternalString.objToArray("a", "b")),
-                new Tuple<>(InternalString.objToArray("x", "y")),
-                new Tuple<>(InternalString.objToArray("o", "i"))
+                new Tuple<>(InternalString.objToArray("a", "b"), InternalString.objToArray("h", "i")),
+                new Tuple<>(InternalString.objToArray("x", "y"), InternalString.objToArray("h", "i")),
+                new Tuple<>(InternalString.objToArray("o", "i"), InternalString.objToArray("h", "i"))
         });
+        t2.setNames(new HeaderNames(InternalString.objToList("first", "second", "last")));
 
         expected = "" +
-                "0           | 1           | 2\n" +
-                "0 | 1␤a | b | 0 | 1␤x | y | 0 | 1␤o | i";
+                "first       | second      | last\n" +
+                "h | i␤a | b | h | i␤x | y | h | i␤o | i";
 
         assertEquals(expected, t2.toString());
     }

@@ -104,20 +104,50 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         return tuples.get(rowNum);
     }
 
+    /**
+     * <p>Get tuple at specified index (see {@link List#get(int)}).</p>
+     *
+     * @param index index of element to return
+     * @return Element at specified location
+     * @throws IndexOutOfBoundsException if {@code index < 0} or {@code index >= this.getSize()}
+     */
     @Override
     public Tuple<E> get(int index) {
         return tuples.get(index);
     }
 
+    /**
+     * <p>Get column header name at specified index (see {@link HeaderNames#get(int)}).</p>
+     *
+     * @param index index of name element to return
+     * @return Name element at specified location
+     * @throws IndexOutOfBoundsException if {@code index < 0} or {@code index >= this.getSize()}
+     */
     @Override
     public InternalString getHeader(int index) {
         return colNames.get(index);
     }
 
+    /**
+     * <p>Set row height attribute of tuple at specified index.</p>
+     *
+     * <p>From limited testing with Excel, {@code height = 0.5} seems to be the standard height (= 14 points = 28 pixels).</p>
+     *
+     * @param rowNum Which row to transform (assuming table is not transposed)
+     * @param height Row height, 0.5 being the tested standard height
+     *
+     * @throws IndexOutOfBoundsException if {@code rowNum < 0} or {@code rowNum >= this.getSize()}
+     */
     public void setRowHeight(int rowNum, double height) {
         this.tuples.get(rowNum).getStyle().setAttribute(Style.ROW_HEIGHT, Double.toString(height));
     }
 
+    /**
+     * <p>Get number of rows in table, depending on if it's transposed or not. It does not count
+     * the header row if it's not transposed.</p>
+     *
+     * @return Number of tuples if not transposed, else number of column names
+     */
     public int getNumberOfRows() {
         if(!transposed)
             return tuples.size();
@@ -125,15 +155,17 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
             return colNames.size();
     }
 
+    /**
+     * <p>Get number of columns in table, depending on if it's transposed or not. It does not count
+     * the header column if it's transposed.</p>
+     *
+     * @return Number of column names if not transposed, else number of tuples
+     */
     public int getNumberOfColumns() {
         if(!transposed)
             return colNames.size();
         else
             return tuples.size();
-    }
-
-    public int getTupleSize() {
-        return tuples.size();
     }
 
     /*
@@ -156,26 +188,31 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     */
 
     /**
-     * Use carefully!
+     * <p>Method implementation of {@link TupleOperation#isHorizontal()}.</p>
      *
-     * @return tuple arraylist
+     * @return {@code true} if not transposed, else {@code false}
      */
-    @Deprecated
-    public ArrayList<Tuple<E>> getRows() {
-        return tuples;
-    }
-
     @Override
     public boolean isHorizontal() {
         return !transposed;
     }
 
+    /**
+     * <p>Method implementation of {@link TupleOperation#setHorizontal(boolean)}.</p>
+     *
+     * <p>Transpose matrix if current orientation is not set orientation.</p>
+     *
+     * @param horizontal If {@code true}, tuples are rows, else tuples are columns
+     */
     @Override
     public void setHorizontal(boolean horizontal) {
         if ((horizontal && transposed) || (!horizontal && !transposed))
             transpose();
     }
 
+    /**
+     * <p>Flip orientation of table.</p>
+     */
     @Override
     public void transpose() {
         transposed = !transposed;
@@ -184,15 +221,72 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         tuples.forEach(t -> t.setHorizontal(!transposed));
     }
 
+    /**
+     * <p>Method implementation of {@link TupleOperation#isTransposed()}.</p>
+     *
+     * <p>By default tables are not transposed (tuples are rows).</p>
+     *
+     * @return {@code true} if table is transposed, else {@code false}
+     */
     @Override
     public boolean isTransposed() {
         return transposed;
     }
 
+    /**
+     * <p>Implementation of {@link TupleOperation#getWidth()}.</p>
+     *
+     * <p>Returns width of table depending on if it's transposed or not. HeaderNames row or column is ignored.</p>
+     *
+     * @return width of table, {@code colNames.size()} if not transposed, else {@code tuples.size()}
+     */
+    @Override
+    public int getWidth() {
+        return transposed ? tuples.size() : colNames.size();
+    }
+
+    /**
+     * <p>Implementation of {@link TupleOperation#getHeight()}.</p>
+     *
+     * <p>Returns height of table depending on if it's transposed or not. HeaderNames row or column is ignored.</p>
+     *
+     * @return height of table, {@code tuples.size()} if not transposed, else {@code colNames.size()}
+     */
+    @Override
+    public int getHeight() {
+        return transposed ? colNames.size() : tuples.size();
+    }
+
+    /**
+     * <p>Implementation of {@link TupleOperation#getSize()}.</p>
+     *
+     * <p>Get number of tuples in table object.</p>
+     *
+     * @return Number of tuples
+     */
+    @Override
+    public int getSize() {
+        return tuples.size();
+    }
+
+    /**
+     * <p>Get column header names.</p>
+     *
+     * <p>The Table class already supplies some functionality to look at column names,
+     * such as {@link Table#getHeader(int)} or {@link Table#getColumnIndex(InternalString)}.</p>
+     *
+     * @return column names object
+     */
     public HeaderNames getColNames() {
         return colNames;
     }
 
+    /**
+     * <p>Set column header names.</p>
+     *
+     * @param names HeaderNames to set
+     * @throws ArrayLengthMismatchException if set names size is not equal to current names size
+     */
     public void setColNames(HeaderNames names) {
         if (this.colNames.size() != names.size())
             throw new ArrayLengthMismatchException(this.colNames.size(), names.size());
@@ -268,7 +362,7 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * See {@link Table#projection(int...)}
+     * <p>See {@link Table#projection(int...)}</p>
      *
      * @param colNames Column indices on which to project
      * @return {@code Table<E>} with projected table columns
@@ -283,31 +377,16 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * Projection to no columns. This is kept here since function overloading doesn't know what to pick
-     * when no parameter is given to a variadic function.
+     * <p>Projection to no columns. This is kept here since function overloading doesn't know what to pick
+     * when no parameter is given to a variadic function.</p>
      *
-     * <p>This method basically returns an empty table.
+     * <p>This method basically returns an empty table.</p>
      *
      * @return an empty Table
      */
     @Override
     public Table<E> projection() {
         return new Table<>(getParent());
-    }
-
-    @Override
-    public int getWidth() {
-        return transposed ? tuples.size() : colNames.size();
-    }
-
-    @Override
-    public int getHeight() {
-        return transposed ? colNames.size() : tuples.size();
-    }
-
-    @Override
-    public int getSize() {
-        return tuples.size();
     }
 
     /**
@@ -333,10 +412,15 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * Given two tables generate a new table with rows of both of them, though with no duplicates.
+     * <p>Given two tables generate a new table with tuples of the other table object appended to tuples of this object.
+     * Duplicates are ignored, aka if two tuples are equal to another, only one will be included.</p>
+     *
+     * <p>This method guarantees the order of the tuples to stay the same.</p>
      *
      * @param other Table with which to create a union
      * @return Table with tuple rows of {@code other} appended to tuples of this object
+     * @throws TableHeaderMismatchException if {@code other} does not have the same column names as this object.
+     * Use {@link Table#setColNames(HeaderNames)} together with {@link Table#getColNames()} to circumvent this.
      */
     public Table<E> union(Table<E> other) {
 
@@ -364,7 +448,9 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * Generate new table with all rows removed that appear in {@code other}.
+     * <p>Generate new table with all rows removed that appear in {@code other}.</p>
+     *
+     * <p>This method guarantees the order of the tuples to stay the same. Duplicates from this table object will not be removed.</p>
      *
      * @param other Rows which are to be removed from this object's tuple rows
      * @return Table with removed rows
@@ -386,7 +472,7 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * Add {@code other} to the right of the table. If number of rows is not equal, missing cells will be filled with null.
+     * Add {@code other} to the right of this table object. If number of rows is not equal, missing cells will be filled with null.
      *
      * @param other Table which is to be appended to the right of this table
      * @return New table with other table appended to the right
@@ -421,9 +507,9 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * Add {@code other} to the bottom of the table. If number of columns is not equal, missing cells will be filled with null.
+     * Add {@code other} to the bottom of this table object. If number of columns is not equal, missing cells will be filled with null.
      *
-     * Column header will be taken from this table, each missing column from {@code other}.
+     * <p>Column header will be taken from this table, each missing column from {@code other}.</p>
      *
      * @param other Table which is to be appended to the bottom of this table
      * @return New table with other table appended to the bottom
@@ -463,6 +549,7 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         return new Table<>(newColNames, newRows, getParent());
     }
 
+    // toString helper function for pretty-printing tables
     private int[] calculateColumnWidths() {
         int[] strLengths;
 
@@ -498,6 +585,12 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         if (colNames.size() == 0)
             return "";
 
+        /*
+         basic idea: figure out the maximum width of each column and use String.format() to neatly align all the elements.
+         eg. if column 1 has an element with 15 characters width, column 2 is at most 10 chars wide and column 3 17 chars,
+         the corresponding format function looks something like this:
+         String.format("%-15s %-10s %-17s", tuples[row][0], tuples[row][1], tuples[row][2]);
+        */
         StringBuilder sb;
 
         int[] strLengths = calculateColumnWidths();
@@ -508,11 +601,7 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
             formatted[0] = formatted[0] + " |";
             formatted[formatted.length - 1] = "%s";
 
-            // Calculating the capacity
-            // Width of all columns added together (probably a little less for most rows)
-            // +strLength.length for whitespace between each column (and newline at the end)
-            // +2 for the " |" delimiter after the first column
-            // This row length times number of rows
+            // Weird capacity calculation
             sb = new StringBuilder((Arrays.stream(strLengths).sum() + strLengths.length + 2) * colNames.size());
 
             for (int row = 0; row < colNames.size(); row++) {
@@ -571,6 +660,11 @@ public class Table<E extends Styleable> extends InternalObject implements TupleO
         return Objects.hash(tuples, transposed, colNames);
     }
 
+    /**
+     * <p>Iterate through tuples.</p>
+     *
+     * @return tuples iterator
+     */
     @Override
     public Iterator<Tuple<E>> iterator() {
         return tuples.iterator();
