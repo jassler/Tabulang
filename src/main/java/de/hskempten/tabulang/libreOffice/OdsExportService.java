@@ -68,8 +68,7 @@ public class OdsExportService {
      * @param path      Specification of the path where the ods file should be saved
      * @param fileName  File name of the table to be exported (without specifying ods)
      */
-
-    public void Export(Table<InternalObject> table, String path, String fileName){
+    public void Export(Table<? extends InternalObject> table, String path, String fileName){
         try {
             var content = new ArrayList<ArrayList<String>>();
             for(var row : table){
@@ -433,7 +432,7 @@ public class OdsExportService {
      * Helper function for {@link OdsExportService#SetStyleToCell(int, int)}
      * Create a new OdfStyle-Object as a style instance
      *
-     * @return
+     * @return OdfStyle
      */
 
     private OdfStyle CreateOdfStyle(){
@@ -454,8 +453,8 @@ public class OdsExportService {
      * @param table Table with styled tuples
      */
 
-    private void SetRowStylesFromTable(Table<InternalObject> table){
-        int rowNum = -1;
+    private void SetRowStylesFromTable(Table<? extends InternalObject> table){
+        int rowNum = 0;
         for(var tuple : table) {
             rowNum++;
             if(tuple.getStyle().isEmpty())

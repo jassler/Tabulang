@@ -29,13 +29,11 @@ public class InTupleNode extends BinaryPredicateNode {
                 return new InternalBoolean(false);
             }
         } else {
-            for (Object t : ((Table<?>) tupleObject).getRows()) {
-                if (t.equals(identifier)) {
+            for(Tuple<?> t : (Table<?>) tupleObject) {
+                if (t.equals(identifier))
                     return new InternalBoolean(true);
-                }
-                if (((Tuple<?>) t).getElements().contains(identifier)) {
+                if(t.getElements().contains(identifier))
                     return new InternalBoolean(true);
-                }
             }
             return new InternalBoolean(false);
         }
