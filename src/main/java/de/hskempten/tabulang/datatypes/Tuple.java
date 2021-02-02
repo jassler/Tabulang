@@ -158,6 +158,12 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return names;
     }
 
+    /**
+     * <p>Set header names for this tuple object.</p>
+     *
+     * @param names new header names
+     * @throws ArrayLengthMismatchException if new names size != number of elements
+     */
     public void setNames(HeaderNames names) {
         if (elements.size() != names.size())
             throw new ArrayLengthMismatchException(elements.size(), names.size());
@@ -165,6 +171,13 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         this.names = names;
     }
 
+    /**
+     * <p>Get element at specified index (see {@link List#get(int)}).</p>
+     *
+     * @param index Specified index
+     * @return Element at specified location
+     * @throws IndexOutOfBoundsException if {@code index < 0} or {@code index >= getSize()}
+     */
     @Override
     public E get(int index) {
         return elements.get(index);
@@ -185,11 +198,19 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return isHorizontal;
     }
 
+    /**
+     * <p>Toggle orientation of tuple.</p>
+     */
     @Override
     public void transpose() {
         this.isHorizontal = !this.isHorizontal;
     }
 
+    /**
+     * <p>Is tuple transposed. By default tuples are horizontal == not transposed.</p>
+     *
+     * @return {@code false} if tuple is horizontal, else {@code true}
+     */
     @Override
     public boolean isTransposed() {
         return !this.isHorizontal;
@@ -345,6 +366,11 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return isHorizontal ? 1 : size();
     }
 
+    /**
+     * <p>Get number of elements (see {@link Tuple#size()}).</p>
+     *
+     * @return number of elements
+     */
     @Override
     public int getSize() {
         return size();
@@ -365,9 +391,9 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
     }
 
     /**
-     * NumberAST of elements in this tuple.
+     * Number of elements in this tuple.
      *
-     * @return NumberAST of elements in this tuple.
+     * @return Number of elements in this tuple
      */
     public int size() {
         return this.elements.size();
@@ -448,16 +474,25 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return elements.iterator();
     }
 
-    public Object transformIntoTableIfPossible() {
+    /**
+     * <p>Get tuple in table format if every element of this tuple is a tuple, each with the same number of elements.</p>
+     *
+     * <p>In the programming language, tables cannot be constructed with default syntax. If table operations are used
+     * (eg. {@link Table#horizontalPairing(Table)}), try converting this tuple to a table object.</p>
+     *
+     * @return Table object if conversion was successful, else this object.
+     */
+    @SuppressWarnings("unchecked")
+    public TupleOperation<?> transformIntoTableIfPossible() {
         Object firstObject = elements.get(0);
-        if (firstObject instanceof Tuple) {
-            int sizeRequirement = ((Tuple<?>) firstObject).size();
-            for (Object o : elements) {
+        if (firstObject instanceof Tuple<?> first) {
+            int sizeRequirement = first.size();
+            for (E o : elements) {
                 if (!(o instanceof Tuple) || ((Tuple<?>) o).size() != sizeRequirement) {
                     return this;
                 }
             }
-            return new Table<>(elements.toArray(Tuple[]::new));
+            return new Table<>(first.names.getNames(), (ArrayList<Tuple<E>>) elements);
         } else {
             return this;
         }
