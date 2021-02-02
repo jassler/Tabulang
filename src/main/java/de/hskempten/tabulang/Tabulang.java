@@ -1,6 +1,5 @@
 package de.hskempten.tabulang;
 
-import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;

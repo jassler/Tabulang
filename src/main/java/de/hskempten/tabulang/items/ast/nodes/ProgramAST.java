@@ -2,13 +2,10 @@ package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.RootNode;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.TypeMismatchException;
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProgramAST extends RootNode {
     private ArrayList<Node> statements;

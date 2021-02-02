@@ -1,11 +1,9 @@
 package de.hskempten.tabulang.standardLibrary;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.standardLibrary.importexport.*;
 import de.hskempten.tabulang.standardLibrary.stringLibrary.Split;
 import de.hskempten.tabulang.standardLibrary.stringLibrary.StandardStringToObj;

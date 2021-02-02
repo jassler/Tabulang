@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.Node;
-import de.hskempten.tabulang.astNodes.StatementNode;
+import de.hskempten.tabulang.astNodes.statement.StatementNode;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
 

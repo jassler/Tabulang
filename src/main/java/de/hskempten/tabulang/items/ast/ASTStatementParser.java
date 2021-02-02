@@ -1,6 +1,17 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.astNodes.predicate.PredicateNode;
+import de.hskempten.tabulang.astNodes.statement.*;
+import de.hskempten.tabulang.astNodes.statement.group.GroupAfterFunctionCallNode;
+import de.hskempten.tabulang.astNodes.statement.group.GroupBeforeFunctionCallNode;
+import de.hskempten.tabulang.astNodes.statement.group.GroupWithoutFunctionCallNode;
+import de.hskempten.tabulang.astNodes.statement.group.HidingGroupFunctionCallNode;
+import de.hskempten.tabulang.astNodes.statement.mark.MarkInLoopIfNode;
+import de.hskempten.tabulang.astNodes.statement.mark.MarkInLoopNode;
+import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.PositionedException;
@@ -135,7 +146,7 @@ public class ASTStatementParser {
                     }
                     default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }
-                return new FunctionAssignment(identifier, identifierList, statements, textPosition);
+                return new FunctionAssignmentNode(identifier, identifierList, statements, textPosition);
             }
             case ANYSTATEMENT_RETURN -> {
                 if (actItem instanceof AnyStatementItem item) {
@@ -218,7 +229,7 @@ public class ASTStatementParser {
                     }
                     case LOOP_MARK_WITHIF -> {
                         PredicateNode ifPred = new ASTPredParser().parse(mrk.getMyPred());
-                        return new MarkIfInLoopNode(markTerm, asTerm, ifPred, textPosition);
+                        return new MarkInLoopIfNode(markTerm, asTerm, ifPred, textPosition);
                     }
                     default -> throw new ParseTimeException("Unexpected value: " + actItem.getLanguageItemType(), actItem.getTextPosition());
                 }

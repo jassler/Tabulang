@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.datatypes;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.Node;
 
 import java.util.ArrayList;
