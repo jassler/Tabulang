@@ -420,6 +420,20 @@ public class Tuple<E extends Styleable> extends InternalObject implements TupleO
         return Objects.hash(elements, names, isHorizontal);
     }
 
+    /**
+     * <p>String representation of tuple.</p>
+     *
+     * <p>New lines are replaced with the '␤' Unicode character.</p>
+     *
+     * <p>Note that if header names is default initialized (names are 0, 1, 2, ...), then the header row is omitted
+     * and elements are only printed by the default {@link ArrayList#toString()} method (eg. "[39, 'Frank', 'Sinatra']").
+     * Else it returns two lines, the first line containing the header names, the second this tuple's elements, each
+     * separated with '|' (eg. "a  | b     | c\n" + "39 | Frank | Sinatra")</p>
+     *
+     * <p>This may lead to inconsistencies and should be reviewed in future.</p>
+     *
+     * @return String representation of tuple
+     */
     @Override
     public String toString() {
         if (size() == 0)
