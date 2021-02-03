@@ -4,9 +4,9 @@ package de.hskempten.tabulang.astNodes;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberOperandArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTableOperandArgumentException;
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberArgumentException;
+import de.hskempten.tabulang.datatypes.exceptions.IllegalTableArgumentException;
+import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public abstract class Node {
@@ -35,7 +35,7 @@ public abstract class Node {
         if (o instanceof Table<?> table) {
             return table;
         } else {
-            throw new IllegalTableOperandArgumentException(node.getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent(), o + " (" + o.getClass() + ") is not a table.");
+            throw new IllegalTableArgumentException(node.getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent(), o + " (" + o.getClass() + ") is not a table.");
         }
     }
 
@@ -49,7 +49,7 @@ public abstract class Node {
     public InternalNumber verifyAndReturnNumber(Node node, Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);
         if (!(o instanceof InternalNumber internalNumber)) {
-            throw new IllegalNumberOperandArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
+            throw new IllegalNumberArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
         }
         return internalNumber;
     }

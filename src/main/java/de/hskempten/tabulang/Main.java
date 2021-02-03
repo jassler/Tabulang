@@ -3,7 +3,6 @@ package de.hskempten.tabulang;
 import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.datatypes.exceptions.DataTypeException;
-import de.hskempten.tabulang.interpretTest.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;

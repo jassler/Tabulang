@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.items.ast.nodes;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.items.ast.interfaces.TermAST;

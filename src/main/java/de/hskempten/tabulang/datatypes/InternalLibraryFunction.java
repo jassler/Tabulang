@@ -1,6 +1,7 @@
 package de.hskempten.tabulang.datatypes;
 
-import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
 import de.hskempten.tabulang.standardLibrary.InternalFunction;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * Node for function calls that are directly implemented in Java, most likely in the standardLibrary package.
  * 
- * When the {@link de.hskempten.tabulang.astNodes.FunctionCallNode} interprets this function,
+ * When the {@link FunctionCallNode} interprets this function,
  * it calls {@link InternalFunction#compute(Object...)}.
  */
 public class InternalLibraryFunction extends InternalObject {

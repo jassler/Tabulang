@@ -1,9 +1,9 @@
 import de.hskempten.tabulang.TokenType;
-import de.hskempten.tabulang.astNodes.AssignmentNode;
-import de.hskempten.tabulang.astNodes.IdentifierNode;
+import de.hskempten.tabulang.astNodes.statement.AssignmentNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.Node;
-import de.hskempten.tabulang.astNodes.NumberNode;
-import de.hskempten.tabulang.interpretTest.Interpretation;
+import de.hskempten.tabulang.astNodes.term.arithmetic.NumberNode;
+import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;

@@ -1,7 +1,18 @@
 package de.hskempten.tabulang.interpretTest;
 
 
-import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.astNodes.term.arithmetic.AddNode;
+import de.hskempten.tabulang.astNodes.term.arithmetic.MultiplyNode;
+import de.hskempten.tabulang.astNodes.term.arithmetic.NumberNode;
+import de.hskempten.tabulang.astNodes.term.arithmetic.SubtractNode;
+import de.hskempten.tabulang.astNodes.predicate.*;
+import de.hskempten.tabulang.astNodes.statement.*;
+import de.hskempten.tabulang.astNodes.term.*;
+import de.hskempten.tabulang.astNodes.tupleOperations.CountNode;
+import de.hskempten.tabulang.astNodes.tupleOperations.SpreadNode;
+import de.hskempten.tabulang.astNodes.tupleOperations.TupleElementNode;
+import de.hskempten.tabulang.astNodes.tupleOperations.TupleNode;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
 import de.hskempten.tabulang.tokenizer.ParameterizedString;
@@ -116,32 +127,7 @@ public class Main {
         Tuple t2 = new Tuple(objectsTable2);
         Tuple t3 = new Tuple(objectsTable3);
         Table table1 = new Table(t1, t2);
-        TableNode tableNode1 = new TableNode(table1);
-        Table table2 = new Table(t1, t3);
-        TableNode tableNode2 = new TableNode(table2);
         //System.out.println(tableNode1.evaluateNode(interpretation));
-        CountHorizontalNode countHorizontalNode1 = new CountHorizontalNode(tableNode1, textPosition);
-        //System.out.println(countHorizontalNode1.evaluateNode(interpretation));
-        CountHorizontalNode countHorizontalNode2 = new CountHorizontalNode(tupleNode2, textPosition);
-        //System.out.println(countHorizontalNode2.evaluateNode(interpretation));
-        CountVerticalNode countVerticalNode1 = new CountVerticalNode(tableNode1, textPosition);
-        //System.out.println("Count vertical: " + countVerticalNode1.evaluateNode(interpretation));
-        AverageNode averageNode1 = new AverageNode(s2, tableNode1, textPosition);
-        //System.out.println(tableNode1.toString());
-        //System.out.println("Average: " + averageNode1.evaluateNode(interpretation));
-        String[] stringArray = {"1"};
-        //DistinctFromNode distinctFromNode1 = new DistinctFromNode(tableNode1, stringArray);
-        ArrayList<IdentifierNode> testDistinct = new ArrayList<>();
-        IdentifierNode idTable1 = new IdentifierNode("1", textPosition);
-        testDistinct.add(idTable1);
-        DistinctFromNode distinctFromNode1 = new DistinctFromNode(tableNode1, testDistinct, textPosition);
-        //System.out.println("Distinct: " + distinctFromNode1.evaluateNode(interpretation));
-        IntersectNode intersectNode1 = new IntersectNode(tableNode1, tableNode2, textPosition);
-        //System.out.println("Intersection: " + intersectNode1.evaluateNode(interpretation));
-        SubtractNode subtractNode2 = new SubtractNode(tableNode1, tableNode2, textPosition);
-        //System.out.println("Subtraction: " + subtractNode2.evaluateNode(interpretation));
-        UniteNode uniteNode1 = new UniteNode(tableNode1, tableNode2, textPosition);
-        //System.out.println("Unite: " + uniteNode1.evaluateNode(interpretation));
 
 
         //Conjoined Predicates
@@ -204,8 +190,7 @@ public class Main {
 
         GreaterThanNode greaterThanNode2 = new GreaterThanNode(v1, n3, textPosition);
         //greaterThanNode2.evaluateNode(interpretation);
-        FilterNode filterNode1 = new FilterNode(tableNode2, greaterThanNode2, textPosition);
-        //System.out.println(filterNode1.evaluateNode(interpretation));
+
         AssignmentNode a10 = new AssignmentNode(v6, v1, textPosition);
         //a10.evaluateNode(interpretation);
 
@@ -238,8 +223,6 @@ public class Main {
 
         System.out.println(sp1.evaluateNode(interpretation));
 
-        //System.out.println(averageNode1.evaluateNode(interpretation));
-        System.out.println(countVerticalNode1.evaluateNode(interpretation));
 
 
         System.out.println();

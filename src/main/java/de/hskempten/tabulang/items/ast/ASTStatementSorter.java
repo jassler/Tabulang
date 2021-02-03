@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.items.ast;
 
-import de.hskempten.tabulang.astNodes.FunctionAssignment;
-import de.hskempten.tabulang.astNodes.FunctionCallNode;
-import de.hskempten.tabulang.astNodes.GroupNode;
+import de.hskempten.tabulang.astNodes.statement.FunctionAssignmentNode;
+import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
+import de.hskempten.tabulang.astNodes.statement.group.GroupNode;
 import de.hskempten.tabulang.astNodes.Node;
 
 import java.util.ArrayList;
@@ -43,15 +43,15 @@ public class ASTStatementSorter {
 
     private static boolean containsFunCallToNext(Node actual, Node next) {
         String nextName = "";
-        if (FunctionAssignment.class.equals(next.getClass())) {
-            nextName = ((FunctionAssignment) next).getIdentifier().getIdentifier();
+        if (FunctionAssignmentNode.class.equals(next.getClass())) {
+            nextName = ((FunctionAssignmentNode) next).getIdentifier().getIdentifier();
         } else return false;
 
 
         {
-            if (FunctionAssignment.class.equals(actual.getClass())) {
-                for (int i = 0; i < ((FunctionAssignment) actual).getStatements().size(); i++) {
-                    if (getFunCallMethodNames(((FunctionAssignment) actual).getStatements().get(i)).contains(nextName))
+            if (FunctionAssignmentNode.class.equals(actual.getClass())) {
+                for (int i = 0; i < ((FunctionAssignmentNode) actual).getStatements().size(); i++) {
+                    if (getFunCallMethodNames(((FunctionAssignmentNode) actual).getStatements().get(i)).contains(nextName))
                         return true;
                 }
                 return false;
@@ -61,7 +61,7 @@ public class ASTStatementSorter {
     }
 
     private static boolean isProceduralF(Node statement) {
-        return FunctionAssignment.class.equals(statement.getClass());
+        return FunctionAssignmentNode.class.equals(statement.getClass());
     }
 
     private static ArrayList<String> getFunCallMethodNames(Node statement) {

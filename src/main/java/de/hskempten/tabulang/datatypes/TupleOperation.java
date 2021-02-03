@@ -1,6 +1,11 @@
 package de.hskempten.tabulang.datatypes;
 
-public interface TupleOperation<E> extends Cloneable, Iterable<E> {
+/**
+ * Basic tuple operation functionality. See {@link Tuple} and {@link Table} for specific implementation.
+ *
+ * @param <E> Internal object that can be annotated
+ */
+public interface TupleOperation<E extends Styleable> extends Cloneable, Iterable<E> {
 
     E get(int index);
     InternalString getHeader(int index);

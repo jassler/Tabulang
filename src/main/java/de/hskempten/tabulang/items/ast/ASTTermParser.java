@@ -1,6 +1,16 @@
 package de.hskempten.tabulang.items.ast;
 
 import de.hskempten.tabulang.astNodes.*;
+import de.hskempten.tabulang.astNodes.term.arithmetic.*;
+import de.hskempten.tabulang.astNodes.predicate.PredicateNode;
+import de.hskempten.tabulang.astNodes.statement.ReturnNode;
+import de.hskempten.tabulang.astNodes.statement.StatementNode;
+import de.hskempten.tabulang.astNodes.tableOperations.DistinctFromNode;
+import de.hskempten.tabulang.astNodes.tableOperations.FilterNode;
+import de.hskempten.tabulang.astNodes.tableOperations.IntersectNode;
+import de.hskempten.tabulang.astNodes.tableOperations.UniteNode;
+import de.hskempten.tabulang.astNodes.term.*;
+import de.hskempten.tabulang.astNodes.tupleOperations.*;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.PositionedException;
@@ -267,7 +277,7 @@ public class ASTTermParser {
                         previousTerm.getMyTermR().setLanguageItemType(TERMR_NULL);
                         TermNode prevTerm = new ASTTermParser().parse(previousTerm);
                         PredicateNode pred = new ASTPredParser().parse(mark.getMyPred());
-                        return new MarkIfTermNode(prevTerm, markTerm, asTerm, pred, textPosition);
+                        return new MarkTermIfNode(prevTerm, markTerm, asTerm, pred, textPosition);
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + actItem.getLanguageItemType());
                 }

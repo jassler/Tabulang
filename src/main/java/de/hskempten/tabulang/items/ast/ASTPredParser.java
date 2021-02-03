@@ -1,7 +1,9 @@
 package de.hskempten.tabulang.items.ast;
 
-import de.hskempten.tabulang.astNodes.*;
-import de.hskempten.tabulang.astNodes.PredTermNode;
+import de.hskempten.tabulang.astNodes.predicate.PredTermNode;
+import de.hskempten.tabulang.astNodes.predicate.*;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.items.*;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 import de.hskempten.tabulang.tokenizer.PositionedException;
