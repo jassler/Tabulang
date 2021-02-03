@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.term;
 
 
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class NullNode extends TermNode {

@@ -1,9 +1,8 @@
 package de.hskempten.tabulang.astNodes.tupleOperations;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.TupleOperation;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class VerticalTupleNode extends TermNode {
@@ -14,22 +13,15 @@ public class VerticalTupleNode extends TermNode {
         this.node = tupleNode;
     }
 
-    public TermNode getTupleNode() {
-        return node;
-    }
-
-    public void setTupleNode(TermNode tupleNode) {
-        this.node = tupleNode;
-    }
-
+    /**
+     * Creates new Tuple/Table of the specified Tuple/Table but is transposed vertically.
+     *
+     * @return new Tuple/Table that is equal to the specified Tuple/Table but transposed vertically.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object o = node.evaluateNode(interpretation);
-
-        if (!(o instanceof TupleOperation<?> t)) {
-            throw new IllegalTupleArgumentException(getTextPosition(), o.getClass().getSimpleName(), node.getTextPosition().getContent());
-        }
-        TupleOperation<?> result = t.clone();
+        TupleOperation<?> tupleOperation = node.verifyAndReturnTupleOperation(interpretation);
+        TupleOperation<?> result = tupleOperation.clone();
         result.setHorizontal(false);
         return result;
     }

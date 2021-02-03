@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes.predicate;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanArgumentException;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public abstract class BinaryPredicateNode extends PredicateNode {

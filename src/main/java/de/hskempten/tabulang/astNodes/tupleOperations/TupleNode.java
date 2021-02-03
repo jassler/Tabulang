@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.astNodes.tupleOperations;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class TupleNode extends TermNode {
     private ArrayList<TermNode> tList;
 
-    public TupleNode(ArrayList tList, TextPosition textPosition) {
+    public TupleNode(ArrayList<TermNode> tList, TextPosition textPosition) {
         super(textPosition);
         this.tList = tList;
     }
@@ -21,18 +21,23 @@ public class TupleNode extends TermNode {
 
     public TupleNode(TermNode oneTerm, TextPosition textPosition) {
         super(textPosition);
-        this.tList = new ArrayList<TermNode>();
+        this.tList = new ArrayList<>();
         this.tList.add(oneTerm);
     }
 
-    public ArrayList getTuple() {
+    public ArrayList<TermNode> getTuple() {
         return tList;
     }
 
-    public void setTuple(ArrayList tList) {
+    public void setTuple(ArrayList<TermNode> tList) {
         this.tList = tList;
     }
 
+    /**
+     * Evaluates every node in the specified array and creates a new Tuple with those values.
+     *
+     * @return new Tuple with evaluated values.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         ArrayList<Object> tupleElements = new ArrayList<>();
@@ -41,8 +46,7 @@ public class TupleNode extends TermNode {
             o = termNode.evaluateNode(interpretation);
             tupleElements.add(o);
         }
-        Tuple tuple = new Tuple(tupleElements);
-        return tuple;
+        return new Tuple(tupleElements);
     }
 
     @Override

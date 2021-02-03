@@ -1,10 +1,10 @@
 package de.hskempten.tabulang.astNodes.term.arithmetic;
 
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalNumberArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class ModNode extends BinaryArithmeticNode {
@@ -12,6 +12,11 @@ public class ModNode extends BinaryArithmeticNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Divides the value of the first evaluated node by the value of the second evaluated node.
+     *
+     * @return the remainder of the division of both values.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);

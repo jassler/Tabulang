@@ -1,9 +1,8 @@
 package de.hskempten.tabulang.parser;
 
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.types.ProgramType;
-import de.hskempten.tabulang.nodes.AnyStatement;
 import de.hskempten.tabulang.tokenizer.Lexer;
 import de.hskempten.tabulang.tokenizer.ParseTimeException;
 

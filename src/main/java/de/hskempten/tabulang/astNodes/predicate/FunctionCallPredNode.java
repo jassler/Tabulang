@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
-import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.helper.FunctionCallHelper;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -34,6 +34,9 @@ public class FunctionCallPredNode extends PredicateNode {
         this.parameters = parameters;
     }
 
+    /**
+     * @see FunctionCallHelper#callFunction(IdentifierNode, Interpretation, ArrayList)
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         return FunctionCallHelper.callFunction(node, interpretation, parameters);

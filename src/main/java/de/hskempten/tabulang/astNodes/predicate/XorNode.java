@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class XorNode extends BinaryPredicateNode {
@@ -9,10 +9,15 @@ public class XorNode extends BinaryPredicateNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Compares two evaluated nodes with XOR operator.
+     *
+     * @return InternalBoolean with value of XOR operation on evaluated left node and evaluated right node.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        InternalBoolean leftBool = verifyAndReturnBoolean(getLeftNode(), interpretation);
-        InternalBoolean rightBool = verifyAndReturnBoolean(getRightNode(), interpretation);
+        InternalBoolean leftBool = getLeftNode().verifyAndReturnBoolean(interpretation);
+        InternalBoolean rightBool = getRightNode().verifyAndReturnBoolean(interpretation);
         return new InternalBoolean(leftBool.getBoolean() ^ rightBool.getBoolean());
     }
 

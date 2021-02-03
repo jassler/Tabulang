@@ -1,10 +1,10 @@
 package de.hskempten.tabulang.astNodes.term;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.helper.MarkHelper;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkTermIfNode extends MarkTermNode {
@@ -24,6 +24,11 @@ public class MarkTermIfNode extends MarkTermNode {
         this.pred = pred;
     }
 
+    /**
+     * Marks the specified value if a condition is met.
+     *
+     * @see MarkHelper for more details.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object date = getLeftNode().evaluateNode(interpretation);

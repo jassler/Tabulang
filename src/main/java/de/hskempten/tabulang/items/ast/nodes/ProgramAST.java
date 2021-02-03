@@ -2,7 +2,7 @@ package de.hskempten.tabulang.items.ast.nodes;
 
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.RootNode;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 
 import java.util.ArrayList;

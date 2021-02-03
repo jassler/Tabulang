@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.statement;
 
-import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.datatypes.InternalFunction;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -29,10 +29,6 @@ public class FunctionAssignmentNode extends StatementNode {
         this.identifier = identifier;
     }
 
-    public ArrayList<IdentifierNode> getIdentifierList() {
-        return identifierList;
-    }
-
     public void setIdentifierList(ArrayList<IdentifierNode> identifierList) {
         this.identifierList = identifierList;
     }
@@ -45,6 +41,11 @@ public class FunctionAssignmentNode extends StatementNode {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
+    /**
+     * Assigns specified function to specified identifier name in the interpretation.
+     *
+     * @return value that got assigned to identifier.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         String o = identifier.getIdentifier();

@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.statement.group;
 
-import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
@@ -20,23 +20,15 @@ public class GroupAfterFunctionCallNode extends GroupNode {
         this.setFunCall(funCall);
     }
 
-
-    public FunctionCallNode getFunCall() {
-        return funCall;
-    }
-
     public void setFunCall(FunctionCallNode funCall) {
         this.funCall = funCall;
     }
 
-    public LinkedHashMap<Object, LinkedList<Object>> getVariableValueInLoopX() {
-        return variableValueInLoopX;
-    }
-
-    public void setVariableValueInLoopX(LinkedHashMap<Object, LinkedList<Object>> variableValueInLoopX) {
-        this.variableValueInLoopX = variableValueInLoopX;
-    }
-
+    /**
+     * Groups loop iterations according to the 'group' keyword condition before calculating their respective function value.
+     *
+     * @return list of mapValue values of a group followed by their function call value for each group (e.g. (x1, x2, fx, y1, y2, fy,...)).
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);

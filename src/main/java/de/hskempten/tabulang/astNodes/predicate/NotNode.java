@@ -1,9 +1,8 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class NotNode extends PredicateNode {
@@ -22,12 +21,15 @@ public class NotNode extends PredicateNode {
         this.node = node;
     }
 
+    /**
+     * Returns negation of a evaluated node.
+     *
+     * @return InternalBoolean with value true if evaluated node value false,
+     * InternalBoolean with value false otherwise.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object pred = node.evaluateNode(interpretation);
-        if (!(pred instanceof InternalBoolean internalBoolean)) {
-            throw new IllegalBooleanArgumentException(toString());
-        }
+        InternalBoolean internalBoolean = node.verifyAndReturnBoolean(interpretation);
         return new InternalBoolean(!(internalBoolean.getBoolean()));
     }
 

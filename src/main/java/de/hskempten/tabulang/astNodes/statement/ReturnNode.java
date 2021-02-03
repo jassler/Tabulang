@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.statement;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class ReturnNode extends StatementNode {
@@ -20,6 +20,11 @@ public class ReturnNode extends StatementNode {
         this.node = node;
     }
 
+    /**
+     * Assigns specified value to the key 'return' in the interpretation.
+     *
+     * @return value that got assigned to 'return'.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);

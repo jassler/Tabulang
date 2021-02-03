@@ -1,12 +1,12 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.exceptions.InterpreterException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class EqualsNode extends BinaryPredicateNode {
@@ -14,6 +14,12 @@ public class EqualsNode extends BinaryPredicateNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Compares two nodes with == operator.
+     *
+     * @return InternalBoolean with value of == operation on evaluated left node and evaluated right node.
+     * @throws InterpreterException both nodes neither evaluate to strings nor numbers
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);

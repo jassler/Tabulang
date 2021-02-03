@@ -1,8 +1,8 @@
 package de.hskempten.tabulang.astNodes.term;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.statement.StatementNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -18,6 +18,12 @@ public class FunctionDeclarationNode extends TermNode {
         this.statements = statements;
     }
 
+    /**
+     * Executes the declared anonymous function with the specified parameters and statements.
+     *
+     * @return the return value if the statements contain a return statement,
+     * null otherwise
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
