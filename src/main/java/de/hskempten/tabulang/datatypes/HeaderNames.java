@@ -178,14 +178,14 @@ public class HeaderNames implements Iterable<InternalString>, Cloneable {
      * @param o String name to remove
      * @return true if removal was successful
      */
-    public boolean remove(String o) {
-        Integer i = nameLookup.get(o);
+    public boolean remove(InternalString o) {
+        Integer i = nameLookup.get(o.getString());
         if(i != null) {
             updateLookupValues(x -> (x > i) ? (x - 1) : x);
-            nameLookup.remove(o);
+            nameLookup.remove(o.getString());
         }
 
-        return names.remove(new InternalString(o));
+        return names.remove(o);
     }
 
     /**
