@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.statement.group;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.LinkedList;
@@ -13,7 +13,11 @@ public class GroupWithoutFunctionCallNode extends GroupNode {
         super(term, textPosition);
     }
 
-
+    /**
+     * Groups loop iterations according to the 'group' keyword condition.
+     *
+     * @return list of mapValue values of a group (e.g. (x1, x2, y1, y2,...)).
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);

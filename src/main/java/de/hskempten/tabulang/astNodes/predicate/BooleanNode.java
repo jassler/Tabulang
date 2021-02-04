@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class BooleanNode extends PredicateNode {
@@ -9,14 +9,6 @@ public class BooleanNode extends PredicateNode {
 
     public BooleanNode(Boolean aBoolean, TextPosition textPosition) {
         super(textPosition);
-        this.aBoolean = aBoolean;
-    }
-
-    public Boolean getaBoolean() {
-        return aBoolean;
-    }
-
-    public void setaBoolean(Boolean aBoolean) {
         this.aBoolean = aBoolean;
     }
 

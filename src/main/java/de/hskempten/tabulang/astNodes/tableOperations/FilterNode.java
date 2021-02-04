@@ -1,28 +1,31 @@
 package de.hskempten.tabulang.astNodes.tableOperations;
 
-import de.hskempten.tabulang.astNodes.term.BinaryTermNode;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
+import de.hskempten.tabulang.astNodes.term.BinaryTermNode;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanArgumentException;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTableArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class FilterNode extends BinaryTermNode {
     public FilterNode(Node leftNode, Node rightNode, TextPosition textPosition) {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Creates a new Table with rows from given Table that fulfill a specified predicate.
+     * See {@link Table#filter(Predicate)}
+     *
+     * @return Table object with rows from given Table that fulfill the predicate.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object object = getLeftNode().evaluateNode(interpretation);
-        object = ifTupleTransform(object);
-        if (!(object instanceof Table<?> table))
-            throw new IllegalTableArgumentException(getTextPosition(), object.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
+        Table<?> table = getLeftNode().verifyAndReturnTable(interpretation);
 
         ArrayList<InternalString> colNames = new ArrayList<>(table.getColNames().getNames());
 

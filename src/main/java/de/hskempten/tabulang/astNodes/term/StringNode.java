@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.term;
 
 import de.hskempten.tabulang.datatypes.InternalString;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Objects;

@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes.statement.group;
 import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
@@ -23,6 +23,11 @@ public class HidingGroupFunctionCallNode extends GroupNode {
         this.funCall = funCall;
     }
 
+    /**
+     * Groups loop iterations according to the 'group' keyword condition before calculating their respective function value.
+     *
+     * @return list of function call values for each group without their mapValue values (e.g. (fx, fy,...)).
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);

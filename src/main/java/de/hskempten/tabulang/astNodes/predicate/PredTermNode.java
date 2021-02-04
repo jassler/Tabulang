@@ -2,8 +2,7 @@ package de.hskempten.tabulang.astNodes.predicate;
 
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanArgumentException;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class PredTermNode extends PredicateNode {
@@ -22,12 +21,14 @@ public class PredTermNode extends PredicateNode {
         this.term = term;
     }
 
+    /**
+     * Checks if node evaluates to a boolean.
+     *
+     * @return InternalBoolean with value of evaluated node.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object termObject = term.evaluateNode(interpretation);
-        if (!(termObject instanceof InternalBoolean internalBoolean)) {
-            throw new IllegalBooleanArgumentException(getTextPosition(), termObject.getClass().getSimpleName(), term.getTextPosition().getContent());
-        }
+        InternalBoolean internalBoolean = term.verifyAndReturnBoolean(interpretation);
         return internalBoolean;
     }
 }

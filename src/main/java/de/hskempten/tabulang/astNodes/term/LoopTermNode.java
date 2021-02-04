@@ -1,16 +1,12 @@
 package de.hskempten.tabulang.astNodes.term;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
-import de.hskempten.tabulang.astNodes.statement.group.GroupNode;
-import de.hskempten.tabulang.datatypes.*;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleArgumentException;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.astNodes.helper.LoopHelper;
 import de.hskempten.tabulang.items.ast.ASTStatementSorter;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 public class LoopTermNode extends TermNode {
     private IdentifierNode identifier;
@@ -51,62 +47,19 @@ public class LoopTermNode extends TermNode {
         this.statements = ASTStatementSorter.sortStatements(statements);
     }
 
-    public int getNestingLevel() {
-        return nestingLevel;
-    }
-
     public void setNestingLevel(int nestingLevel) {
         this.nestingLevel = nestingLevel;
     }
 
-
+    /**
+     * Loops over a set of statements once for each element in a tuple.
+     *
+     * @return tuple of mapValue values for each iteration or a rearranged variation thereof if the set of statements contains a group statement.
+     * See {@link LoopHelper} for more details.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object termObject = getTerm().evaluateNode(interpretation);
-
-        if (!(termObject instanceof TupleOperation<?> tuple))
-            throw new IllegalTupleArgumentException(getTextPosition(), termObject.getClass().getSimpleName(), getTerm().getTextPosition().getContent());
-
-        String identifier = getIdentifier().getIdentifier();
-        LinkedList<Object> resultList = new LinkedList<>();
-        Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
-
-        for (int i = 0; i < tuple.getSize(); ++i) {
-            Object tupleElementObject = tuple.get(i);
-            nestedInterpretation.getEnvironment().put(identifier, tupleElementObject);
-
-            if (tupleElementObject instanceof TupleOperation<?> tupleElement) {
-                for (int j = 0; j < tupleElement.getWidth(); j++) {
-                    InternalString type = tupleElement.getHeader(j);
-                    Object element = tupleElement.get(j);
-                    nestedInterpretation.getEnvironment().put(type.getString(), element);
-                }
-            }
-
-            for (Node statementNode : statements) {
-                if (statementNode instanceof GroupNode && !groupStatementFound) {
-                    ((GroupNode) statementNode).setNestingLevel(nestingLevel);
-                    ((GroupNode) statementNode).setLastIteration(false);
-                    groupStatementFound = true;
-                }
-                if (statementNode instanceof GroupNode && i + 1 == tuple.getHeight()) {
-                    ((GroupNode) statementNode).setLastIteration(true);
-                    resultList = (LinkedList<Object>) statementNode.evaluateNode(nestedInterpretation);
-                } else {
-                    statementNode.evaluateNode(nestedInterpretation);
-                }
-            }
-            if (!groupStatementFound) {
-                if (nestedInterpretation.getEnvironment().containsKey("mapValue" + nestingLevel)) {
-                    resultList.add(nestedInterpretation.getEnvironment().get("mapValue" + nestingLevel));
-                }
-            }
-        }
-
-        ArrayList<InternalDataObject> annotatedResults = new ArrayList<>(resultList.size());
-        resultList.forEach(el -> annotatedResults.add(new InternalDataObject(el)));
-        Tuple<InternalDataObject> result = new Tuple<>(annotatedResults);
-        return result;
+        return LoopHelper.loop(identifier, term, statements, nestingLevel, groupStatementFound, interpretation, getTextPosition());
     }
 
     @Override

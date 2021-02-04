@@ -3,7 +3,7 @@ package de.hskempten.tabulang.astNodes.tupleOperations;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.TupleOperation;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.math.BigInteger;
@@ -24,6 +24,13 @@ public class CountNode extends TermNode {
         this.node = node;
     }
 
+    /**
+     * Counts the size of a specified object.
+     * If the object is a Tuple, it counts its size.
+     * Otherwise it returns 1.
+     *
+     * @return the size of the specified object.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = node.evaluateNode(interpretation);

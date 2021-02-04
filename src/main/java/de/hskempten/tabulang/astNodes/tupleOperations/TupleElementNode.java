@@ -1,14 +1,14 @@
 package de.hskempten.tabulang.astNodes.tupleOperations;
 
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.BinaryTermNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTupleArgumentException;
+import de.hskempten.tabulang.datatypes.TupleOperation;
 import de.hskempten.tabulang.datatypes.exceptions.InterpreterException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class TupleElementNode extends BinaryTermNode {
@@ -18,12 +18,16 @@ public class TupleElementNode extends BinaryTermNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Creates new Tuple/Table with columns from specified Tuple/Table.
+     * Can either be a single column from Tuple/Table T (e.g. T.'x') or multiple columns (e.g. T.[x,y]).
+     *
+     * @return new Tuple if input was a Tuple, new Table if input was a Table.
+     * @throws InterpreterException the column identfier is neither a String (e.g. 'x') nor a Tuple (e.g. [x,y]).
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        if (!(left instanceof Tuple<?>) && !(left instanceof Table<?>)) {
-            throw new IllegalTupleArgumentException(getTextPosition(), left.getClass().getSimpleName(), getLeftNode().getTextPosition().getContent());
-        }
+        TupleOperation<?> left = getLeftNode().verifyAndReturnTupleOperation(interpretation);
 
         Object right = getRightNode().evaluateNode(interpretation);
         if (!(right instanceof InternalString) && !(right instanceof Tuple<?>)) {

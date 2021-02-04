@@ -1,9 +1,8 @@
 package de.hskempten.tabulang.astNodes.statement;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalBooleanArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class IfNode extends BinaryStatementNode {
@@ -11,13 +10,13 @@ public class IfNode extends BinaryStatementNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Executes either one or no node according to boolean value of a third evaluated node.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object left = getLeftNode().evaluateNode(interpretation);
-        if (!(left instanceof InternalBoolean bool)) {
-            throw new IllegalBooleanArgumentException(toString());
-        }
-        if (bool.getBoolean()) {
+        InternalBoolean internalBoolean = getLeftNode().verifyAndReturnBoolean(interpretation);
+        if (internalBoolean.getBoolean()) {
             return getRightNode().evaluateNode(interpretation);
         } else {
             return null;

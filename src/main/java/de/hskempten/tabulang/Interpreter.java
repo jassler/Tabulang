@@ -6,6 +6,7 @@ import de.hskempten.tabulang.tokenizer.ParseTimeException;
 
 import java.util.HashMap;
 
+//Unused, refer to Interpretation class in the interpreter package
 public class Interpreter {
 
     private HashMap<String, Number> environment;

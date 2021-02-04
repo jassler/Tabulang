@@ -1,5 +1,6 @@
 package de.hskempten.tabulang;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.items.ProgramItem;
 import de.hskempten.tabulang.items.ast.ASTProgramParser;
 import de.hskempten.tabulang.items.ast.nodes.ProgramAST;
@@ -134,8 +135,8 @@ public class Tabulang {
                     "tuple := [[1, 2]," +
                               "[2, 3]," +
                               "[3, 11]];\n" +
-                    "b := 1;\n" +
-                   "if(true) c := 1;\n" +
+                    //"b := 2 * 'hi';\n" +
+                   //"if(true) c := 1;\n" +
                     //"multTest := '1' * 6;\n" +
                     //"modTest := '1' mod 6;\n" +
                     //"c := average b tuple;\n" +
@@ -152,9 +153,9 @@ public class Tabulang {
                     //"spr := [1...3];\n" +
                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 < 4 iff 6 > 7) d := 10;\n" +
-                    "function f(x) { if( x <= 0 ) return 0; return 0.1 + f(x - 0.1); }\n" +
+                    //"function f(x) { if( x <= 0 ) return 0; return 0.1 + f(x - 0.1); }\n" +
                     //"res := f1(d);\n" +
-                    //"for x in y {set x; c := x + 1; mark '0' as 'grey' if x > 6;}\n" +
+                    "for x in y {set x; c := x + 1; mark '0' as 'grey';}\n" +
                     //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; hiding group after d using f1(c, e) mark 'background' as 'blue';}\n" +
                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +

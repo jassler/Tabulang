@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.statement;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class SetNode extends StatementNode {
@@ -22,6 +22,12 @@ public class SetNode extends StatementNode {
         this.node = node;
     }
 
+    /**
+     * Assigns specified value to the key 'mapValue' in the interpretation.
+     * Also sets the nesting level of the interpretation to the value given by the parser.
+     *
+     * @return value that got assigned to 'mapValue'.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object o = getNode().evaluateNode(interpretation);

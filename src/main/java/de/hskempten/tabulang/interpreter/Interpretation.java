@@ -1,5 +1,7 @@
-package de.hskempten.tabulang;
+package de.hskempten.tabulang.interpreter;
 
+
+import de.hskempten.tabulang.Main;
 
 import java.util.HashMap;
 
@@ -48,7 +50,11 @@ public class Interpretation {
         this.nestingLevel = nestingLevel;
     }
 
-
+    /**
+     * Provides a method to search for an identifier in the current environment and its parents.
+     * @param identifier the identifier to be found.
+     * @return interpretation which contains the specified identifier, null otherwise.
+     */
     public Interpretation findIdentifier(String identifier) {
         if (environment.containsKey(identifier)) {
             return this;
@@ -59,6 +65,10 @@ public class Interpretation {
         }
     }
 
+    /**
+     * Creates a deep copy of an interpretation.
+     * @return the copied interpretation.
+     */
     public Interpretation deepCopy() {
         Interpretation deepCopy = new Interpretation(new HashMap<>(this.getEnvironment()));
         if (this.parent != null) {
@@ -67,6 +77,9 @@ public class Interpretation {
         return deepCopy;
     }
 
+    /**
+     * Creates a deep copy of the parents of an interpretation. Used in combination with {@link Interpretation#deepCopy()} to create deep copies.
+     */
     public void deepCopyParents(Interpretation current, Interpretation parent) {
         Interpretation deepCopyParent = new Interpretation(new HashMap<>(parent.getEnvironment()));
         current.setParent(deepCopyParent);
@@ -75,21 +88,34 @@ public class Interpretation {
         }
     }
 
-    public Interpretation putValue(String key, Object value) {
+    /**
+     * Creates a new key-value pair in the environment.
+     * @param key the identifier name.
+     * @param value the value to be associated with the key.
+     */
+    public void putValue(String key, Object value) {
         environment.put(key, value);
-        return this;
     }
 
+    /**
+     * Returns the value of an identifier in the environment.
+     * @param key the identifier name.
+     * @return the associated value.
+     */
     public Object getValue(String key) {
         return environment.get(key);
     }
 
+    /**
+     * Exits the program.
+     * @param e the exception that occurred.
+     */
     public void exitProgram(Exception e) {
         System.err.println(e.getMessage());
         if (Main.isDebug()) {
             e.printStackTrace();
         }
-        //System.exit(1);
+        System.exit(1);
     }
 
 }

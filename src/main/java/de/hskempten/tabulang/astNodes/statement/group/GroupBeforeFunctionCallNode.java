@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.statement.group;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.FunctionCallNode;
 import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.Iterator;
@@ -24,6 +24,11 @@ public class GroupBeforeFunctionCallNode extends GroupNode {
         this.funCall = funCall;
     }
 
+    /**
+     * Groups loop iterations according to the 'group' keyword condition before calculating their respective function value.
+     *
+     * @return list of mapValue values of a group preceded by their function call value for each group (e.g. (fx, x1, x2, fy, y1, y2,...)).
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object groupTerm = getTerm().evaluateNode(interpretation);

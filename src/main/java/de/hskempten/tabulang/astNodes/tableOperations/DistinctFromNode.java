@@ -1,12 +1,11 @@
 package de.hskempten.tabulang.astNodes.tableOperations;
 
-import de.hskempten.tabulang.astNodes.term.IdentifierNode;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
+import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.Table;
-import de.hskempten.tabulang.datatypes.exceptions.IllegalTableArgumentException;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -37,20 +36,21 @@ public class DistinctFromNode extends TermNode {
         this.names = names;
     }
 
+    /**
+     * Creates a projection with specified columns on given Table.
+     * See {@link Table#projection(InternalString...)}
+     *
+     * @return Table object with specified columns from given Table.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        Object object = node.evaluateNode(interpretation);
-        object = ifTupleTransform(object);
-
-        if (object instanceof Table table) {
-            ArrayList<InternalString> columnNames = new ArrayList<>();
-            for (IdentifierNode identifier : names) {
-                columnNames.add((InternalString) identifier.evaluateNode(interpretation));
-            }
-            return table.projection(columnNames.toArray(InternalString[]::new));
-        } else {
-            throw new IllegalTableArgumentException(getTextPosition(), object.getClass().getSimpleName(), node.getTextPosition().getContent());
+        Table table = node.verifyAndReturnTable(interpretation);
+        ArrayList<InternalString> columnNames = new ArrayList<>();
+        for (IdentifierNode identifier : names) {
+            columnNames.add((InternalString) identifier.evaluateNode(interpretation));
         }
+        return table.projection(columnNames.toArray(InternalString[]::new));
+
     }
 
     @Override

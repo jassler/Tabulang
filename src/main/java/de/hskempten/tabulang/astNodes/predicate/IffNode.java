@@ -1,6 +1,6 @@
 package de.hskempten.tabulang.astNodes.predicate;
 
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.datatypes.InternalBoolean;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
@@ -9,10 +9,16 @@ public class IffNode extends BinaryPredicateNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Compares two evaluated nodes to decide if both boolean values are equal.
+     *
+     * @return InternalBoolean with value true if both boolean values are equal,
+     * InternalBoolean with value false otherwise.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        InternalBoolean leftBool = verifyAndReturnBoolean(getLeftNode(), interpretation);
-        InternalBoolean rightBool = verifyAndReturnBoolean(getRightNode(), interpretation);
+        InternalBoolean leftBool = getLeftNode().verifyAndReturnBoolean(interpretation);
+        InternalBoolean rightBool = getRightNode().verifyAndReturnBoolean(interpretation);
         return new InternalBoolean(leftBool.getBoolean() == rightBool.getBoolean());
     }
 

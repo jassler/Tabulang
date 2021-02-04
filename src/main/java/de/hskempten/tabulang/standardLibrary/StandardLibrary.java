@@ -3,7 +3,7 @@ package de.hskempten.tabulang.standardLibrary;
 import de.hskempten.tabulang.astNodes.term.IdentifierNode;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.datatypes.InternalNumber;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.standardLibrary.importexport.*;
 import de.hskempten.tabulang.standardLibrary.stringLibrary.Split;
 import de.hskempten.tabulang.standardLibrary.stringLibrary.StandardStringToObj;

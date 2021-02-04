@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.term;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.Node;
 import de.hskempten.tabulang.astNodes.helper.MarkHelper;
 import de.hskempten.tabulang.datatypes.Tuple;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MarkTermNode extends TernaryTermNode {
@@ -11,6 +11,11 @@ public class MarkTermNode extends TernaryTermNode {
         super(left, middle, right, textPosition);
     }
 
+    /**
+     * Marks the specified date.
+     *
+     * @see MarkHelper for more details.
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object date = getLeftNode().evaluateNode(interpretation);

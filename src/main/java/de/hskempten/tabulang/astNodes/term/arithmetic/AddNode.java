@@ -5,7 +5,7 @@ import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalNumber;
 import de.hskempten.tabulang.datatypes.InternalString;
 import de.hskempten.tabulang.datatypes.exceptions.InterpreterException;
-import de.hskempten.tabulang.Interpretation;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class AddNode extends BinaryArithmeticNode {
@@ -13,6 +13,13 @@ public class AddNode extends BinaryArithmeticNode {
         super(leftNode, rightNode, textPosition);
     }
 
+    /**
+     * Adds the values of two evaluated nodes. If both values are Numbers, it will add both Numbers.
+     * If either one is a String, it will concatenate both values.
+     *
+     * @return the sum or concatenation of both values.
+     * @throws InterpreterException if neither value is a String nor Number
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         Object left = getLeftNode().evaluateNode(interpretation);

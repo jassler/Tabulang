@@ -1,7 +1,7 @@
 package de.hskempten.tabulang.astNodes.term;
 
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.helper.FunctionCallHelper;
-import de.hskempten.tabulang.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
@@ -32,6 +32,9 @@ public class FunctionCallNode extends TermNode {
         this.parameters = parameters;
     }
 
+    /**
+     * @see FunctionCallHelper#callFunction(IdentifierNode, Interpretation, ArrayList)
+     */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
         return FunctionCallHelper.callFunction(node, interpretation, parameters);

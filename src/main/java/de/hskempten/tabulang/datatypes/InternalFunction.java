@@ -6,6 +6,9 @@ import de.hskempten.tabulang.astNodes.Node;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * An InternalFunction that accepts a certain number of parameters and contains statements.
+ */
 public class InternalFunction extends InternalObject {
     private ArrayList<IdentifierNode> parameters;
     private ArrayList<Node> statements;
