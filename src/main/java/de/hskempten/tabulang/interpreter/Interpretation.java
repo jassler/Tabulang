@@ -9,7 +9,7 @@ public class Interpretation {
 
     private Interpretation parent;
     private HashMap<String, Object> environment;
-    private int nestingLevel = 1;
+    private int nestingLevel = 0;
 
     public Interpretation() {
         this.parent = null;

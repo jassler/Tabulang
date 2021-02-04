@@ -42,7 +42,7 @@ public class AverageNode extends BinaryTermNode {
             Object columnValue = a.getFromIndex(index);
 
             if (!(columnValue instanceof InternalNumber internalNumber))
-                throw new IllegalNumberArgumentException("Can not calculate average over non-numerical object. Object " + columnValue + " of class " + columnValue.getClass().getSimpleName() + " found in column with name '" + columnIdentifier + "'");
+                throw new IllegalNumberArgumentException(getTextPosition(), "Can not calculate average over non-numerical object. Object " + columnValue + " of class " + columnValue.getClass().getSimpleName() + " found in column with name '" + columnIdentifier + "'");
 
             sum = sum.add(internalNumber);
             numberElements = numberElements.add(one);

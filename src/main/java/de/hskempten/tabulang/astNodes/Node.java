@@ -98,7 +98,7 @@ public abstract class Node {
         return internalString;
     }
 
-    public TupleOperation verifyAndReturnTupleOperation(Interpretation interpretation) {
+    public TupleOperation<?> verifyAndReturnTupleOperation(Interpretation interpretation) {
         Object evaluated = this.evaluateNode(interpretation);
         if (!(evaluated instanceof TupleOperation<?> tupleOperation)) {
             throw new IllegalStringArgumentException(getTextPosition(), evaluated.getClass().getSimpleName(), this.getTextPosition().getContent());
