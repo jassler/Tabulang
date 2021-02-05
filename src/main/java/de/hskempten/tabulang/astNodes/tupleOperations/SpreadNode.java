@@ -38,8 +38,7 @@ public class SpreadNode extends BinaryTermNode {
         Object rightValueObject = rightNumber.getValue();
 
         if (!(leftValueObject instanceof Integer leftValue && rightValueObject instanceof Integer rightValue))
-            throw new IllegalNumberArgumentException("Operation '" + leftValueObject + " ... " + rightValueObject + "' can not be executed. " +
-                    "Operands need to be integer.");
+            throw new IllegalNumberArgumentException(getTextPosition(), "Operands need to be integer.");
 
         for (int j = leftValue; j <= rightValue; j++) {
             intervalArray.add(new InternalNumber(new BigInteger(Integer.toString(j)), new BigInteger("1")));

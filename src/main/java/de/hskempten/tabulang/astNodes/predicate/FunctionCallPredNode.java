@@ -35,11 +35,11 @@ public class FunctionCallPredNode extends PredicateNode {
     }
 
     /**
-     * @see FunctionCallHelper#callFunction(IdentifierNode, Interpretation, ArrayList)
+     * @see FunctionCallHelper#callFunction(IdentifierNode, Interpretation, ArrayList, TextPosition)
      */
     @Override
     public Object evaluateNode(Interpretation interpretation) {
-        return FunctionCallHelper.callFunction(node, interpretation, parameters);
+        return FunctionCallHelper.callFunction(node, interpretation, parameters, getTextPosition());
     }
 
     @Override

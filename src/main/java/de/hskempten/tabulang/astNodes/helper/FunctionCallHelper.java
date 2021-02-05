@@ -7,6 +7,7 @@ import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalFunction;
 import de.hskempten.tabulang.datatypes.InternalLibraryFunction;
 import de.hskempten.tabulang.datatypes.exceptions.IllegalFunctionArgumentException;
+import de.hskempten.tabulang.tokenizer.TextPosition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +24,12 @@ public class FunctionCallHelper {
      * @throws IllegalFunctionArgumentException if needed and specified parameter size is not equal
      *                                          or identifier does not refer to a function in the environment
      */
-    public static Object callFunction(IdentifierNode node, Interpretation interpretation, ArrayList<TermNode> parameters) {
+    public static Object callFunction(IdentifierNode node, Interpretation interpretation, ArrayList<TermNode> parameters, TextPosition textPosition) {
         Object identifier = node.evaluateNode(interpretation);
 
         if (identifier instanceof InternalLibraryFunction f) {
             if (f.getParameters().size() != parameters.size()) {
-                throw new IllegalFunctionArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
+                throw new IllegalFunctionArgumentException(textPosition, "Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
                         + f.formattedString(node.getIdentifier()));
             }
 
@@ -43,7 +44,7 @@ public class FunctionCallHelper {
         } else if (identifier instanceof InternalFunction f) {
             Interpretation nestedInterpretation = new Interpretation(interpretation, new HashMap<>());
             if (f.getParameters().size() != parameters.size())
-                throw new IllegalFunctionArgumentException("Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
+                throw new IllegalFunctionArgumentException(textPosition, "Expected " + f.getParameters().size() + " parameter(s) but got " + parameters.size() + "\n"
                         + f.formattedString(node.getIdentifier()));
 
             for (int i = 0; i < f.getParameters().size(); i++) {
@@ -61,6 +62,6 @@ public class FunctionCallHelper {
             }
             return null;
         } else
-            throw new IllegalFunctionArgumentException("Identifier " + identifier + "does not refer to a function.");
+            throw new IllegalFunctionArgumentException(textPosition, "Identifier " + identifier + "does not refer to a function.");
     }
 }
