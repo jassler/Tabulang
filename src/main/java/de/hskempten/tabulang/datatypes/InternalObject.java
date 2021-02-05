@@ -92,13 +92,15 @@ public class InternalObject implements Styleable {
      */
     @Override
     public Style computeStyle() {
+        Style s;
         if (style == null)
-            style = new Style();
+            s = new Style();
+        else
+            s = style.clone();
 
         if (parent == null)
             return style;
 
-        Style s = style.clone();
         InternalObject p = parent;
         while (p != null) {
             s.importStyleIfAbsent(p.getStyle());
