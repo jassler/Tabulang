@@ -12,7 +12,7 @@ private Interpretation parent;
 private HashMap<String, Object> environment;
 private int nestingLevel;
 \end{lstlisting}
-Das \textbf{nestingLevel} wird hauptsächlich für die Annotatierbarkeit von Daten in einer Schleife benötigt, um das korrekte zu annotierende Datum in jeder Iteration zu bestimmen. Dies hängt eng mit dem sogenannten \textit{mapValue} zusammen, einer speziellen sprach-internen Variablen, welche für Schleifen benötigt wird. Da dies aber mehr mit der Sprache und ihren Konstrukten an sich zusammenhängt wird es hier nicht weiter konkretisiert.
+Das \textbf{nestingLevel} wird hauptsächlich für die Annotatierbarkeit von Daten in einer Schleife benötigt, um das korrekte zu annotierende Datum in jeder Iteration zu bestimmen. Dies hängt eng mit dem sogenannten \textit{mapValue} zusammen, einer speziellen sprach-internen Variablen, welche für Schleifen benötigt wird. Da dies aber mehr mit der Sprache und ihren Konstrukten an sich zusammenhängt wird es hier nicht weiter konkretisiert. Für eine detaillierte Ausführung sei an die Sprachbeschreibung verwiesen.
 \\\\
 Das wohl wichtigste Attribut ist das hier genannte \textbf{environment}. Hier wird zur Laufzeit die Variablenbelegung des Programms festgehalten. Eine Zuweisung fügt dem \textbf{environment} somit entweder ein neues Schlüssel-Wert-Paar hinzu oder verändert den Wert eines bereits vorhandenen Schlüssels.
 
