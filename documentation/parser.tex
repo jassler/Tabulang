@@ -132,4 +132,22 @@ Am Ende wird der Knoten zurückgegeben.
 
 \subsubsection{ASTTermParser}
 
+Da Terme im Parser-Baum durch die angehängten TermR längere Terme entstehen können, müssen diese im  \texttt{ASTTermParser} auch richtig sortiert werden, damit sie vom Interpreter auch in der richtigen Reihenfolge interpretiert werden. 
+Dazu wird in diesem Projekt der ShuntingYard-Algorithmus verwendet. Dieser bringt eine Kette von Termen und Operatoren unter Berücksichtigung von Klammern in die Reverse Polish Notation. Diese Notation kann dann leicht in einen Teilast des AST umgewandelt werden. Auf die Funktionsweise des ShuntingYard-Algorithmus wird in dieser Dokumentation nicht weiter eingegangen.
+Als erster Schritt gibt es hier die Funktion \texttt{traverseTerm}. Diese durchläuft den Term, indem immer mit dem TermR weiter gemacht wird, bis TermR auf ein tatsächliches Ende des Terms zeigt. Alle Unterterme werden dann immer dem \texttt{ShuntingYardBuilder} hinzugefügt. 
+Danach wird der sortierte Output vom \texttt{ShuntingYardBuilder} abgeholt und an die Funktion \texttt{termParser} übergeben.
+Dieser erzeugt daraus einen Ast des AST, der diesen Term repräsentiert und gibt ihn an die Klasse zurück, von der \texttt{ASTTermParser} aufgerufen wurde.
+Wenn \texttt{termParser} in dem sortierten Output beispielsweise auf ein ''\textbf{+}'' stößt, wird ein \texttt{AddNode} erzeugt, an den als Kindknoten die beiden nächsten Terme in der Reihe angehängt werden.
+
+\subsubsection{ASTPredParser}
+
+Der \texttt{ASTPredParser} funktioniert im allgemeinen ziemlich gleich wie der \texttt{ASTTermParser}. Hier tauchen statt der Operatoren in den Termen beispielsweise Elemente wie ''and'' oder ''or'' auf, welche vom ShuntingYard dann als Operatoren betrachtet werden.
+
+\subsubsection{ASTStatementSorter}
+
+Der \texttt{ASTStatementSorter} sortiert eine Liste von Statementknoten, sodass Funktionsdefinitionen am Anfang und Gruppierungsknoten am Ende in der Liste stehen. Die Funktion \texttt{sortStatements} führt dabei einen Bubble Sort Algorithmus aus. Die restlichen Funktionen in dieser Klasse sind Hilfsfunktionen, die zum Beispiel prüfen, ob es sich bei dem aktuell betrachteten Statement um eine Funktionsdefinitionsknoten oder ein Gruppierungsknoten handelt.
+
+\subsubsection{Abschluss}
+
+Wenn der \texttt{ASTProgramParser} für alle Statements Knoten erstellt hat, die jeweils wiederum durch die anderen ASTParser erzeugten Unterknoten enthalten, werden alle Knoten an einen Wurzelknoten gehängt und dieser dann zurückgegeben. Diesen AST erhält dann der Interpreter.
 
