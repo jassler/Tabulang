@@ -24,7 +24,7 @@ private String _username;
 private String _password;
 \end{lstlisting}
 \textbf{MSqlTableContent}\\
-Dieses Model kapselt alle nötigen Daten einer MySQL-Datenbank in ein Objekt. Hierbei repräsentiert die Property {\_}dbName den Namen der Datenbanktabelle. In der ArrayList {\_}headlines, die auf den Datentyp "String" festgezogen ist, werden die Tabellenüberschriften abgelegt und einem festen Index zugewiesen. Dieser Index lässt sich wiederum in der ArrayList {\_}content mit dem Typ ArrayList<String> wiederfinden. Durch die Indizes lässt sich der Tabelleninhalt stets der korrekten Tabellenüberschrift zuordnen.
+Dieses Model kapselt alle nötigen Daten einer MySQL-Datenbank in ein Objekt. Hierbei repräsentiert die Property {\_}dbName den Namen der Datenbanktabelle. In der ArrayList {\_}headlines, die auf den Datentyp {\frqq}String{\flqq} festgezogen ist, werden die Tabellenüberschriften abgelegt und einem festen Index zugewiesen. Dieser Index lässt sich wiederum in der ArrayList {\_}content mit dem Typ ArrayList<String> wiederfinden. Durch die Indizes lässt sich der Tabelleninhalt stets der korrekten Tabellenüberschrift zuordnen.
 
 \begin{lstlisting}[caption=Repräsentation einer MySQL-Tabelle als Java-Objekt, language=Java]
 private String _dbName;
@@ -34,13 +34,13 @@ private ArrayList<ArrayList<String>> _content;
 
 \subsubsection{Kernfunktionalitäten}
 \label{mysqlCore}
-Alle Funktionalitäten für das Arbeiten mit einer MySQL-Datenbank beinhaltet die Klasse "DatabaseConnection". Diese Klasse wurde als Singleton implementiert, sodass nur zeitgleich ein Objekt und somit nur eine Verbindung zu der Datenbank aufgebaut werden kann, um Verbindungskonflikte zu verhindern.\\\\
+Alle Funktionalitäten für das Arbeiten mit einer MySQL-Datenbank beinhaltet die Klasse {\frqq}DatabaseConnection{\flqq}. Diese Klasse wurde als Singleton implementiert, sodass nur zeitgleich ein Objekt und somit nur eine Verbindung zu der Datenbank aufgebaut werden kann, um Verbindungskonflikte zu verhindern.\\\\
 \textbf{Verbindungsaufbau}\\
-Der Verbindungsaufbau erfolgt mit dem im Kapitel \ref{mysqlModels} beschriebenen Model "MSqlConnectionParameter". Dieses Objekt muss der Methode "OpenConnection" als Parameter übergeben werden. Diese Methode kümmert sich um den Verbindungsaufbau und um das Erstellen des Singleton-Objekts.\\\\
+Der Verbindungsaufbau erfolgt mit dem im Kapitel \ref{mysqlModels} beschriebenen Model {\frqq}MSqlConnectionParameter{\flqq}. Dieses Objekt muss der Methode {\frqq}OpenConnection{\flqq} als Parameter übergeben werden. Diese Methode kümmert sich um den Verbindungsaufbau und um das Erstellen des Singleton-Objekts.\\\\
 \textbf{Trennen einer Verbindung}\\
-Der Abbruch der Verbindung lässt sich schnell und einfach mit der Methode "CloseConnection" durchführen. Diese Methode ist parameterlos und greift stets auf das Singleton-Objekt im Hintergrund zu.\\\\
+Der Abbruch der Verbindung lässt sich schnell und einfach mit der Methode {\frqq}CloseConnection{\flqq} durchführen. Diese Methode ist parameterlos und greift stets auf das Singleton-Objekt im Hintergrund zu.\\\\
 \textbf{Dateiexport}\\
-Zu den Kernfunktionalitäten zählt zweifelsohne die Methode, eine MySQL-Tabelle direkt in das ods-Dateiformat zu konvertieren und abzuspeichern. Dies kann mit der Methode "ExportToFile" durchgeführt werden. Zum korrekten und fehlerlosen Export benötigt die Methode vier Eingangsparameter. Diese wären:
+Zu den Kernfunktionalitäten zählt zweifelsohne die Methode, eine MySQL-Tabelle direkt in das ods-Dateiformat zu konvertieren und abzuspeichern. Dies kann mit der Methode {\frqq}ExportToFile{\flqq} durchgeführt werden. Zum korrekten und fehlerlosen Export benötigt die Methode vier Eingangsparameter. Diese wären:
 \begin{itemize}
 \item query: String -> Hier wird das SQL-Statement übergeben, das für den Erhalt der Daten aus der Datenbank zuständig ist.
 \item odsExportService: OdsExportService -> Auf diesen Objekttyp wird im Kapitel \ref{loCore} im weiteren näher eingegangen. Vorab: Dieses Objekt beinhaltet die Funktion, eine ods-Datei zu erzeugen und abzuspeichern.
@@ -48,9 +48,9 @@ Zu den Kernfunktionalitäten zählt zweifelsohne die Methode, eine MySQL-Tabelle
 \item fileName: String -> Angabe des ods-Dateinamens, wie sie nach dem Export heißen soll 
 \end{itemize}
 \textbf{Export als Table-Objekt}\\
-Die zweite Variante des Exports kann mit der Methode "ExportAsTable" aufgerufen werden. Hierbei erfolgt durch den alleinigen Übergabeparameter "query" der Abruf der Daten aus der Datenbank. Diese werden in dieser Methode so verarbeitet, dass die Methode ein Table-Objekt zurück gibt, das die Form der internen Tabellensprache hat. Somit kann bei Verwendung dieses Objekts, Operationen der Tabellensprache angewendet werden.\\\\
+Die zweite Variante des Exports kann mit der Methode {\frqq}ExportAsTable{\flqq} aufgerufen werden. Hierbei erfolgt durch den alleinigen Übergabeparameter {\frqq}query{\flqq} der Abruf der Daten aus der Datenbank. Diese werden in dieser Methode so verarbeitet, dass die Methode ein Table-Objekt zurück gibt, das die Form der internen Tabellensprache hat. Somit kann bei Verwendung dieses Objekts, Operationen der Tabellensprache angewendet werden.\\\\
 \textbf{Import}\\
-Als letzte Kernfunktionalität kann die Funktion "ImportFromTable" mit den beiden Übergabeparametern table vom Typ Table<InternalString> und die Zeichenkette mit dem Namen "sqlTableName" aufgerufen werden, um Daten in eine Datenbanktabelle abzuspeichern. Hierbei wird in dieser Funktion, anhand der übergebenen Tabelle, ein SQL-Statement erstellt, dass den Import in die dazugehörige Tabelle (sqlTableName) durchführt.
+Als letzte Kernfunktionalität kann die Funktion {\frqq}ImportFromTable{\flqq} mit den beiden Übergabeparametern table vom Typ Table<InternalString> und die Zeichenkette mit dem Namen {\frqq}sqlTableName{\flqq} aufgerufen werden, um Daten in eine Datenbanktabelle abzuspeichern. Hierbei wird in dieser Funktion, anhand der übergebenen Tabelle, ein SQL-Statement erstellt, dass den Import in die dazugehörige Tabelle (sqlTableName) durchführt.
 
 \subsubsection{Private Hilfsfunktionen}
 \label{mysqlHelper}
@@ -74,14 +74,14 @@ Die letzte Hilfsfunktion \textbf{CreateConnectionString} wirkt für den Verbindu
 
 \subsubsection{Kurzbeschreibung}
 \label{loDescription}
-Neben der internen Datenhaltung ist es wichtig eine Anbindung "nach außen" herzustellen. So soll es möglich sein, bis dato fremde Daten zusätzlich in die Statistik einbinden zu können. Hierzu wurde die Schnittstelle zu Libre Office Calc implementiert. Diese Anbindung ermöglicht es neben Daten, auch die dazugehörigen Tabellengestaltung beim Import auszulesen und abzuspeichern. Beim Export kann diese Operation durch definierte Funktionen in die andere Richtung durchgeführt werden. Doch dazu mehr im Kapitel \ref{loCore}.\\
+Neben der internen Datenhaltung ist es wichtig eine Anbindung {\frqq}nach außen{\flqq} herzustellen. So soll es möglich sein, bis dato fremde Daten zusätzlich in die Statistik einbinden zu können. Hierzu wurde die Schnittstelle zu Libre Office Calc implementiert. Diese Anbindung ermöglicht es neben Daten, auch die dazugehörigen Tabellengestaltung beim Import auszulesen und abzuspeichern. Beim Export kann diese Operation durch definierte Funktionen in die andere Richtung durchgeführt werden. Doch dazu mehr im Kapitel \ref{loCore}.\\
 Zunächst werden im folgenden die benötigten Objekte (Models) für das Arbeiten mit ods-Dateien vorgestellt.
 
 \subsubsection{Models}
 \label{loModels}
 
 \textbf{MCell}\\
-Dieses Model repräsentiert eine Zelle einer bestimmten Zeile und spalte. Dieses Objekt hat dabei einen "value" (Zelleninhalt) und Attribute, wie beispielsweise die Gestaltung der Zelle.
+Dieses Model repräsentiert eine Zelle einer bestimmten Zeile und spalte. Dieses Objekt hat dabei einen {\frqq}value{\flqq} (Zelleninhalt) und Attribute, wie beispielsweise die Gestaltung der Zelle.
 
 \begin{lstlisting}[caption=Repräsentation einer Zelle einer Libre Office Calc Datei, language=Java]
 private HashMap<String,String> _attributes;
@@ -117,7 +117,7 @@ private HashMap<String, HashMap<String, String>> _cellStyles;
 private ArrayList<MTableWrapper> _tables;
 \end{lstlisting}
 \textbf{MStyle}\\
-Dieses Objekt dient als Wrapper, um einen Style beim Export zu einem ods-Format einzulegen. Dieser erhält eine Property property vom Typ OdfStyleProperty und der dazugehörige Wert, beispielsweise könnte es die property "FontWeight" mit dem Wert "bold" sein. Somit lässt sich ein Text in fett schreiben.
+Dieses Objekt dient als Wrapper, um einen Style beim Export zu einem ods-Format einzulegen. Dieser erhält eine Property property vom Typ OdfStyleProperty und der dazugehörige Wert, beispielsweise könnte es die property {\frqq}FontWeight{\flqq} mit dem Wert {\frqq}bold{\flqq} sein. Somit lässt sich ein Text in fett schreiben.
 
 \begin{lstlisting}[caption=Repräsentation eines Styles einer Libre Office Calc Datei, language=Java]
 private OdfStyleProperty property;
@@ -127,7 +127,7 @@ private String value;
 \subsubsection{Kernfunktionalitäten}
 \label{loCore}
 \textbf{OdsExportService}\\
-Zunächst ist wichtig zu erwähnen, dass zu Beginn des Exportvorganges zunächst der Konstruktor aufzurufen ist, um alle nötigen Objekte und Listen auf den Standardwert zu setzen. Hierbei kann ein parameterloser Konstruktor, wie auch ein Konstruktor mit einem Übergabeparameter aufgerufen werden. Der Unterschied liegt dabei nur an der Namensgebung der späteren Tabelle. Wird der leere Konstruktor aufgerufen, erhält die Tabelle einen Defaultnamen von "Table1". Dieser Wert kann durch den weiter angebotenen Konstruktor modifiziert werden.\\
+Zunächst ist wichtig zu erwähnen, dass zu Beginn des Exportvorganges zunächst der Konstruktor aufzurufen ist, um alle nötigen Objekte und Listen auf den Standardwert zu setzen. Hierbei kann ein parameterloser Konstruktor, wie auch ein Konstruktor mit einem Übergabeparameter aufgerufen werden. Der Unterschied liegt dabei nur an der Namensgebung der späteren Tabelle. Wird der leere Konstruktor aufgerufen, erhält die Tabelle einen Defaultnamen von {\frqq}Table1{\flqq}. Dieser Wert kann durch den weiter angebotenen Konstruktor modifiziert werden.\\
 Weiter kann durch zwei verschiedene Exporte gewählt werden. Zum einen ist es möglich, einen sofortigen Export einer MySQL-Datenbank in eine ods-Datei durch die Methode \textbf{InstantlyExportToFile} durchzuführen. Hierbei wird die Tabelle 1:1 in eine Libre Office Calc-Datei umgewandelt und es kann nichts modifiziert werden. Um eine komplett eigene Tabelle zu exportieren, kann \textbf{Export} aufgerufen werden. Diese Methode erhält als Übergabeparameter ein Table-Objekt mit allen Inhalten und Strukturen, als auch den Speicherort und den späteren Dateinamen.\\
 Um eine ods-Datei korrekt zu exportieren, sind dabei folgende Schritte zu beachten:
 \begin{enumerate} 
@@ -176,7 +176,7 @@ odsExportService.CreateTable("Table Number 2");
 // -------------------------------------------------------------
 odsExportService.SaveFile("C:/", "testTable");
 \end{lstlisting}
-Als letzte öffentliche Methode kann \textbf{SaveFile} angewendet werden, um mit Hilfe der Parameter "path" und "fileName" die generierte Tabelle in das ods-Dateiformat abzuspeichern. Hierbei wird das interne Spreadsheet-Objekt, das alle Styles, Strukturen und Inhalte enthält, an den angegebenen Speicherort exportiert.\\\\
+Als letzte öffentliche Methode kann \textbf{SaveFile} angewendet werden, um mit Hilfe der Parameter {\frqq}path{\flqq} und {\frqq}fileName{\flqq} die generierte Tabelle in das ods-Dateiformat abzuspeichern. Hierbei wird das interne Spreadsheet-Objekt, das alle Styles, Strukturen und Inhalte enthält, an den angegebenen Speicherort exportiert.\\\\
 \textbf{OdsImportService}\\
 Der Import einer ods-Datei kann in zwei Varianten erfolgen. Zum einen ist es möglich, die eingelesen Daten mit \textbf{Import} anhand des übergebenen Pfades einzulesen. Der Rückgabewert dieser Funktion wäre ein Objekt vom Typ MSpreadsheet einzulesen. Die zweite Variante erfolgt auf die gleiche Art und Weise. Der Rückgabewert von \textbf{ImportFile} ist dabei ein mit dem InternalString typisiertes Objekt Table.
 
