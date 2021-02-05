@@ -111,6 +111,7 @@ der internen Datenhaltung erfordert und aus zeitlichen Gründen nicht mehr umges
 \end{itemize}
 
 \subsection{Numbers}
+Für Zahlen wird ein eigener Datentyp verwendet. Bei diesem werden alle Zahlen intern als Bruch aus zwei \texttt{BigInteger} dargestellt. Dies hat den Vorteil, dass Zahlen beliebig groß sein können und auch keine Rundungsfehler auftreten. Die Klasse \texttt{InternalNumber} enthält Funktionen für die mathematischen Operationen, die mit diesen Zahlen verwendet werden können.
 
 \subsection{Tuples}
 
