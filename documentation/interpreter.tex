@@ -26,7 +26,15 @@ Es sollte hierbei erwähnt werden dass zu Beginn das Environment der ersten Inte
 
 \subsection{Die Klasse Node}
 \label{Node}
-Bei den Datenstrukturen handelt es sich um Objekte der Klasse \textbf{Node}, genauer gesagt um die vielen Klassen welche von \textbf{Node} erben und in Baumstruktur vom \underline{Parser} bereitgestellt werden. Diese hierarchische Strukur bedeutet dass bis auf die Blätter jedes Objekt dieser Knoten weitere Knoten als Attribute hält. Jede (nicht-abstrakte) von \textbf{Node} abgeleitete Klasse implementiert folgende Methode:
+Bei den Datenstrukturen handelt es sich um Objekte der Klasse \textbf{Node}, genauer gesagt um die vielen Klassen welche von \textbf{Node} erben und in Baumstruktur vom \underline{Parser} bereitgestellt werden. Diese hierarchische Strukur bedeutet dass bis auf die Blätter jedes Objekt dieser Knoten weitere Knoten als Attribute hält. Folgende Abbildung dient zur Visualisierung der Baumstruktur. 
+\begin{figure}[H]
+\centering
+	\includegraphics[width=1.0\textwidth]{images/InterpreterExample.png}\par\vspace{0.5cm}
+	\caption{Beispielhafter Aufbau der Baumstruktur}
+	\label{fig:tree structure}
+\end{figure}
+
+Jede (nicht-abstrakte) von \textbf{Node} abgeleitete Klasse implementiert folgende Methode:
 
 
 \begin{lstlisting}[caption=Funktionsdeklaration der Methode \textit{evaluateNode}, language=Java]
