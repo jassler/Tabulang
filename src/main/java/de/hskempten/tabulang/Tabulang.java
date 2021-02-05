@@ -133,10 +133,10 @@ public class Tabulang {
         if (true) {
             l.setText("\n" +
                     "tuple := [[1, 2]," +
-                              "[2, 3]," +
-                              "[3, 11]];\n" +
+                    "[2, 3]," +
+                    "[3, 11]];\n" +
                     //"b := 2 * 'hi';\n" +
-                   //"if(true) c := 1;\n" +
+                    //"if(true) c := 1;\n" +
                     //"multTest := '1' * 6;\n" +
                     //"modTest := '1' mod 6;\n" +
                     //"c := average b tuple;\n" +
@@ -151,13 +151,13 @@ public class Tabulang {
                     //"g := tuple.'1'.'1';\n" +
                     //"testest := if(true) return 0; return 5;\n" +
                     //"spr := [1...3];\n" +
-                   // "var a := 'hi' + 'hi';\n" +
+                    // "var a := 'hi' + 'hi';\n" +
                     //"if(5 < 4 iff 6 > 7) d := 10;\n" +
                     //"function f(x) { if( x <= 0 ) return 0; return 0.1 + f(x - 0.1); }\n" +
                     //"res := f1(d);\n" +
                     "for x in y {set x; c := x + 1; mark '0' as 'grey';}\n" +
                     //"for x in y {set x; d := 'Informatik'; if(x = 7) d := 'Mathematik'; c := x; e := c - 1; l :=  e - 1; hiding group after d using f1(c, e) mark 'background' as 'blue';}\n" +
-                   // "function hi(a, b) {c := 1; return a + b;}\n" +
+                    // "function hi(a, b) {c := 1; return a + b;}\n" +
                     //"S := for x in y {set x; c := c + 1;};\n" +
                     //"e := f(5);" +
                     "\n");
@@ -173,15 +173,15 @@ public class Tabulang {
 
                     //"tTitle := databaseToTable(queryTitle);\n" +
                     //"allenPlayedIn := tActor filter last_name = 'ALLEN';\n" +
-                   // "allenMovieAmount := count vertical allenPlayedIn;\n" +
-                   // "allenTransformedHorizontal := horizontal allenPlayedIn;\n" +
+                    // "allenMovieAmount := count vertical allenPlayedIn;\n" +
+                    // "allenTransformedHorizontal := horizontal allenPlayedIn;\n" +
                     "function findActorByLastName(x, y) return x filter last_name = y;\n" +
                     "function findActorsInZorroArk(x) {names := x filter title = 'ZORRO ARK'; return names.['first_name', 'last_name'];}\n" +
                     "function uniteTables(x, y) return x unite y;\n" +
                     "function iCount(x) return count vertical x;\n" +
                     "function createTable(anzahlZeilen, anzahlSpalten) {" +
                     "   return for z in [0...anzahlZeilen - 1] {" +
-                            "set [z * anzahlSpalten...(z + 1) * anzahlSpalten - 1];};}\n" +
+                    "set [z * anzahlSpalten...(z + 1) * anzahlSpalten - 1];};}\n" +
                     //"function rating(x) {if(x = 'YOUTH KICK') return 'Super'; if(x = 'YOUNG LANGUAGE') return 'Okay'; else return 'Nicht gesehen';}\n" +
                     "function f3(y) { print(y + 1); print(y * 2); print(y / 2); print(y - 1); }\n" +
                     "function getTitles(y) for x in y {set x.'title';};\n" +

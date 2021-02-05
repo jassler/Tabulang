@@ -1,9 +1,9 @@
 package de.hskempten.tabulang.astNodes.term.arithmetic;
 
 
-import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.astNodes.term.TermNode;
 import de.hskempten.tabulang.datatypes.InternalNumber;
+import de.hskempten.tabulang.interpreter.Interpretation;
 import de.hskempten.tabulang.tokenizer.TextPosition;
 
 public class MultiplyNode extends BinaryArithmeticNode {
@@ -22,6 +22,7 @@ public class MultiplyNode extends BinaryArithmeticNode {
         InternalNumber rightNumber = getRightNode().verifyAndReturnNumber(interpretation);
         return leftNumber.multiply(rightNumber);
     }
+
 
     @Override
     public String toString() {

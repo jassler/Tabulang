@@ -98,6 +98,12 @@ public abstract class Node {
         return internalString;
     }
 
+    /**
+     * Provides a method to check if a node evaluates to a Table or Tuple object.
+     *
+     * @return evaluated Table or Tuple object.
+     * @throws IllegalStringArgumentException if node does not evaluate to a Table or Tuple object.
+     */
     public TupleOperation<?> verifyAndReturnTupleOperation(Interpretation interpretation) {
         Object evaluated = this.evaluateNode(interpretation);
         if (!(evaluated instanceof TupleOperation<?> tupleOperation)) {
