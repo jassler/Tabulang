@@ -54,14 +54,15 @@ bindingoffset=0mm, top=20mm,bottom=20mm}
 \usepackage[german]{babel}
 
 % custom footers and headers
+\usepackage{lastpage}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \lhead{}
 \chead{}
 \rhead{}
-\lfoot{Assignment \textnumero{} 5}
+\lfoot{Tabulang Dokumentation}
 \cfoot{}
-\rfoot{Page \thepage}
+\rfoot{Seite \thepage{} von \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 %
@@ -90,8 +91,13 @@ bindingoffset=0mm, top=20mm,bottom=20mm}
     stepnumber=1,
     numbersep=10pt,
     captionpos=t,
-    escapeinside={\%*}{*)}
+    escapeinside={\%*}{*)},
+    literate={ö}{{\"o}}1
+           {ä}{{\"a}}1
+           {ü}{{\"u}}1
 }
+
+\usepackage{tablefootnote}
 
 %%%----------%%%----------%%%----------%%%----------%%%
 
@@ -106,14 +112,19 @@ bindingoffset=0mm, top=20mm,bottom=20mm}
 \maketitle
 
 \tableofcontents
+\pagebreak
 
 \input{parser.tex}
+\pagebreak
 
 \input{interpreter.tex}
+\pagebreak
 
 \input{datatypes.tex}
+\pagebreak
 
 \input{importexport.tex}
+\pagebreak
 
 \input{standard.tex}
 \end{document}
