@@ -115,7 +115,7 @@ public class Interpretation {
         if (Main.isDebug()) {
             e.printStackTrace();
         }
-        System.exit(1);
+        //System.exit(1);
     }
 
 }
