@@ -92,8 +92,44 @@ Zeigt \texttt{Lexer} zum Beispiel aktuell auf ein Token mit dem Inhalt ''return'
 In Abbildung \ref{fig:sequenzdiagramm} ist der Ablauf für die Erstellung des Parser-Baums an einem kleinen Beispiel aufgezeigt. Der Programmcode besteht in diesem Fall nur aus der einen Zeile mit dem Inhalt ''\textbf{a := 5;}''. Dabei handelt es sich um ein VarDef-Statement, das die Variable \textbf{a} erzeugt, falls diese nicht bereit existiert und dieser den Wert \textbf{5} zuweist.
 
 
-
-
-
 \subsection{Abstract-Syntax-Tree (AST)}\label{subsection:ast}
+
+\subsubsection{Überblick}
+
+\begin{figure}[tbh]
+	%\centering
+	\hspace{-0.1\linewidth}
+	%\fbox{}
+	\includegraphics[width=1.2\linewidth]{images/sequenzdiagrammAST}
+	\caption[Sequenzdiagramm Parser]{Sequenzdiagramm für die Erstellung des Abstract-Syntax-Tree}
+	\label{fig:sequenzdiagrammAST}
+\end{figure}
+
+Das Ziel des Parsers ist es, den Programmcode in eine Struktur zu bringen, die dann vom Interpreter einfach weiter verarbeitet werden kann. Die Interpretation wird dann in Kapitel \ref{InterpreterIntro} betrachtet.
+Als Datenstruktur bietet sich hier ein Abstract-Syntax-Tree (im folgenden nur noch \textbf{AST}) an. Zum besseren Verständnis kann hier nochmal der blaue Pfad in Abbildung \ref{fig:parseast} angeschaut werden. Der Wurzelknoten ist in diesem Baum der Knoten \textbf{ProgramAST}. 
+Dieser enthält genau ein Statement mit ein einer Variablenzuweisung. Deshalb hat der Wurzelknoten auch nur den einen Kindknoten \textbf{Assignment}. 
+Bei der Interpretation werden dann als erstes die Blattknoten und damit dann immer die übergeordneten Knoten interpretiert, bis man schließlich wieder beim Wurzelknoten ankommt. 
+\newline
+\newline
+Dieser Teil des Parsers befindet sich im Package \texttt{items/ast}. Die Verarbeitung findet in den Klassen \texttt{ASTProgramParser}, \texttt{ASTStatementParser}, \texttt{ASTTermParser} und \texttt{ASTPredParser} statt. Die Klasse \texttt{ASTStatementSorter} wird verwendet, um die Statements einer ArrayListe in die richtige Reihenfolge zu bringen, da Funktionsdefinitionen in einer Liste von Arrays immer als erstes Interpretiert werden sollen und GroupStatements als Letztes.
+\newline
+\newline
+In Abbildung \ref{fig:sequenzdiagrammAST} ist ein Sequenzdiagramm, das diesen Ablauf zeigt. Hier wurde wieder der Programmcode ''\textbf{a := 5;}'' verwendet.
+
+\subsubsection{ASTProgramParser}
+
+Im \texttt{ASTProgramParser} ist nur die eine Funktion \texttt{parse(ProgramItem prg)}. Diese erhält den in Kapitel \ref{subsection:parser} erstellten Parser-Baum. 
+Dieser enthält eine Liste mit Statements, die jeweils an den \texttt{ASTStatementParser} weitergegeben werden. Dieser gibt dann wiederum je nach Inhalt einen entsprechenden Statementknoten zurück. Diese werden dann jeweils als Kindknoten an den Wurzelknoten gehängt. 
+Am Ende wird dieser Wurzelknoten mit den verarbeiteten Statements zurückgegeben und kann vom Interpreter weiter verarbeitet werden.
+
+\subsubsection{ASTStatementParser}
+
+Im \texttt{ASTStatementParser} wird als Erstes die Funktion \texttt{parse} aufgerufen, welche zum einen das tatsächliche Statement aus dem ursprünglichen Statement extrahiert und dann mit der Funktion \texttt{statementParser} weiter verarbeitet. 
+\newline
+\newline
+In der Funktion \texttt{statementParser} wird das Statement geöffnet und je nach Typ die entsprechenden Elemente, die zu diesem Statement gehören weiterverarbeitet. Enthält ein Statement beispielsweise einen Term, so wird das Termelement an den \texttt{ASTTermParser} geschickt, der dann einen Knoten für diesen Term zurückgibt. Anschließend wird ein entsprechender Statementknoten, zum Beispiel ein \texttt{AssignmentNode} erstellt, an den diese so erstellten Knoten als Kindknoten gehängt werden. 
+Am Ende wird der Knoten zurückgegeben.
+
+\subsubsection{ASTTermParser}
+
 
