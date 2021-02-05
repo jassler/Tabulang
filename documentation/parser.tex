@@ -14,6 +14,7 @@ Das Parsen wird in diesem Projekt in zwei Schritten umgesetzt. Im Unterkapitel \
 	\label{fig:parseast}
 \end{figure}
 
+
 In diesem Unterkapitel wird ein kurzer Überblick über das Ziel des Parsers gegeben. Die Abbildung \ref{fig:parseast} zeigt anhand eines kleinen Codebeispiels, wie die zwei verschiedenen Strukturen aussehen, die während des Parsens erzeugt werden. Dabei wird das Programmcodebeispiel \mbox{\textbf{x := a * (b - c) + d;}} betrachtet. Der gelbe Pfad stellt die Struktur nach dem ersten Parsen des Codes da. Dabei ist \textbf{Prg} der Wurzelknoten und \textbf{varDef} dessen einziges Statement. Im blauen Pfad mit \textbf{ProgramAST} als Wurzelknoten ist der \textbf{Abstract Syntax Tree} abgebildet. Dieser wird im weiteren Verlauf vom Interpreter verwendet.
 
 \subsection{Lexer}

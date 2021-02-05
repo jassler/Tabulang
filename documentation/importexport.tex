@@ -23,6 +23,7 @@ private String _dbName;
 private String _username;
 private String _password;
 \end{lstlisting}
+
 \textbf{MSqlTableContent}\\
 Dieses Model kapselt alle nötigen Daten einer MySQL-Datenbank in ein Objekt. Hierbei repräsentiert die Property {\_}dbName den Namen der Datenbanktabelle. In der ArrayList {\_}headlines, die auf den Datentyp {\frqq}String{\flqq} festgezogen ist, werden die Tabellenüberschriften abgelegt und einem festen Index zugewiesen. Dieser Index lässt sich wiederum in der ArrayList {\_}content mit dem Typ ArrayList<String> wiederfinden. Durch die Indizes lässt sich der Tabelleninhalt stets der korrekten Tabellenüberschrift zuordnen.
 
@@ -156,6 +157,7 @@ Um eine ods-Datei korrekt zu exportieren, sind dabei folgende Schritte zu beacht
 \end{enumerate}
 \end{enumerate}
 \textit{Anmerkung: Die Schritte 4 bis 6 können nun beliebig oft aufgerufen werden. Möchte man beispielsweise drei Zeilen mit einem Style versehen, werden die Schritte folgedessen dreimal durchlaufen und abschließend dreimal die Methode \textbf{SetStyleToRow(rowIndex: int)} aufgerufen.}
+\newpage
 \begin{lstlisting}[caption=Codebeispiel wie drei Zeilen einer Tabelle gestyled werden und eine weitere Tabelle hinzugefügt wird, language=Java]
 var odsExportService = new OdsExportService("Table Number 1");
 // ADD DATA TO TABLE
